@@ -1,6 +1,9 @@
 ---
 name: agentic-translation
-description: Use when translating documents ≥5K words, or when user requests agentic translation for smaller complex documents. NOT for simple sentences/paragraphs without explicit agentic request.
+version: 2.0
+date: 2026-01-31
+author: Frédéric Guigand
+description: Use when translating documents ≥5K words, or when user requests agentic translation for smaller complex documents. NOT for simple sentences/paragraphs without explicit agentic request. See agentic-translation-reference.md for complete workflow.
 ---
 
 # Agentic Translation

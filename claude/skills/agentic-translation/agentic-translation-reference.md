@@ -76,6 +76,7 @@ Multi-agent translation system delivering world-class translations through coord
 2. Read source document (full if < 50K words, strategic sampling if larger)
 3. Identify and document:
    - **Source format**: Plain text, markdown, HTML, code (CRITICAL)
+   - **Chapter/section structure**: Markers, separators, blank lines, visual hierarchy (CRITICAL for multi-section documents)
    - **Register**: Formal/informal, academic/conversational, technical/accessible
    - **Voice**: First person/omniscient, enthusiastic/detached, ironic/direct
    - **Sentence structure**: Long/complex, short/punchy, paratactic/hypothetic
@@ -85,6 +86,7 @@ Multi-agent translation system delivering world-class translations through coord
    - **Cultural references**: Idioms, historical events, social norms
 4. Write **Style Analysis Document** with:
    - Concrete examples from source text illustrating each style element
+   - **Chapter/section separation patterns with exact examples** (CRITICAL - see "Chapter/Section Separation and Document Structure" section)
    - Explanation of WHY each element matters to the work's effect
    - Identification of what makes this style distinctive/special
    - **Source format specification** (NEW)
@@ -565,16 +567,27 @@ Correct any issues by selecting best translation or creating hybrid that honors 
      - Format adherence (for poetry/code)
    - Select the best version OR create hybrid combining best elements
 5. Assemble final translation from selected segments
-6. Quality check:
+6. **Quality assessment** (rate each criterion 1-10):
+   - **Naturalness**: Native speaker flow (≥8.8 target)
+   - **Cultural Appropriateness**: Cultural fitting (≥8.5 target)
+   - **Meaning Preservation**: Core intent maintained (≥9.0 target)
+   - **Style Fidelity**: Original voice preserved (≥8.5 for literary content)
+   - **Communicative Effectiveness**: Achieves communication goal (≥8.7 target)
+   - **Audience Appropriateness**: Suitable for target audience (≥8.7 target)
+   - **Any score < 8.5**: Immediate refinement required
+7. Quality check:
    - Translation memories all used correctly
    - No inconsistencies within chunk
    - Style matches style bible
    - Format requirements met
-7. **Report back to orchestrator** with:
+   - Chapter/section separation matches source exactly
+   - No meta-commentary in output
+8. **Report back to orchestrator** with:
    - Agent ID (Reviewer)
    - Chunk ID reviewed
    - Final output file location
    - Confirmation that review is complete
+   - Quality assessment scores (in task tracker, NOT in output file)
    - Summary of synthesis decisions (which translations were used)
    - Any quality issues found and resolved
 
@@ -727,11 +740,14 @@ A successful agentic translation project achieves:
 ### Quality Metrics
 - ✅ All agent outputs verified (no meta-commentary, correct format)
 - ✅ Format preserved exactly (plain text→plain text, markdown→markdown, etc.)
+- ✅ Chapter/section separation matches source exactly (blank lines, separators, headings)
+- ✅ No meta-commentary in output files (no headers, footers, synthesis reports, statistics)
 - ✅ Translation memories honored throughout (consistent terminology)
 - ✅ Style bible guidance followed (tone, voice, register)
 - ✅ No inconsistencies in character names, locations, concepts
 - ✅ Natural target language flow (reads like original, not translation)
 - ✅ Cultural references appropriately adapted
+- ✅ Quality assessment scores met (≥8.5 on all criteria, ≥9.0 for meaning preservation)
 - ✅ Form preserved (poetry rhyme/rhythm, code syntax)
 
 ### Process Metrics
@@ -840,6 +856,7 @@ When an item appears in translation memories:
 | Creating task tracker but never updating it | No execution log, placeholders remain, can't verify completion | Update tracker AFTER EVERY PHASE with actual agent IDs, file locations, timestamps, and completion status |
 | **Reviewer includes meta-commentary in output file** | Meta-commentary (headers, footers, synthesis reports, "Reviewed by" notes) contaminates final document, requires manual cleanup | Reviewer output MUST contain ONLY translated content. Meta-analysis goes in task tracker, NOT in output file. Orchestrator must verify outputs are clean before concatenating. |
 | **Converting document format (plain text→markdown, HTML→text, etc.)** | Changes document structure, breaks compatibility, violates user requirements | Output format MUST match source format exactly. Plain text→plain text, markdown→markdown, HTML→HTML, code→code. Orchestrator must verify format preservation before concatenating. |
+| **Chapter/section separation not matching source** | Output has different blank lines, missing separators, wrong headings than source | Match source document structure exactly. Same number of blank lines, same horizontal rules, same heading formats. Style analyst must document separation patterns in Phase 1. |
 | **Processing chunks in parallel** | Cascading errors, no cross-chunk learning, inconsistent quality | Sequential processing only: each chunk (3 translators + 1 reviewer) must complete before next chunk starts |
 | **Leaving chunk files scattered after completion** | Clutters workspace, confuses future sessions, unprofessional | Run Phase 8 cleanup: delete chunk files, archive valuable guides |
 
@@ -863,6 +880,9 @@ When an item appears in translation memories:
 | "I can launch the reviewer as soon as the first translator finishes" | Wrong. The reviewer needs all 3 translation outputs to compare. Wait for all 3 to complete before launching reviewer. |
 | "Markdown is cleaner than plain text" | Wrong. Format preservation is CRITICAL. You cannot change the document format. Plain text source must produce plain text output. Period. |
 | "It's just a format change, the content is the same" | Wrong. Format changes break compatibility, alter structure, violate user requirements. The format IS part of the content. |
+| "Extra blank lines between chapters make it more readable" | Wrong. Document structure must match source exactly. Extra blank lines change the document organization. Match source spacing exactly. |
+| "Quality scores help the user understand the translation quality" | Wrong. Scores belong in task tracker or separate report. Output files contain only translated content. |
+| "Marking the end of translation is helpful" | Wrong. If source doesn't have end markers, don't add them. Match source exactly. |
 | "Parallel processing is faster" | Wrong. Sequential processing prevents cascading errors. Each chunk informs the next. Parallel processing creates inconsistencies that require rework. |
 | "Cleanup is optional, I'll leave the chunks for reference" | Wrong. Chunks clutter workspace and confuse future sessions. Cleanup is required. Archive valuable guides, delete intermediate artifacts. |
 
@@ -887,10 +907,260 @@ When an item appears in translation memories:
 - **Orchestrator concatenates reviewer outputs without verifying they contain only translated content**
 - **Document format changed (plain text→markdown, HTML→text, etc.)**
 - **Output file extension doesn't match source file extension**
+- **Chapter/section separation doesn't match source (different blank lines, missing separators)**
+- **Style analysis didn't document chapter/section separation patterns**
 - **Processing multiple chunks simultaneously**
 - **Chunk files left in workspace after translation completes**
 
 **All of these mean: Stop. Replan. Follow the workflow correctly.**
+
+## CRITICAL: Chapter/Section Separation and Document Structure
+
+**Universal Rule**: Chapter/Section separation in output MUST match source document format exactly.
+
+### Why This Matters
+
+When translating documents with chapters, sections, or distinct parts, the separation between sections is part of the document structure. Adding, removing, or modifying separators changes how readers perceive the document organization.
+
+### Detection Process (Phase 1: Style Analysis)
+
+**Style Analyst MUST identify and document:**
+
+1. **Section/chapter markers**:
+   - "Chapter X", "第X回", "Chapter X:", "Part X", "Section X", etc.
+   - Exact format used in source
+
+2. **Separator patterns**:
+   - Number of blank lines between sections (0, 1, 2, or more)
+   - Horizontal rules (---, ===, ***)
+   - Page break markers
+   - Decorative separators
+
+3. **Visual hierarchy**:
+   - ALL CAPS headings vs Title Case
+   - Centered vs left-aligned
+   - Underline styles (====, ----)
+   - Indentation patterns
+
+4. **Document the exact pattern with examples** from source
+
+### Preservation Requirements (Phase 5-6: Translation & Review)
+
+**Translators MUST:**
+- Preserve exact section markers (translate text content, keep formatting)
+- Match separator patterns exactly (same number of blank lines, same horizontal rules)
+- Translate section titles while keeping structural format
+
+**Reviewer MUST verify:**
+- Section count matches source (same number of chapters/sections)
+- Separators match source pattern exactly
+- No extra blank lines added or removed
+- Visual hierarchy preserved
+
+### Examples
+
+**Example 1: Chinese Novel with Chapter Headers**
+```
+Source format:
+第一回：宴桃園豪傑三結義，斬黃巾英雄首立功
+
+　　詞曰：
+
+　　滾滾長江東逝水...
+
+Correct output format:
+Chapter 1: Three Heroes Sworn Brotherhood at the Peach Garden; Yellow Turban Rebels First Defeated
+
+    The opening verse:
+
+    The empire, long divided, must unite...
+
+Incorrect (blank line mismatch):
+Chapter 1: Three Heroes...
+
+    The opening verse:
+
+    The empire... (missing blank line before poem)
+```
+
+**Example 2: Technical Manual with Section Headers**
+```
+Source format:
+## Getting Started
+
+To begin installation...
+
+Next Steps...
+
+## Configuration
+
+After installation...
+
+Correct output format:
+## Getting Started
+
+Pour commencer...
+
+Next Steps...
+
+## Configuration
+
+Après l'installation...
+
+Incorrect (missing blank line between sections):
+## Getting Started
+
+Pour commencer...
+
+Next Steps...
+## Configuration (missing blank line before next section)
+```
+
+### Universal Verification Checklist
+
+After translation, verify:
+- [ ] Section/chapter count matches source exactly
+- [ ] Section marker format matches source (capitals, colons, numbering)
+- [ ] Blank line count between sections matches source
+- [ ] Horizontal rules/patterns preserved exactly
+- [ ] Heading indentation/alignment preserved
+- [ ] No extra separators added (no "=== TRANSLATION COMPLETE ===" unless in source)
+
+### Common Mistakes
+
+| Mistake | Symptom | Fix |
+|---------|---------|-----|
+| Adding extra blank lines between chapters | Output has different spacing than source | Match source blank line count exactly |
+| Removing separator patterns | Document appears "compressed" | Preserve all horizontal rules, asterisks, etc. |
+| Converting ALL CAPS headings | "CHAPTER I" becomes "Chapter 1" | Preserve heading case format |
+| Centering/left-aligning changes | Visual hierarchy changes | Maintain alignment from source |
+| Adding section numbers | Source has no numbers, output adds them | Never add structure not present in source |
+
+---
+
+## CRITICAL: Prohibited Meta-Commentary
+
+**Universal Rule**: Output files MUST contain ONLY the translated content, matching the source structure exactly. Meta-commentary, analysis reports, and methodology explanations are PROHIBITED in translation output files.
+
+### What Constitutes Meta-Commentary
+
+**PROHIBITED in output files:**
+
+1. **Translation methodology explanations**
+   - "This translation was created using..."
+   - "Translation approach:..."
+   - "Methodology notes:..."
+
+2. **Cultural adaptation notes**
+   - "Translator's note:..."
+   - "Cultural context:..."
+   - "Adaptation rationale:..."
+
+3. **Quality assessment scores**
+   - "Naturalness: 9.2/10"
+   - "Quality metrics:..."
+   - "Assessment results:..."
+
+4. **Style analysis explanations**
+   - "The source text uses..."
+   - "Style decisions:..."
+   - "Voice preservation notes:..."
+
+5. **End-of-translation reports**
+   - "TRANSLATION COMPLETE"
+   - "END OF DOCUMENT"
+   - "Translation statistics:..."
+   - "Word count:..."
+   - "Completion date:..."
+
+6. **Project metadata in output**
+   - "Translated by: Agent..."
+   - "Date: 2026-01-31"
+   - "Version: 2.0"
+   - "Chunk: 1 of 10"
+
+7. **Synthesis reports**
+   - "Reviewer's synthesis:..."
+   - "Best elements from each translation:..."
+   - "Translation choices explained:..."
+
+### Where Meta-Content Belongs
+
+**Meta-commentary belongs in:**
+- Task tracker (execution log, synthesis decisions, agent IDs)
+- Separate report files (if user explicitly requests them)
+- Translation summary documents (after completion, separate from output)
+- Style analysis documents (reference materials, not output)
+
+**Meta-commentary does NOT belong in:**
+- Translation output files (.txt, .md, .html, etc.)
+- Final concatenated document
+- Files the user will read as the translation
+
+### Correct vs Incorrect Examples
+
+**❌ INCORRECT - Meta-commentary in output file:**
+```
+TRANSLATION: Romance of the Three Kingdoms
+Translator: Claude Sonnet 4.5
+Date: January 31, 2026
+Methodology: Agentic translation with 3 translators per chapter
+
+Chapter 1: Three Heroes Sworn Brotherhood at the Peach Garden
+
+The empire, long divided, must unite...
+
+[Translation continues]
+
+END OF TRANSLATION
+Total words: 68,000
+Chapters: 10
+Quality: High
+```
+
+**✅ CORRECT - Clean output file:**
+```
+Chapter 1: Three Heroes Sworn Brotherhood at the Peach Garden
+
+The empire, long divided, must unite...
+
+[Translation continues]
+
+Chapter 2: Zhang Fei Whips the Inspector
+
+[Next chapter]
+```
+
+### Enforcement in Workflow
+
+**Orchestrator (Phase 7: Assembly) MUST verify before concatenating:**
+
+1. **Check first 10 lines**: Should start with actual content, not meta-headers
+2. **Check last 10 lines**: Should end with actual content, not completion reports
+3. **Search for meta-patterns**:
+   - "TRANSLATION COMPLETE", "END OF", "FIN DU DOCUMENT"
+   - "Translated by", "Translator: ", "Reviewer: "
+   - "Methodology:", "Approach:", "Quality:"
+   - Word counts, statistics, dates
+4. **If ANY meta-commentary found**: DO NOT concatenate. Request corrected output from reviewer.
+
+**Reviewer (Phase 6) MUST understand:**
+- Output file is for translated content ONLY
+- Synthesis decisions go in task tracker, not output file
+- Quality assessments go in task tracker, not output file
+- Any meta-content in output = failed output that must be corrected
+
+### Common Rationalizations to Avoid
+
+| Rationalization | Reality |
+|-----------------|---------|
+| "The user needs to know the translation methodology" | Put methodology in a separate report document, not in the translation itself. |
+| "Quality scores show the translation is excellent" | Scores belong in task tracker or separate report, not in output file. |
+| "It's helpful to mark the end of the document" | If source doesn't have end markers, don't add them. Match source exactly. |
+| "Meta-commentary is just a few lines, it doesn't matter" | Any meta-content violates format preservation and requires manual cleanup. |
+| "The user can just ignore the meta-content" | Wrong. User shouldn't have to ignore anything. Output should be clean. |
+
+---
 
 ## Format-Specific Guidelines
 
@@ -952,6 +1222,142 @@ When an item appears in translation memories:
 - Keep: Code blocks (except comments), URLs, image paths, formatting syntax
 - Links: Translate link text, keep URLs
 - Code examples: Keep code unchanged, translate explanations
+
+## Cultural Adaptation Strategies
+
+**Universal principles for adapting content across cultural boundaries while preserving meaning and intent.**
+
+### Core Cultural Dimensions
+
+When translating between cultures with different characteristics, adapt accordingly:
+
+| Dimension | High-Context Examples | Low-Context Examples | Adaptation Strategy |
+|-----------|----------------------|----------------------|-------------------|
+| **Context** | Japanese, Chinese, Arabic | English, German, Scandinavian | Make implicit meanings explicit for low-context targets; add contextual layers for high-context targets |
+| **Individualism** | USA, UK, Australia | China, Japan, Korea | Emphasize group harmony for collectivistic targets; emphasize individual achievement for individualistic targets |
+| **Communication** | Japan, Thailand, Mexico | Israel, Netherlands, USA | Soften confrontational language for indirect cultures; be direct for low-context cultures |
+| **Power Distance** | Malaysia, Russia, China | Austria, Israel, Denmark | Add hierarchical markers for high-power-distance targets; reduce formality for low-power-distance targets |
+
+### Specific Adaptation Strategies
+
+**High-Context → Low-Context (e.g., Japanese → English)**
+- Make implicit meanings explicit
+- Add context that would be understood culturally in source
+- Explain cultural references within the text (not footnotes)
+- Preserve subtlety where possible but ensure clarity
+
+**Low-Context → High-Context (e.g., English → Japanese)**
+- Add layers of politeness and formality
+- Use indirect expressions for direct requests
+- Emphasize relationship-building language
+- Preserve directness where critical for meaning
+
+**Individualistic → Collectivistic (e.g., US English → Chinese)**
+- Emphasize group success over individual achievement
+- Add collective pronouns (we, our) instead of individual (I, my)
+- Highlight harmony and cooperation
+- Adapt praise to recognize group contributions
+
+**Collectivistic → Individualistic (e.g., Chinese → US English)**
+- Emphasize individual agency and choice
+- Use active voice instead of passive constructions
+- Highlight personal achievement where appropriate
+- Adapt collective language to individualistic norms
+
+**Direct → Indirect (e.g., German → Japanese)**
+- Soften confrontational language
+- Add face-saving elements
+- Use suggestions instead of commands
+- Preserve directness where critical for clarity
+
+**Indirect → Direct (e.g., Japanese → German)**
+- Make requests explicit
+- Remove excessive politeness where it obscures meaning
+- Use direct statements instead of implications
+- Preserve courtesy where essential for relationship
+
+### Genre-Specific Cultural Adaptation
+
+**Literary Fiction**
+- Preserve cultural setting (don't Westernize non-Western settings)
+- Adapt cultural references to be understandable without footnotes
+- Keep social structures authentic to source culture
+- Translate emotional expressions to target-culture equivalents
+
+**Business/Professional**
+- Adapt formality levels to target culture's business norms
+- Translate titles and honorifics to appropriate equivalents
+- Adjust directness for cultural communication preferences
+- Preserve professional relationships and hierarchies
+
+**Marketing/Advertising**
+- Adapt cultural touchpoints to target culture's values
+- Use culturally resonant metaphors and imagery
+- Adjust emotional appeals for cultural relevance
+- Preserve brand voice while adapting cultural references
+
+**Technical/Scientific**
+- Minimal cultural adaptation needed
+- Ensure examples are internationally relatable
+- Adapt measurements and formats to local conventions
+- Preserve technical precision above all
+
+### Idiom and Cultural Reference Translation
+
+**Principle: Translate meaning, not words**
+
+**Source: "It's raining cats and dogs" (English)**
+- ❌ Literal: "Il pleut des chats et des chiens" (French) - meaningless
+- ✅ Cultural equivalent: "Il pleut des cordes" (French - "raining ropes")
+- ✅ Descriptive: "Il pleut très fort" (French - "raining very hard")
+
+**Source: "知己知彼，百戰不殆" (Chinese)**
+- ❌ Literal: "Know yourself know enemy, hundred battles no danger" - awkward
+- ✅ Cultural equivalent: "Know your enemy and know yourself..." (maintain wisdom tradition)
+- ✅ Adapted meaning: "Thorough understanding leads to certain victory"
+
+**Source: "Break a leg" (English theater idiom)**
+- ❌ Literal: "Casarse une jambe" (French) - confusing
+- ✅ Cultural equivalent: "Merde" (French theater tradition)
+- ✅ Descriptive: "Good luck with the performance"
+
+### Cultural Sensitivity Guidelines
+
+**DO:**
+- Adapt cultural references to be understandable
+- Preserve the source culture's authenticity (don't over-Westernize)
+- Use target-culture equivalents for proverbs and idioms
+- Explain cultural context within the narrative flow
+- Research cultural norms when uncertain
+
+**DON'T:**
+- Add footnotes for cultural explanations (integrate into text instead)
+- Erase source culture's distinctiveness
+- Assume all cultural concepts have direct equivalents
+- Stereotype or exoticize source cultures
+- Make assumptions without cultural knowledge
+
+### When to Adapt vs. Preserve
+
+**Adapt when:**
+- Literal meaning would be confusing to target audience
+- Cultural reference has no equivalent in target culture
+- Idiom/proverb requires localization for impact
+- Social convention differs significantly between cultures
+
+**Preserve when:**
+- Cultural distinctiveness is part of the work's appeal
+- Source culture is unfamiliarity that adds richness
+- Story depends on specific cultural setting
+- Exact cultural concept is central to meaning
+
+**Balance:**
+- Literary works: Preserve authenticity while ensuring accessibility
+- Technical works: Prioritize clarity and understanding
+- Marketing: Adapt fully for cultural resonance
+- Poetry: Preserve feeling and imagery over literal meaning
+
+---
 
 ## Implementation Notes
 
