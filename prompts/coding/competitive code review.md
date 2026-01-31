@@ -1,0 +1,1 @@
+Please dispatch two subagents to carefully review [FEATURE/COMPONENT/PLAN/ETC]. Tell them that they're competing with another agent. Make sure they look at user interface design, accessibility, architecture and implementation. Tell them that whomever finds more issues gets promoted.
