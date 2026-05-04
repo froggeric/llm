@@ -41,16 +41,15 @@ If missing: `brew install python node git`
 
 ## Step 1: Install & Configure SearXNG
 
-### 1.1 Clone and set up (one command)
+### 1.1 Set up (one command)
 
 ```bash
-git clone https://github.com/searxng/searxng.git ~/searxng
-cd ~/searxng
 python3 searxng-setup-local-mcp.py
 ```
 
 That's it. The script handles everything:
 
+- Clones the SearxNG github repo
 - Creates a virtual environment and installs dependencies
 - Applies all configuration changes (secret key, JSON API, engine fixes, optimizations)
 - Installs the macOS launchd service for auto-start
