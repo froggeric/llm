@@ -9,7 +9,8 @@ The catalog is a TOML file that describes every model the MCP can serve. It live
 | `qwen3-vl-4b` | Qwen3-VL 4B | constrained | 5 GB | `read_image` |
 | `qwen3-vl-8b` | Qwen3-VL 8B | mainstream | 8 GB | `read_image`, `extract_text`, `extract_code`, `describe_ui`, `diagnose_error` |
 | `gemma4-26b-a4b` | Gemma 4 26B-A4B (MoE) | high_end | 24 GB | `describe_chart`, `describe_diagram`, `extract_table`, `compare_images` |
-| `internvl35-8b` | InternVL3.5 8B | mainstream | 8 GB | (none — explicit selection only) |
+
+InternVL3.5 8B was considered but dropped from v0.1 — no clean upstream GGUF source, and it ranked last in our 7-model benchmark (called a QR code a "maze-like pattern"). May be re-added in v0.2.
 
 The default model for your hardware is auto-selected at startup. Run `local-vision-mcp doctor` to see which one applies.
 
@@ -128,7 +129,7 @@ See `internal/models/selection.go` for the implementation.
 
 Models in the catalog are sourced from the open-weight ecosystem. They have known weaknesses:
 
-- **InternVL3.5 8B** called a QR code a "maze-like pattern" in our 20-image benchmark. Not in any `preferred_for` list.
+- **InternVL3.5 8B** (not in v0.1 catalog) called a QR code a "maze-like pattern" in our 20-image benchmark.
 - **Gemma 4 26B-A4B** is the strongest on dense content but takes 17 GB of disk.
 - **Qwen3-VL 8B** is the recommended default for 16–32 GB Macs.
 - **Qwen3-VL 4B** is the recommended default for ≤16 GB Macs; quality drops on busy images.

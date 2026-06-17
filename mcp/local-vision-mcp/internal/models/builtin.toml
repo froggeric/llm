@@ -39,10 +39,10 @@ notes = "Fastest model in the catalog. Use on 8 GB Macs where nothing else fits.
 
 [models.qwen3-vl-8b]
 display_name = "Qwen3-VL 8B"
-gguf = "https://huggingface.co/froggeric/Qwen3-VL-8B-GGUF/resolve/main/qwen3-vl-8b-q4_k_m.gguf"
-mmproj = "https://huggingface.co/froggeric/Qwen3-VL-8B-GGUF/resolve/main/mmproj-qwen3-vl-8b-f16.gguf"
-gguf_sha256 = "PLACEHOLDER-PHASE3"
-mmproj_sha256 = "PLACEHOLDER-PHASE3"
+gguf = "https://huggingface.co/froggeric/Qwen3-VL-8B-Instruct-GGUF/resolve/main/Qwen3-VL-8B-Instruct-Q4_K_M.gguf"
+mmproj = "https://huggingface.co/froggeric/Qwen3-VL-8B-Instruct-GGUF/resolve/main/mmproj-F16.gguf"
+gguf_sha256 = "108e7ff92b78eefd3db4741885104acba514255c11b617d3c7b197a5f46efe89"
+mmproj_sha256 = "d406d03ebabefdef86a2c86bf0c1b65f9e046f7a81c218f25de4931b46a07fc4"
 ctx = 32768
 gpu_layers = -1
 min_vram_gb = 8
@@ -87,26 +87,3 @@ preferred_for = [
 hardware_tier = "high_end"
 bench_toks = 39.5
 notes = "MoE: 26B params on disk, 4B active per token. Best for dense/busy screenshots and structured table output. >=32 GB Macs."
-
-# =============================================================================
-# Available but never auto-picked (no preferred flag). Users can request
-# explicitly via config.default_model or per-tool override.
-# =============================================================================
-
-[models.internvl35-8b]
-display_name = "InternVL3.5 8B"
-gguf = "https://huggingface.co/froggeric/InternVL3.5-8B-GGUF/resolve/main/internvl35-8b-q4_k_m.gguf"
-mmproj = "https://huggingface.co/froggeric/InternVL3.5-8B-GGUF/resolve/main/mmproj-internvl35-8b-f16.gguf"
-gguf_sha256 = "PLACEHOLDER-PHASE3"
-mmproj_sha256 = "PLACEHOLDER-PHASE3"
-ctx = 16384
-gpu_layers = -1
-min_vram_gb = 8
-min_system_ram_gb = 16
-released = "2025-08"
-license = "MIT"
-preferred = false
-preferred_for = []
-hardware_tier = "mainstream"
-bench_toks = 41.2
-notes = "Very terse outputs (~400 tokens vs ~1500 for peers). Useful for RAG indexing and cheap embeddings; not for verbose descriptions. Wrong on basic facts in our benchmark (called a QR code a 'maze-like pattern')."

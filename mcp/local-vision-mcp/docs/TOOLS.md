@@ -149,7 +149,8 @@ From the benchmark (`local-vlm-research/BENCHMARK-SUMMARY.md`):
 - **Qwen3-VL 8B**: best OCR + fine detail. Verbose (1400–2200 tokens). Correct on the headcount test in our 7-model suite.
 - **Qwen3-VL 4B**: same family as 8B, slightly less precise on busy images. Fastest in the suite (61 tok/s).
 - **Gemma 4 26B-A4B (MoE)**: best on dense screenshots, produces clean Markdown tables unprompted. 26B params on disk, 4B active.
-- **InternVL3.5 8B**: very terse (~400 tokens vs ~1500 for peers). Wrong on the QR-code test in our benchmark (called it a "maze-like pattern"). Not in any `preferred_for` list; available for explicit selection only.
+
+InternVL3.5 8B was considered but dropped from v0.1 — it ranked last in our benchmark and there's no clean upstream GGUF.
 
 ## Tool name collisions
 

@@ -53,7 +53,7 @@ All tools accept these input shapes (pick whichever is easiest for the caller):
 
 **Budget 30–60 seconds per call.** Each call:
 
-1. Picks a model based on the tool + your hardware (default catalog has 4 models, scoped to constrained/mainstream/high_end tiers).
+1. Picks a model based on the tool + your hardware (default catalog has 3 models, scoped to constrained/mainstream/high_end tiers).
 2. Loads the model into a `llama-server` subprocess (cold start: 5–10 s; subsequent calls on the same model: 0.1–0.5 s).
 3. Runs one inference and returns text.
 

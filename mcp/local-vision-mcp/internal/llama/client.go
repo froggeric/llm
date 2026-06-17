@@ -11,7 +11,9 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -19,16 +21,66 @@ import (
 // loadImageAsDataURI reads the image file at path and returns it as a
 // `data:<mime>;base64,<b64>` URI suitable for OpenAI's image_url.url field.
 //
-// MIME type is sniffed from the file extension; on unknown extensions we
-// fall back to image/png (llama-server will fail to decode if it's wrong,
-// which surfaces a clear error to the user).
+// HEIC/HEIF files are auto-converted to JPEG via `sips` (macOS built-in)
+// because the CLIP vision encoder inside llama-server does not understand
+// HEIC. The converted JPEG is written to a temp file and deleted after the
+// request completes; the original HEIC is left untouched.
+//
+// On Linux/Windows where `sips` is unavailable, HEIC files return an error
+// asking the user to convert manually. v0.2 will add an ImageMagick fallback
+// or a pure-Go HEIC decoder.
 func loadImageAsDataURI(path string) (string, error) {
+	ext := strings.ToLower(filepath.Ext(path))
+
+	// HEIC/HEIF: convert to JPEG first.
+	if ext == ".heic" || ext == ".heif" {
+		jpegPath, err := convertHEICToJPEG(path)
+		if err != nil {
+			return "", fmt.Errorf("convert HEIC: %w", err)
+		}
+		defer os.Remove(jpegPath)
+		path = jpegPath
+		ext = ".jpg"
+	}
+
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return "", err
 	}
-	mime := mimeForExt(filepath.Ext(path))
+	mime := mimeForExt(ext)
 	return "data:" + mime + ";base64," + base64.StdEncoding.EncodeToString(data), nil
+}
+
+// convertHEICToJPEG uses macOS `sips` to convert a HEIC/HEIF file to JPEG.
+// Returns the path to a temp file containing the JPEG. Caller must remove.
+//
+// Why sips: it ships with macOS (no install needed), handles HEIC correctly,
+// and preserves EXIF orientation. ImageMagick would also work but isn't a
+// system dependency we can rely on.
+func convertHEICToJPEG(heicPath string) (string, error) {
+	if runtime.GOOS != "darwin" {
+		return "", fmt.Errorf("HEIC conversion requires macOS `sips`; on %s convert manually with `magick %s output.jpg`", runtime.GOOS, heicPath)
+	}
+	if _, err := exec.LookPath("sips"); err != nil {
+		return "", fmt.Errorf("HEIC conversion requires `sips` (macOS built-in); not found on $PATH: %w", err)
+	}
+
+	tmp, err := os.CreateTemp("", "lvm-heic-*.jpg")
+	if err != nil {
+		return "", fmt.Errorf("create temp file: %w", err)
+	}
+	tmp.Close()
+	tmpPath := tmp.Name()
+
+	// sips -s format jpeg input.heic --out output.jpg
+	cmd := exec.Command("sips", "-s", "format", "jpeg", heicPath, "--out", tmpPath)
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+	if err := cmd.Run(); err != nil {
+		os.Remove(tmpPath)
+		return "", fmt.Errorf("sips failed: %w; stderr: %s", err, stderr.String())
+	}
+	return tmpPath, nil
 }
 
 // mimeForExt returns a MIME type for the given file extension. Used for
