@@ -8,6 +8,11 @@ package models
 import (
 	"context"
 	"errors"
+	"fmt"
+	"log/slog"
+	"strings"
+
+	"github.com/BurntSushi/toml"
 )
 
 // ErrNotImplemented is returned by stub functions during the contract phase.
@@ -99,7 +104,23 @@ type Catalog struct {
 // overlayDir may be empty; in that case only the built-in catalog is used.
 // Load does NOT call Validate; callers must do so explicitly.
 func Load(overlayDir string) (*Catalog, error) {
-	return nil, ErrNotImplemented
+	raw, err := BuiltinCatalog()
+	if err != nil {
+		return nil, fmt.Errorf("read embedded builtin.toml: %w", err)
+	}
+
+	var c Catalog
+	if _, err := toml.Decode(string(raw), &c); err != nil {
+		return nil, fmt.Errorf("decode builtin.toml: %w", err)
+	}
+	if c.Models == nil {
+		c.Models = make(map[string]ModelSpec)
+	}
+
+	if err := loadOverlays(overlayDir, &c); err != nil {
+		return nil, err
+	}
+	return &c, nil
 }
 
 // Validate enforces catalog invariants. See ModelSpec docs for the list.
@@ -107,7 +128,137 @@ func Load(overlayDir string) (*Catalog, error) {
 // Returns a wrapped ErrInvalidCatalog with a list of all violations (not
 // just the first), so users can fix multiple issues at once.
 func (c *Catalog) Validate() error {
-	return ErrNotImplemented
+	var problems []string
+
+	// Schema version: must match exactly. A higher version means "the
+	// user has a newer catalog than this binary supports"; a missing
+	// version is treated as a malformed file.
+	if c.SchemaVersion == 0 {
+		problems = append(problems, "schema_version is missing (must be 1)")
+	} else if c.SchemaVersion != CurrentSchemaVersion {
+		problems = append(problems, fmt.Sprintf(
+			"schema_version is %d but this build of local-vision-mcp supports %d; "+
+				"upgrade the binary (go install github.com/froggeric/llm/mcp/local-vision-mcp/cmd/local-vision-mcp@latest)",
+			c.SchemaVersion, CurrentSchemaVersion,
+		))
+	}
+
+	if len(c.Models) == 0 {
+		problems = append(problems, "catalog has no models")
+	}
+
+	// Preferred-per-tier invariant: F2.5. Track exactly one preferred per
+	// tier; report all violators.
+	preferredByTier := make(map[HardwareTier][]string)
+	validTiers := map[HardwareTier]bool{
+		TierConstrained: true,
+		TierMainstream:  true,
+		TierHighEnd:     true,
+	}
+
+	// Sort IDs for deterministic error output (so re-running Validate on
+	// the same input always reports problems in the same order).
+	ids := make([]string, 0, len(c.Models))
+	for id := range c.Models {
+		ids = append(ids, id)
+	}
+	// simple lexical sort without importing sort here.
+	for i := 1; i < len(ids); i++ {
+		for j := i; j > 0 && ids[j-1] > ids[j]; j-- {
+			ids[j-1], ids[j] = ids[j], ids[j-1]
+		}
+	}
+
+	for _, id := range ids {
+		m := c.Models[id]
+
+		// Mandatory fields.
+		if m.DisplayName == "" {
+			problems = append(problems, fmt.Sprintf("model %q: display_name is empty", id))
+		}
+		if m.Ctx <= 0 {
+			problems = append(problems, fmt.Sprintf("model %q: ctx must be positive", id))
+		}
+		if m.MinVramGb <= 0 {
+			problems = append(problems, fmt.Sprintf("model %q: min_vram_gb must be positive", id))
+		}
+		if m.License == "" {
+			problems = append(problems, fmt.Sprintf("model %q: license is empty", id))
+		}
+
+		// HardwareTier valid value.
+		if !validTiers[m.HardwareTier] {
+			problems = append(problems, fmt.Sprintf(
+				"model %q: hardware_tier %q is not one of %s/%s/%s",
+				id, m.HardwareTier, TierConstrained, TierMainstream, TierHighEnd,
+			))
+		}
+
+		// HTTPS-only URLs in the HF namespace. F3.2/F3.3.
+		if err := ValidateHFURL(m.GGUF, ""); err != nil {
+			problems = append(problems, fmt.Sprintf("model %q: gguf url invalid: %v", id, err))
+		}
+		if err := ValidateHFURL(m.Mmproj, ""); err != nil {
+			problems = append(problems, fmt.Sprintf("model %q: mmproj url invalid: %v", id, err))
+		}
+
+		// SHA256 mandatory, reject placeholder. F1.5.
+		if !validHash(m.GGUFSha256) {
+			problems = append(problems, fmt.Sprintf(
+				"model %q: gguf_sha256 is missing or placeholder; "+
+					"run `local-vision-mcp doctor --compute-hashes` to populate",
+				id,
+			))
+		}
+		if !validHash(m.MmprojSha256) {
+			problems = append(problems, fmt.Sprintf(
+				"model %q: mmproj_sha256 is missing or placeholder; "+
+					"run `local-vision-mcp doctor --compute-hashes` to populate",
+				id,
+			))
+		}
+
+		// Preferred-per-tier bookkeeping. We'll enforce "exactly one" below.
+		if m.Preferred {
+			preferredByTier[m.HardwareTier] = append(preferredByTier[m.HardwareTier], id)
+		}
+	}
+
+	// Preferred-per-tier invariant. F2.5: each tier that has any preferred
+	// entries must have EXACTLY ONE. We don't require every tier to have
+	// one (a tier with zero is allowed; selection falls back to the
+	// smallest-fitting model).
+	for tier, ids := range preferredByTier {
+		if len(ids) > 1 {
+			problems = append(problems, fmt.Sprintf(
+				"hardware_tier %q has multiple preferred models (%s); exactly one is required",
+				tier, strings.Join(ids, ", "),
+			))
+		}
+	}
+
+	if len(problems) > 0 {
+		// Log each problem so users see them in their slog output too.
+		for _, p := range problems {
+			slog.Error("catalog validation problem", "problem", p)
+		}
+		return fmt.Errorf("%w: %d problem(s): %s",
+			ErrInvalidCatalog, len(problems), strings.Join(problems, "; "))
+	}
+	return nil
+}
+
+// validHash returns true if h is a non-empty, non-placeholder 64-char hex
+// SHA256. PLACEHOLDER-PHASE3 is what builtin.toml ships with until Phase 3
+// fills in the real hashes. F1.5.
+func validHash(h string) bool {
+	cleaned := normalizeHex(h)
+	if len(cleaned) != 64 {
+		return false
+	}
+	// normalizeHex already lowercased; reject anything that looks like the
+	// placeholder by length check (placeholder doesn't have 64 hex chars).
+	return cleaned != strings.ToLower("PLACEHOLDER-PHASE3")
 }
 
 // DefaultModel returns the model ID to load at startup for the given
@@ -119,7 +270,7 @@ func (c *Catalog) Validate() error {
 // Returns ErrNoFittingModel if nothing fits (8 GB Mac with no small model).
 // Callers MUST surface this as a structured MCP error, never crash.
 func (c *Catalog) DefaultModel(hw HardwareInfo) (string, error) {
-	return "", ErrNotImplemented
+	return selectDefault(c, hw, defaultSelectionSafetyMarginGB)
 }
 
 // ModelFor returns the best model ID for the given tool on the given
@@ -132,7 +283,7 @@ func (c *Catalog) DefaultModel(hw HardwareInfo) (string, error) {
 // Determinism: given the same (catalog, tool, hardware), always returns the
 // same ID.
 func (c *Catalog) ModelFor(tool string, hw HardwareInfo) (string, error) {
-	return "", ErrNotImplemented
+	return selectModelFor(c, tool, hw, defaultSelectionSafetyMarginGB)
 }
 
 // Downloader handles resumable HTTPS downloads of model files with SHA256
@@ -151,12 +302,12 @@ type Progress struct {
 // If destPath already exists with the right SHA256, returns immediately
 // (cache hit). Calls progress periodically; cancel via ctx.
 func (d *Downloader) Download(ctx context.Context, url, destPath, expectedSha256 string, progress func(Progress)) error {
-	return ErrNotImplemented
+	return downloadImpl(ctx, url, destPath, expectedSha256, progress)
 }
 
 // DetectHardware inspects the running machine and returns its capabilities.
 // On darwin (Apple Silicon) uses sysctl hw.memsize. On linux/windows in MVP
 // returns Backend=BackendUnsupported; v0.2 adds real detection.
 func DetectHardware() (HardwareInfo, error) {
-	return HardwareInfo{Backend: BackendUnsupported}, ErrNotImplemented
+	return detectHardware()
 }

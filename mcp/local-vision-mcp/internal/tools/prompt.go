@@ -1,0 +1,74 @@
+package tools
+
+// Task-tuned system prompts for each of the 9 tools.
+//
+// These prompts are the entire reason we have 9 tools instead of one generic
+// "describe image" tool: each prompt steers the model toward a specific output
+// shape (Markdown tables, fenced code, terse bullet lists) so downstream
+// consumers (text-only LLMs) get a structure they can reason about.
+//
+// Guidelines applied across all prompts:
+//   - Short and specific. The model has 800-4096 output tokens per tool;
+//     a verbose prompt wastes tokens on instruction-following overhead.
+//   - Always specify output format ("Markdown headings", "fenced code block").
+//   - Always specify what NOT to output ("No explanation before or after").
+//   - "Verbatim" appears in extract_* prompts to discourage paraphrasing.
+//
+// Per-tool max_tokens are encoded in the Tool.MaxTokens() method, not here.
+
+// promptReadImage is the generic "describe this image" prompt.
+const promptReadImage = `Describe this image in detail. Include visible text (verbatim), objects, people, layout, colors, and notable features. Use Markdown headings. Do not invent details that are not visible. If text is illegible, say so rather than guessing.`
+
+// promptExtractText is OCR: extract every visible character verbatim.
+const promptExtractText = `Extract ALL text from the image verbatim. Preserve formatting, indentation, line breaks, and punctuation exactly as they appear. Output the text only — no commentary, no Markdown, no fences. If multiple distinct text blocks are visible, separate them with a blank line.`
+
+// promptExtractCode detects language and emits a fenced block. ParseOutput
+// strips any prose outside the fence.
+const promptExtractCode = `You are an expert code reader. Extract the code from the image verbatim. Detect the programming language. Output ONLY the code in a fenced code block (triple-backtick followed by the language name on the opening line). Preserve all indentation exactly. No explanation before or after the fence.`
+
+// promptExtractTable produces Markdown tables. The prompt instructs the model
+// to preserve column alignment, which matters for downstream diff tools.
+const promptExtractTable = `Extract tables from the image. Output each table as a Markdown table (header row, separator row, data rows). Preserve column alignment. If multiple tables are present, separate them with a horizontal rule (---). If a cell spans multiple lines, join them with a space. Do not include any text outside the Markdown tables.`
+
+// promptDescribeUI lists every visible component for use by an agent
+// navigating the application.
+const promptDescribeUI = `Describe this UI screenshot. List:
+(1) Overall layout (regions, panels, navigation).
+(2) Every visible component with its text label verbatim.
+(3) Any feedback, status, or error messages.
+(4) Interactive elements (buttons, inputs, links) and their state.
+Use Markdown headings for each section. Be terse — one bullet per component.`
+
+// promptDescribeDiagram handles architecture / flowchart / ER / sequence
+// diagrams. The "diagram type" first line lets downstream consumers route
+// to the right reasoning tool.
+const promptDescribeDiagram = `Describe this technical diagram. Report:
+(1) Diagram type (architecture, flowchart, ER, sequence, state machine, etc.).
+(2) All named components (boxes, nodes, classes, tables).
+(3) All connections with their labels and protocols.
+(4) A one-sentence summary of what the diagram represents.
+Use Markdown headings for each section.`
+
+// promptDescribeChart is for data visualizations. Terse, structured output
+// for downstream numerical reasoning.
+const promptDescribeChart = `You are a data analyst. Describe the chart in this image. Report:
+(1) Chart type (bar, line, pie, scatter, heatmap, etc.).
+(2) Axes with units and ranges.
+(3) Data series with names.
+(4) Notable values, outliers, and inflection points (with numbers).
+(5) Overall trend.
+Use Markdown headings. Be terse.`
+
+// promptDiagnoseError is for stack-trace / exception screenshots. The
+// constrained output budget (800 tokens) forces the model to be terse.
+const promptDiagnoseError = `You are a debugging assistant. This image shows an error or stack trace. Report:
+(1) Error type (exception class / error code).
+(2) Root-cause message verbatim.
+(3) Most relevant file:line in the stack trace.
+(4) One-sentence likely cause.
+Use Markdown. Be terse.`
+
+// promptCompareImages is the only multi-image tool. The prompt makes the
+// "focus on differences" intent explicit so the model does not produce two
+// unrelated descriptions.
+const promptCompareImages = `You are given two images. Describe what is DIFFERENT between them. Focus on visible changes: added or removed text, layout shifts, color or style changes, new or missing components, and repositioned elements. If the two images are identical, say so explicitly. Use Markdown bullets, one bullet per change. Do not describe the images separately.`

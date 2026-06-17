@@ -1,0 +1,77 @@
+# Continuous integration for the local-vision-mcp subdirectory.
+#
+# Scope: this workflow ONLY runs when files under mcp/local-vision-mcp/
+# change. Python/Shell/Markdown changes elsewhere in the repo are covered
+# by the existing ci.yml and never trigger this workflow, so they cannot
+# break the Go build and vice versa.
+#
+# v0.1 MVP matrix is macOS 14 (Apple Silicon) only because the hardware
+# detection code paths are Apple-Silicon-specific. Linux and Windows
+# runners will be added in v0.2 alongside the platform ports.
+
+name: vision-mcp-ci
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mcp/local-vision-mcp/**'
+      - '.github/workflows/vision-mcp-ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'mcp/local-vision-mcp/**'
+      - '.github/workflows/vision-mcp-ci.yml'
+
+# Cancel in-progress runs for the same ref when a new commit lands.
+concurrency:
+  group: vision-mcp-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Build & test (darwin/arm64)
+    runs-on: macos-14
+    defaults:
+      run:
+        working-directory: mcp/local-vision-mcp
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # We need full history for goreleaser-style metadata, but plain
+          # CI only needs the merged tree. fetch-depth=1 is faster.
+          fetch-depth: 1
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25.3'
+          cache-dependency-path: mcp/local-vision-mcp/go.sum
+
+      - name: Print environment
+        run: |
+          echo "go version: $(go version)"
+          echo "GOOS=$(go env GOOS) GOARCH=$(go env GOARCH)"
+          echo "module: $(head -1 go.mod)"
+
+      - name: go vet
+        run: go vet ./...
+
+      - name: go test -race
+        run: go test -race ./...
+
+      - name: go build
+        run: |
+          mkdir -p bin
+          go build -trimpath -o bin/local-vision-mcp ./cmd/local-vision-mcp
+          ./bin/local-vision-mcp version
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: local-vision-mcp-${{ github.sha }}-darwin-arm64
+          path: mcp/local-vision-mcp/bin/local-vision-mcp
+          if-no-files-found: error
+          retention-days: 7

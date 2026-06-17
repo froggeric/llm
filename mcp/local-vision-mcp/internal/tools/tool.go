@@ -100,8 +100,17 @@ type Registry struct {
 
 // NewRegistry returns a Registry populated with all 9 tools. Track E
 // implements this in registry.go.
+//
+// The tools are registered in deterministic alphabetical order by ID so
+// All() returns them in a stable sequence — Track B's server preserves
+// whatever order we return, and stable tools/list output is friendlier to
+// clients that diff snapshots.
 func NewRegistry() *Registry {
-	return &Registry{tools: make(map[string]Tool)}
+	r := &Registry{tools: make(map[string]Tool)}
+	for _, t := range allTools() {
+		r.Register(t)
+	}
+	return r
 }
 
 // Get returns the tool with the given ID, or false if not found.
@@ -113,11 +122,35 @@ func (r *Registry) Get(id string) (Tool, bool) {
 // All returns every registered tool, sorted by ID for deterministic ordering
 // in tools/list responses.
 func (r *Registry) All() []Tool {
-	return nil // Track E implements
+	if r == nil {
+		return nil
+	}
+	out := make([]Tool, 0, len(r.tools))
+	for _, t := range r.tools {
+		out = append(out, t)
+	}
+	// Deterministic order: sort by ID. Simple insertion sort avoids importing
+	// sort just for this small slice; the catalog has 9 entries.
+	for i := 1; i < len(out); i++ {
+		for j := i; j > 0 && out[j-1].ID() > out[j].ID(); j-- {
+			out[j-1], out[j] = out[j], out[j-1]
+		}
+	}
+	return out
 }
 
 // Register adds a tool to the registry. Panics on duplicate IDs (programming
 // error, not user-facing).
 func (r *Registry) Register(t Tool) {
-	// Track E implements; called from NewRegistry
+	if t == nil {
+		panic("tools: Register called with nil Tool")
+	}
+	id := t.ID()
+	if id == "" {
+		panic("tools: Register called with Tool whose ID() is empty")
+	}
+	if _, dup := r.tools[id]; dup {
+		panic("tools: duplicate tool ID " + id)
+	}
+	r.tools[id] = t
 }

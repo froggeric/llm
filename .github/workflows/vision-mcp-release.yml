@@ -1,0 +1,74 @@
+# Release workflow for local-vision-mcp.
+#
+# Triggers when a tag matching mcp/local-vision-mcp/v* is pushed. This is
+# the Go subdirectory-module convention; proxy.golang.org looks for tags in
+# this format when resolving `go install ...@latest`.
+#
+# v0.1 runs on a single macos-14 (Apple Silicon) runner because that is
+# the only platform we build binaries for in v0.1. When v0.2 adds Linux
+# and Windows targets, this workflow gets a matrix and the runner count
+# expands.
+#
+# Required secrets:
+#
+#   GITHUB_TOKEN            Automatically provided by Actions; used by
+#                           goreleaser to upload release assets.
+#
+# Documented but UNUSED in v0.1:
+#
+#   HOMEBREW_TAP_GITHUB_TOKEN
+#                           Plumbed through so we don't need to touch this
+#                           workflow again in v0.2 when we enable the
+#                           Homebrew tap. Currently passed as an env var to
+#                           goreleaser, which has no brews: section in v0.1.
+
+name: vision-mcp-release
+
+on:
+  push:
+    tags:
+      - 'mcp/local-vision-mcp/v*'
+
+# Release runs are not safe to race; never cancel a release in flight.
+concurrency:
+  group: vision-mcp-release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write  # goreleaser needs to upload assets to the release.
+
+jobs:
+  release:
+    name: goreleaser (darwin/arm64)
+    runs-on: macos-14
+    defaults:
+      run:
+        working-directory: mcp/local-vision-mcp
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # goreleaser needs full history + tags to compute the changelog.
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25.3'
+          cache-dependency-path: mcp/local-vision-mcp/go.sum
+
+      - name: Install goreleaser
+        # Pin to a known-good major version; bump intentionally.
+        run: |
+          brew install goreleaser
+          goreleaser --version
+
+      - name: Run goreleaser
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Plumbed through but unused in v0.1 (.goreleaser.yaml has no
+          # brews: section). v0.2 will add a Homebrew tap.
+          HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
+        run: |
+          goreleaser release --clean
