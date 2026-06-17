@@ -3,16 +3,52 @@ package llama
 import (
 	"bytes"
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
 )
+
+// loadImageAsDataURI reads the image file at path and returns it as a
+// `data:<mime>;base64,<b64>` URI suitable for OpenAI's image_url.url field.
+//
+// MIME type is sniffed from the file extension; on unknown extensions we
+// fall back to image/png (llama-server will fail to decode if it's wrong,
+// which surfaces a clear error to the user).
+func loadImageAsDataURI(path string) (string, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
+	mime := mimeForExt(filepath.Ext(path))
+	return "data:" + mime + ";base64," + base64.StdEncoding.EncodeToString(data), nil
+}
+
+// mimeForExt returns a MIME type for the given file extension. Used for
+// inline data: URIs sent to llama-server.
+func mimeForExt(ext string) string {
+	switch strings.ToLower(ext) {
+	case ".jpg", ".jpeg":
+		return "image/jpeg"
+	case ".png":
+		return "image/png"
+	case ".gif":
+		return "image/gif"
+	case ".webp":
+		return "image/webp"
+	case ".bmp":
+		return "image/bmp"
+	default:
+		return "image/png"
+	}
+}
 
 // client.go implements the OpenAI-compatible HTTP client that talks to
 // llama-server. It sends a chat completion with image content and parses
@@ -366,9 +402,19 @@ func buildChatRequestBody(req ChatRequest) ([]byte, error) {
 		if err != nil {
 			return nil, fmt.Errorf("resolve image path %q: %w", p, err)
 		}
+		// Inline the image as a data: URI rather than file://. Recent
+		// llama-server versions reject file:// URLs unless --media-path
+		// is configured, and we don't want to require users to set that.
+		// The base64 bloat is acceptable: a 1 MB image becomes ~1.4 MB
+		// of base64 in the JSON request, which is small relative to the
+		// inference cost.
+		dataURI, err := loadImageAsDataURI(abs)
+		if err != nil {
+			return nil, fmt.Errorf("encode image %q: %w", abs, err)
+		}
 		parts = append(parts, chatContentPart{
 			Type:     contentKindImageURL,
-			ImageURL: &chatImageURLRef{URL: "file://" + abs},
+			ImageURL: &chatImageURLRef{URL: dataURI},
 		})
 	}
 	msgs = append(msgs, chatMessage{Role: "user", Content: parts})

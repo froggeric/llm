@@ -109,6 +109,21 @@ func findOrDownloadBinary(ctx context.Context, pinnedSHA256, binDir string) (str
 		}
 	}
 
+	// Path (2): $PATH lookup. Pre-pin phase only — when no authoritative
+	// SHA256 is set, accept any llama-server the user has installed (via
+	// Homebrew, MacPorts, built from source). When pinnedSHA256 is real,
+	// we skip PATH because the integrity check would be impossible (we
+	// can't mutate $PATH binaries to match our pin). The user is
+	// responsible for upgrading their PATH binary in that case, OR the
+	// pinned hash should match a downloadable release.
+	if pinnedSHA256 == "" || pinnedSHA256 == "TODO-PHASE3" {
+		if p, err := exec.LookPath("llama-server"); err == nil {
+			slog.Info("found llama-server on PATH; skipping integrity check (placeholder pin)",
+				"path", p)
+			return p, nil
+		}
+	}
+
 	// Path (3): download.
 	if err := os.MkdirAll(binDir, 0o755); err != nil {
 		return "", fmt.Errorf("mkdir bin dir %s: %w", binDir, err)

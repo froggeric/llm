@@ -421,6 +421,32 @@ func (m *LifecycleManager) loadLocked(acquireCtx, spawnCtx context.Context, mode
 		mmprojLocal = filepath.Join(m.modelsDir, filepath.Base(spec.Mmproj))
 	}
 
+	// Ensure model files are present. The Downloader is a no-op if the
+	// file already exists with the correct SHA256, so this is safe to call
+	// on every Acquire (it caches the hash result internally).
+	if m.opts.VerifyHashHook == nil {
+		// Real download path (skipped in tests via VerifyHashHook).
+		if err := os.MkdirAll(m.modelsDir, 0o755); err != nil {
+			m.state = StateCrashed
+			m.cond.Broadcast()
+			return fmt.Errorf("mkdir models dir %s: %w", m.modelsDir, err)
+		}
+		d := &models.Downloader{}
+		m.logger.Info("ensuring model files present", "model", modelID, "gguf", ggufLocal)
+		if err := d.Download(acquireCtx, spec.GGUF, ggufLocal, spec.GGUFSha256, nil); err != nil {
+			m.state = StateCrashed
+			m.cond.Broadcast()
+			return fmt.Errorf("download gguf: %w", err)
+		}
+		if mmprojLocal != "" {
+			if err := d.Download(acquireCtx, spec.Mmproj, mmprojLocal, spec.MmprojSha256, nil); err != nil {
+				m.state = StateCrashed
+				m.cond.Broadcast()
+				return fmt.Errorf("download mmproj: %w", err)
+			}
+		}
+	}
+
 	// SHA256 verification on every load (F1.5).
 	if m.opts.VerifyHashHook != nil {
 		if err := m.opts.VerifyHashHook(acquireCtx, ggufLocal, spec.GGUFSha256); err != nil {
