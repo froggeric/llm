@@ -1,0 +1,30 @@
+# Go binaries
+/local-vision-mcp
+/local-vision-mcp.exe
+/bin/
+/dist/
+
+# Test artifacts
+*.test
+*.out
+*.prof
+coverage.html
+coverage.txt
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Local config (per-user overrides)
+config.local.toml
+
+# Downloaded models (cached locally, not in repo)
+/models_cache/
+
+# llama-server binary cache
+/bin_cache/
+
+# Logs
+*.log

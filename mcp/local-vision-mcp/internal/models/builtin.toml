@@ -1,0 +1,112 @@
+# Built-in model catalog for local-vision-mcp.
+#
+# All URLs point at the project's HuggingFace namespace (huggingface.co/froggeric)
+# so we control availability and quantization choices.
+#
+# SHA256 fields are placeholders until Phase 3, when the lead downloads each
+# model file, hashes it, and commits the real values. Tools that try to load
+# a model with placeholder SHA256 will fail validation.
+#
+# Catalog schema version. Increment when adding/removing/renaming fields.
+# Loader rejects incompatible versions with a clear upgrade message.
+schema_version = 1
+
+# =============================================================================
+# Preferred model for "constrained" hardware (8-16 GB Macs)
+# =============================================================================
+
+[models.qwen3-vl-4b]
+display_name = "Qwen3-VL 4B"
+gguf = "https://huggingface.co/froggeric/Qwen3-VL-4B-GGUF/resolve/main/qwen3-vl-4b-q4_k_m.gguf"
+mmproj = "https://huggingface.co/froggeric/Qwen3-VL-4B-GGUF/resolve/main/mmproj-qwen3-vl-4b-f16.gguf"
+gguf_sha256 = "PLACEHOLDER-PHASE3"
+mmproj_sha256 = "PLACEHOLDER-PHASE3"
+ctx = 32768
+gpu_layers = -1
+min_vram_gb = 5
+min_system_ram_gb = 8
+released = "2025-10"
+license = "Apache-2.0"
+preferred = true
+preferred_for = ["read_image"]
+hardware_tier = "constrained"
+bench_toks = 60.6
+notes = "Fastest model in the catalog. Use on 8 GB Macs where nothing else fits. Quality close to Qwen3-VL 8B on simple images."
+
+# =============================================================================
+# Preferred model for "mainstream" hardware (16-48 GB Macs) — the default
+# =============================================================================
+
+[models.qwen3-vl-8b]
+display_name = "Qwen3-VL 8B"
+gguf = "https://huggingface.co/froggeric/Qwen3-VL-8B-GGUF/resolve/main/qwen3-vl-8b-q4_k_m.gguf"
+mmproj = "https://huggingface.co/froggeric/Qwen3-VL-8B-GGUF/resolve/main/mmproj-qwen3-vl-8b-f16.gguf"
+gguf_sha256 = "PLACEHOLDER-PHASE3"
+mmproj_sha256 = "PLACEHOLDER-PHASE3"
+ctx = 32768
+gpu_layers = -1
+min_vram_gb = 8
+min_system_ram_gb = 16
+released = "2025-10"
+license = "Apache-2.0"
+preferred = true
+preferred_for = [
+  "read_image",
+  "extract_text",
+  "extract_code",
+  "describe_ui",
+  "diagnose_error",
+]
+hardware_tier = "mainstream"
+bench_toks = 43.0
+notes = "Best all-rounder. Default for 16-32 GB Macs. OCR, fine detail, mixed-language text. Verbose (1.4-2.2k tokens)."
+
+# =============================================================================
+# Preferred model for "high_end" hardware (>48 GB Macs)
+# =============================================================================
+
+[models.gemma4-26b-a4b]
+display_name = "Gemma 4 26B-A4B (MoE)"
+gguf = "https://huggingface.co/froggeric/Gemma-4-26B-A4B-GGUF/resolve/main/gemma-4-26b-a4b-q4_k_m.gguf"
+mmproj = "https://huggingface.co/froggeric/Gemma-4-26B-A4B-GGUF/resolve/main/mmproj-gemma-4-26b-a4b-f16.gguf"
+gguf_sha256 = "PLACEHOLDER-PHASE3"
+mmproj_sha256 = "PLACEHOLDER-PHASE3"
+ctx = 32768
+gpu_layers = -1
+min_vram_gb = 24
+min_system_ram_gb = 32
+released = "2025-09"
+license = "Apache-2.0"
+preferred = true
+preferred_for = [
+  "describe_chart",
+  "describe_diagram",
+  "extract_table",
+  "compare_images",
+]
+hardware_tier = "high_end"
+bench_toks = 39.5
+notes = "MoE: 26B params on disk, 4B active per token. Best for dense/busy screenshots and structured table output. >=32 GB Macs."
+
+# =============================================================================
+# Available but never auto-picked (no preferred flag). Users can request
+# explicitly via config.default_model or per-tool override.
+# =============================================================================
+
+[models.internvl35-8b]
+display_name = "InternVL3.5 8B"
+gguf = "https://huggingface.co/froggeric/InternVL3.5-8B-GGUF/resolve/main/internvl35-8b-q4_k_m.gguf"
+mmproj = "https://huggingface.co/froggeric/InternVL3.5-8B-GGUF/resolve/main/mmproj-internvl35-8b-f16.gguf"
+gguf_sha256 = "PLACEHOLDER-PHASE3"
+mmproj_sha256 = "PLACEHOLDER-PHASE3"
+ctx = 16384
+gpu_layers = -1
+min_vram_gb = 8
+min_system_ram_gb = 16
+released = "2025-08"
+license = "MIT"
+preferred = false
+preferred_for = []
+hardware_tier = "mainstream"
+bench_toks = 41.2
+notes = "Very terse outputs (~400 tokens vs ~1500 for peers). Useful for RAG indexing and cheap embeddings; not for verbose descriptions. Wrong on basic facts in our benchmark (called a QR code a 'maze-like pattern')."
