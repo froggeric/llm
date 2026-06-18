@@ -67,10 +67,10 @@ notes = "Best all-rounder. Default for 16-32 GB Macs. OCR, fine detail, mixed-la
 
 [models.gemma4-26b-a4b]
 display_name = "Gemma 4 26B-A4B (MoE)"
-gguf = "https://huggingface.co/froggeric/Gemma-4-26B-A4B-GGUF/resolve/main/gemma-4-26b-a4b-q4_k_m.gguf"
-mmproj = "https://huggingface.co/froggeric/Gemma-4-26B-A4B-GGUF/resolve/main/mmproj-gemma-4-26b-a4b-f16.gguf"
-gguf_sha256 = "PLACEHOLDER-PHASE3"
-mmproj_sha256 = "PLACEHOLDER-PHASE3"
+gguf = "https://huggingface.co/froggeric/Gemma-4-26B-A4B-it-GGUF/resolve/main/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+mmproj = "https://huggingface.co/froggeric/Gemma-4-26B-A4B-it-GGUF/resolve/main/mmproj-F16.gguf"
+gguf_sha256 = "34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35"
+mmproj_sha256 = "418a6d8723067cd712235facbbc5cba6c8fbbd413fc1292d2aace5a027d5a42f"
 ctx = 32768
 gpu_layers = -1
 min_vram_gb = 24

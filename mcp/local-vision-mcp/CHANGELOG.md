@@ -9,6 +9,56 @@ once it reaches v1.0.0. Until then, minor changes may break compatibility.
 Tags for this subdirectory follow the Go module convention
 `mcp/local-vision-mcp/v<MAJOR>.<MINOR>.<PATCH>`.
 
+## [0.1.0] - 2026-06-18
+
+First usable release. macOS Apple Silicon only (Linux/Windows stubbed for v0.2).
+
+### Added
+
+- **9 tools**: `read_image`, `extract_text`, `extract_code`, `extract_table`,
+  `describe_ui`, `describe_diagram`, `describe_chart`, `diagnose_error`,
+  `compare_images`. Each tool has a task-tuned system prompt and per-tool
+  output budget.
+- **3 models** mirrored to `huggingface.co/froggeric/` with pinned SHA256s:
+  - Qwen3-VL 4B (constrained tier, ≤16 GB Macs)
+  - Qwen3-VL 8B (mainstream tier, 16–48 GB Macs; default for most tools)
+  - Gemma 4 26B-A4B MoE (high_end tier, ≥32 GB Macs; preferred for charts,
+    diagrams, tables, image comparison)
+- **Hardware detection** via `sysctl hw.memsize` on Apple Silicon. Tier
+  classification: constrained ≤16 GB, mainstream 16–48 GB, high_end >48 GB.
+- **Subprocess lifecycle**: spawn-on-demand + 5-min keep-warm. Mutex-serialized
+  model switches. Crash watcher auto-respawns dead subprocesses. SHA256
+  verification on every model load.
+- **HEIC support**: auto-converts iPhone HEIC/HEIF images to JPEG via `sips`
+  (macOS built-in) before sending to `llama-server`.
+- **Plugin manifest** (`plugin/plugin.json`) and **SKILL.md** for Claude Code
+  integration. Any MCP client that speaks stdio JSON-RPC works.
+- **CLI**: `local-vision-mcp run` (default; stdio server), `doctor`
+  (diagnostics), `version`.
+- **Catalog overlays**: drop TOML files in `~/.local-vision-mcp/catalog.d/`
+  to add models without rebuilding.
+- **Docs**: INSTALL, TOOLS, MODELS, CONFIGURATION, SECURITY, TROUBLESHOOTING,
+  CONTRIBUTING.
+- **License**: PolyForm Noncommercial 1.0.0. Source-available; commercial use
+  requires a separate license. See COMMERCIAL-LICENSING.md.
+
+### Known limitations
+
+- macOS Apple Silicon only. Linux and Windows hardware detection returns
+  `BackendUnsupported`. v0.2 adds cross-platform support.
+- `llama-server` SHA256 is not pinned in source (`TODO-PHASE3` placeholder).
+  Binary discovery accepts any `llama-server` on `$PATH` or in
+  `~/.local-vision-mcp/bin/`. v0.1.1 will pin a real hash.
+- HEIC conversion requires `sips` (macOS built-in). Linux/Windows users must
+  convert HEIC images manually.
+- No streaming responses to the MCP client. Each `tools/call` blocks until
+  the inference completes (30–70 s typical). v0.2 may add
+  `notifications/progress`.
+- Tool names are unprefixed. If you have another vision MCP installed, you
+  may see name collisions in Claude Code's tool list.
+- `InternVL3.5 8B` was considered but dropped from v0.1 — no clean upstream
+  GGUF source and it ranked last in our 7-model benchmark.
+
 ## [Unreleased]
 
 ### Notes for the lead (do not ship verbatim)
