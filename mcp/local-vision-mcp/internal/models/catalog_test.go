@@ -301,8 +301,11 @@ func TestDefaultModel_PrefersTierPreferred(t *testing.T) {
 	}
 }
 
-func TestDefaultModel_FallsBackToSmallest(t *testing.T) {
-	// No preferred entry in the matching tier; smallest MinVramGb wins.
+func TestDefaultModel_FallsBackToLargest(t *testing.T) {
+	// No preferred entry in the matching tier; LARGEST MinVramGb wins
+	// (most capable model that fits). This is the v0.1.1 algorithm change:
+	// a 64 GB Mac with both 4B and 20B models in catalog should default
+	// to the 20B, not the 4B. "Bigger is better when it fits."
 	c := &Catalog{
 		SchemaVersion: 1,
 		Models: map[string]ModelSpec{
@@ -313,8 +316,8 @@ func TestDefaultModel_FallsBackToSmallest(t *testing.T) {
 	hw := HardwareInfo{TotalMemoryGB: 64, Tier: TierHighEnd}
 	id, err := c.DefaultModel(hw)
 	require.NoError(t, err)
-	if id != "small" {
-		t.Errorf("DefaultModel = %q; want small (smallest MinVramGb)", id)
+	if id != "big" {
+		t.Errorf("DefaultModel = %q; want big (largest MinVramGb that fits)", id)
 	}
 }
 

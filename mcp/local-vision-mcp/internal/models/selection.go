@@ -39,8 +39,12 @@ func fitsModel(model ModelSpec, hw HardwareInfo, safetyMarginGB float64) bool {
 }
 
 // fittingModels returns catalog entries (id, spec) that fit the hardware,
-// sorted deterministically: smallest MinVramGb ascending, then DisplayName
-// lexically. F1.8 determinism.
+// sorted deterministically: LARGEST MinVramGb first (most capable model that
+// fits wins), then DisplayName lexically as a tiebreaker. F1.8 determinism.
+//
+// We pick largest-fitting rather than smallest-fitting because the catalog
+// is ordered by capability — bigger models are generally better when they
+// fit. A 96 GB Mac should get Qwen3-VL 8B, not 4B, when both fit.
 func fittingModels(c *Catalog, hw HardwareInfo, safetyMarginGB float64) []modelEntry {
 	out := make([]modelEntry, 0, len(c.Models))
 	for id, m := range c.Models {
@@ -59,16 +63,17 @@ type modelEntry struct {
 }
 
 // sortDeterministic orders entries by:
-//  1. MinVramGb ascending
+//  1. MinVramGb DESCENDING (most capable first)
 //  2. DisplayName ascending (lexical)
 //
-// The ID is NOT a tiebreaker: DisplayName is the user-facing label and is
-// guaranteed unique by Validate (which rejects two models with the same
-// DisplayName in the same tier to avoid this ambiguity).
+// The "largest fitting wins" rule means: when a user has plenty of VRAM,
+// they get the best model that fits, not the smallest one. The
+// tier-preferred lookup in selectDefault still takes priority — this sort
+// only applies when no preferred model matches the user's tier.
 func sortDeterministic(in []modelEntry) {
 	sort.SliceStable(in, func(i, j int) bool {
 		if in[i].spec.MinVramGb != in[j].spec.MinVramGb {
-			return in[i].spec.MinVramGb < in[j].spec.MinVramGb
+			return in[i].spec.MinVramGb > in[j].spec.MinVramGb
 		}
 		return in[i].spec.DisplayName < in[j].spec.DisplayName
 	})
@@ -100,7 +105,10 @@ func selectDefault(c *Catalog, hw HardwareInfo, safetyMarginGB float64) (string,
 			return e.id, nil
 		}
 	}
-	// Step 4: deterministic fallback to smallest, then lexically-first.
+	// Step 4: deterministic fallback. fittingModels sorts by MinVramGb
+	// DESCENDING, so candidates[0] is the most capable model that fits.
+	// On a 96 GB Mac with our 2-model catalog, this returns Qwen3-VL 8B
+	// (the better model) rather than Qwen3-VL 4B (the smaller one).
 	return candidates[0].id, nil
 }
 

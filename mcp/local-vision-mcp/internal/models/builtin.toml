@@ -3,9 +3,13 @@
 # All URLs point at the project's HuggingFace namespace (huggingface.co/froggeric)
 # so we control availability and quantization choices.
 #
-# SHA256 fields are placeholders until Phase 3, when the lead downloads each
-# model file, hashes it, and commits the real values. Tools that try to load
-# a model with placeholder SHA256 will fail validation.
+# v0.1.0 ships with two models. Both are Qwen3-VL — Qwen's dedicated vision
+# family, which led our 7-model benchmark on OCR accuracy and fine detail.
+# Gemma 4 26B-A4B was considered but removed: in the head-to-head, Qwen3-VL 8B
+# beat it on every category that matters (verbatim transcription, dense
+# screenshots, bilingual OCR). "Bigger is not always better."
+#
+# SHA256 fields are real (computed Phase 3, 2026-06-18).
 #
 # Catalog schema version. Increment when adding/removing/renaming fields.
 # Loader rejects incompatible versions with a clear upgrade message.
@@ -31,10 +35,11 @@ preferred = true
 preferred_for = ["read_image"]
 hardware_tier = "constrained"
 bench_toks = 60.6
-notes = "Fastest model in the catalog. Use on 8 GB Macs where nothing else fits. Quality close to Qwen3-VL 8B on simple images."
+notes = "Fastest model in the catalog (60 tok/s on Apple M2 Max). Default for 8-16 GB Macs where the 8B doesn't fit comfortably. Same Qwen3-VL family as the 8B; quality close on simple images, drops on busy ones."
 
 # =============================================================================
-# Preferred model for "mainstream" hardware (16-48 GB Macs) — the default
+# Preferred model for "mainstream" and "high_end" hardware (16+ GB Macs)
+# The default for the vast majority of users.
 # =============================================================================
 
 [models.qwen3-vl-8b]
@@ -54,36 +59,13 @@ preferred_for = [
   "read_image",
   "extract_text",
   "extract_code",
+  "extract_table",
   "describe_ui",
+  "describe_diagram",
+  "describe_chart",
   "diagnose_error",
+  "compare_images",
 ]
 hardware_tier = "mainstream"
 bench_toks = 43.0
-notes = "Best all-rounder. Default for 16-32 GB Macs. OCR, fine detail, mixed-language text. Verbose (1.4-2.2k tokens)."
-
-# =============================================================================
-# Preferred model for "high_end" hardware (>48 GB Macs)
-# =============================================================================
-
-[models.gemma4-26b-a4b]
-display_name = "Gemma 4 26B-A4B (MoE)"
-gguf = "https://huggingface.co/froggeric/Gemma-4-26B-A4B-it-GGUF/resolve/main/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
-mmproj = "https://huggingface.co/froggeric/Gemma-4-26B-A4B-it-GGUF/resolve/main/mmproj-F16.gguf"
-gguf_sha256 = "34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35"
-mmproj_sha256 = "418a6d8723067cd712235facbbc5cba6c8fbbd413fc1292d2aace5a027d5a42f"
-ctx = 32768
-gpu_layers = -1
-min_vram_gb = 24
-min_system_ram_gb = 32
-released = "2025-09"
-license = "Apache-2.0"
-preferred = true
-preferred_for = [
-  "describe_chart",
-  "describe_diagram",
-  "extract_table",
-  "compare_images",
-]
-hardware_tier = "high_end"
-bench_toks = 39.5
-notes = "MoE: 26B params on disk, 4B active per token. Best for dense/busy screenshots and structured table output. >=32 GB Macs."
+notes = "Best all-rounder. Default for any Mac with >=16 GB unified memory. Won our 7-model benchmark on OCR accuracy, mixed-script text (read Chinese + Latin on the same image), and dense-screenshot extraction (got all 20 albums verbatim where Gemma 4 26B-A4B hallucinated 8 of them). 6 GB on disk."
