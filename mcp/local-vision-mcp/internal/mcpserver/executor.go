@@ -106,6 +106,14 @@ func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPro
 		}
 	}
 
+	// Look up the spec to forward any per-model chat_template_kwargs
+	// (e.g. enable_thinking=false for Qwen3.5/3.6 hybrid thinkers — a
+	// strict win for vision per our v6 benchmark).
+	spec, ok := e.catalog.Models[modelID]
+	if !ok {
+		return "", fmt.Errorf("executor: model %q not in catalog after selection", modelID)
+	}
+
 	req := llama.ChatRequest{
 		Model:        modelID,
 		SystemPrompt: systemPrompt,
@@ -115,6 +123,8 @@ func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPro
 		// Tools favor determinism. The catalog/tool layer can override
 		// per-tool if needed in a future revision; MVP uses 0.1.
 		Temperature: 0.1,
+		// Forward any per-model chat_template_kwargs.
+		ChatTemplateKwargs: spec.ChatTemplateKwargs,
 	}
 
 	resp, err := client.ChatVision(ctx, req)

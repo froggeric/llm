@@ -85,6 +85,12 @@ type ModelSpec struct {
 	PreferredFor   []string `toml:"preferred_for"`
 	BenchToks      float64  `toml:"bench_toks"`
 	Notes          string   `toml:"notes"`
+	// ChatTemplateKwargs is forwarded as `chat_template_kwargs` in the
+	// chat-completion request body. Used for hybrid thinking models
+	// (Qwen3.5/3.6) where `enable_thinking = false` skips the reasoning
+	// phase — our v6 benchmark established this is a strict win for vision
+	// tasks. Empty map = no kwargs sent.
+	ChatTemplateKwargs map[string]any `toml:"chat_template_kwargs"`
 }
 
 // Catalog is the parsed catalog after merging the built-in builtin.toml with

@@ -777,12 +777,16 @@ type Client struct {
 
 // ChatRequest is a single vision-language chat completion request.
 type ChatRequest struct {
-	Model        string   // model ID as known to the registry (informational)
-	SystemPrompt string   // task-tuned system prompt from the tool
-	UserPrompt   string   // user-turn prompt from the tool
-	ImagePaths   []string // absolute local paths to image files
-	MaxTokens    int      // per-tool output budget
-	Temperature  float64  // usually 0.1 for deterministic output
+	Model        string         // model ID as known to the registry (informational)
+	SystemPrompt string         // task-tuned system prompt from the tool
+	UserPrompt   string         // user-turn prompt from the tool
+	ImagePaths   []string       // absolute local paths to image files
+	MaxTokens    int            // per-tool output budget
+	Temperature  float64        // usually 0.1 for deterministic output
+	// ChatTemplateKwargs is forwarded as `chat_template_kwargs` in the
+	// request body. Populated from ModelSpec.ChatTemplateKwargs by the
+	// executor before calling ChatVision. Empty = no kwargs sent.
+	ChatTemplateKwargs map[string]any
 }
 
 // ChatResponse holds the model's reply plus accounting fields.

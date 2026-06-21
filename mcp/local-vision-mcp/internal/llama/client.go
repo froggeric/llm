@@ -23,24 +23,40 @@ import (
 //
 // HEIC/HEIF files are auto-converted to JPEG via `sips` (macOS built-in)
 // because the CLIP vision encoder inside llama-server does not understand
-// HEIC. The converted JPEG is written to a temp file and deleted after the
-// request completes; the original HEIC is left untouched.
+// HEIC. WEBP files are auto-converted to PNG for the same reason —
+// llama-server silently drops WEBP input, producing "no image provided"
+// responses (discovered in the v6 benchmark).
 //
-// On Linux/Windows where `sips` is unavailable, HEIC files return an error
-// asking the user to convert manually. v0.2 will add an ImageMagick fallback
-// or a pure-Go HEIC decoder.
+// The converted file is written to a temp file and deleted after the
+// request completes; the original is left untouched.
+//
+// On Linux/Windows where `sips` is unavailable, these formats return an
+// error asking the user to convert manually. v0.2 will add an ImageMagick
+// fallback or a pure-Go decoder.
 func loadImageAsDataURI(path string) (string, error) {
 	ext := strings.ToLower(filepath.Ext(path))
 
-	// HEIC/HEIF: convert to JPEG first.
+	// HEIC/HEIF: convert to JPEG.
 	if ext == ".heic" || ext == ".heif" {
-		jpegPath, err := convertHEICToJPEG(path)
+		jpegPath, err := convertViaSips(path, "jpeg", "jpg")
 		if err != nil {
 			return "", fmt.Errorf("convert HEIC: %w", err)
 		}
 		defer os.Remove(jpegPath)
 		path = jpegPath
 		ext = ".jpg"
+	}
+
+	// WEBP: convert to PNG. llama-server's image decoder (stb_image)
+	// doesn't understand WEBP and silently drops it.
+	if ext == ".webp" {
+		pngPath, err := convertViaSips(path, "png", "png")
+		if err != nil {
+			return "", fmt.Errorf("convert WEBP: %w", err)
+		}
+		defer os.Remove(pngPath)
+		path = pngPath
+		ext = ".png"
 	}
 
 	data, err := os.ReadFile(path)
@@ -51,29 +67,33 @@ func loadImageAsDataURI(path string) (string, error) {
 	return "data:" + mime + ";base64," + base64.StdEncoding.EncodeToString(data), nil
 }
 
-// convertHEICToJPEG uses macOS `sips` to convert a HEIC/HEIF file to JPEG.
-// Returns the path to a temp file containing the JPEG. Caller must remove.
+// convertViaSips uses macOS `sips` to convert an image to the given format.
+// Returns the path to a temp file containing the converted image. Caller
+// must remove.
 //
-// Why sips: it ships with macOS (no install needed), handles HEIC correctly,
-// and preserves EXIF orientation. ImageMagick would also work but isn't a
-// system dependency we can rely on.
-func convertHEICToJPEG(heicPath string) (string, error) {
+// Why sips: it ships with macOS (no install needed), handles HEIC and WEBP
+// correctly, and preserves EXIF orientation. ImageMagick would also work
+// but isn't a system dependency we can rely on.
+//
+// format is the sips format name ("jpeg", "png"). ext is the temp-file
+// extension ("jpg", "png") used to name the output.
+func convertViaSips(srcPath, format, ext string) (string, error) {
 	if runtime.GOOS != "darwin" {
-		return "", fmt.Errorf("HEIC conversion requires macOS `sips`; on %s convert manually with `magick %s output.jpg`", runtime.GOOS, heicPath)
+		return "", fmt.Errorf("%s conversion requires macOS `sips`; on %s convert manually with `magick %s output.%s`", format, runtime.GOOS, srcPath, ext)
 	}
 	if _, err := exec.LookPath("sips"); err != nil {
-		return "", fmt.Errorf("HEIC conversion requires `sips` (macOS built-in); not found on $PATH: %w", err)
+		return "", fmt.Errorf("%s conversion requires `sips` (macOS built-in); not found on $PATH: %w", format, err)
 	}
 
-	tmp, err := os.CreateTemp("", "lvm-heic-*.jpg")
+	tmp, err := os.CreateTemp("", "lvm-conv-*."+ext)
 	if err != nil {
 		return "", fmt.Errorf("create temp file: %w", err)
 	}
 	tmp.Close()
 	tmpPath := tmp.Name()
 
-	// sips -s format jpeg input.heic --out output.jpg
-	cmd := exec.Command("sips", "-s", "format", "jpeg", heicPath, "--out", tmpPath)
+	// sips -s format <fmt> input --out output
+	cmd := exec.Command("sips", "-s", "format", format, srcPath, "--out", tmpPath)
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 	if err := cmd.Run(); err != nil {
@@ -166,11 +186,12 @@ type chatMessage struct {
 
 // chatRequestJSON is the on-the-wire request body sent to /v1/chat/completions.
 type chatRequestJSON struct {
-	Model       string        `json:"model"`
-	Messages    []chatMessage `json:"messages"`
-	MaxTokens   int           `json:"max_tokens,omitempty"`
-	Temperature float64       `json:"temperature,omitempty"`
-	Stream      bool          `json:"stream,omitempty"`
+	Model              string         `json:"model"`
+	Messages           []chatMessage  `json:"messages"`
+	MaxTokens          int            `json:"max_tokens,omitempty"`
+	Temperature        float64        `json:"temperature,omitempty"`
+	Stream             bool           `json:"stream,omitempty"`
+	ChatTemplateKwargs map[string]any `json:"chat_template_kwargs,omitempty"`
 }
 
 // chatResponseJSON is the subset of the OpenAI response we care about.
@@ -472,11 +493,12 @@ func buildChatRequestBody(req ChatRequest) ([]byte, error) {
 	msgs = append(msgs, chatMessage{Role: "user", Content: parts})
 
 	body := chatRequestJSON{
-		Model:       model,
-		Messages:    msgs,
-		MaxTokens:   maxTokens,
-		Temperature: temperature,
-		Stream:      false,
+		Model:              model,
+		Messages:           msgs,
+		MaxTokens:          maxTokens,
+		Temperature:        temperature,
+		Stream:             false,
+		ChatTemplateKwargs: req.ChatTemplateKwargs,
 	}
 	out, err := json.Marshal(body)
 	if err != nil {

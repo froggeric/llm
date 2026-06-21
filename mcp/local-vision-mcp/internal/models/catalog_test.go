@@ -222,14 +222,38 @@ func TestLoad_NoOverlayDir(t *testing.T) {
 	if len(c.Models) == 0 {
 		t.Error("builtin catalog has no models")
 	}
-	// Spot-check: qwen3-vl-4b must exist and be preferred in constrained.
-	m, ok := c.Models["qwen3-vl-4b"]
+	// Spot-check: qwen3-vl-8b must exist, be preferred in constrained, and
+	// point at the Q8_0 variant (v6 benchmark finding).
+	m, ok := c.Models["qwen3-vl-8b"]
 	require.True(t, ok)
 	if !m.Preferred {
-		t.Error("qwen3-vl-4b should be preferred")
+		t.Error("qwen3-vl-8b should be preferred")
 	}
 	if m.HardwareTier != TierConstrained {
-		t.Errorf("qwen3-vl-4b tier = %q; want constrained", m.HardwareTier)
+		t.Errorf("qwen3-vl-8b tier = %q; want constrained", m.HardwareTier)
+	}
+	if !strings.Contains(m.GGUF, "Q8_0") {
+		t.Errorf("qwen3-vl-8b gguf URL should reference Q8_0; got %q", m.GGUF)
+	}
+	// Spot-check: qwen3.5-4b must exist, have chat_template_kwargs with
+	// enable_thinking=false.
+	m2, ok := c.Models["qwen3.5-4b"]
+	require.True(t, ok)
+	if m2.ChatTemplateKwargs == nil {
+		t.Fatal("qwen3.5-4b should have chat_template_kwargs")
+	}
+	v, ok := m2.ChatTemplateKwargs["enable_thinking"]
+	if !ok || v != false {
+		t.Errorf("qwen3.5-4b chat_template_kwargs.enable_thinking = %v; want false", v)
+	}
+	// Spot-check: qwen3.6-27b must exist and be preferred in mainstream.
+	m3, ok := c.Models["qwen3.6-27b"]
+	require.True(t, ok)
+	if !m3.Preferred {
+		t.Error("qwen3.6-27b should be preferred")
+	}
+	if m3.HardwareTier != TierMainstream {
+		t.Errorf("qwen3.6-27b tier = %q; want mainstream", m3.HardwareTier)
 	}
 }
 

@@ -2,17 +2,35 @@
 
 The catalog is a TOML file that describes every model the MCP can serve. It lives at `internal/models/builtin.toml` (embedded in the binary) and can be extended via overlays at `~/.local-vision-mcp/catalog.d/*.toml`.
 
-## Built-in catalog (v0.1.0)
+## Built-in catalog (v0.2.0)
+
+Based on the v6 benchmark (30 images, 3 runs, 24 variants, hybrid scoring).
 
 | Model | Display name | Tier | Min VRAM | Preferred for |
 |---|---|---|---|---|
-| `qwen3-vl-4b` | Qwen3-VL 4B | constrained | 5 GB | `read_image` |
-| `qwen3-vl-8b` | Qwen3-VL 8B | mainstream | 8 GB | `read_image`, `extract_text`, `extract_code`, `describe_ui`, `diagnose_error` |
-| `gemma4-26b-a4b` | Gemma 4 26B-A4B (MoE) | high_end | 24 GB | `describe_chart`, `describe_diagram`, `extract_table`, `compare_images` |
+| `qwen3-vl-8b` | Qwen3-VL 8B (Q8_0) | constrained | 6 GB | all tools |
+| `qwen3.5-4b` | Qwen3.5 4B (nothink) | constrained | 3 GB | `read_image` (fallback) |
+| `qwen3.6-27b` | Qwen3.6 27B (nothink) | mainstream | 17 GB | all tools |
 
-InternVL3.5 8B was considered but dropped from v0.1 — no clean upstream GGUF source, and it ranked last in our 7-model benchmark (called a QR code a "maze-like pattern"). May be re-added in v0.2.
+**How selection works**:
 
-The default model for your hardware is auto-selected at startup. Run `local-vision-mcp doctor` to see which one applies.
+- On 4–8 GB Macs: `qwen3.5-4b` is the only model that fits. Runs with `enable_thinking=false` (chat_template_kwargs).
+- On 12–16 GB Macs: `qwen3-vl-8b` (Q8_0) is preferred — the only 100%-reliable Q8 model in the benchmark (0 timeouts, σ=0.33).
+- On 24+ GB Macs: `qwen3.6-27b` is preferred — the benchmark champion (79.6/100, σ=0.24, 0 failures).
+- On 48+ GB Macs: no upgrade. `qwen3.6-27b` remains the best model in the study; larger models (Qwen3.6-35B-A3B, Gemma 4 31B) tested worse despite the bigger footprint.
+
+Run `local-vision-mcp doctor` to see which model applies to your hardware.
+
+### Why these models
+
+The v6 benchmark tested 11 base models × multiple quants and thinking modes. Key findings:
+
+- **Thinking mode hurts vision**: all Qwen hybrid thinkers scored higher with `enable_thinking=false`. Vision is perception, not reasoning. This is why `chat_template_kwargs = {enable_thinking = false}` is set for both Qwen3.5 and Qwen3.6 entries.
+- **Q8 is asymmetric**: Q8_0 is a strict win for Qwen3-VL 8B (0 timeouts, lower σ) but cripples Qwen3.5 thinkers. Only Qwen3-VL 8B-Q8 earned a recommendation.
+- **MoE size is misleading**: Qwen3.6 35B-A3B (3B active per token) ties much smaller dense models on quality despite being 7× larger. Not worth the footprint.
+- **Gemma 4 12B has hallucination flips** at Q4 (same image → different results across runs). Q8 fixes the variance but introduces 22% timeout rate. Excluded.
+
+For the full benchmark report, see `local-vlm-research/BENCHMARK-REPORT-v5.md` (in the parent repo).
 
 ## Adding a model
 
@@ -38,6 +56,8 @@ preferred_for = []
 hardware_tier = "mainstream"
 bench_toks = 0.0
 notes = "Optional notes shown in `doctor` output."
+# Optional: per-model chat_template_kwargs (e.g. enable_thinking=false)
+# chat_template_kwargs = { enable_thinking = false }
 ```
 
 ### Field reference
@@ -60,6 +80,7 @@ notes = "Optional notes shown in `doctor` output."
 | `hardware_tier` | string | yes | One of `constrained`, `mainstream`, `high_end`. |
 | `bench_toks` | float | yes (can be 0) | Throughput from the benchmark, in tokens/sec. Informational. |
 | `notes` | string | no | Free-form notes shown in `doctor` output. |
+| `chat_template_kwargs` | map | no | Forwarded as `chat_template_kwargs` in the chat-completion request. Use for `enable_thinking = false` on hybrid thinking models (Qwen3.5/3.6). |
 
 ### Computing SHA256
 
@@ -127,11 +148,12 @@ See `internal/models/selection.go` for the implementation.
 
 ## Quality caveats
 
-Models in the catalog are sourced from the open-weight ecosystem. They have known weaknesses:
+Models in the catalog are sourced from the open-weight ecosystem. Known weaknesses from the v6 benchmark:
 
-- **InternVL3.5 8B** (not in v0.1 catalog) called a QR code a "maze-like pattern" in our 20-image benchmark.
-- **Gemma 4 26B-A4B** is the strongest on dense content but takes 17 GB of disk.
-- **Qwen3-VL 8B** is the recommended default for 16–32 GB Macs.
-- **Qwen3-VL 4B** is the recommended default for ≤16 GB Macs; quality drops on busy images.
+- **All models miss medical findings**: the X-ray rib fracture was missed by all 24 variants. Do not use for clinical work.
+- **Dense scenes are hard**: Where's Waldo, complex spritesheets — no model locates hidden characters reliably.
+- **Qwen3.5-4B (nothink)** is the best small model but has σ=0.48 (some run-to-run variance on hard images).
+- **Qwen3-VL 8B (Q8)** is the most reliable mid-tier (σ=0.33) but slightly lower quality than the 27B.
+- **Qwen3.6-27B (nothink)** is the champion but needs 24+ GB RAM for comfortable operation.
 
-For full benchmark results, see `local-vlm-research/BENCHMARK-SUMMARY.md` (in the parent repo).
+For full benchmark results, see `local-vlm-research/BENCHMARK-REPORT-v5.md` (in the parent repo).
