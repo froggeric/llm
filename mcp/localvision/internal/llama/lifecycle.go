@@ -446,15 +446,24 @@ func (m *LifecycleManager) loadLocked(acquireCtx, spawnCtx context.Context, mode
 			return fmt.Errorf("mkdir models dir %s: %w", m.modelsDir, err)
 		}
 		d := &models.Downloader{}
-		m.Phase("downloading", spec.DisplayName)
+		// Only show "downloading" when bytes are actually transferred (the
+		// downloader is a no-op on cache hit). The progress callback fires
+		// Phase on first invocation.
+		dlStarted := false
+		dlProgress := func(models.Progress) {
+			if !dlStarted {
+				dlStarted = true
+				m.Phase("downloading", spec.DisplayName)
+			}
+		}
 		m.logger.Info("ensuring model files present", "model", modelID, "gguf", ggufLocal)
-		if err := d.Download(acquireCtx, spec.GGUF, ggufLocal, spec.GGUFSha256, nil); err != nil {
+		if err := d.Download(acquireCtx, spec.GGUF, ggufLocal, spec.GGUFSha256, dlProgress); err != nil {
 			m.state = StateCrashed
 			m.cond.Broadcast()
 			return fmt.Errorf("download gguf: %w", err)
 		}
 		if mmprojLocal != "" {
-			if err := d.Download(acquireCtx, spec.Mmproj, mmprojLocal, spec.MmprojSha256, nil); err != nil {
+			if err := d.Download(acquireCtx, spec.Mmproj, mmprojLocal, spec.MmprojSha256, dlProgress); err != nil {
 				m.state = StateCrashed
 				m.cond.Broadcast()
 				return fmt.Errorf("download mmproj: %w", err)
