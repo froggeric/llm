@@ -11,6 +11,17 @@ Tags for this subdirectory follow the Go module convention
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-06-22
+
+### Added
+
+- **Configurable model storage + disk-space safety**: model downloads no longer
+  silently fill the system drive. A free-space precheck refuses a download whose
+  size exceeds the free space on the destination volume; new `--models-dir` and
+  `--cache-dir` flags (plus the existing config `models_dir`/`cache_dir`) let you
+  redirect model storage off the system drive; `doctor` shows free space next to
+  the models dir.
+
 ## [0.2.1] - 2026-06-22
 
 ### Fixed
@@ -145,6 +156,7 @@ First usable release. macOS Apple Silicon only (Linux/Windows stubbed for v0.2).
   GGUF source and it ranked last in our 7-model benchmark.
 
 [Unreleased]: https://github.com/froggeric/llm/compare/HEAD
+[v0.2.2]: https://github.com/froggeric/llm/releases/tag/v0.2.2
 [v0.2.1]: https://github.com/froggeric/llm/releases/tag/v0.2.1
 [v0.2.0]: https://github.com/froggeric/llm/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/froggeric/llm/releases/tag/mcp%2Flocalvision%2Fv0.1.0
