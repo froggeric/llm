@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -17,6 +18,9 @@ import (
 // absolute LocalPath.
 func TestParseImageRef_FilePath(t *testing.T) {
 	t.Run("absolute path", func(t *testing.T) {
+		if runtime.GOOS == "windows" {
+			t.Skip("Windows: Unix-absolute path literal (/tmp/...) resolves drive-relative")
+		}
 		ref, err := ParseImageRef("/tmp/some-image.png")
 		require.NoError(t, err)
 		assert.Equal(t, "/tmp/some-image.png", ref.LocalPath)
@@ -121,6 +125,9 @@ func TestParseImageRef_DataURI(t *testing.T) {
 // TestParseImageRef_FileURI exercises the file:// URI form.
 func TestParseImageRef_FileURI(t *testing.T) {
 	t.Run("absolute file URI", func(t *testing.T) {
+		if runtime.GOOS == "windows" {
+			t.Skip("Windows: Unix file:// URI path semantics")
+		}
 		ref, err := ParseImageRef("file:///tmp/some-image.png")
 		require.NoError(t, err)
 		assert.Equal(t, "/tmp/some-image.png", ref.LocalPath)

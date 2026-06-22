@@ -11,47 +11,54 @@ import (
 )
 
 func TestApplyDirOverrides(t *testing.T) {
+	// Use OS-absolute paths (t.TempDir) for overrides so expandPath is an
+	// identity and the test holds on Windows as well as Unix.
 	base := Config{
 		CacheDir:  "/home/u/.localvision",
 		ModelsDir: "/home/u/.localvision/models",
 		BinDir:    "/home/u/.localvision/bin",
 	}
+	tmp := t.TempDir()
+	cacheOverride := filepath.Join(tmp, "cache")
+	modelsOverride := filepath.Join(tmp, "custom-models")
 
 	t.Run("models-dir override only", func(t *testing.T) {
 		c := base
-		c.ApplyDirOverrides("", "/Volumes/ext/models", "")
+		c.ApplyDirOverrides("", modelsOverride, "")
 		assert.Equal(t, "/home/u/.localvision", c.CacheDir)   // unchanged
-		assert.Equal(t, "/Volumes/ext/models", c.ModelsDir)   // overridden
+		assert.Equal(t, modelsOverride, c.ModelsDir)          // overridden
 		assert.Equal(t, "/home/u/.localvision/bin", c.BinDir) // unchanged
 	})
 
 	t.Run("cache-dir re-derives models and bin", func(t *testing.T) {
 		c := base
-		c.ApplyDirOverrides("/Volumes/ext/cache", "", "")
-		assert.Equal(t, "/Volumes/ext/cache", c.CacheDir)
-		assert.Equal(t, "/Volumes/ext/cache/models", c.ModelsDir) // re-derived
-		assert.Equal(t, "/Volumes/ext/cache/bin", c.BinDir)       // re-derived
+		c.ApplyDirOverrides(cacheOverride, "", "")
+		assert.Equal(t, cacheOverride, c.CacheDir)
+		assert.Equal(t, filepath.Join(cacheOverride, "models"), c.ModelsDir) // re-derived
+		assert.Equal(t, filepath.Join(cacheOverride, "bin"), c.BinDir)       // re-derived
 	})
 
 	t.Run("explicit models-dir wins over cache-dir re-derive", func(t *testing.T) {
 		c := base
-		c.ApplyDirOverrides("/Volumes/ext/cache", "/custom/models", "")
-		assert.Equal(t, "/Volumes/ext/cache", c.CacheDir)
-		assert.Equal(t, "/custom/models", c.ModelsDir)
+		c.ApplyDirOverrides(cacheOverride, modelsOverride, "")
+		assert.Equal(t, cacheOverride, c.CacheDir)
+		assert.Equal(t, modelsOverride, c.ModelsDir)
 	})
 }
 
 func TestSaveLoadRoundTrip(t *testing.T) {
-	dir := t.TempDir()
+	// OS-absolute paths so Load's expandPath is an identity on every platform.
+	tmp := t.TempDir()
+	dir := filepath.Join(tmp, "cfgdir")
 	path := filepath.Join(dir, "nested", "config.toml")
 	in := &Config{
 		DefaultModel:   "qwen3.5-4b",
 		DefaultFormat:  "json",
-		CacheDir:       "/tmp/cache",
-		ModelsDir:      "/tmp/models",
-		BinDir:         "/tmp/bin",
+		CacheDir:       filepath.Join(tmp, "cache"),
+		ModelsDir:      filepath.Join(tmp, "models"),
+		BinDir:         filepath.Join(tmp, "bin"),
 		LogLevel:       "warn",
-		LogFile:        "/tmp/lv.log",
+		LogFile:        filepath.Join(tmp, "lv.log"),
 		IdleTimeout:    90 * time.Second,
 		StartupTimeout: 3 * time.Minute,
 		SafetyMarginGB: 6.0,
@@ -63,10 +70,10 @@ func TestSaveLoadRoundTrip(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, "qwen3.5-4b", out.DefaultModel)
 	assert.Equal(t, "json", out.DefaultFormat)
-	assert.Equal(t, "/tmp/cache", out.CacheDir)
-	assert.Equal(t, "/tmp/bin", out.BinDir)
+	assert.Equal(t, in.CacheDir, out.CacheDir)
+	assert.Equal(t, in.BinDir, out.BinDir)
 	assert.Equal(t, "warn", out.LogLevel)
-	assert.Equal(t, "/tmp/lv.log", out.LogFile)
+	assert.Equal(t, in.LogFile, out.LogFile)
 	assert.Equal(t, 90*time.Second, out.IdleTimeout)
 	assert.Equal(t, 3*time.Minute, out.StartupTimeout)
 	assert.Equal(t, 6.0, out.SafetyMarginGB)

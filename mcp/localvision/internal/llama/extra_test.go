@@ -116,6 +116,7 @@ func TestSpawnSubprocessValidatesPaths(t *testing.T) {
 // and must be spawnable. A stub binary is placed outside binDir and
 // spawnSubprocess must accept it (regression test for the PATH-binary case).
 func TestSpawnSubprocessAcceptsPATHBinary(t *testing.T) {
+	skipOnWindows(t, "Unix PATH separator + #!/bin/sh subprocess")
 	sleepPath, err := exec.LookPath("sleep")
 	require.NoError(t, err)
 
@@ -152,6 +153,7 @@ func TestSpawnSubprocessAcceptsPATHBinary(t *testing.T) {
 // TestSpawnSubprocessHappyPath: spawnSubprocess can actually start a
 // subprocess (sleep) and capture its PID.
 func TestSpawnSubprocessHappyPath(t *testing.T) {
+	skipOnWindows(t, "Unix #!/bin/sh subprocess")
 	sleepPath, err := exec.LookPath("sleep")
 	require.NoError(t, err)
 
@@ -198,6 +200,7 @@ func TestSampleFreePortSucceeds(t *testing.T) {
 
 // TestPathInside: covers the boundary conditions.
 func TestPathInside(t *testing.T) {
+	skipOnWindows(t, "Unix-absolute path literals")
 	assert.True(t, pathInside("/a/b", "/a/b"))
 	assert.True(t, pathInside("/a/b/c", "/a/b"))
 	assert.False(t, pathInside("/a/bc", "/a/b"))
@@ -207,6 +210,7 @@ func TestPathInside(t *testing.T) {
 
 // TestValidateModelPath: covers both branches.
 func TestValidateModelPath(t *testing.T) {
+	skipOnWindows(t, "Unix-absolute path literal")
 	inside, err := validateModelPath("/a/b/m.gguf", "/a/b")
 	require.NoError(t, err)
 	assert.Equal(t, "/a/b/m.gguf", inside)
@@ -321,6 +325,7 @@ func TestLimitedBufferDefaultMax(t *testing.T) {
 // extracted; the resulting binary is executable. PATH is isolated so the
 // $PATH branch isn't taken on machines with llama-server installed.
 func TestFindOrDownloadBinaryFallsBackToDownload(t *testing.T) {
+	skipOnWindows(t, "Unix #!/bin/sh + exec bit")
 	t.Setenv("PATH", t.TempDir())
 	setTestTag(t, "bTEST")
 
@@ -375,6 +380,7 @@ func TestFindOrDownloadBinaryCreatesBinDir(t *testing.T) {
 // TestDownloadVerifyAndExtractCtxCancelled: ctx cancelled mid-download cleans
 // up the .tmp archive and leaves no binary behind.
 func TestDownloadVerifyAndExtractCtxCancelled(t *testing.T) {
+	skipOnWindows(t, "Unix exec-bit + tar extraction")
 	// Slow server.
 	srv := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(2 * time.Second)
@@ -442,6 +448,7 @@ func TestStateAfterCrashAndRespawn(t *testing.T) {
 // TestSigkillOnProcess: cover sigkill() by sending SIGKILL to a sleep
 // subprocess and verifying via Wait() that the process exits.
 func TestSigkillOnProcess(t *testing.T) {
+	skipOnWindows(t, "Unix SIGKILL")
 	cmd := exec.Command("/bin/sleep", "30")
 	require.NoError(t, cmd.Start())
 
@@ -465,6 +472,7 @@ func TestSigkillOnProcess(t *testing.T) {
 // TestSigtermOnProcess: cover sigterm() by sending SIGTERM to sleep and
 // verifying it exits.
 func TestSigtermOnProcess(t *testing.T) {
+	skipOnWindows(t, "Unix SIGTERM (unsupported on Windows)")
 	cmd := exec.Command("/bin/sleep", "30")
 	require.NoError(t, cmd.Start())
 	defer func() {

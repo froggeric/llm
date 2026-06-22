@@ -80,6 +80,7 @@ func makeFakeBundleArchive(t *testing.T) []byte {
 // archive SHA matches. The inner llama-server is extracted to the bundle dir,
 // chmod'd +x, and the sidecar records the verified SHA.
 func TestDownloadVerifyAndExtractSuccess(t *testing.T) {
+	skipOnWindows(t, "Unix exec-bit on extracted binary")
 	archive := makeFakeBundleArchive(t)
 	wantHex := sha256hex(archive)
 
@@ -251,6 +252,7 @@ func TestBuildDownloadURLIsHTTPS(t *testing.T) {
 // bundle (sidecar matches) short-circuits to the cache path. PATH is isolated
 // so the $PATH branch isn't taken on machines with llama-server installed.
 func TestFindOrDownloadBinaryCacheHit(t *testing.T) {
+	skipOnWindows(t, "Unix #!/bin/sh fake binary + exec bit")
 	t.Setenv("PATH", t.TempDir())
 	setTestTag(t, "bTEST")
 
@@ -271,6 +273,7 @@ func TestFindOrDownloadBinaryCacheHit(t *testing.T) {
 // $PATH, it is used even if a verified cache bundle exists (locked decision:
 // PATH is the robust, user-controlled default).
 func TestFindOrDownloadBinaryPATHPreferredOverCache(t *testing.T) {
+	skipOnWindows(t, "Unix PATH separator + #!/bin/sh")
 	pathDir := t.TempDir()
 	fakeBin := filepath.Join(pathDir, "llama-server")
 	require.NoError(t, os.WriteFile(fakeBin, []byte("#!/bin/sh\n"), 0o755))
@@ -337,6 +340,7 @@ func TestExtractTarGzRejectsPathTraversal(t *testing.T) {
 // TestExtractTarGzPreservesExecBit: the executable bit from the tar header is
 // preserved on extraction (a naive 0o644 write would strip it).
 func TestExtractTarGzPreservesExecBit(t *testing.T) {
+	skipOnWindows(t, "Unix exec-bit preservation")
 	var buf bytes.Buffer
 	gz := gzip.NewWriter(&buf)
 	tw := tar.NewWriter(gz)
@@ -381,6 +385,7 @@ func TestExtractTarGzRejectsSymlink(t *testing.T) {
 // path (since v0.2, a $PATH-discovered binary like /opt/homebrew/bin/llama-server
 // lives outside ~/.localvision/bin and must be allowed) and rejects relative paths.
 func TestValidateBinaryPathAbsolute(t *testing.T) {
+	skipOnWindows(t, "Unix-absolute path literal")
 	dir := t.TempDir()
 
 	// Absolute path outside the cache dir — the $PATH-binary case.

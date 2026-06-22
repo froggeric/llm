@@ -6,6 +6,7 @@ import (
 	"io"
 	"log/slog"
 	"os"
+	"runtime"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -446,6 +447,9 @@ func TestCompareImagesRejectsSingleImageInput(t *testing.T) {
 // TestNormalizeImages covers the input normalization matrix.
 func TestNormalizeImages(t *testing.T) {
 	t.Run("image_path", func(t *testing.T) {
+		if runtime.GOOS == "windows" {
+			t.Skip("Windows: Unix-absolute path literal resolves drive-relative")
+		}
 		args := map[string]any{"image_path": "/abs/path/x.png"}
 		refs, consumed, err := normalizeImages(args, "read_image")
 		require.NoError(t, err)
@@ -455,6 +459,9 @@ func TestNormalizeImages(t *testing.T) {
 	})
 
 	t.Run("image_url file://", func(t *testing.T) {
+		if runtime.GOOS == "windows" {
+			t.Skip("Windows: Unix file:// URI path semantics")
+		}
 		args := map[string]any{"image_url": "file:///abs/path/y.png"}
 		refs, consumed, err := normalizeImages(args, "read_image")
 		require.NoError(t, err)

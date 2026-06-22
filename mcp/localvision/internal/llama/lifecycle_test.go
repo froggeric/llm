@@ -533,6 +533,7 @@ func TestShutdownIdempotent(t *testing.T) {
 
 // TestShutdownKillsSubprocess: a running subprocess is killed by Shutdown.
 func TestShutdownKillsSubprocess(t *testing.T) {
+	skipOnWindows(t, "Unix process signaling")
 	m := newTestManager(t, Options{
 		IdleTimeout: 30 * time.Second, // don't let idle timer race us
 	})
