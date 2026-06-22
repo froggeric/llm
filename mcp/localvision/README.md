@@ -39,24 +39,21 @@ and tears the subprocess down after a 5-minute idle timer.
 
 ## Install
 
-You have two options.
+macOS Apple Silicon only (Linux/Windows are planned — see
+[`ROADMAP.md`](./ROADMAP.md), Theme D). Three options.
 
-### Option 1 — `go install`
-
-The canonical install path uses the Go toolchain and pulls from the
-canonical module path:
+### Option 1 — Homebrew (recommended)
 
 ```bash
-go install github.com/froggeric/llm/mcp/localvision/cmd/localvision@latest
+brew tap froggeric/homebrew-tap
+brew trust froggeric/tap          # one-time: current Homebrew requires trusting new taps
+brew install localvision
 ```
-
-The resulting binary lands in `$(go env GOPATH)/bin`. Make sure that
-directory is on your `PATH`.
 
 ### Option 2 — `curl | sh`
 
-If you do not have Go installed, you can use the installer that ships with
-each GitHub release:
+If you do not have Homebrew, use the installer that ships with each GitHub
+release:
 
 ```bash
 curl -fsSL https://github.com/froggeric/llm/releases/latest/download/install.sh | bash
@@ -65,12 +62,23 @@ curl -fsSL https://github.com/froggeric/llm/releases/latest/download/install.sh 
 The installer (source: [`scripts/install.sh`](./scripts/install.sh)):
 
 1. Detects your OS and architecture via `uname`.
-2. Rejects unsupported combinations (in v0.1: only macOS Apple Silicon is
-   supported; Linux and Windows fail with a clear message).
+2. Rejects unsupported combinations (only macOS Apple Silicon is supported
+   in v0.2; Linux and Windows fail with a clear message).
 3. Downloads the release tarball from GitHub Releases.
 4. Verifies the SHA256 sidecar.
 5. Extracts `localvision` into `/usr/local/bin` if you have `sudo`,
    otherwise `~/.local/bin`.
+
+### Option 3 — `go install`
+
+If you have the Go toolchain:
+
+```bash
+go install github.com/froggeric/llm/mcp/localvision/cmd/localvision@latest
+```
+
+The resulting binary lands in `$(go env GOPATH)/bin`. Make sure that
+directory is on your `PATH`.
 
 ### What happens on first run
 

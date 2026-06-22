@@ -128,5 +128,5 @@ First usable release. macOS Apple Silicon only (Linux/Windows stubbed for v0.2).
   GGUF source and it ranked last in our 7-model benchmark.
 
 [Unreleased]: https://github.com/froggeric/llm/compare/HEAD
-[v0.2.0]: https://github.com/froggeric/llm/releases/tag/mcp%2Flocalvision%2Fv0.2.0
+[v0.2.0]: https://github.com/froggeric/llm/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/froggeric/llm/releases/tag/mcp%2Flocalvision%2Fv0.1.0

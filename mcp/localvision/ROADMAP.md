@@ -98,20 +98,22 @@ build a local `llama-server` for `$PATH` (not part of the release).
 
 ## Theme B — Distribution (get it into users' hands) → `v0.2.0`–`v0.3.0`
 
-### B1. GitHub Releases 🚧 `S` — *(idea 9)*
+### B1. GitHub Releases ✅ `S` — *(done in v0.2.0)*
 
-goreleaser is already wired (`.goreleaser.yaml` builds `darwin/arm64`, emits
-`checksums.txt`, ships `install.sh` as a release asset). No release exists yet
-(`gh release list` is empty). Once **A1** is green, tag
-`mcp/localvision/v0.2.0` and the release publishes automatically.
+First GitHub Release cut (`v0.2.0`: archive + `checksums.txt` + `install.sh`).
+goreleaser builds `darwin/arm64`. Note: goreleaser OSS can't parse the Go
+subdirectory-module tag, so the release workflow normalizes
+`mcp/localvision/vX.Y.Z` to a local bare `vX.Y.Z` tag (the subdir tag stays on
+the remote for `go install`), and `.goreleaser.yaml` uses `gomod.proxy: false`.
 
-### B2. Homebrew 🚧 `S–M` — *(idea 8)*
+### B2. Homebrew ✅ `S–M` — *(done in v0.2.0)*
 
-`.goreleaser.yaml:139` is `brews: []`; `HOMEBREW_TAP_GITHUB_TOKEN` is already
-plumbed through the release workflow. To enable: create a tap repo
-(`froggeric/homebrew-tap`), set the secret with `repo` scope on the tap, and
-replace `brews: []` with a `brews:` stanza (goreleaser auto-generates the
-formula). Depends on **B1** (artifacts to point at).
+`brews:` stanza added; goreleaser publishes `Formula/localvision.rb` to
+[`froggeric/homebrew-tap`](https://github.com/froggeric/homebrew-tap) using the
+`HOMEBREW_TAP_GITHUB_TOKEN` secret. Install: `brew tap froggeric/homebrew-tap &&
+brew trust froggeric/tap && brew install localvision`. (The cross-repo push
+token is currently the maintainer's gh token — replace with a dedicated
+fine-grained PAT scoped to the tap for hardening.)
 
 ### B3. Claude Code marketplace plugin 📋 `M` — *(idea 6)*
 
@@ -389,7 +391,7 @@ Ambitious, far-fetched, explicitly invited for the later roadmap.
 
 ```
 v0.2.0  Foundation & first real distribution
-        A1 (CI) ✅ ─┬─► B1 (GitHub Releases) ─► B2 (Homebrew)
+        A1 (CI) ✅ ─┬─► B1 (GitHub Releases) ✅ ─► B2 (Homebrew) ✅
         A2 (binary) ✅─┘  A3 (names) ✅, A4 (docs) ✅, A5 ✅
         C6 (benchmark params) — pull forward, low risk
 
