@@ -133,7 +133,32 @@ release:
     - glob: ./scripts/install.sh
       name_template: install.sh
 
-# Homebrew tap is a v0.2 deliverable. The CI workflow plumbs through
-# HOMEBREW_TAP_GITHUB_TOKEN now so we don't have to touch the workflow
-# again when we enable it.
-brews: []
+# Homebrew tap. Requires the froggeric/homebrew-tap repo + the
+# HOMEBREW_TAP_GITHUB_TOKEN secret to exist BEFORE the release tag is pushed
+# (see ROADMAP handoff). The classic `brews:` (formulas) section is deprecated
+# in goreleaser v2.10 in favor of casks, but casks are for GUI apps; for a CLI
+# binary, a formula is still correct.
+brews:
+  - name: localvision
+    repository:
+      owner: froggeric
+      name: homebrew-tap
+      branch: main
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    homepage: https://github.com/froggeric/llm/tree/main/mcp/localvision
+    description: "Local vision-language model tools for text-only coding LLMs, backed by a local llama.cpp subprocess."
+    license: PolyForm-Noncommercial-1.0.0
+    directory: Formula
+    install: |
+      bin.install "localvision"
+    test: |
+      system "#{bin}/localvision", "version"
+    caveats: |
+      localvision shells out to llama-server. Install it via `brew install llama.cpp`
+      so `llama-server` is on your $PATH, or let localvision download a pinned
+      release on first run.
+    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+    commit_author:
+      name: froggeric-bot
+      email: frederic@guigand.com
+    skip_upload: auto

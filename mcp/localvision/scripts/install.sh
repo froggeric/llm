@@ -272,9 +272,10 @@ Next steps:
   1. Verify the install:
        $binary_path version
 
-  2. Run the doctor to download llama-server + the smallest model
-     (5-15 minutes on first run):
-       $binary_path doctor
+  2. (Optional) Pre-install llama-server so localvision doesn't download it:
+       brew install llama.cpp      # puts llama-server on $PATH (recommended)
+     Otherwise the first tool call downloads a pinned llama.cpp release and
+     verifies its SHA256. Run \`$binary_path doctor\` for a status check.
 
   3. Add it to your MCP client config. For Claude Code:
 

@@ -116,6 +116,13 @@ func buildArgv(spec models.ModelSpec, ggufPath, mmprojPath string, port int) []s
 		"--host", "127.0.0.1", // never 0.0.0.0; F3.2 security
 		"-ngl", fmt.Sprintf("%d", spec.GpuLayers),
 		"-c", fmt.Sprintf("%d", spec.Ctx),
+		// v6 benchmark launch flags. -np 1 = single slot (sequential). -b/-ub
+		// 4096 = batch/ubatch large enough that a ~548-token image never splits
+		// across physical batches (default -ub 512 degrades vision quality).
+		// These are batch sizes, NOT context (ctx is governed by -c above).
+		"-np", "1",
+		"-b", "4096",
+		"-ub", "4096",
 	}
 }
 

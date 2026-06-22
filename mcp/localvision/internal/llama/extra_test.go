@@ -73,6 +73,12 @@ func TestBuildArgvFormat(t *testing.T) {
 	require.Contains(t, argv, "-1")
 	require.Contains(t, argv, "-c")
 	require.Contains(t, argv, "4096")
+	// v6 benchmark launch flags.
+	require.Contains(t, argv, "-np")
+	require.Contains(t, argv, "1")
+	require.Contains(t, argv, "-b")
+	require.Contains(t, argv, "4096")
+	require.Contains(t, argv, "-ub")
 	// Security: never 0.0.0.0.
 	require.NotContains(t, argv, "0.0.0.0")
 }
@@ -293,23 +299,28 @@ func TestLimitedBufferDefaultMax(t *testing.T) {
 	assert.Equal(t, 1024, b2.max)
 }
 
-// TestFindOrDownloadBinaryFallsBackToDownload: when the cache is empty and
-// the server returns a valid binary, the download succeeds.
+// TestFindOrDownloadBinaryFallsBackToDownload: when $PATH has no llama-server
+// and the cache is empty, the pinned tar.gz is downloaded, verified, and
+// extracted; the resulting binary is executable. PATH is isolated so the
+// $PATH branch isn't taken on machines with llama-server installed.
 func TestFindOrDownloadBinaryFallsBackToDownload(t *testing.T) {
-	payload := []byte("#!/bin/sh\necho stub\n")
+	t.Setenv("PATH", t.TempDir())
+	setTestTag(t, "bTEST")
+
+	archive := makeFakeBundleArchive(t)
+	wantHex := sha256hex(archive)
 	srv := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(payload)
+		_, _ = w.Write(archive)
 	}))
 	defer srv.Close()
 	setDownloadClient(srv.Client())
 	t.Cleanup(func() { setDownloadClient(&http.Client{Timeout: 0}) })
-	// Override the URL so we don't try to reach GitHub.
-	restore := setDownloadURLOverride(srv.URL + "/llama-server")
+	restore := setDownloadURLOverride(srv.URL + "/archive.tar.gz")
 	defer restore()
 
 	dir := t.TempDir()
-	got, err := findOrDownloadBinary(t.Context(), "TODO-PHASE3", dir)
+	got, err := findOrDownloadBinary(t.Context(), wantHex, dir)
 	require.NoError(t, err)
 	assert.True(t, strings.HasSuffix(got, "llama-server"))
 
@@ -318,30 +329,35 @@ func TestFindOrDownloadBinaryFallsBackToDownload(t *testing.T) {
 	assert.NotZero(t, info.Mode()&0o100)
 }
 
-// TestFindOrDownloadBinaryCreatesBinDir: a missing bin dir is created.
+// TestFindOrDownloadBinaryCreatesBinDir: a missing bin dir is created before
+// the bundle is extracted into it.
 func TestFindOrDownloadBinaryCreatesBinDir(t *testing.T) {
-	payload := []byte("#!/bin/sh\necho stub\n")
+	t.Setenv("PATH", t.TempDir())
+	setTestTag(t, "bTEST")
+
+	archive := makeFakeBundleArchive(t)
+	wantHex := sha256hex(archive)
 	srv := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(payload)
+		_, _ = w.Write(archive)
 	}))
 	defer srv.Close()
 	setDownloadClient(srv.Client())
 	t.Cleanup(func() { setDownloadClient(&http.Client{Timeout: 0}) })
-	restore := setDownloadURLOverride(srv.URL + "/llama-server")
+	restore := setDownloadURLOverride(srv.URL + "/archive.tar.gz")
 	defer restore()
 
 	dir := t.TempDir()
 	binDir := filepath.Join(dir, "nested", "bin")
-	_, err := findOrDownloadBinary(t.Context(), "TODO-PHASE3", binDir)
+	_, err := findOrDownloadBinary(t.Context(), wantHex, binDir)
 	require.NoError(t, err)
 	_, err = os.Stat(binDir)
 	require.NoError(t, err)
 }
 
-// TestDownloadAndVerifyCtxCancelled: ctx cancelled mid-download cleans up
-// the .tmp file.
-func TestDownloadAndVerifyCtxCancelled(t *testing.T) {
+// TestDownloadVerifyAndExtractCtxCancelled: ctx cancelled mid-download cleans
+// up the .tmp archive and leaves no binary behind.
+func TestDownloadVerifyAndExtractCtxCancelled(t *testing.T) {
 	// Slow server.
 	srv := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(2 * time.Second)
@@ -352,17 +368,17 @@ func TestDownloadAndVerifyCtxCancelled(t *testing.T) {
 	t.Cleanup(func() { setDownloadClient(&http.Client{Timeout: 0}) })
 
 	dir := t.TempDir()
-	finalPath := filepath.Join(dir, "llama-server")
+	bundleDir := filepath.Join(dir, "llama-bTEST")
+	binPath := filepath.Join(bundleDir, "llama-server")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 50*time.Millisecond)
 	defer cancel()
-	_, err := downloadAndVerify(ctx, srv.URL+"/x", finalPath, "TODO-PHASE3")
+	_, err := downloadVerifyAndExtract(ctx, srv.URL+"/x", bundleDir, binPath, binPath+".sha256", strings.Repeat("a", 64))
 	require.Error(t, err)
 
-	// .tmp must be cleaned up.
-	_, statErr := os.Stat(finalPath + ".tmp")
+	_, statErr := os.Stat(binPath + ".tar.gz.tmp")
 	assert.True(t, os.IsNotExist(statErr))
-	_, statErr = os.Stat(finalPath)
+	_, statErr = os.Stat(binPath)
 	assert.True(t, os.IsNotExist(statErr))
 }
 

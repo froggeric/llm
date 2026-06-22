@@ -123,8 +123,9 @@ type Options struct {
 	// SkipBinaryDiscovery short-circuits findOrDownloadBinary. Used by
 	// tests that inject BinaryPath directly.
 	SkipBinaryDiscovery bool
-	// BinarySHA256 pins the binary's expected hash. Defaults to
-	// pinnedLLAMAServerSHA256 in binary.go. Set to "" to disable.
+	// BinarySHA256 pins the expected archive SHA256 for the downloaded
+	// llama-server bundle. Defaults to pinnedLLAMAArchiveSHA256 in binary.go.
+	// Set to "" to disable. (Ignored for $PATH-discovered binaries.)
 	BinarySHA256 string
 	// Logger is the slog.Logger used for diagnostic output. Defaults to
 	// slog.Default().
@@ -239,7 +240,7 @@ func NewWithOptions(opts Options) (*LifecycleManager, error) {
 		opts.PortRetryAttempts = maxPortRetryAttempts
 	}
 	if opts.BinarySHA256 == "" {
-		opts.BinarySHA256 = pinnedLLAMAServerSHA256
+		opts.BinarySHA256 = pinnedLLAMAArchiveSHA256
 	}
 
 	cacheDir := opts.CacheDir
@@ -783,6 +784,10 @@ type ChatRequest struct {
 	ImagePaths   []string       // absolute local paths to image files
 	MaxTokens    int            // per-tool output budget
 	Temperature  float64        // usually 0.1 for deterministic output
+	// TopP / TopK carry v6 benchmark sampling (0.95 / 64). buildChatRequestBody
+	// applies these as defaults when left at zero; the executor always sets them.
+	TopP float64
+	TopK int
 	// ChatTemplateKwargs is forwarded as `chat_template_kwargs` in the
 	// request body. Populated from ModelSpec.ChatTemplateKwargs by the
 	// executor before calling ChatVision. Empty = no kwargs sent.

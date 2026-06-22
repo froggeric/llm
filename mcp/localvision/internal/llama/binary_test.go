@@ -1,6 +1,9 @@
 package llama
 
 import (
+	"archive/tar"
+	"bytes"
+	"compress/gzip"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
@@ -16,90 +19,133 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// binary_test.go exercises the SHA256 verification and atomic-rename logic
-// in findOrDownloadBinary. We use an httptest.Server as a stand-in for
-// github.com/ggml-org/llama.cpp releases.
+// binary_test.go exercises the archive-SHA verification, tar extraction, and
+// discovery logic in findOrDownloadBinary. We use an httptest.Server as a
+// stand-in for github.com/ggml-org/llama.cpp releases.
 
-// TestDownloadAndVerifySuccess: a server serving a binary with the
-// matching SHA256 succeeds. The file is written to the final path with
-// mode 0755.
-func TestDownloadAndVerifySuccess(t *testing.T) {
-	payload := []byte("#!/bin/sh\necho llama-server stub\n")
-	wantHash := sha256.Sum256(payload)
-	wantHex := hex.EncodeToString(wantHash[:])
-
-	srv := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(payload)
-	}))
-	defer srv.Close()
-	setDownloadClient(srv.Client())
-	t.Cleanup(func() { setDownloadClient(&http.Client{Timeout: 0}) })
-
-	dir := t.TempDir()
-	finalPath := filepath.Join(dir, "llama-server")
-
-	gotPath, err := downloadAndVerify(t.Context(), srv.URL+"/llama-server", finalPath, wantHex)
-	require.NoError(t, err)
-	assert.Equal(t, finalPath, gotPath)
-
-	info, err := os.Stat(finalPath)
-	require.NoError(t, err)
-	// 0755 means owner-exec bit set.
-	assert.NotZero(t, info.Mode()&0o100, "binary should be executable")
-
-	// Contents match.
-	got, err := os.ReadFile(finalPath)
-	require.NoError(t, err)
-	assert.Equal(t, payload, got)
-
-	// No leftover .tmp file.
-	_, err = os.Stat(finalPath + ".tmp")
-	assert.True(t, os.IsNotExist(err), ".tmp file should be removed")
+// setTestTag swaps llamaServerDownloadTag for the test and restores it on
+// cleanup, so findOrDownloadBinary computes a predictable bundle dir name.
+func setTestTag(t *testing.T, tag string) {
+	t.Helper()
+	prev := llamaServerDownloadTag
+	llamaServerDownloadTag = tag
+	t.Cleanup(func() { llamaServerDownloadTag = prev })
 }
 
-// TestDownloadAndVerifySHAMismatch: server returns wrong bytes; the
-// download fails with *ErrIntegrityFailStruct and no file is left at the
-// final path.
-func TestDownloadAndVerifySHAMismatch(t *testing.T) {
-	payload := []byte("not the right bytes")
-	wantHex := strings.Repeat("a", 64) // 64 hex chars, won't match
+// sha256hex returns the lowercase hex SHA256 of data.
+func sha256hex(data []byte) string {
+	sum := sha256.Sum256(data)
+	return hex.EncodeToString(sum[:])
+}
+
+// makeFakeBundleArchive builds an in-memory tar.gz containing
+// llama-bTEST/llama-server (an executable stub), matching the bundle layout
+// downloadVerifyAndExtract extracts. Returns the archive bytes.
+func makeFakeBundleArchive(t *testing.T) []byte {
+	t.Helper()
+	var buf bytes.Buffer
+	gz := gzip.NewWriter(&buf)
+	tw := tar.NewWriter(gz)
+	stub := []byte("#!/bin/sh\necho llama-server stub\n")
+	entries := []struct {
+		name string
+		mode int64
+		body []byte
+	}{
+		{"llama-bTEST/", 0o755, nil},
+		{"llama-bTEST/llama-server", 0o755, stub},
+	}
+	for _, e := range entries {
+		hdr := &tar.Header{
+			Name:     e.name,
+			Mode:     e.mode,
+			Size:     int64(len(e.body)),
+			Typeflag: tar.TypeDir,
+		}
+		if e.body != nil {
+			hdr.Typeflag = tar.TypeReg
+		}
+		require.NoError(t, tw.WriteHeader(hdr))
+		if e.body != nil {
+			_, err := tw.Write(e.body)
+			require.NoError(t, err)
+		}
+	}
+	require.NoError(t, tw.Close())
+	require.NoError(t, gz.Close())
+	return buf.Bytes()
+}
+
+// TestDownloadVerifyAndExtractSuccess: a server serving a tar.gz bundle whose
+// archive SHA matches. The inner llama-server is extracted to the bundle dir,
+// chmod'd +x, and the sidecar records the verified SHA.
+func TestDownloadVerifyAndExtractSuccess(t *testing.T) {
+	archive := makeFakeBundleArchive(t)
+	wantHex := sha256hex(archive)
 
 	srv := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(payload)
+		_, _ = w.Write(archive)
 	}))
 	defer srv.Close()
 	setDownloadClient(srv.Client())
 	t.Cleanup(func() { setDownloadClient(&http.Client{Timeout: 0}) })
 
 	dir := t.TempDir()
-	finalPath := filepath.Join(dir, "llama-server")
+	bundleDir := filepath.Join(dir, "llama-bTEST")
+	binPath := filepath.Join(bundleDir, "llama-server")
+	sidecar := binPath + ".sha256"
 
-	_, err := downloadAndVerify(t.Context(), srv.URL+"/llama-server", finalPath, wantHex)
+	gotPath, err := downloadVerifyAndExtract(t.Context(), srv.URL+"/x", bundleDir, binPath, sidecar, wantHex)
+	require.NoError(t, err)
+	assert.Equal(t, binPath, gotPath)
+
+	info, err := os.Stat(binPath)
+	require.NoError(t, err)
+	assert.NotZero(t, info.Mode()&0o100, "extracted binary should be executable")
+
+	marked, err := os.ReadFile(sidecar)
+	require.NoError(t, err)
+	assert.Equal(t, wantHex, strings.TrimSpace(string(marked)))
+
+	_, err = os.Stat(binPath + ".tar.gz.tmp")
+	assert.True(t, os.IsNotExist(err), "tmp archive should be removed")
+}
+
+// TestDownloadVerifyAndExtractSHAMismatch: server returns an archive whose
+// SHA does not match; the call fails with *ErrIntegrityFailStruct and no
+// binary or tmp file is left behind.
+func TestDownloadVerifyAndExtractSHAMismatch(t *testing.T) {
+	archive := makeFakeBundleArchive(t)
+	wantHex := strings.Repeat("a", 64) // will not match
+
+	srv := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(archive)
+	}))
+	defer srv.Close()
+	setDownloadClient(srv.Client())
+	t.Cleanup(func() { setDownloadClient(&http.Client{Timeout: 0}) })
+
+	dir := t.TempDir()
+	bundleDir := filepath.Join(dir, "llama-bTEST")
+	binPath := filepath.Join(bundleDir, "llama-server")
+
+	_, err := downloadVerifyAndExtract(t.Context(), srv.URL+"/x", bundleDir, binPath, binPath+".sha256", wantHex)
 	require.Error(t, err)
 	var ie *ErrIntegrityFailStruct
 	require.True(t, asErrIntegrityFail(err, &ie), "want *ErrIntegrityFailStruct, got %T: %v", err, err)
 	assert.Equal(t, wantHex, ie.Expected)
 
-	// File must not exist at the final path.
-	_, statErr := os.Stat(finalPath)
-	assert.True(t, os.IsNotExist(statErr), "final path must not exist on SHA mismatch")
-
-	// .tmp file must also be cleaned up.
-	_, statErr = os.Stat(finalPath + ".tmp")
-	assert.True(t, os.IsNotExist(statErr), ".tmp must not exist on SHA mismatch")
+	_, err = os.Stat(binPath)
+	assert.True(t, os.IsNotExist(err), "binary must not exist on SHA mismatch")
+	_, err = os.Stat(binPath + ".tar.gz.tmp")
+	assert.True(t, os.IsNotExist(err), "tmp archive must be removed on SHA mismatch")
 }
 
-// asErrIntegrityFail is a thin wrapper around errors.As for the local
-// *ErrIntegrityFailStruct type. We need it because errors.As requires a
-// pointer to a pointer and we can't take a pointer to a typed nil without
-// declaring a variable first.
+// asErrIntegrityFail is a thin wrapper around a type assertion for the local
+// *ErrIntegrityFailStruct type.
 func asErrIntegrityFail(err error, target **ErrIntegrityFailStruct) bool {
-	for _, c := range []error{err} {
-		_ = c
-	}
-	// Manual walk; we only have one wrapping level to deal with.
 	if err == nil {
 		return false
 	}
@@ -110,44 +156,19 @@ func asErrIntegrityFail(err error, target **ErrIntegrityFailStruct) bool {
 	return false
 }
 
-// TestDownloadAndVerifyPlaceholderSkipsCheck: when pinnedSHA256 is the
-// TODO-PHASE3 placeholder, the SHA check is skipped (Phase 1/2 behavior).
-// The file is downloaded and chmod'd; the call succeeds.
-func TestDownloadAndVerifyPlaceholderSkipsCheck(t *testing.T) {
-	payload := []byte("#!/bin/sh\necho stub\n")
-
-	srv := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write(payload)
-	}))
-	defer srv.Close()
-	setDownloadClient(srv.Client())
-	t.Cleanup(func() { setDownloadClient(&http.Client{Timeout: 0}) })
-
+// TestDownloadVerifyAndExtractHTTPSError: an HTTP (not HTTPS) URL is rejected
+// by the guard before any download.
+func TestDownloadVerifyAndExtractHTTPSError(t *testing.T) {
 	dir := t.TempDir()
-	finalPath := filepath.Join(dir, "llama-server")
-
-	_, err := downloadAndVerify(t.Context(), srv.URL+"/llama-server", finalPath, "TODO-PHASE3")
-	require.NoError(t, err)
-
-	info, err := os.Stat(finalPath)
-	require.NoError(t, err)
-	assert.NotZero(t, info.Mode()&0o100)
-}
-
-// TestDownloadAndVerifyHTTPSError: an HTTP (not HTTPS) URL is rejected
-// even if the test server tries to serve it. We don't bother spinning up
-// a plaintext server; just check the URL guard.
-func TestDownloadAndVerifyHTTPSError(t *testing.T) {
-	dir := t.TempDir()
-	_, err := downloadAndVerify(t.Context(), "http://example.com/x", filepath.Join(dir, "x"), strings.Repeat("a", 64))
+	binPath := filepath.Join(dir, "llama-server")
+	_, err := downloadVerifyAndExtract(t.Context(), "http://example.com/x", dir, binPath, binPath+".sha256", strings.Repeat("a", 64))
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "HTTPS")
 }
 
-// TestDownloadAndVerify500Error: server returns 500; the call fails and no
-// file is left behind.
-func TestDownloadAndVerify500Error(t *testing.T) {
+// TestDownloadVerifyAndExtract500Error: server returns 500; the call fails and
+// no binary is left behind.
+func TestDownloadVerifyAndExtract500Error(t *testing.T) {
 	srv := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "boom", http.StatusInternalServerError)
 	}))
@@ -156,11 +177,11 @@ func TestDownloadAndVerify500Error(t *testing.T) {
 	t.Cleanup(func() { setDownloadClient(&http.Client{Timeout: 0}) })
 
 	dir := t.TempDir()
-	finalPath := filepath.Join(dir, "llama-server")
-	_, err := downloadAndVerify(t.Context(), srv.URL+"/x", finalPath, strings.Repeat("a", 64))
+	binPath := filepath.Join(dir, "llama-server")
+	_, err := downloadVerifyAndExtract(t.Context(), srv.URL+"/x", dir, binPath, binPath+".sha256", strings.Repeat("a", 64))
 	require.Error(t, err)
-	_, statErr := os.Stat(finalPath)
-	assert.True(t, os.IsNotExist(statErr))
+	_, err = os.Stat(binPath)
+	assert.True(t, os.IsNotExist(err))
 }
 
 // TestHashFileStreams: hashFile produces the correct SHA256 for a multi-chunk
@@ -169,7 +190,6 @@ func TestDownloadAndVerify500Error(t *testing.T) {
 func TestHashFileStreams(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "big.bin")
-	// 200KB of deterministic data.
 	payload := make([]byte, 200*1024)
 	for i := range payload {
 		payload[i] = byte(i % 251)
@@ -193,9 +213,9 @@ func TestFileSHA256Matches(t *testing.T) {
 	payload := []byte("hello")
 	require.NoError(t, os.WriteFile(path, payload, 0o600))
 	sum := sha256.Sum256(payload)
-	hex := hex.EncodeToString(sum[:])
+	hexStr := hex.EncodeToString(sum[:])
 
-	ok, err := fileSHA256Matches(t.Context(), path, hex)
+	ok, err := fileSHA256Matches(t.Context(), path, hexStr)
 	require.NoError(t, err)
 	assert.True(t, ok)
 
@@ -203,7 +223,7 @@ func TestFileSHA256Matches(t *testing.T) {
 	require.NoError(t, err)
 	assert.False(t, ok)
 
-	_, err = fileSHA256Matches(t.Context(), filepath.Join(dir, "nope"), hex)
+	_, err = fileSHA256Matches(t.Context(), filepath.Join(dir, "nope"), hexStr)
 	require.Error(t, err)
 }
 
@@ -215,9 +235,8 @@ func TestIsExecutable(t *testing.T) {
 	assert.False(t, isExecutable("/x", 0o600))
 }
 
-// TestPathHasLLAMAServer: does not assert anything specific; just exercises
-// the function so it's covered. We can't guarantee llama-server is or isn't
-// on PATH on the test runner.
+// TestPathHasLLAMAServer: exercises the function so it's covered. We can't
+// guarantee llama-server is or isn't on PATH on the test runner.
 func TestPathHasLLAMAServer(t *testing.T) {
 	_ = pathHasLLAMAServer()
 }
@@ -228,50 +247,134 @@ func TestBuildDownloadURLIsHTTPS(t *testing.T) {
 	assert.True(t, strings.HasPrefix(u, "https://"), "download URL must be HTTPS, got %s", u)
 }
 
-// TestPinnedSHA256Placeholder: the source pin must be the documented
-// placeholder until Phase 3 lands a real value. This test will fail (and
-// prompt removal of this assertion) once the real hash is committed.
-func TestPinnedSHA256Placeholder(t *testing.T) {
-	assert.Equal(t, "TODO-PHASE3", pinnedLLAMAServerSHA256,
-		"if you change this, also remove the placeholder skip paths")
-}
-
-// TestFindOrDownloadBinaryCacheHit: a cache dir already containing a valid
-// binary short-circuits to the cache path (no download attempted).
+// TestFindOrDownloadBinaryCacheHit: a cache dir already containing a verified
+// bundle (sidecar matches) short-circuits to the cache path. PATH is isolated
+// so the $PATH branch isn't taken on machines with llama-server installed.
 func TestFindOrDownloadBinaryCacheHit(t *testing.T) {
-	dir := t.TempDir()
-	// Pre-place a binary in the cache dir.
-	cached := filepath.Join(dir, "llama-server")
-	require.NoError(t, os.WriteFile(cached, []byte("#!/bin/sh\n"), 0o755))
+	t.Setenv("PATH", t.TempDir())
+	setTestTag(t, "bTEST")
 
-	// Even with a placeholder SHA, we should hit the cache.
-	got, err := findOrDownloadBinary(t.Context(), "TODO-PHASE3", dir)
+	wantHex := strings.Repeat("a", 64)
+	dir := t.TempDir()
+	bundleDir := filepath.Join(dir, "llama-bTEST")
+	require.NoError(t, os.MkdirAll(bundleDir, 0o755))
+	cached := filepath.Join(bundleDir, "llama-server")
+	require.NoError(t, os.WriteFile(cached, []byte("#!/bin/sh\n"), 0o755))
+	require.NoError(t, os.WriteFile(cached+".sha256", []byte(wantHex), 0o600))
+
+	got, err := findOrDownloadBinary(t.Context(), wantHex, dir)
 	require.NoError(t, err)
 	assert.Equal(t, cached, got)
 }
 
-// TestDownloadAndVerifyNoChmodBeforeHash: a regression test for F3.3.
-// If SHA verification fails, the file at finalPath must NOT exist (and
-// therefore must NOT be executable). The .tmp file should be removed too.
-func TestDownloadAndVerifyNoChmodBeforeHash(t *testing.T) {
+// TestFindOrDownloadBinaryPATHPreferredOverCache: when a llama-server is on
+// $PATH, it is used even if a verified cache bundle exists (locked decision:
+// PATH is the robust, user-controlled default).
+func TestFindOrDownloadBinaryPATHPreferredOverCache(t *testing.T) {
+	pathDir := t.TempDir()
+	fakeBin := filepath.Join(pathDir, "llama-server")
+	require.NoError(t, os.WriteFile(fakeBin, []byte("#!/bin/sh\n"), 0o755))
+	t.Setenv("PATH", pathDir)
+
+	setTestTag(t, "bTEST")
+	dir := t.TempDir()
+	bundleDir := filepath.Join(dir, "llama-bTEST")
+	require.NoError(t, os.MkdirAll(bundleDir, 0o755))
+	cached := filepath.Join(bundleDir, "llama-server")
+	require.NoError(t, os.WriteFile(cached, []byte("#!/bin/sh\n"), 0o755))
+	require.NoError(t, os.WriteFile(cached+".sha256", []byte(strings.Repeat("a", 64)), 0o600))
+
+	got, err := findOrDownloadBinary(t.Context(), strings.Repeat("a", 64), dir)
+	require.NoError(t, err)
+	assert.Equal(t, fakeBin, got, "PATH binary must be preferred over the cache")
+}
+
+// TestDownloadVerifyAndExtractNoChmodBeforeHash: a regression test for F3.3.
+// If SHA verification fails, the extracted binary must NOT exist (and therefore
+// must NOT be executable). The .tmp archive must be removed too.
+func TestDownloadVerifyAndExtractNoChmodBeforeHash(t *testing.T) {
 	srv := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		_, _ = io.WriteString(w, "wrong bytes")
+		_, _ = io.WriteString(w, "not a valid archive")
 	}))
 	defer srv.Close()
 	setDownloadClient(srv.Client())
 	t.Cleanup(func() { setDownloadClient(&http.Client{Timeout: 0}) })
 
 	dir := t.TempDir()
-	finalPath := filepath.Join(dir, "llama-server")
+	bundleDir := filepath.Join(dir, "llama-bTEST")
+	binPath := filepath.Join(bundleDir, "llama-server")
 
-	_, err := downloadAndVerify(t.Context(), srv.URL+"/x", finalPath, strings.Repeat("f", 64))
+	_, err := downloadVerifyAndExtract(t.Context(), srv.URL+"/x", bundleDir, binPath, binPath+".sha256", strings.Repeat("f", 64))
 	require.Error(t, err)
 
-	// Crucially: finalPath must not be chmod'd into existence.
-	_, statErr := os.Stat(finalPath)
+	_, statErr := os.Stat(binPath)
 	assert.True(t, os.IsNotExist(statErr),
-		"finalPath must not exist when SHA256 verification fails; F3.3 violation")
+		"binary must not exist when SHA256 verification fails; F3.3 violation")
+}
+
+// TestExtractTarGzRejectsPathTraversal: an entry escaping destDir is refused.
+func TestExtractTarGzRejectsPathTraversal(t *testing.T) {
+	var buf bytes.Buffer
+	gz := gzip.NewWriter(&buf)
+	tw := tar.NewWriter(gz)
+	require.NoError(t, tw.WriteHeader(&tar.Header{
+		Name: "../evil.txt", Mode: 0o644, Size: 1, Typeflag: tar.TypeReg,
+	}))
+	_, _ = tw.Write([]byte("x"))
+	require.NoError(t, tw.Close())
+	require.NoError(t, gz.Close())
+
+	archivePath := filepath.Join(t.TempDir(), "evil.tar.gz")
+	require.NoError(t, os.WriteFile(archivePath, buf.Bytes(), 0o600))
+
+	dest := t.TempDir()
+	err := extractTarGz(archivePath, dest)
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "escapes dest dir")
+}
+
+// TestExtractTarGzPreservesExecBit: the executable bit from the tar header is
+// preserved on extraction (a naive 0o644 write would strip it).
+func TestExtractTarGzPreservesExecBit(t *testing.T) {
+	var buf bytes.Buffer
+	gz := gzip.NewWriter(&buf)
+	tw := tar.NewWriter(gz)
+	require.NoError(t, tw.WriteHeader(&tar.Header{
+		Name: "bin/runme", Mode: 0o755, Size: 4, Typeflag: tar.TypeReg,
+	}))
+	_, _ = tw.Write([]byte("#!sh"))
+	require.NoError(t, tw.Close())
+	require.NoError(t, gz.Close())
+
+	archivePath := filepath.Join(t.TempDir(), "a.tar.gz")
+	require.NoError(t, os.WriteFile(archivePath, buf.Bytes(), 0o600))
+
+	dest := t.TempDir()
+	require.NoError(t, extractTarGz(archivePath, dest))
+
+	info, err := os.Stat(filepath.Join(dest, "bin", "runme"))
+	require.NoError(t, err)
+	assert.NotZero(t, info.Mode()&0o100, "executable bit must be preserved")
+}
+
+// TestExtractTarGzRejectsSymlink: a symlink (or hardlink) entry is refused.
+func TestExtractTarGzRejectsSymlink(t *testing.T) {
+	var buf bytes.Buffer
+	gz := gzip.NewWriter(&buf)
+	tw := tar.NewWriter(gz)
+	require.NoError(t, tw.WriteHeader(&tar.Header{
+		Name: "link", Linkname: "/etc/passwd", Mode: 0o777, Typeflag: tar.TypeSymlink,
+	}))
+	require.NoError(t, tw.Close())
+	require.NoError(t, gz.Close())
+
+	archivePath := filepath.Join(t.TempDir(), "a.tar.gz")
+	require.NoError(t, os.WriteFile(archivePath, buf.Bytes(), 0o600))
+
+	err := extractTarGz(archivePath, t.TempDir())
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "link entry")
 }
 
 // TestValidateBinaryPathInside: validateBinaryPath accepts paths inside

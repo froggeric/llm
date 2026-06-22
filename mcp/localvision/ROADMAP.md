@@ -46,7 +46,7 @@ The foundation. Nothing downstream (releases, Homebrew, marketplace) is
 trustworthy until CI is green and the shipped `llama-server` is pinned. This
 theme is the gate for the first real `v0.2.0` tag.
 
-### A1. Fix the CI build 🚧 `S` — *(idea 1)*
+### A1. Fix the CI build ✅ `S` — *(done in v0.2.0)*
 
 **Root cause (diagnosed):** `internal/llama/client_test.go` has two tests —
 `TestBuildChatRequestBodyImageURLs` (~line 280) and
@@ -64,13 +64,13 @@ rename — it is not a path/import issue.
 
 **Blocks:** every release-dependent item (B1, B2).
 
-### A2. Pin the `llama-server` binary 🚧 `M` — *(from v0.1.1 known-limitation)*
+### A2. Acquire `llama-server` safely ✅ `M` — *(done in v0.2.0)*
 
-`internal/llama/binary.go:44` still ships `const pinnedLLAMAServerSHA256 =
-"TODO-PHASE3"` and `llamaServerDownloadTag = "b0-example"`. Today the runtime
-download is **not integrity-checked** — the verify gate is intentionally
-disabled. Publish a real per-platform `llama-server` build, record its SHA256,
-and flip the constant.
+Dropped the `TODO-PHASE3` placeholder. localvision now **prefers a
+user-installed `llama-server` on `$PATH`** (e.g. `brew install llama.cpp`;
+warned as unverified); if absent it downloads a **pinned official llama.cpp
+release tag** and verifies the **archive SHA256** before extracting the dylib
+bundle. No custom build or self-hosting. See `internal/llama/binary.go`.
 
 **Pairs with A5** (how the binary reaches the user).
 
@@ -86,16 +86,13 @@ Fix the v0.1 → v0.2 drift across README, CHANGELOG, ARCHITECTURE, TOOLS, and
 the plugin SKILL (catalog names, tier list, benchmark wording, stale
 "Phase 0" / "stub" language).
 
-### A5. Ship `llama-server` through the release pipeline 🔬 `M`
+### A5. `llama-server` delivery ✅ `M` — *(done in v0.2.0)*
 
-Today `vision-mcp-release.yml` runs only goreleaser, which produces the wrapper
-binary (`CGO_ENABLED=0`); `scripts/build-llama-cpp.sh` is never invoked by the
-release, so `llama-server` is fetched at first `doctor` run (unpinned — see A2).
-Decide the model: **bundle** a per-platform `llama-server` in the release
-archive (bigger downloads, fully offline, integrity-guaranteed) vs. **runtime
-fetch pinned** (smaller archive, needs network on first run). Recommendation:
-runtime fetch with a real pin (A2) for v0.2; revisit bundling if offline
-install matters.
+The release pipeline ships only the `localvision` wrapper (goreleaser,
+`CGO_ENABLED=0`); `llama-server` is **not** bundled — it is resolved at the
+first tool call per A2 (prefer `$PATH`, else download a pinned official
+tar.gz). `scripts/build-llama-cpp.sh` is retained as a dev/convenience way to
+build a local `llama-server` for `$PATH` (not part of the release).
 
 ---
 
@@ -205,7 +202,7 @@ possible but requires threading `ChatResponse.TokensIn/Out/ElapsedMs`
 `cfg.DefaultModel` entirely — it's a latent field. Add: explicit `--model`
 override → honor it; else honor `default_model` if set; else catalog autoselect.
 
-### C6. Benchmark-faithful `llama.cpp` parameters 🚧 `S–M` — *(idea 11)*
+### C6. Benchmark-faithful `llama.cpp` parameters ✅ `S–M` — *(done in v0.2.0)*
 
 The v6 benchmark produced its quality with a specific `llama-server` invocation
 (`benchmark/vlm/code/benchmark_llamaserver.py:139`). Reproduce it exactly so
@@ -392,8 +389,8 @@ Ambitious, far-fetched, explicitly invited for the later roadmap.
 
 ```
 v0.2.0  Foundation & first real distribution
-        A1 (CI) ─┬─► B1 (GitHub Releases) ─► B2 (Homebrew)
-        A2 (pin)─┘    A3 (names) ✅, A4 (docs) ✅, A5 (binary pipeline)
+        A1 (CI) ✅ ─┬─► B1 (GitHub Releases) ─► B2 (Homebrew)
+        A2 (binary) ✅─┘  A3 (names) ✅, A4 (docs) ✅, A5 ✅
         C6 (benchmark params) — pull forward, low risk
 
 v0.3.0  Standalone CLI + onboarding

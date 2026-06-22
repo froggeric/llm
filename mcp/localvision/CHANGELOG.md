@@ -11,16 +11,28 @@ Tags for this subdirectory follow the Go module convention
 
 ## [Unreleased]
 
-*This section becomes `v0.2.0` when tagged. The forward plan — including what is
-still targeted for this release (notably green CI, a pinned `llama-server`
-binary, and the first GitHub Release + Homebrew formula) — lives in
-[`ROADMAP.md`](./ROADMAP.md).*
+## [0.2.0] - 2026-06-22
+
+Foundation & first real distribution. The v6 benchmark catalog refresh lands,
+CI is green again, `llama-server` is acquired safely, and the first GitHub
+Release + Homebrew formula ship. See [`ROADMAP.md`](./ROADMAP.md) Themes A/B + C6.
+
+### Added
+
+- **First GitHub Release + Homebrew formula** (B1/B2): `brew tap
+  froggeric/homebrew-tap && brew install localvision`. darwin/arm64 only.
+- `chat_template_kwargs` catalog field, carrying `enable_thinking=false` for the
+  hybrid-thinking models (Qwen3.5/3.6) — "thinking mode hurts vision" was a key
+  v6 finding.
+- **WEBP** image support.
+- The v6 **benchmark** is checked into the monorepo at `benchmark/vlm/` (report,
+  scoring code, test images, raw results).
 
 ### Changed
 
 - **Catalog refreshed to v0.2.0** — winners of the v6 benchmark
-  (`benchmark/vlm/`: 30 images × 3 runs × 24 variants, hybrid scoring). The
-  built-in catalog is now three models across two tiers:
+  (`benchmark/vlm/`: 30 images × 3 runs × 24 variants, hybrid scoring). Three
+  models across two tiers:
   - `qwen3-vl-8b` (Q8_0) — constrained tier, preferred for all tools; the only
     100%-reliable Q8 model in the benchmark (σ=0.33, 0 timeouts across 90 cells).
   - `qwen3.5-4b` (nothink) — constrained fallback for 4–8 GB Macs where the 8B
@@ -29,31 +41,41 @@ binary, and the first GitHub Release + Homebrew formula) — lives in
     σ=0.24, 0 failures).
   Dropped: Qwen3-VL 4B and Gemma 4 26B-A4B. The `high_end` tier is gone — the
   mainstream 27B is reused on 48+ GB hardware via deterministic fallback.
-- **Tiers reduced** to `constrained` and `mainstream` only.
+- **`llama-server` acquisition reframed** (A2/A5): the `TODO-PHASE3` placeholder
+  is gone. localvision now **prefers a user-installed `llama-server` on `$PATH`**
+  (e.g. `brew install llama.cpp`; WARN-logged as unverified); if absent it
+  downloads a **pinned official llama.cpp release** (`b9758`) and verifies the
+  archive SHA256 before extracting the dylib bundle. PATH-first is a behavior
+  change for users who previously relied on the cached placeholder download.
+- **Benchmark-faithful llama.cpp parameters** (C6): sampling now sends
+  `top_p` 0.95 and `top_k` 64 (alongside the existing `temperature` 0.1), and
+  `llama-server` launches with `-np 1 -b 4096 -ub 4096` (batch sizes large enough
+  that image tokens never split across physical batches — a quality fix from the
+  v6 benchmark).
+- **Server key unified** to `localvision` everywhere (`plugin/plugin.json`,
+  `docs/INSTALL.md`).
 
-### Added
+### Fixed
 
-- `chat_template_kwargs` catalog field, carrying `enable_thinking=false` for the
-  hybrid-thinking models (Qwen3.5/3.6) — "thinking mode hurts vision" was a key
-  v6 finding.
-- **WEBP** image support.
-- The v6 **benchmark** is checked into the monorepo at `benchmark/vlm/` (report,
-  scoring code, test images, raw results).
+- **CI green again** (A1): the two `internal/llama` tests that broke when image
+  handling switched to data-URI inlining now use real fixtures and assert the
+  data-URI shape.
 
 ### Renamed
 
 - `local-vision-mcp` → `localvision` (module path, Go tags, CI/release
   workflows, install paths). Mechanical rename; no logic change.
 
-### Known limitations (carried forward; tracked in ROADMAP.md)
+### Known limitations
 
 - macOS Apple Silicon only; Linux/Windows detection returns
   `BackendUnsupported` (ROADMAP Theme D).
-- `llama-server` SHA256 is still a `TODO-PHASE3` placeholder — the runtime
-  download is not integrity-checked (ROADMAP A2).
 - No streaming; each `tools/call` blocks until inference completes (ROADMAP E1).
 - Tool names are unprefixed and may collide with another vision MCP
   (ROADMAP E4).
+- The pinned llama.cpp release tag ages (llama.cpp releases daily); bump it
+  deliberately and recompute the archive SHA. A future
+  `doctor --update-llama-server` (ROADMAP Theme E) will automate this.
 
 ## [0.1.0] - 2026-06-18
 
@@ -106,4 +128,5 @@ First usable release. macOS Apple Silicon only (Linux/Windows stubbed for v0.2).
   GGUF source and it ranked last in our 7-model benchmark.
 
 [Unreleased]: https://github.com/froggeric/llm/compare/HEAD
+[v0.2.0]: https://github.com/froggeric/llm/releases/tag/mcp%2Flocalvision%2Fv0.2.0
 [v0.1.0]: https://github.com/froggeric/llm/releases/tag/mcp%2Flocalvision%2Fv0.1.0

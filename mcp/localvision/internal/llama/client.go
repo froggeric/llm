@@ -190,6 +190,8 @@ type chatRequestJSON struct {
 	Messages           []chatMessage  `json:"messages"`
 	MaxTokens          int            `json:"max_tokens,omitempty"`
 	Temperature        float64        `json:"temperature,omitempty"`
+	TopP               float64        `json:"top_p,omitempty"`
+	TopK               int            `json:"top_k,omitempty"`
 	Stream             bool           `json:"stream,omitempty"`
 	ChatTemplateKwargs map[string]any `json:"chat_template_kwargs,omitempty"`
 }
@@ -452,6 +454,16 @@ func buildChatRequestBody(req ChatRequest) ([]byte, error) {
 		// a literal 0, but tools always set it).
 		temperature = 0.1
 	}
+	topP := req.TopP
+	if topP == 0 {
+		// 0.0 is a degenerate-but-valid top_p; treat 0 as "unset". The
+		// executor is the sole caller and always passes 0.95 (v6 bench).
+		topP = 0.95
+	}
+	topK := req.TopK
+	if topK <= 0 {
+		topK = 64
+	}
 	model := req.Model
 	if model == "" {
 		model = "local"
@@ -497,6 +509,8 @@ func buildChatRequestBody(req ChatRequest) ([]byte, error) {
 		Messages:           msgs,
 		MaxTokens:          maxTokens,
 		Temperature:        temperature,
+		TopP:               topP,
+		TopK:               topK,
 		Stream:             false,
 		ChatTemplateKwargs: req.ChatTemplateKwargs,
 	}

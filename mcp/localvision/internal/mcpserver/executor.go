@@ -123,6 +123,9 @@ func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPro
 		// Tools favor determinism. The catalog/tool layer can override
 		// per-tool if needed in a future revision; MVP uses 0.1.
 		Temperature: 0.1,
+		// v6 benchmark sampling: low temperature with light top-p/top-k pruning.
+		TopP: 0.95,
+		TopK: 64,
 		// Forward any per-model chat_template_kwargs.
 		ChatTemplateKwargs: spec.ChatTemplateKwargs,
 	}

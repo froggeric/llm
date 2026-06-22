@@ -8,6 +8,8 @@ import (
 	"net"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"strings"
 	"sync/atomic"
 	"testing"
@@ -275,13 +277,27 @@ func TestChatVisionCtxCancelled(t *testing.T) {
 	assert.True(t, errors.Is(err, context.Canceled))
 }
 
-// TestBuildChatRequestBodyImageURLs: image paths are encoded as file:// URLs
-// in image_url content parts.
+// TestBuildChatRequestBodyImageURLs: image paths are inlined as data: URIs
+// (base64) in image_url content parts. buildChatRequestBody reads each file
+// from disk, so the test writes real (minimal) image bytes to a temp dir.
 func TestBuildChatRequestBodyImageURLs(t *testing.T) {
+	dir := t.TempDir()
+	pngPath := filepath.Join(dir, "foo.png")
+	jpgPath := filepath.Join(dir, "bar.jpg")
+	// Minimal valid image signatures — loadImageAsDataURI only base64-encodes
+	// the file contents for .png/.jpg (no sips conversion for these exts).
+	require.NoError(t, os.WriteFile(pngPath, []byte{
+		0x89, 'P', 'N', 'G', 0x0D, 0x0A, 0x1A, 0x0A, // PNG signature
+	}, 0o600))
+	require.NoError(t, os.WriteFile(jpgPath, []byte{
+		0xFF, 0xD8, 0xFF, 0xE0, // SOI + APP0 marker (JPEG)
+		0xFF, 0xD9, // EOI
+	}, 0o600))
+
 	body, err := buildChatRequestBody(ChatRequest{
 		SystemPrompt: "you are a tool",
 		UserPrompt:   "describe",
-		ImagePaths:   []string{"/tmp/foo.png", "/tmp/bar.jpg"},
+		ImagePaths:   []string{pngPath, jpgPath},
 		MaxTokens:    100,
 		Temperature:  0.2,
 	})
@@ -289,8 +305,8 @@ func TestBuildChatRequestBodyImageURLs(t *testing.T) {
 	s := string(body)
 	assert.Contains(t, s, `"system"`)
 	assert.Contains(t, s, `"you are a tool"`)
-	assert.Contains(t, s, `"file:///tmp/foo.png"`)
-	assert.Contains(t, s, `"file:///tmp/bar.jpg"`)
+	assert.Contains(t, s, `"data:image/png;base64,`)
+	assert.Contains(t, s, `"data:image/jpeg;base64,`)
 	assert.Contains(t, s, `"describe"`)
 	assert.Contains(t, s, `"max_tokens":100`)
 	assert.Contains(t, s, `"temperature":0.2`)
@@ -367,7 +383,6 @@ func TestBuildChatRequestBodyContainsNoShell(t *testing.T) {
 	malicious := "; rm -rf ~"
 	body, err := buildChatRequestBody(ChatRequest{
 		UserPrompt: malicious,
-		ImagePaths: []string{"/tmp/" + malicious + ".png"},
 	})
 	require.NoError(t, err)
 	s := string(body)

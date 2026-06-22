@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
-# build-llama-cpp.sh — build a single-target llama-server binary for
-# localvision's release pipeline.
+# build-llama-cpp.sh — build a local llama-server binary to put on $PATH.
+#
+# NOT part of localvision's release pipeline: the release ships only the
+# localvision wrapper, and llama-server is resolved at runtime (prefer a
+# user-installed binary on $PATH, else download a pinned official release —
+# see ROADMAP A2). This script is a dev/convenience tool for building your
+# own llama-server from source.
 #
 # Usage:
 #
@@ -12,16 +17,14 @@
 # The script:
 #   1. Clones llama.cpp at the requested tag.
 #   2. Configures the build for the requested target (Metal on darwin-arm64;
-#      other targets print a clear error and exit non-zero until v0.2).
+#      other targets print a clear error and exit non-zero — cross-platform
+#      is ROADMAP Theme D, out of scope for localvision v0.2).
 #   3. Produces the binary at --out.
 #   4. Writes a <out>.sha256 sidecar alongside the binary.
 #
 # Requirements:
 #   - git, cmake, a working C/C++ toolchain (Xcode CLT on macOS).
 #   - Internet access to clone llama.cpp.
-#
-# This script is invoked by goreleaser via the release workflow. It is also
-# runnable standalone for local experimentation.
 
 set -euo pipefail
 
@@ -41,7 +44,8 @@ Usage: build-llama-cpp.sh --target <platform> --llama-version <tag> --out <path>
 Options:
   --target           The target platform. Currently supported:
                        darwin-arm64  (Apple Silicon; Metal-accelerated)
-                     Stubs (fail with a clear message until v0.2):
+                     Stubs (fail with a clear message; cross-platform
+                     is ROADMAP Theme D):
                        darwin-amd64, linux-amd64, linux-arm64,
                        windows-amd64, windows-arm64
   --llama-version    A llama.cpp git tag, branch, or commit (e.g. b4400).

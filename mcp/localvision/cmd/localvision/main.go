@@ -23,7 +23,6 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
-	"path/filepath"
 	"syscall"
 
 	"github.com/froggeric/llm/mcp/localvision/internal/config"
@@ -253,14 +252,13 @@ func doctorSubcommand(args []string) int {
 	fmt.Fprintln(w, "=== llama-server binary ===")
 	if path, err := lookPathLLAMAServer(); err == nil {
 		fmt.Fprintf(w, "Discovered on $PATH: %s\n", path)
-	} else if info, err := os.Stat(filepath.Join(cfg.BinDir, "llama-server")); err == nil && !info.IsDir() {
-		fmt.Fprintf(w, "Cached at:      %s\n", filepath.Join(cfg.BinDir, "llama-server"))
+		fmt.Fprintln(w, "(used as-is; integrity not verified)")
 	} else {
-		fmt.Fprintln(w, "Not yet present. On first run, localvision auto-downloads")
-		fmt.Fprintln(w, "llama-server from https://github.com/ggml-org/llama.cpp/releases")
-		fmt.Fprintf(w, "into the bin dir and verifies its SHA256. Ensure you have")
-		fmt.Fprintln(w, "network access on first run, or install llama.cpp manually and")
-		fmt.Fprintln(w, "put `llama-server` on your $PATH.")
+		fmt.Fprintln(w, "Not found on $PATH. Recommended: install llama.cpp")
+		fmt.Fprintln(w, "(`brew install llama.cpp`) so `llama-server` is on $PATH.")
+		fmt.Fprintln(w, "Otherwise the first tool call downloads a pinned release from")
+		fmt.Fprintln(w, "https://github.com/ggml-org/llama.cpp/releases into the bin dir")
+		fmt.Fprintln(w, "and verifies its SHA256 before extracting.")
 	}
 	fmt.Fprintln(w)
 

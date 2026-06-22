@@ -1,6 +1,8 @@
 package llama
 
 import (
+	"archive/tar"
+	"compress/gzip"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
@@ -19,38 +21,39 @@ import (
 
 // binary.go discovers or downloads the llama-server binary.
 //
-// Discovery order (per the Track C contract):
-//  1. $PATH: if `llama-server` is on PATH and runs successfully, use it.
-//     No SHA256 check on PATH binaries (we assume the user installed it
-//     intentionally; we can't pin a SHA for a system package).
-//     NOTE: PATH binaries are skipped by default — see skipPathLookup —
-//     because they bypass the integrity invariant. The lifecycle opts in
-//     via options when the user requests it. Default is the cache dir.
-//  2. Cache: ~/.localvision/bin/llama-server, if SHA256 matches the
-//     pinned value.
-//  3. Download: HTTPS-only, to a .tmp file, verify SHA256, atomic-rename,
-//     chmod +x. Never chmod before SHA256 passes. F3.3.
+// Discovery order:
+//  1. $PATH: a user-installed `llama-server` (e.g. via `brew install
+//     llama.cpp`) is the preferred default. We can't pin a SHA for a system
+//     binary, so it is used as-is and a WARN is logged ("integrity NOT
+//     verified"). This is the robust path — Homebrew keeps it current and
+//     resolves its dylib dependencies correctly.
+//  2. Cache: a previously-extracted bundle at <binDir>/llama-b<TAG>/, trusted
+//     only when a sidecar records the verified archive SHA.
+//  3. Download: a pinned official llama.cpp release tar.gz (HTTPS-only),
+//     verified against the pinned ARCHIVE SHA256 BEFORE extraction, then
+//     extracted preserving the bundle dir (dylib siblings), quarantine
+//     stripped, and chmod +x. Never chmod before SHA passes. F3.3.
 //
-// The pinned SHA256 lives in this file as a source constant (defense in
-// depth) so a TLS-strip-and-replace attack against a remote manifest fails.
+// The pinned archive SHA256 lives in this file as a source constant (defense
+// in depth) so a TLS-strip-and-replace attack against a remote manifest fails.
 
-// pinnedLLAMAServerSHA256 is the SHA256 of the llama-server binary we expect
-// to download. It is pinned in source so a compromised CDN or TLS-strip MITM
-// cannot substitute a malicious binary. F3.3.
+// pinnedLLAMAArchiveSHA256 is the SHA256 of the llama.cpp release tar.gz ASSET
+// (llama-b<TAG>-bin-macos-arm64.tar.gz), NOT of the inner llama-server binary.
+// We pin the archive (not the extracted binary) so integrity is enforced BEFORE
+// extraction. Pinned in source so a compromised CDN or TLS-strip MITM cannot
+// substitute. Bump llamaServerDownloadTag and recompute together:
 //
-// TODO(froggeric, phase-3): pin real SHA256 once we publish llama-server
-// binaries for v0.1. The string "TODO-PHASE3" is recognized by Validate as
-// "not pinned yet" — callers get a clear error rather than a silent failure.
-const pinnedLLAMAServerSHA256 = "TODO-PHASE3"
+//	curl -fsSL <asset-url> | shasum -a 256
+const pinnedLLAMAArchiveSHA256 = "021b947de63cbedcb39f7bed356be03fbef9aec5a3d77a716aa99df57454af59"
 
-// llamaServerDownloadTag is the git tag we download from the llama.cpp
-// releases page. Bumped per release when the SHA above is updated.
-const llamaServerDownloadTag = "b0-example"
+// llamaServerDownloadTag is the llama.cpp release tag we pin to (NOT "latest").
+// It is a `var` (not const) so tests can swap it for a fixed value. Bump
+// intentionally and record the bump date in CHANGELOG.
+var llamaServerDownloadTag = "b9758"
 
-// downloadURLTemplate formats the llama.cpp release download URL. OS and
-// arch are filled in from runtime.GOOS / runtime.GOARCH. The result is
-// HTTPS-only — there is no code path that produces an http:// URL here.
-const downloadURLTemplate = "https://github.com/ggml-org/llama.cpp/releases/download/%s/llama-server-%s-%s"
+// downloadURLTemplate formats the llama.cpp release download URL. The asset is
+// a tar.gz dylib BUNDLE named llama-b<TAG>-bin-<os>-<arch>.tar.gz. HTTPS-only.
+const downloadURLTemplate = "https://github.com/ggml-org/llama.cpp/releases/download/%[1]s/llama-%[1]s-bin-%[2]s-%[3]s.tar.gz"
 
 // downloadURLOverride, when non-empty, replaces the URL produced by
 // buildDownloadURL. Tests use this to point findOrDownloadBinary at an
@@ -77,162 +80,221 @@ var downloadClient = &http.Client{
 func setDownloadClient(c *http.Client) { downloadClient = c }
 
 // findOrDownloadBinary locates a usable llama-server binary and returns its
-// absolute path. See the file comment for the discovery order.
-//
-// When the pinned SHA256 is "TODO-PHASE3" (Phase 3 placeholder), this
-// function still downloads/verifies but does NOT enforce a hash match
-// (since there's no authoritative hash to compare against). In Phase 3 the
-// placeholder is replaced by a real hex string, at which point any mismatch
-// is a hard error.
+// absolute path. See the file comment for the discovery order. The signature
+// is fixed: lifecycle.go calls it opaquely with the pinned archive SHA.
 func findOrDownloadBinary(ctx context.Context, pinnedSHA256, binDir string) (string, error) {
-	// Path (1): cache dir, with SHA256 check. We check the cache first by
-	// default because the PATH binary bypasses integrity. If the cache
-	// has a binary but its hash is wrong, fall through to download.
-	cachePath := filepath.Join(binDir, "llama-server")
-	if info, err := os.Stat(cachePath); err == nil && !info.IsDir() {
-		if pinnedSHA256 == "" || pinnedSHA256 == "TODO-PHASE3" {
-			// Pre-pin phase: any executable file in the cache is accepted,
-			// because we have no authoritative hash to compare against.
-			if isExecutable(cachePath, info.Mode()) {
-				return cachePath, nil
-			}
-		} else {
-			ok, err := fileSHA256Matches(ctx, cachePath, pinnedSHA256)
-			if err != nil {
-				return "", fmt.Errorf("hash cache binary: %w", err)
-			}
-			if ok {
-				return cachePath, nil
-			}
-			slog.Warn("cached llama-server binary failed SHA256; redownloading",
-				"path", cachePath)
-		}
+	// (1) $PATH — preferred. A user-installed llama-server (e.g. via
+	// `brew install llama.cpp`) is the robust default. We can't pin a SHA for
+	// a system binary, so it is used as-is and WARN-logged as unverified.
+	if p, err := exec.LookPath("llama-server"); err == nil {
+		slog.Warn("using llama-server from $PATH; integrity NOT verified (user-installed)",
+			"path", p)
+		return p, nil
 	}
 
-	// Path (2): $PATH lookup. Pre-pin phase only — when no authoritative
-	// SHA256 is set, accept any llama-server the user has installed (via
-	// Homebrew, MacPorts, built from source). When pinnedSHA256 is real,
-	// we skip PATH because the integrity check would be impossible (we
-	// can't mutate $PATH binaries to match our pin). The user is
-	// responsible for upgrading their PATH binary in that case, OR the
-	// pinned hash should match a downloadable release.
-	if pinnedSHA256 == "" || pinnedSHA256 == "TODO-PHASE3" {
-		if p, err := exec.LookPath("llama-server"); err == nil {
-			slog.Info("found llama-server on PATH; skipping integrity check (placeholder pin)",
-				"path", p)
-			return p, nil
+	// (2) Cache: a previously-extracted bundle, trusted only if a sidecar
+	// records the verified archive SHA. Survives across manager lifetimes.
+	bundleDir := filepath.Join(binDir, "llama-b"+strings.TrimPrefix(llamaServerDownloadTag, "b"))
+	cachedBin := filepath.Join(bundleDir, "llama-server")
+	sidecar := cachedBin + ".sha256"
+	if info, err := os.Stat(cachedBin); err == nil && !info.IsDir() && isExecutable(cachedBin, info.Mode()) {
+		if marked, merr := os.ReadFile(sidecar); merr == nil &&
+			strings.TrimSpace(string(marked)) == strings.ToLower(pinnedSHA256) {
+			return cachedBin, nil
 		}
+		slog.Warn("cached llama-server bundle has stale/missing SHA sidecar; re-downloading",
+			"path", cachedBin)
 	}
 
-	// Path (3): download.
+	// (3) Download the pinned tar.gz, verify ARCHIVE SHA, extract, strip quarantine.
 	if err := os.MkdirAll(binDir, 0o755); err != nil {
 		return "", fmt.Errorf("mkdir bin dir %s: %w", binDir, err)
 	}
-
 	url := buildDownloadURL()
-	downloadedPath, err := downloadAndVerify(ctx, url, cachePath, pinnedSHA256)
-	if err != nil {
-		return "", err
-	}
-	return downloadedPath, nil
+	return downloadVerifyAndExtract(ctx, url, bundleDir, cachedBin, sidecar, pinnedSHA256)
 }
 
-// downloadAndVerify fetches url to a .tmp file, verifies SHA256, atomically
-// renames to finalPath, and chmods +x. Never chmods before SHA256 passes.
-//
-// When pinnedSHA256 is empty or "TODO-PHASE3", the SHA256 check is skipped
-// (this is the Phase 1/2 path that the contract phase accepts). In Phase 3
-// the placeholder is replaced by a real hex string, at which point any
-// mismatch is a hard error.
-func downloadAndVerify(ctx context.Context, url, finalPath, pinnedSHA256 string) (string, error) {
+// downloadVerifyAndExtract fetches url (a tar.gz) to a .tmp file, verifies the
+// ARCHIVE SHA256, extracts the bundle preserving its dir layout, chmods the
+// inner llama-server +x, strips macOS quarantine, and writes a SHA sidecar.
+// Never chmods before SHA passes (F3.3). pinnedSHA256 is the archive hash.
+func downloadVerifyAndExtract(ctx context.Context, url, bundleDir, finalBinPath, sidecarPath, pinnedSHA256 string) (string, error) {
 	if !strings.HasPrefix(url, "https://") {
 		return "", errors.New("internal bug: download URL must be HTTPS")
 	}
 
-	tmpPath := finalPath + ".tmp"
-	// Remove any stale .tmp from a previous interrupted attempt.
-	_ = os.Remove(tmpPath)
+	tmpArchive := finalBinPath + ".tar.gz.tmp"
+	_ = os.Remove(tmpArchive) // remove any stale tmp from a prior interrupted run
 
-	f, err := os.OpenFile(tmpPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0o600)
+	// The tmp archive lives inside the bundle dir; ensure it exists.
+	if err := os.MkdirAll(filepath.Dir(tmpArchive), 0o755); err != nil {
+		return "", fmt.Errorf("mkdir bundle dir: %w", err)
+	}
+
+	f, err := os.OpenFile(tmpArchive, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0o600)
 	if err != nil {
-		return "", fmt.Errorf("create tmp file %s: %w", tmpPath, err)
+		return "", fmt.Errorf("create tmp archive %s: %w", tmpArchive, err)
 	}
 	defer f.Close()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
+		_ = os.Remove(tmpArchive)
 		return "", fmt.Errorf("build download request: %w", err)
 	}
 	resp, err := downloadClient.Do(req)
 	if err != nil {
-		_ = os.Remove(tmpPath)
+		_ = os.Remove(tmpArchive)
 		return "", fmt.Errorf("download %s: %w", url, err)
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		_ = os.Remove(tmpPath)
+		_ = os.Remove(tmpArchive)
 		return "", fmt.Errorf("download %s: HTTP %d", url, resp.StatusCode)
 	}
 
-	// Stream into the temp file in 64KB chunks.
+	// Stream into the temp archive in 64KB chunks.
 	buf := make([]byte, 64*1024)
 	for {
 		if err := ctx.Err(); err != nil {
-			_ = os.Remove(tmpPath)
+			_ = os.Remove(tmpArchive)
 			return "", err
 		}
 		n, rerr := resp.Body.Read(buf)
 		if n > 0 {
 			if _, werr := f.Write(buf[:n]); werr != nil {
-				_ = os.Remove(tmpPath)
-				return "", fmt.Errorf("write tmp file: %w", werr)
+				_ = os.Remove(tmpArchive)
+				return "", fmt.Errorf("write tmp archive: %w", werr)
 			}
 		}
 		if rerr == io.EOF {
 			break
 		}
 		if rerr != nil {
-			_ = os.Remove(tmpPath)
+			_ = os.Remove(tmpArchive)
 			return "", fmt.Errorf("read response body: %w", rerr)
 		}
 	}
 	if err := f.Close(); err != nil {
-		_ = os.Remove(tmpPath)
-		return "", fmt.Errorf("close tmp file: %w", err)
+		_ = os.Remove(tmpArchive)
+		return "", fmt.Errorf("close tmp archive: %w", err)
 	}
 
-	// SHA256 verification (skipped only when pinned value is not yet set).
-	if pinnedSHA256 != "" && pinnedSHA256 != "TODO-PHASE3" {
-		got, err := hashFile(ctx, tmpPath)
+	// Verify the ARCHIVE SHA256 BEFORE extracting.
+	want := strings.ToLower(pinnedSHA256)
+	got, err := hashFile(ctx, tmpArchive)
+	if err != nil {
+		_ = os.Remove(tmpArchive)
+		return "", fmt.Errorf("hash archive: %w", err)
+	}
+	if got != want {
+		_ = os.Remove(tmpArchive)
+		return "", &ErrIntegrityFailStruct{Path: tmpArchive, Expected: want, Actual: got}
+	}
+
+	// Extract the tar.gz into bundleDir's parent so llama-b<TAG>/ lands at bundleDir.
+	if err := os.MkdirAll(filepath.Dir(bundleDir), 0o755); err != nil {
+		_ = os.Remove(tmpArchive)
+		return "", fmt.Errorf("mkdir bundle parent: %w", err)
+	}
+	if err := extractTarGz(tmpArchive, filepath.Dir(bundleDir)); err != nil {
+		_ = os.Remove(tmpArchive)
+		return "", fmt.Errorf("extract archive: %w", err)
+	}
+	_ = os.Remove(tmpArchive)
+
+	// NOW chmod +x (only after SHA passed — F3.3).
+	if err := os.Chmod(finalBinPath, 0o755); err != nil {
+		return "", fmt.Errorf("chmod extracted binary %s: %w", finalBinPath, err)
+	}
+
+	// Strip macOS quarantine recursively over the whole bundle.
+	stripQuarantine(bundleDir)
+
+	// Record the verified archive SHA so the cache path trusts this bundle later.
+	if err := os.WriteFile(sidecarPath, []byte(want), 0o600); err != nil {
+		slog.Warn("could not write llama-server SHA sidecar; cache will re-download", "err", err)
+	}
+
+	slog.Info("downloaded+extracted llama-server bundle",
+		"path", finalBinPath, "tag", llamaServerDownloadTag)
+	return finalBinPath, nil
+}
+
+// extractTarGz extracts a gzip'd tar into destDir. It refuses entries that
+// escape destDir (path traversal) and refuses link entries (symlink/hardlink
+// — supply-chain hygiene). Executable bits are preserved from the tar
+// headers. The llama.cpp bundle has no links and no absolute paths, so
+// refusal is always safe here.
+func extractTarGz(archivePath, destDir string) error {
+	f, err := os.Open(archivePath)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	gz, err := gzip.NewReader(f)
+	if err != nil {
+		return fmt.Errorf("gzip: %w", err)
+	}
+	defer gz.Close()
+	tr := tar.NewReader(gz)
+	cleanDest := filepath.Clean(destDir)
+	for {
+		hdr, err := tr.Next()
+		if err == io.EOF {
+			break
+		}
 		if err != nil {
-			_ = os.Remove(tmpPath)
-			return "", fmt.Errorf("hash downloaded binary: %w", err)
+			return err
 		}
-		if got != strings.ToLower(pinnedSHA256) {
-			_ = os.Remove(tmpPath)
-			return "", &ErrIntegrityFailStruct{
-				Path:     tmpPath,
-				Expected: strings.ToLower(pinnedSHA256),
-				Actual:   got,
+		target := filepath.Join(cleanDest, hdr.Name)
+		// Path-traversal defense: the cleaned target must be destDir itself
+		// or live beneath it.
+		if !strings.HasPrefix(filepath.Clean(target)+string(filepath.Separator), cleanDest+string(filepath.Separator)) &&
+			filepath.Clean(target) != cleanDest {
+			return fmt.Errorf("archive entry %q escapes dest dir", hdr.Name)
+		}
+		switch hdr.Typeflag {
+		case tar.TypeDir:
+			if err := os.MkdirAll(target, 0o755); err != nil {
+				return err
 			}
+		case tar.TypeReg, tar.TypeRegA:
+			if err := os.MkdirAll(filepath.Dir(target), 0o755); err != nil {
+				return err
+			}
+			out, err := os.OpenFile(target, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, os.FileMode(hdr.Mode)&0o777)
+			if err != nil {
+				return err
+			}
+			if _, err := io.Copy(out, tr); err != nil {
+				out.Close()
+				return err
+			}
+			out.Close()
+		case tar.TypeSymlink, tar.TypeLink:
+			return fmt.Errorf("archive contains a link entry %q — refusing", hdr.Name)
 		}
 	}
+	return nil
+}
 
-	// Atomic rename. os.Rename is atomic on POSIX when both paths are on
-	// the same filesystem, which they are (same dir).
-	if err := os.Rename(tmpPath, finalPath); err != nil {
-		_ = os.Remove(tmpPath)
-		return "", fmt.Errorf("rename %s -> %s: %w", tmpPath, finalPath, err)
+// stripQuarantine clears the macOS com.apple.quarantine extended attribute
+// recursively over the bundle dir, so the downloaded llama-server and its
+// dylib siblings aren't killed by Gatekeeper on first launch. No-op off darwin.
+func stripQuarantine(bundleDir string) {
+	if runtime.GOOS != "darwin" {
+		return
 	}
-
-	// NOW we chmod +x. Never before SHA256 passes (F3.3).
-	if err := os.Chmod(finalPath, 0o755); err != nil {
-		return "", fmt.Errorf("chmod %s: %w", finalPath, err)
+	if _, err := exec.LookPath("xattr"); err != nil {
+		slog.Warn("xattr not found; cannot strip macOS quarantine from llama-server bundle", "err", err)
+		return
 	}
-
-	slog.Info("downloaded llama-server binary",
-		"path", finalPath, "url", url, "sha256_pinned", pinnedSHA256 != "" && pinnedSHA256 != "TODO-PHASE3")
-	return finalPath, nil
+	// -c clears, -r recurses (so dylib siblings are cleared too). Quarantine
+	// may be absent (benign); not fatal.
+	if out, err := exec.Command("xattr", "-cr", bundleDir).CombinedOutput(); err != nil {
+		slog.Warn("xattr -cr failed (may be benign if quarantine absent)", "err", err, "out", string(out))
+	}
 }
 
 // buildDownloadURL formats the llama.cpp releases download URL for the
