@@ -1,6 +1,6 @@
 {
   "name": "localvision",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Local vision-language model tools backed by a local llama.cpp subprocess. Provides 9 image-analysis tools (read_image, extract_text, extract_code, extract_table, describe_ui, describe_diagram, describe_chart, diagnose_error, compare_images) for text-only coding LLMs. Each call loads a vision model and runs one inference — budget 30-60 seconds per call.",
   "mcpServers": {
     "localvision": {

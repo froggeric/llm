@@ -4,23 +4,20 @@
 # the Go subdirectory-module convention; proxy.golang.org looks for tags in
 # this format when resolving `go install ...@latest`.
 #
-# v0.1 runs on a single macos-14 (Apple Silicon) runner because that is
-# the only platform we build binaries for in v0.1. When v0.2 adds Linux
-# and Windows targets, this workflow gets a matrix and the runner count
-# expands.
+# Runs on a single macos-14 runner. With CGO off the wrapper is pure Go, so
+# goreleaser cross-compiles all six targets (darwin/linux/windows × arm64/amd64)
+# from this one runner — no per-OS build matrix is needed for the release.
+# Cross-platform *tests* run in vision-mcp-ci.yml on ubuntu/windows/macos.
 #
 # Required secrets:
 #
 #   GITHUB_TOKEN            Automatically provided by Actions; used by
 #                           goreleaser to upload release assets.
 #
-# Documented but UNUSED in v0.1:
-#
 #   HOMEBREW_TAP_GITHUB_TOKEN
-#                           Plumbed through so we don't need to touch this
-#                           workflow again in v0.2 when we enable the
-#                           Homebrew tap. Currently passed as an env var to
-#                           goreleaser, which has no brews: section in v0.1.
+#                           A fine-grained PAT with contents:write on
+#                           froggeric/homebrew-tap, so goreleaser can push the
+#                           formula update.
 
 name: vision-mcp-release
 
@@ -39,7 +36,7 @@ permissions:
 
 jobs:
   release:
-    name: goreleaser (darwin/arm64)
+    name: goreleaser (cross-compile all targets)
     runs-on: macos-14
     defaults:
       run:

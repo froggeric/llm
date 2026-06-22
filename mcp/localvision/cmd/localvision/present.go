@@ -9,20 +9,17 @@ import (
 	"time"
 
 	"github.com/froggeric/llm/mcp/localvision/internal/tools"
-	"golang.org/x/sys/unix"
 )
 
 // present.go adds terminal chrome (spinner, colors, symbols) to the one-shot
 // CLI. All chrome goes to STDERR and is gated on stderr being a TTY, so stdout
 // stays plain text for piping (`localvision img.png --type ocr > out.txt`).
+//
+// isTerminal is per-OS (term_{darwin,linux,windows,other}.go) so this package
+// cross-compiles cleanly.
 
 // stderrIsTTY gates color/animation so pipes and log files stay clean.
 var stderrIsTTY = isTerminal(os.Stderr.Fd())
-
-func isTerminal(fd uintptr) bool {
-	_, err := unix.IoctlGetTermios(int(fd), unix.TIOCGETA)
-	return err == nil
-}
 
 // ANSI color codes.
 const (

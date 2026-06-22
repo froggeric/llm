@@ -40,15 +40,16 @@ builds:
   - id: localvision
     main: ./cmd/localvision
     binary: localvision
-    # v0.1 MVP: darwin/arm64 only. The other targets are listed as comments
-    # so that enabling them in v0.2 is a one-line change per target.
+    # v0.4: cross-platform. CGO is off (the wrapper spawns llama-server as a
+    # subprocess and does no inference itself), so goreleaser cross-compiles all
+    # six darwin/linux/windows × arm64/amd64 targets from a single runner.
     goos:
       - darwin
-      # - linux    # v0.2
-      # - windows  # v0.2
+      - linux
+      - windows
     goarch:
       - arm64
-      # - amd64    # v0.2
+      - amd64
     # CGO off for the wrapper binary. The wrapper never does inference
     # itself; it spawns llama-server as a subprocess. (The llama-server
     # binary itself is built by scripts/build-llama-cpp.sh and shipped as

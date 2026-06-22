@@ -8,10 +8,10 @@ It runs entirely on your machine. There is no telemetry, no outbound HTTP
 except to `huggingface.co/froggeric/` for the initial model download, and
 the `llama-server` subprocess binds to `127.0.0.1` only.
 
-> **Status:** **v0.3.0** — the standalone CLI is complete: one-shot queries
-> (`localvision img.png --type ocr`), `--format json`, batch processing
-> (`*.png --output-dir out/ --meta`), and a first-run `setup` wizard.
-> Apple Silicon (darwin/arm64) only.
+> **Status:** **v0.4.0** — cross-platform: runs on macOS (Apple Silicon/Intel),
+> Linux, and Windows (x86_64 + arm64). One-shot CLI (`localvision img.png --type
+> ocr`), `--format`, batch (`--output-dir --meta`), a `setup` wizard, and a
+> cross-platform HEIC/WEBP converter chain.
 
 ---
 
@@ -40,8 +40,8 @@ and tears the subprocess down after a 5-minute idle timer.
 
 ## Install
 
-macOS Apple Silicon only (Linux/Windows are planned — see
-[`ROADMAP.md`](./ROADMAP.md), Theme D). Three options.
+macOS (Apple Silicon/Intel), Linux, and Windows are all supported. Three options
+(Windows users: use Option 3, `go install`).
 
 ### Option 1 — Homebrew (recommended)
 
@@ -63,8 +63,9 @@ curl -fsSL https://github.com/froggeric/llm/releases/latest/download/install.sh 
 The installer (source: [`scripts/install.sh`](./scripts/install.sh)):
 
 1. Detects your OS and architecture via `uname`.
-2. Rejects unsupported combinations (only macOS Apple Silicon is supported
-   in v0.2; Linux and Windows fail with a clear message).
+2. Supports darwin/amd64, darwin/arm64, linux/amd64, linux/arm64 (tar.gz).
+   Windows is detected and the user is pointed to `go install` (Option 3),
+   since native-Windows zip+exe handling isn't in the bash installer.
 3. Downloads the release tarball from GitHub Releases.
 4. Verifies the SHA256 sidecar.
 5. Extracts `localvision` into `/usr/local/bin` if you have `sudo`,

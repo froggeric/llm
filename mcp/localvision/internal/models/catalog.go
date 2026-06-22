@@ -49,12 +49,17 @@ const (
 
 // HardwareInfo is the result of runtime hardware detection.
 //
-// On Apple Silicon, TotalMemoryGB is unified memory; there is no separate
-// VRAM. The detection code subtracts a safety margin (default 4 GB) before
-// comparing against model min_vram_gb, because macOS will refuse to wire
-// more than ~75-80% of total memory.
+// On Apple Silicon, TotalMemoryGB is unified memory and there is no separate
+// VRAM (VramGB stays 0); the model loads into unified memory. On Linux/Windows
+// with a discrete GPU (CUDA/ROCm), VramGB is the GPU's VRAM and that is what
+// the model loads into. effectiveMemoryGB picks the right figure for selection.
+//
+// The detection code subtracts a safety margin (default 4 GB) before comparing
+// against model min_vram_gb, because macOS will refuse to wire more than
+// ~75-80% of total memory (and discrete GPUs can't be filled 100% either).
 type HardwareInfo struct {
-	TotalMemoryGB float64
+	TotalMemoryGB float64 // system RAM; on Apple Silicon this is also the GPU's unified memory
+	VramGB        float64 // discrete-GPU VRAM when Backend == discrete_gpu; 0 otherwise
 	Tier          HardwareTier
 	Backend       Backend
 	DetectNote    string // surfaced to user via `doctor` if non-empty

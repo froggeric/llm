@@ -14,8 +14,6 @@ import (
 	"regexp"
 	"strings"
 	"time"
-
-	"golang.org/x/sys/unix"
 )
 
 // ErrSchemaIncompatible is returned by Load when the catalog file declares
@@ -384,15 +382,10 @@ func streamDownload(ctx context.Context, url, tmpPath string, resumeFrom int64, 
 }
 
 // freeDiskBytes returns the free byte count available to unprivileged users on
-// the filesystem holding path (darwin/linux via Statfs). It is a package-level
-// variable so tests can simulate a nearly-full volume.
-var freeDiskBytes = func(path string) (int64, error) {
-	var stat unix.Statfs_t
-	if err := unix.Statfs(path, &stat); err != nil {
-		return 0, err
-	}
-	return int64(stat.Bavail) * int64(stat.Bsize), nil
-}
+// the filesystem holding path. It delegates to the per-OS freeSpace
+// (disk_{unix,windows,fallback}.go) and is a package-level variable so tests
+// can simulate a nearly-full volume.
+var freeDiskBytes = freeSpace
 
 // humanBytes renders a byte count as a short human-readable string.
 func humanBytes(b int64) string {

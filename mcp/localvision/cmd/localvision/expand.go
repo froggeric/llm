@@ -11,7 +11,8 @@ import (
 
 // imageExts are the file extensions (lowercase, no dot) treated as images
 // when expanding a directory. Matches the formats llama-server accepts plus
-// HEIC/HEIF (converted upstream by the image-ref normalizer via sips).
+// HEIC/HEIF (converted upstream via sips on macOS; cross-platform converter
+// chain planned — see ROADMAP D5).
 var imageExts = map[string]bool{
 	"png": true, "jpg": true, "jpeg": true, "webp": true,
 	"heic": true, "heif": true, "gif": true, "bmp": true,

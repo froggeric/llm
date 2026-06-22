@@ -21,10 +21,22 @@ const defaultSelectionSafetyMarginGB = 4.0
 // plan's pseudocode uses "minus 1 (per running llama-server)".
 const residentLlamaServerMarginGB = 1.0
 
+// effectiveMemoryGB returns the memory a model loads into: VRAM when a discrete
+// GPU is present, else system (unified) RAM. On Apple Silicon the backend is
+// apple_silicon (not discrete) and VramGB is 0, so this returns TotalMemoryGB —
+// preserving the pre-v0.4 Apple behaviour exactly. On Linux/Windows + NVIDIA/ROCm
+// it returns VRAM, which is correct since llama-server offloads the model there.
+func effectiveMemoryGB(hw HardwareInfo) float64 {
+	if hw.Backend == BackendDiscreteGPU && hw.VramGB > 0 {
+		return hw.VramGB
+	}
+	return hw.TotalMemoryGB
+}
+
 // fitsModel returns true if the model can plausibly fit in the detected
 // hardware, per F1.6:
 //
-//	available = totalMemoryGB - safetyMarginGB - residentMarginGB
+//	available = effectiveMemoryGB(hw) - safetyMarginGB - residentMarginGB
 //	fits      = available >= model.MinVramGb
 //
 // safetyMarginGB defaults to 4 if 0 or negative. We use >= rather than >
@@ -34,7 +46,7 @@ func fitsModel(model ModelSpec, hw HardwareInfo, safetyMarginGB float64) bool {
 	if margin <= 0 {
 		margin = defaultSelectionSafetyMarginGB
 	}
-	available := hw.TotalMemoryGB - margin - residentLlamaServerMarginGB
+	available := effectiveMemoryGB(hw) - margin - residentLlamaServerMarginGB
 	return float64(model.MinVramGb) <= available
 }
 

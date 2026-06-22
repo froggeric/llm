@@ -18,22 +18,24 @@ item isn't in this file, it isn't planned.
 
 ## Where we are now
 
-**v0.3.0 shipped** — the standalone CLI is complete (Theme C). `localvision` is
-now a first-class shell tool: one-shot queries (`localvision img.png --type ocr`),
-`--format json|yaml|xml|text|markdown`, batch processing (`*.png --output-dir
-out/ --meta`, glob/dir/stdin expansion, `--type compare` pairs), and a
-framework-free `setup` wizard (stdlib, zero new deps). The one interface change:
-`Executor.Run` returns `(raw, Stats, error)` to feed `--meta`.
+**v0.4.0 shipped** — cross-platform (Theme D). `localvision` now builds and runs
+on macOS (Apple Silicon/Intel), Linux, and Windows (x86_64 + arm64) — all six
+targets cross-compiled from one runner (pure Go, CGO off). Linux/Windows detect
+CUDA/ROCm/NVIDIA GPUs and size model selection against VRAM; a first-wins
+converter chain (`sips → magick → heif-convert → ffmpeg`) handles HEIC/WEBP
+everywhere; CI runs on ubuntu/windows/macos.
 
 What **works**: 9 MCP tools (MCP `run` command); the full one-shot CLI;
-`--format` / batch / `--meta`; the `setup` wizard; hardware tier detection;
-spawn-on-demand lifecycle with warm reuse; SHA256 verification; HEIC; installs
-via **Homebrew**, `curl|sh`, `go install`.
+`--format` / batch / `--meta`; the `setup` wizard; hardware detection
+(Apple Silicon + Linux CUDA/ROCm + Windows CUDA); VRAM-aware selection;
+cross-platform HEIC/WEBP; spawn-on-demand lifecycle with warm reuse; SHA256
+verification; installs via **Homebrew** (macOS), `curl|sh` (darwin/linux),
+`go install` (all platforms).
 
-What's **next**: cross-platform support (Theme D — Linux/Windows + GPU
-backends), hardening (Theme E — streaming, tool prefixes, doctor --update),
-then the localhost HTTP API / OpenAI-compatible endpoint (Theme F), richer
-tools (video, PDF, UI→code), and far-future research ideas.
+What's **next**: hardening (Theme E — streaming, tool prefixes, doctor
+--update-llama-server, pin goreleaser), then the localhost HTTP API /
+OpenAI-compatible endpoint (Theme F), richer tools (video, PDF, UI→code), and
+far-future research ideas.
 
 ---
 
@@ -219,23 +221,49 @@ pull forward into `v0.2.0`** alongside A1–A4.
 
 ---
 
-## Theme D — Cross-platform → `v0.4.0`
+## Theme D — Cross-platform → `v0.4.0` ✅
 
-`v0.1`/`v0.2` are Apple Silicon only. Linux/Windows hardware detection returns
-`BackendUnsupported` (`internal/models/hardware_linux.go`,
-`hardware_windows.go`); goreleaser and `build-llama-cpp.sh` reject every other
-target with a clear "v0.2" message.
+`v0.4` adds Linux and Windows (x86_64 + arm64) alongside macOS. The wrapper is
+pure Go (CGO off), so goreleaser cross-compiles all six targets from one runner;
+CI runs `vet`/`test -race`/`build` on ubuntu/windows/macos. Discrete-GPU model
+selection now sizes against VRAM (CUDA/ROCm detected), not host RAM.
 
-- **D1.** Linux hardware detection — CUDA + ROCm. `M`
-- **D2.** Windows hardware detection — CUDA + DirectML. `M`
-- **D3.** CI matrix: add Linux + Windows runners. `S`
-- **D4.** goreleaser cross-compile: uncomment `linux`, `windows`, `amd64`
-  (`.goreleaser.yaml:42-46`); the windows→zip `format_override` is already
-  staged. `S`
-- **D5.** Cross-platform HEIC: ImageMagick fallback (today HEIC relies on macOS
-  `sips`). `S`
+- **D1.** Linux hardware detection — CUDA + ROCm. `M` ✅ *(done in v0.4.0)*
+- **D2.** Windows hardware detection — CUDA (DirectML deferred). `M` ✅ *(done in v0.4.0)*
+- **D3.** CI matrix: ubuntu/windows/macos in `vision-mcp-ci.yml`. `S` ✅ *(done in v0.4.0)*
+- **D4.** goreleaser cross-compile: six targets (darwin/linux/windows × arm64/amd64)
+  from one macos runner (CGO off). `S` ✅ *(done in v0.4.0)*
+- **D5.** Cross-platform HEIC/WEBP conversion — opportunistic converter chain. `S–M` ✅ *(done in v0.4.0)*
+  First-wins chain over **CLI-only, `$PATH`-discovered** tools: `sips` (macOS) →
+  `magick`/`convert` (ImageMagick) → `heif-convert` (libheif) → `ffmpeg`. Use
+  whatever the user already has installed; convert to JPEG/PNG because
+  `llama-server` (stb_image) can't read HEIC natively. WEBP stays on the same path.
 
-D3/D4 depend on D1/D2 (don't ship builds for platforms you can't detect).
+  Design decisions:
+  - **Opportunistic, not ImageMagick-only.** ImageMagick's HEIC is frequently
+    broken out-of-the-box (delegate not compiled in; `policy.xml` blocks
+    HEIC/HEIF by default). A chain is far more robust than betting on one tool.
+  - **CLI-only / headless-safe.** Exclude GUI viewers with bolt-on CLIs
+    (IrfanView, XnView MP): localvision runs headless (MCP server, batch, cron),
+    where GUI apps flash windows, return inconsistent exit codes, and fail in
+    non-interactive sessions. (`nconvert` — XnView's real CLI, self-contained
+    HEIC codec — is the one GUI-family tool that'd be acceptable; deferred
+    unless Windows-HEIC-without-ffmpeg becomes a real pain point.)
+  - **Never bundle a decoder.** HEIC uses HEVC (patent-encumbered: MPEG-LA /
+    HEVC Advance). Redistributing *any* HEVC decoder — `nconvert`/IrfanView
+    (freeware; no redistribution rights anyway), `libheif`+`libde265`, or a
+    static ffmpeg-with-heif — puts the project on the hook for HEVC patent
+    licensing. This is why we bundle MIT-licensed `llama-server` but **no HEIC
+    decoder**: MIT grants redistribution; freeware and patent-encumbered codecs
+    do not. HEIC is, by nature, "bring your own decoder."
+  - **Error UX.** When no converter is found, emit a clear message naming
+    installable options — incl. IrfanView/XnView/nconvert for Windows users who
+    already have them — instead of a macOS-only wall.
+
+**Known limitation:** Linux/Windows GPU detection is unit-tested (parsers +
+selection logic) and runs clean on GPU-less CI, but isn't validated on real
+CUDA/ROCm hardware from the dev machine (macOS). `default_model` overrides any
+misdetection. DirectML detection on Windows is deferred.
 
 ---
 

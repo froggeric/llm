@@ -16,7 +16,9 @@
 #   4. Verifies the SHA256 sidecar.
 #   5. Extracts `localvision` into /usr/local/bin (or ~/.local/bin).
 #
-# Supported in v0.1: macOS Apple Silicon (darwin/arm64) only.
+# Supported in v0.4: darwin/amd64, darwin/arm64, linux/amd64, linux/arm64
+# (all via tar.gz). Windows has prebuilt .zip releases but installs via
+# `go install` (see the windows branch below).
 #
 # This file is the source of truth. goreleaser copies it into each GitHub
 # release as a top-level `install.sh` artifact (see release.extra_files in
@@ -83,9 +85,10 @@ raw_os="$(uname -s)"
 raw_arch="$(uname -m)"
 
 case "$raw_os" in
-	Darwin) os="darwin" ;;
-	Linux)  os="linux" ;;
-	*)      os="$raw_os" ;;
+	Darwin)               os="darwin" ;;
+	Linux)                os="linux" ;;
+	MINGW*|MSYS*|CYGWIN*) os="windows" ;; # Git Bash / MSYS / Cygwin on Windows
+	*)                    os="$raw_os" ;;
 esac
 
 case "$raw_arch" in
@@ -94,32 +97,48 @@ case "$raw_arch" in
 	*)             arch="$raw_arch" ;;
 esac
 
-# --- supported target check (v0.1 MVP) -----------------------------------
+# --- supported target check ----------------------------------------------
 
-if [[ "$os" == "darwin" && "$arch" == "arm64" ]]; then
-	: # supported
-else
+# v0.4 ships tar.gz builds for darwin (amd64+arm64) and linux (amd64+arm64),
+# which this installer handles end-to-end. Windows builds exist (.zip with
+# localvision.exe) but this bash installer doesn't do native-Windows zip/exe/PATH
+# handling — Windows users get a pointer to `go install`, which works cleanly.
+if [[ "$os" == "windows" ]]; then
 	cat >&2 <<EOF
-install.sh: target '$os/$arch' is not supported in localvision v0.1.
+install.sh: native Windows isn't handled by this curl|sh installer.
 
-The v0.1 release is MVP-scoped to macOS Apple Silicon (darwin/arm64).
-Support for additional targets will land in v0.2:
+Install localvision on Windows with Go (one command; Go is pure Go, CGO off):
 
-  - darwin/amd64     (Intel Mac)
-  - linux/amd64      (typical CI / WSL2)
-  - linux/arm64      (Raspberry Pi 5, Ampere Altra)
-  - windows/amd64
-  - windows/arm64
+  go install github.com/$REPO/mcp/localvision/cmd/localvision@latest
 
-If you are on one of those platforms and want to track v0.2 progress, open
-an issue at https://github.com/$REPO/issues.
+or download the .zip for your arch from the release page and extract
+${APP_NAME}.exe manually:
+
+  https://github.com/$REPO/releases/latest
+
+Detected: uname -s = $raw_os ($os/$arch).
+EOF
+	exit 0
+fi
+
+case "$os/$arch" in
+	darwin/amd64|darwin/arm64|linux/amd64|linux/arm64) : ;;
+	*)
+		cat >&2 <<EOF
+install.sh: target '$os/$arch' is not supported by this installer.
+
+Prebuilt targets: darwin/amd64, darwin/arm64, linux/amd64, linux/arm64, and
+windows (via go install). To build from source on any Go-supported platform:
+
+  go install github.com/$REPO/mcp/localvision/cmd/localvision@latest
 
 Detected:
   uname -s = $raw_os  -> $os
   uname -m = $raw_arch -> $arch
 EOF
-	exit 3
-fi
+		exit 3
+		;;
+esac
 
 # --- pick an install prefix ----------------------------------------------
 

@@ -13,7 +13,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"time"
 )
@@ -31,14 +30,18 @@ import (
 // request completes; the original is left untouched.
 //
 // On Linux/Windows where `sips` is unavailable, these formats return an
-// error asking the user to convert manually. v0.2 will add an ImageMagick
-// fallback or a pure-Go decoder.
+// error asking the user to convert manually. Theme D / D5 (ROADMAP) will
+// generalize this into a first-wins, CLI-only, `$PATH`-discovered converter
+// chain: `sips → magick/convert → heif-convert → ffmpeg`. (Not ImageMagick-
+// only: its HEIC is often policy/delegate-disabled out of the box. No decoder
+// is bundled — HEVC patents + freeware redistribution limits make HEIC a
+// "bring your own decoder" format.)
 func loadImageAsDataURI(path string) (string, error) {
 	ext := strings.ToLower(filepath.Ext(path))
 
 	// HEIC/HEIF: convert to JPEG.
 	if ext == ".heic" || ext == ".heif" {
-		jpegPath, err := convertViaSips(path, "jpeg", "jpg")
+		jpegPath, err := convertImage(path, "jpg")
 		if err != nil {
 			return "", fmt.Errorf("convert HEIC: %w", err)
 		}
@@ -50,7 +53,7 @@ func loadImageAsDataURI(path string) (string, error) {
 	// WEBP: convert to PNG. llama-server's image decoder (stb_image)
 	// doesn't understand WEBP and silently drops it.
 	if ext == ".webp" {
-		pngPath, err := convertViaSips(path, "png", "png")
+		pngPath, err := convertImage(path, "png")
 		if err != nil {
 			return "", fmt.Errorf("convert WEBP: %w", err)
 		}
@@ -67,38 +70,122 @@ func loadImageAsDataURI(path string) (string, error) {
 	return "data:" + mime + ";base64," + base64.StdEncoding.EncodeToString(data), nil
 }
 
-// convertViaSips uses macOS `sips` to convert an image to the given format.
-// Returns the path to a temp file containing the converted image. Caller
-// must remove.
+// convertImage runs the converter chain (D5): the first available converter
+// that succeeds wins. It is CLI-only and $PATH-discovered so localvision runs
+// headless (MCP server, batch, cron) — no GUI apps. Returns the temp-file path
+// of the converted image; the caller removes it. outExt is the target extension
+// ("jpg", "png").
 //
-// Why sips: it ships with macOS (no install needed), handles HEIC and WEBP
-// correctly, and preserves EXIF orientation. ImageMagick would also work
-// but isn't a system dependency we can rely on.
+// Chain order (preference + reliability): sips (macOS, always correct) →
+// magick (ImageMagick v7) → convert (v6) → heif-convert (libheif, most
+// focused) → ffmpeg (ubiquitous, HEIC needs a heif-demuxer build). ImageMagick
+// alone is *not* sufficient — its HEIC is frequently delegate-disabled or
+// blocked by policy.xml out-of-the-box, hence the chain. No decoder is bundled
+// (HEVC patents + freeware redistribution limits make HEIC a "bring your own
+// decoder" format).
 //
-// format is the sips format name ("jpeg", "png"). ext is the temp-file
-// extension ("jpg", "png") used to name the output.
-func convertViaSips(srcPath, format, ext string) (string, error) {
-	if runtime.GOOS != "darwin" {
-		return "", fmt.Errorf("%s conversion requires macOS `sips`; on %s convert manually with `magick %s output.%s`", format, runtime.GOOS, srcPath, ext)
+// On success returns the temp path; on failure an actionable error naming what
+// to install. convertersVar is the testable seam.
+func convertImage(src, outExt string) (string, error) {
+	var tried []string
+	for _, c := range convertersVar {
+		if !c.avail() {
+			continue
+		}
+		tried = append(tried, c.name)
+		if tmp, err := c.run(src, outExt); err == nil {
+			return tmp, nil
+		}
 	}
-	if _, err := exec.LookPath("sips"); err != nil {
-		return "", fmt.Errorf("%s conversion requires `sips` (macOS built-in); not found on $PATH: %w", format, err)
+	if len(tried) == 0 {
+		return "", fmt.Errorf("no image converter found; install one of: libheif-examples (heif-convert), ffmpeg, or ImageMagick — on Windows, XnView/nconvert or IrfanView+HEIC plugin can also convert")
 	}
+	return "", fmt.Errorf("image conversion failed (tried %s); check the input file or install a different converter", strings.Join(tried, ", "))
+}
 
-	tmp, err := os.CreateTemp("", "lvm-conv-*."+ext)
+// converter is one candidate in the image-conversion chain.
+type converter struct {
+	name  string
+	avail func() bool
+	run   func(src, outExt string) (string, error) // returns temp path; caller removes
+}
+
+// converters is the first-wins chain. Order matters: most-preferred / reliable
+// first. See convertImage doc.
+var converters = []converter{
+	{name: "sips", avail: avail("sips"), run: convertWithSips},
+	{name: "magick", avail: avail("magick"), run: convertWithMagickLike("magick")},
+	{name: "convert", avail: avail("convert"), run: convertWithMagickLike("convert")},
+	{name: "heif-convert", avail: avail("heif-convert"), run: convertWithHeifConvert},
+	{name: "ffmpeg", avail: avail("ffmpeg"), run: convertWithFfmpeg},
+}
+
+// convertersVar is the testable seam (tests inject fakes).
+var convertersVar = converters
+
+// avail returns an availability check for a binary on $PATH.
+func avail(bin string) func() bool {
+	return func() bool { _, err := exec.LookPath(bin); return err == nil }
+}
+
+// convertWithSips: `sips -s format <fmt> src --out tmp` (macOS).
+func convertWithSips(src, outExt string) (string, error) {
+	format := "jpeg"
+	if outExt == "png" {
+		format = "png"
+	}
+	return runToTemp("lvm-conv-*."+outExt, func(tmp string) *exec.Cmd {
+		return exec.Command("sips", "-s", "format", format, src, "--out", tmp)
+	})
+}
+
+// convertWithMagickLike: `<bin> src tmp` — ImageMagick infers the output format
+// from the temp file's extension.
+func convertWithMagickLike(bin string) func(string, string) (string, error) {
+	return func(src, outExt string) (string, error) {
+		return runToTemp("lvm-conv-*."+outExt, func(tmp string) *exec.Cmd {
+			return exec.Command(bin, src, tmp)
+		})
+	}
+}
+
+// convertWithHeifConvert: `heif-convert src tmp` (libheif; format from ext).
+func convertWithHeifConvert(src, outExt string) (string, error) {
+	return runToTemp("lvm-conv-*."+outExt, func(tmp string) *exec.Cmd {
+		return exec.Command("heif-convert", src, tmp)
+	})
+}
+
+// convertWithFfmpeg: `ffmpeg -y -i src tmp` (format from ext; HEIC needs a
+// build with the heif demuxer, so this is best-effort late in the chain).
+func convertWithFfmpeg(src, outExt string) (string, error) {
+	return runToTemp("lvm-conv-*."+outExt, func(tmp string) *exec.Cmd {
+		return exec.Command("ffmpeg", "-y", "-i", src, tmp)
+	})
+}
+
+// runToTemp creates a temp file named with extSuffix, runs cmd(tmp) capturing
+// stderr, and returns the temp path on success (caller removes). On failure the
+// temp file is removed and a stderr-annotated error is returned.
+//
+// The temp file is pre-created (CreateTemp) on purpose: it reserves the output
+// name atomically and guarantees cleanup on failure (the converter overwrites
+// it). Do not "optimize" this away — removing the pre-create would reintroduce
+// a TOCTOU between name selection and the converter writing it.
+func runToTemp(extSuffix string, cmd func(tmp string) *exec.Cmd) (string, error) {
+	tmp, err := os.CreateTemp("", extSuffix)
 	if err != nil {
 		return "", fmt.Errorf("create temp file: %w", err)
 	}
 	tmp.Close()
 	tmpPath := tmp.Name()
-
-	// sips -s format <fmt> input --out output
-	cmd := exec.Command("sips", "-s", "format", format, srcPath, "--out", tmpPath)
+	c := cmd(tmpPath)
 	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-	if err := cmd.Run(); err != nil {
+	c.Stderr = &stderr
+	if err := c.Run(); err != nil {
 		os.Remove(tmpPath)
-		return "", fmt.Errorf("sips failed: %w; stderr: %s", err, stderr.String())
+		name := c.Path
+		return "", fmt.Errorf("%s failed: %w; stderr: %s", name, err, stderr.String())
 	}
 	return tmpPath, nil
 }

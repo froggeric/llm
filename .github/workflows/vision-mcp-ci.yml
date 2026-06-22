@@ -5,9 +5,10 @@
 # by the existing ci.yml and never trigger this workflow, so they cannot
 # break the Go build and vice versa.
 #
-# v0.1 MVP matrix is macOS 14 (Apple Silicon) only because the hardware
-# detection code paths are Apple-Silicon-specific. Linux and Windows
-# runners will be added in v0.2 alongside the platform ports.
+# v0.4 matrix: Linux + Windows + macOS. With CGO off the code is pure Go, so
+# the same `go vet` / `go test -race` / `go build` runs on all three to catch
+# platform-specific regressions (build tags, syscall constants, path handling)
+# and to exercise the Linux/Windows hardware-detection paths on real OSes.
 
 name: vision-mcp-ci
 
@@ -30,8 +31,12 @@ concurrency:
 
 jobs:
   build-test:
-    name: Build & test (darwin/arm64)
-    runs-on: macos-14
+    name: Build & test (${{ matrix.os }})
+    strategy:
+      fail-fast: false # one OS failing shouldn't mask the others
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-14]
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         working-directory: mcp/localvision
@@ -40,8 +45,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          # We need full history for goreleaser-style metadata, but plain
-          # CI only needs the merged tree. fetch-depth=1 is faster.
           fetch-depth: 1
 
       - name: Set up Go
@@ -51,6 +54,7 @@ jobs:
           cache-dependency-path: mcp/localvision/go.sum
 
       - name: Print environment
+        shell: bash
         run: |
           echo "go version: $(go version)"
           echo "GOOS=$(go env GOOS) GOARCH=$(go env GOARCH)"
@@ -63,15 +67,18 @@ jobs:
         run: go test -race ./...
 
       - name: go build
+        shell: bash
         run: |
+          ext=""
+          if [ "$RUNNER_OS" = "Windows" ]; then ext=".exe"; fi
           mkdir -p bin
-          go build -trimpath -o bin/localvision ./cmd/localvision
-          ./bin/localvision version
+          go build -trimpath -o "bin/localvision${ext}" ./cmd/localvision
+          "./bin/localvision${ext}" version
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
-          name: localvision-${{ github.sha }}-darwin-arm64
-          path: mcp/localvision/bin/localvision
+          name: localvision-${{ github.sha }}-${{ matrix.os }}
+          path: mcp/localvision/bin/localvision*
           if-no-files-found: error
           retention-days: 7

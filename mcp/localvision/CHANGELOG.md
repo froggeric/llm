@@ -9,6 +9,56 @@ once it reaches v1.0.0. Until then, minor changes may break compatibility.
 Tags for this subdirectory follow the Go module convention
 `mcp/localvision/v<MAJOR>.<MINOR>.<PATCH>`.
 
+## [0.4.0] - 2026-06-23
+
+Cross-platform: localvision now builds and runs on Linux and Windows (x86_64
+and arm64) in addition to macOS Apple Silicon/Intel. The wrapper is pure Go
+(CGO off), so all six targets cross-compile from one runner. See
+[`ROADMAP.md`](./ROADMAP.md) Theme D.
+
+### Added
+
+- **Linux hardware detection** (D1): system RAM from `/proc/meminfo`; NVIDIA
+  CUDA and AMD ROCm GPUs detected via `nvidia-smi` / `rocm-smi` (VRAM parsed
+  from their output). When a discrete GPU is found, model selection sizes
+  against VRAM, not host RAM.
+- **Windows hardware detection** (D2): total RAM via `GlobalMemoryStatusEx`
+  (kernel32; `x/sys/windows` v0.46 doesn't wrap it, so it's called directly);
+  NVIDIA CUDA via `nvidia-smi`. DirectML detection is deferred — set
+  `default_model` manually on DirectML-only hardware.
+- **VRAM-aware model selection**: `HardwareInfo.VramGB` + `effectiveMemoryGB`
+  — on a discrete GPU the model must fit in VRAM; on Apple Silicon (unified
+  memory) behavior is unchanged. Fixes a latent bug where a 16 GB GPU on a
+  64 GB host would have been sized against host RAM.
+- **Cross-platform HEIC/WEBP conversion** (D5): a first-wins converter chain
+  — `sips → magick/convert → heif-convert → ffmpeg` — CLI-only and
+  `$PATH`-discovered, so it runs headless (MCP server, batch, cron). Replaces
+  the macOS-only `sips` path. No decoder is bundled (HEVC patents + freeware
+  redistribution limits); when no converter is found the error names what to
+  install.
+- **CI matrix** (D3): `vision-mcp-ci.yml` now runs `go vet` / `go test -race` /
+  `go build` on ubuntu, windows, and macos, catching platform regressions and
+  exercising the Linux/Windows detection paths on real OSes.
+
+### Changed
+
+- **Cross-compile all six targets** (D4): `.goreleaser.yaml` builds
+  darwin/linux/windows × arm64/amd64 from a single macos runner (CGO off).
+- **Per-OS `isTerminal` and disk-space** (foundation): the BSD-only
+  `unix.TIOCGETA` and `unix.Statfs` calls that blocked Linux/Windows builds
+  are now build-tagged per OS (`term_*.go`, `disk_*.go`).
+
+### Known limitations
+
+- Linux/Windows GPU detection is unit-tested (parsers + selection logic) and
+  runs clean on GPU-less CI machines, but is **not validated on real CUDA/ROCm
+  hardware** from the dev machine (macOS). Report discrepancies; `default_model`
+  overrides any misdetection.
+- DirectML (DirectX 12) GPU detection is not implemented on Windows.
+- Homebrew remains macOS-only (Linux/Windows users use `curl | sh` or
+  `go install`); the formula's `brews:` stanza uses a goreleaser-deprecated
+  (but functional) field — tracked as ROADMAP Theme E7.
+
 ## [0.3.0] - 2026-06-22
 
 The standalone CLI is complete: one-shot queries, output formats, batch
@@ -205,7 +255,8 @@ First usable release. macOS Apple Silicon only (Linux/Windows stubbed for v0.2).
 - `InternVL3.5 8B` was considered but dropped from v0.1 — no clean upstream
   GGUF source and it ranked last in our 7-model benchmark.
 
-[Unreleased]: https://github.com/froggeric/llm/compare/v0.3.0
+[Unreleased]: https://github.com/froggeric/llm/compare/v0.4.0
+[v0.4.0]: https://github.com/froggeric/llm/releases/tag/v0.4.0
 [v0.3.0]: https://github.com/froggeric/llm/releases/tag/v0.3.0
 [v0.2.2]: https://github.com/froggeric/llm/releases/tag/v0.2.2
 [v0.2.1]: https://github.com/froggeric/llm/releases/tag/v0.2.1
