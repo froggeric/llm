@@ -26,7 +26,7 @@ type runtime struct {
 // lifecycle construction) return an error for the caller to map to an exit
 // code. Callers must have already called loadAndConfigure (which carries the
 // config-load → exitUnsetConfig semantics).
-func bootstrap(cfg *config.Config, logger *slog.Logger) (*runtime, error) {
+func bootstrap(cfg *config.Config, logger *slog.Logger, phaseHook func(string, string)) (*runtime, error) {
 	hw, err := models.DetectHardware()
 	if err != nil {
 		// Non-fatal: proceed with an empty HardwareInfo; the catalog's
@@ -51,6 +51,7 @@ func bootstrap(cfg *config.Config, logger *slog.Logger) (*runtime, error) {
 		StartupTimeout: cfg.StartupTimeout,
 		Logger:         logger,
 		BinarySHA256:   cfg.LLAMAServerPinnedSHA256,
+		PhaseHook:      phaseHook,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("construct lifecycle manager: %w", err)

@@ -102,7 +102,7 @@ func runSubcommand(args []string) int {
 		return exitUnsetConfig
 	}
 
-	rt, err := bootstrap(cfg, logger)
+	rt, err := bootstrap(cfg, logger, nil)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "localvision: %v\n", err)
 		return exitGeneric

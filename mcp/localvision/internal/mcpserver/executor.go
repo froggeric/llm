@@ -149,6 +149,8 @@ func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPro
 		ChatTemplateKwargs: spec.ChatTemplateKwargs,
 	}
 
+	e.lifecycle.Phase("inferring", modelID)
+
 	resp, err := client.ChatVision(ctx, req)
 	if err != nil {
 		return "", fmt.Errorf("inference for model %q: %w", modelID, err)

@@ -122,7 +122,21 @@ func runOneShot(args []string) int {
 		}
 	}
 
-	rt, err := bootstrap(cfg, logger)
+	// Per-phase progress tracking for the CLI presentation.
+	var sp *spinner
+	var phaseTimes []phaseTime
+	phaseCallback := func(phase, detail string) {
+		now := time.Now()
+		if len(phaseTimes) > 0 {
+			phaseTimes[len(phaseTimes)-1].elapsed = now.Sub(phaseTimes[len(phaseTimes)-1].start)
+		}
+		phaseTimes = append(phaseTimes, phaseTime{phase: phase, detail: detail, start: now})
+		if sp != nil {
+			sp.setMsg(phaseLabel(phase) + " · " + detail)
+		}
+	}
+
+	rt, err := bootstrap(cfg, logger, phaseCallback)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "localvision: %v\n", err)
 		return exitGeneric
@@ -194,14 +208,30 @@ func runOneShot(args []string) int {
 	}
 	msg := label + " · " + imageLabel(positionals)
 	start := time.Now()
-	sp := newSpinner(msg)
+	sp = newSpinner(msg)
 	raw, err := exec.Run(ctx, toolID, system, user, refs, tool.MaxTokens())
 	sp.halt()
+	if len(phaseTimes) > 0 {
+		phaseTimes[len(phaseTimes)-1].elapsed = time.Since(phaseTimes[len(phaseTimes)-1].start)
+	}
 	if err != nil {
 		renderError(label, err)
 		return exitGeneric
 	}
-	fmt.Fprintf(os.Stderr, "%s %s (%s)\n", paint(cGreen, "✓"), msg, elapsed(start))
+	modelName := ""
+	for _, p := range phaseTimes {
+		modelName = p.detail
+	}
+	ver := llamaVersion()
+	summary := msg + " · " + elapsed(start)
+	if modelName != "" {
+		summary += " · " + modelName
+	}
+	if ver != "" {
+		summary += " · " + ver
+	}
+	fmt.Fprintf(os.Stderr, "%s %s\n", paint(cGreen, "✓"), summary)
+	printPhaseSummary(phaseTimes)
 
 	parsed, _ := tool.ParseOutput(raw)
 	if s, ok := parsed.(string); ok {

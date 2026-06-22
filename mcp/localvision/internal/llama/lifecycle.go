@@ -149,6 +149,12 @@ type Options struct {
 	// VerifyHashHook, if non-nil, replaces models.VerifySHA256 for the
 	// GGUF and mmproj files. Used by tests to skip the actual hashing.
 	VerifyHashHook func(ctx context.Context, path, expectedHex string) error
+	// PhaseHook, if non-nil, is called at lifecycle phase transitions:
+	// "downloading" (model files), "loading" (spawning llama-server),
+	// "ready" (health OK), "inferring" (ChatVision starts). detail carries
+	// context (e.g., the model display name). Used by the CLI to show
+	// per-phase progress indicators.
+	PhaseHook func(phase, detail string)
 }
 
 // LifecycleManager owns a single llama-server subprocess and serializes
@@ -287,6 +293,13 @@ func NewWithOptions(opts Options) (*LifecycleManager, error) {
 // ctx cancellation is propagated: if the ctx is cancelled while waiting for
 // a model to load, Acquire returns ctx.Err(). Note that ctx cancellation
 // does NOT kill the underlying subprocess — only Shutdown does that.
+// Phase calls the configured PhaseHook (if any) with a phase transition.
+func (m *LifecycleManager) Phase(phase, detail string) {
+	if m.opts.PhaseHook != nil {
+		m.opts.PhaseHook(phase, detail)
+	}
+}
+
 func (m *LifecycleManager) Acquire(ctx context.Context, modelID string) (c *Client, release func(), err error) {
 	if m == nil {
 		return nil, nil, errors.New("nil lifecycle manager")
@@ -433,6 +446,7 @@ func (m *LifecycleManager) loadLocked(acquireCtx, spawnCtx context.Context, mode
 			return fmt.Errorf("mkdir models dir %s: %w", m.modelsDir, err)
 		}
 		d := &models.Downloader{}
+		m.Phase("downloading", spec.DisplayName)
 		m.logger.Info("ensuring model files present", "model", modelID, "gguf", ggufLocal)
 		if err := d.Download(acquireCtx, spec.GGUF, ggufLocal, spec.GGUFSha256, nil); err != nil {
 			m.state = StateCrashed
@@ -487,6 +501,8 @@ func (m *LifecycleManager) loadLocked(acquireCtx, spawnCtx context.Context, mode
 		health = m.opts.HealthHook
 	}
 
+	m.Phase("loading", spec.DisplayName)
+
 	var result *spawnResult
 	var lastErr error
 	for attempt := 0; attempt < m.opts.PortRetryAttempts; attempt++ {
@@ -538,6 +554,7 @@ func (m *LifecycleManager) loadLocked(acquireCtx, spawnCtx context.Context, mode
 
 	m.state = StateReady
 	m.cond.Broadcast()
+	m.Phase("ready", spec.DisplayName)
 	return nil
 }
 

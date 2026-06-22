@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
+	"sync/atomic"
 	"time"
 
 	"github.com/froggeric/llm/mcp/localvision/internal/tools"
@@ -73,9 +75,12 @@ func elapsed(start time.Time) string {
 	return fmt.Sprintf("%.1fs", time.Since(start).Seconds())
 }
 
-// spinner shows an animated braille progress line on stderr (TTY only). When
-// stderr is not a TTY, it prints a single plain line and stop() is a no-op.
-type spinner struct{ stop, done chan struct{} }
+// spinner shows an animated braille progress line on stderr (TTY only). The
+// message is updatable via setMsg so phase transitions can update it in place.
+type spinner struct {
+	stop, done chan struct{}
+	msg        atomic.Value // string
+}
 
 func newSpinner(msg string) *spinner {
 	if !stderrIsTTY {
@@ -83,25 +88,35 @@ func newSpinner(msg string) *spinner {
 		return nil
 	}
 	s := &spinner{stop: make(chan struct{}), done: make(chan struct{})}
+	s.msg.Store(msg)
 	frames := []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
 	go func() {
 		defer close(s.done)
 		t := time.NewTicker(100 * time.Millisecond)
 		defer t.Stop()
 		i := 0
-		fmt.Fprintf(os.Stderr, "\r%s%s%s %s", cCyan, frames[i], cReset, msg)
+		m := s.msg.Load().(string)
+		fmt.Fprintf(os.Stderr, "\r%s%s%s %s", cCyan, frames[i], cReset, m)
 		for {
 			select {
 			case <-s.stop:
-				fmt.Fprintf(os.Stderr, "\r\033[K") // clear the spinner line
+				fmt.Fprintf(os.Stderr, "\r\033[K")
 				return
 			case <-t.C:
 				i = (i + 1) % len(frames)
-				fmt.Fprintf(os.Stderr, "\r%s%s%s %s", cCyan, frames[i], cReset, msg)
+				m = s.msg.Load().(string)
+				fmt.Fprintf(os.Stderr, "\r%s%s%s %s", cCyan, frames[i], cReset, m)
 			}
 		}
 	}()
 	return s
+}
+
+func (s *spinner) setMsg(msg string) {
+	if s == nil {
+		return
+	}
+	s.msg.Store(msg)
 }
 
 func (s *spinner) halt() {
@@ -110,6 +125,57 @@ func (s *spinner) halt() {
 	}
 	close(s.stop)
 	<-s.done
+}
+
+// phaseTime records one lifecycle phase's timing for the per-phase summary.
+type phaseTime struct {
+	phase, detail string
+	start         time.Time
+	elapsed       time.Duration
+}
+
+var phaseLabels = map[string]string{
+	"downloading": "⬇ Downloading",
+	"loading":     "⚙ Loading model",
+	"ready":       "✓ Ready",
+	"inferring":   "↻ Inferring",
+}
+
+func phaseLabel(phase string) string {
+	if l, ok := phaseLabels[phase]; ok {
+		return l
+	}
+	return phase
+}
+
+// printPhaseSummary prints the per-phase elapsed-time breakdown to stderr.
+func printPhaseSummary(phases []phaseTime) {
+	for _, p := range phases {
+		fmt.Fprintf(os.Stderr, "  %s  %s  %s\n",
+			paint(cDim, phaseLabel(p.phase)), p.detail,
+			paint(cDim, fmt.Sprintf("%.1fs", p.elapsed.Seconds())))
+	}
+}
+
+// llamaVersion queries llama-server --version and returns the first
+// version/build/commit line, or "" if unavailable.
+func llamaVersion() string {
+	p, err := exec.LookPath("llama-server")
+	if err != nil {
+		return ""
+	}
+	out, err := exec.Command(p, "--version").CombinedOutput()
+	if err != nil {
+		return ""
+	}
+	for _, line := range strings.Split(string(out), "\n") {
+		l := strings.TrimSpace(line)
+		lower := strings.ToLower(l)
+		if strings.Contains(lower, "version") || strings.Contains(lower, "build") || strings.Contains(lower, "commit") {
+			return l
+		}
+	}
+	return ""
 }
 
 // stdoutIsTTY gates result styling so pipes/files get plain text.
