@@ -96,7 +96,7 @@ func newSpinner(msg string) *spinner {
 		defer t.Stop()
 		i := 0
 		m := s.msg.Load().(string)
-		fmt.Fprintf(os.Stderr, "\r%s%s%s %s", cCyan, frames[i], cReset, m)
+		fmt.Fprintf(os.Stderr, "\r\033[K%s%s%s %s", cCyan, frames[i], cReset, m)
 		for {
 			select {
 			case <-s.stop:
@@ -105,7 +105,7 @@ func newSpinner(msg string) *spinner {
 			case <-t.C:
 				i = (i + 1) % len(frames)
 				m = s.msg.Load().(string)
-				fmt.Fprintf(os.Stderr, "\r%s%s%s %s", cCyan, frames[i], cReset, m)
+				fmt.Fprintf(os.Stderr, "\r\033[K%s%s%s %s", cCyan, frames[i], cReset, m)
 			}
 		}
 	}()
