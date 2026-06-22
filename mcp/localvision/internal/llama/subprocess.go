@@ -60,15 +60,17 @@ func validateModelPath(path, modelsDir string) (string, error) {
 	return cleaned, nil
 }
 
-// validateBinaryPath checks that the llama-server binary is absolute, cleaned,
-// and inside the bin cache dir.
+// validateBinaryPath checks that the llama-server binary path is absolute and
+// cleaned. Since v0.2 the binary may be a user-installed one discovered on
+// $PATH (e.g. /opt/homebrew/bin/llama-server — outside the cache dir) or a
+// localvision-downloaded one (inside it); both are valid, so we no longer
+// require it to live inside binDir. The path originates from the trusted
+// discovery in binary.go (PATH lookup or pinned download), never from user
+// config. binDir is retained for potential future restrictions.
 func validateBinaryPath(path, binDir string) (string, error) {
 	cleaned := filepath.Clean(path)
 	if !filepath.IsAbs(cleaned) {
 		return "", fmt.Errorf("binary path %q is not absolute", path)
-	}
-	if !pathInside(cleaned, binDir) {
-		return "", fmt.Errorf("binary path %q is outside bin cache dir %q", cleaned, binDir)
 	}
 	return cleaned, nil
 }

@@ -111,25 +111,42 @@ func TestSpawnSubprocessValidatesPaths(t *testing.T) {
 	assert.Contains(t, err.Error(), "outside models cache dir")
 }
 
-// TestSpawnSubprocessRejectsOutsideBinary: binary path outside bin dir.
-func TestSpawnSubprocessRejectsOutsideBinary(t *testing.T) {
+// TestSpawnSubprocessAcceptsPATHBinary: since v0.2, a binary discovered on
+// $PATH lives OUTSIDE the bin cache dir (e.g. /opt/homebrew/bin/llama-server)
+// and must be spawnable. A stub binary is placed outside binDir and
+// spawnSubprocess must accept it (regression test for the PATH-binary case).
+func TestSpawnSubprocessAcceptsPATHBinary(t *testing.T) {
+	sleepPath, err := exec.LookPath("sleep")
+	require.NoError(t, err)
+
 	dir := t.TempDir()
-	binDir := filepath.Join(dir, "bin")
-	require.NoError(t, os.MkdirAll(binDir, 0o755))
+	binDir := filepath.Join(dir, "bin") // the stub is intentionally NOT inside this
+	modelsDir := filepath.Join(dir, "models")
+	require.NoError(t, os.MkdirAll(modelsDir, 0o755))
 
-	// Place a stub binary OUTSIDE the bin dir.
-	outside := filepath.Join(dir, "evil")
-	require.NoError(t, os.WriteFile(outside, []byte("#!/bin/sh\n"), 0o755))
+	// Place the stub outside binDir (mimics /opt/homebrew/bin/llama-server).
+	outside := filepath.Join(dir, "llama-server")
+	data, err := os.ReadFile(sleepPath)
+	require.NoError(t, err)
+	require.NoError(t, os.WriteFile(outside, data, 0o755))
 
-	_, err := spawnSubprocess(context.Background(), spawnOptions{
+	gguf := filepath.Join(modelsDir, "x.gguf")
+	require.NoError(t, os.WriteFile(gguf, []byte("x"), 0o600))
+
+	result, err := spawnSubprocess(context.Background(), spawnOptions{
 		BinaryPath: outside,
 		BinDir:     binDir,
-		GGUFPath:   filepath.Join(dir, "models", "x.gguf"),
-		ModelsDir:  filepath.Join(dir, "models"),
+		GGUFPath:   gguf,
+		ModelsDir:  modelsDir,
 		Spec:       models.ModelSpec{Ctx: 100, GpuLayers: 0},
 	})
-	require.Error(t, err)
-	assert.Contains(t, err.Error(), "outside bin cache dir")
+	require.NoError(t, err, "a $PATH binary outside binDir must be accepted")
+	require.NotNil(t, result)
+	require.NotNil(t, result.cmd.Process)
+	defer func() {
+		_ = result.cmd.Process.Kill()
+		_, _ = result.cmd.Process.Wait()
+	}()
 }
 
 // TestSpawnSubprocessHappyPath: spawnSubprocess can actually start a
