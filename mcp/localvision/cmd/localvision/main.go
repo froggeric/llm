@@ -73,12 +73,16 @@ type commonFlags struct {
 	configPath string
 	verbose    bool
 	logFile    string
+	cacheDir   string
+	modelsDir  string
 }
 
 func (f *commonFlags) register(fs *flag.FlagSet) {
 	fs.StringVar(&f.configPath, "config", "", "path to config.toml (default: ~/.localvision/config.toml)")
 	fs.BoolVar(&f.verbose, "verbose", false, "enable debug-level logging")
 	fs.StringVar(&f.logFile, "log-file", "", "also write structured logs to this path")
+	fs.StringVar(&f.cacheDir, "cache-dir", "", "override the cache dir (config cache_dir); redirects ALL storage including multi-GB models")
+	fs.StringVar(&f.modelsDir, "models-dir", "", "override the models dir (config models_dir); where model files are stored")
 }
 
 func runSubcommand(args []string) int {
@@ -190,7 +194,7 @@ func doctorSubcommand(args []string) int {
 	fmt.Fprintln(w, "=== Configuration ===")
 	fmt.Fprintf(w, "Config file:    %s\n", orDefault(cfgPathDisplay(cf.configPath), "(default)"))
 	fmt.Fprintf(w, "Cache dir:      %s\n", cfg.CacheDir)
-	fmt.Fprintf(w, "Models dir:     %s\n", cfg.ModelsDir)
+	fmt.Fprintf(w, "Models dir:     %s (%s)\n", cfg.ModelsDir, models.DiskFreeHuman(cfg.ModelsDir))
 	fmt.Fprintf(w, "Bin dir:        %s\n", cfg.BinDir)
 	fmt.Fprintf(w, "Idle timeout:   %s\n", cfg.IdleTimeout)
 	fmt.Fprintf(w, "Startup:        %s\n", cfg.StartupTimeout)
@@ -300,6 +304,10 @@ func loadAndConfigure(cf commonFlags) (*config.Config, *slog.Logger, error) {
 	if err != nil {
 		return nil, nil, fmt.Errorf("load config: %w", err)
 	}
+	// CLI --cache-dir / --models-dir override the config (and re-derive
+	// subordinate dirs). Lets users redirect multi-GB model storage off the
+	// system drive without editing the TOML.
+	cfg.ApplyDirOverrides(cf.cacheDir, cf.modelsDir, "")
 
 	level := cfg.LogLevel
 	if cf.verbose {
