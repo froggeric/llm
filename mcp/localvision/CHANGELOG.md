@@ -9,10 +9,11 @@ once it reaches v1.0.0. Until then, minor changes may break compatibility.
 Tags for this subdirectory follow the Go module convention
 `mcp/localvision/v<MAJOR>.<MINOR>.<PATCH>`.
 
-## [Unreleased]
+## [0.3.0] - 2026-06-22
 
-The standalone CLI takes shape. Also includes two fixes that were backported to
-v0.2.1/v0.2.2. See [`ROADMAP.md`](./ROADMAP.md) Theme C.
+The standalone CLI is complete: one-shot queries, output formats, batch
+processing, and a first-run setup wizard. `localvision` is now a usable shell
+tool, not just an MCP server. See [`ROADMAP.md`](./ROADMAP.md) Theme C.
 
 ### Added
 
@@ -23,20 +24,51 @@ v0.2.1/v0.2.2. See [`ROADMAP.md`](./ROADMAP.md) Theme C.
   `run`/`doctor`/`version` subcommands unchanged.
 - **Per-phase CLI progress**: the one-shot shows animated phase-by-phase status
   — ⬇ Downloading → ⚙ Loading model → ↻ Inferring — each with elapsed time.
-  Summary line includes the model name + llama.cpp build number. Interactive
-  mode is quiet (slog suppressed; `--verbose` recovers). Result rendered
-  markdown-ish in TTY; plain when piped. Errors broken into indented lines.
-- **Configurable model storage + disk-space safety** (v0.2.2 backport):
-  free-space precheck refuses a download that would overflow the volume;
-  `doctor` shows free space next to the models dir.
+  The summary line includes the model name + llama.cpp build number. Interactive
+  mode is quiet (slog suppressed; `--verbose` recovers). The result is rendered
+  markdown-ish in a TTY and plain when piped; errors are broken into indented
+  lines.
+- **Output formats** (Theme C Phase 2, C3): `--format text|markdown|json|yaml|xml`
+  encodes a result for machine consumption (`localvision img.png --format json |
+  jq .`). Machine formats wrap the result in `{tool, result}` and are always
+  structurally valid; `Config.default_format` sets a default. *Limitation:*
+  without constrained decoding (ROADMAP Theme F4), JSON wraps the model's natural
+  output rather than imposing a per-tool schema — `extract_code`'s
+  `{language, code}` is the one structured result today.
+- **Batch processing** (Theme C Phase 3, C4): positional inputs expand over
+  globs (`*.png`), directories (`--recursive`), and stdin (`-`, one path/line).
+  `--output FILE` writes a single result; `--output-dir DIR` writes one file per
+  input (extension follows `--format`); `--meta` writes a `.meta.json` telemetry
+  sidecar (model, tokens, elapsed) beside each file output. `--type compare`
+  groups inputs into consecutive pairs. A warm `llama-server` is reused across
+  the batch (cold first item, warm rest).
+- **First-run setup wizard** (Theme C Phase 4, C1): `localvision setup` — also
+  the default for `localvision` with no args in a terminal — walks through
+  hardware detection, model selection, llama-server status, and storage paths,
+  then writes `~/.localvision/config.toml`. **Zero new dependencies**: built
+  with the standard library and the project's existing ANSI helpers. (A richer
+  bubbletea TUI was evaluated and deferred to keep the dependency tree lean; the
+  v0.2 tree ran on four direct deps and v0.3 keeps that discipline.)
+- **`config.Save`** writes a minimal, `omitempty` TOML config and round-trips
+  with `Load`.
+
+### Changed
+
+- **`Executor.Run` now returns `(raw string, stats Stats, err error)`**, where
+  `Stats{Model, TokensIn, TokensOut, ElapsedMs}` carries per-inference
+  telemetry. The MCP server ignores it; the CLI uses it for `--meta`. This is
+  the only interface change in v0.3.0.
+- **No-args dispatch**: `localvision` with no arguments now runs the setup wizard
+  in an interactive terminal, and the MCP server when invoked over a non-TTY
+  stdio (how MCP clients connect). MCP clients using `command: localvision` with
+  no `args`, or `args: ["run"]`, are unaffected.
+- When `--format` is absent for file/dir/batch output, the default is the model's
+  natural markdown.
 
 ### Fixed
 
-- **PATH-discovered `llama-server` spawn** (v0.2.1 backport): v0.2.0 rejected
-  a `$PATH` `llama-server` at spawn ("outside bin cache dir"); now accepts any
-  absolute path (discovery-trusted).
-- **One-shot orphan prevention**: each one-shot now shuts down `llama-server`
-  on exit instead of leaving it running (previously left orphans consuming RAM).
+- **One-shot orphan prevention**: a one-shot now shuts down `llama-server` on
+  exit (including mid-batch failures and SIGINT) instead of leaving it running.
 
 ## [0.2.2] - 2026-06-22
 
@@ -173,7 +205,8 @@ First usable release. macOS Apple Silicon only (Linux/Windows stubbed for v0.2).
 - `InternVL3.5 8B` was considered but dropped from v0.1 — no clean upstream
   GGUF source and it ranked last in our 7-model benchmark.
 
-[Unreleased]: https://github.com/froggeric/llm/compare/HEAD
+[Unreleased]: https://github.com/froggeric/llm/compare/v0.3.0
+[v0.3.0]: https://github.com/froggeric/llm/releases/tag/v0.3.0
 [v0.2.2]: https://github.com/froggeric/llm/releases/tag/v0.2.2
 [v0.2.1]: https://github.com/froggeric/llm/releases/tag/v0.2.1
 [v0.2.0]: https://github.com/froggeric/llm/releases/tag/v0.2.0

@@ -35,10 +35,10 @@ type hashResult struct {
 // overlay-modified variants). Eviction is FIFO (oldest insertion), which
 // is good enough for this workload; no need for true LRU complexity.
 type integrityCache struct {
-	mu     sync.RWMutex
+	mu      sync.RWMutex
 	entries map[string]hashResult
-	order  []string // FIFO order for eviction
-	cap    int
+	order   []string // FIFO order for eviction
+	cap     int
 }
 
 const defaultIntegrityCacheCap = 16

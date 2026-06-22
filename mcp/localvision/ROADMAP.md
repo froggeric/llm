@@ -18,22 +18,22 @@ item isn't in this file, it isn't planned.
 
 ## Where we are now
 
-**v0.2.2 shipped** — the v6 benchmark catalog, safe `llama-server` acquisition,
-benchmark-faithful params, GitHub Release + Homebrew, disk-space safety
-(`--models-dir`, free-space precheck), and the `$PATH` llama-server spawn fix.
+**v0.3.0 shipped** — the standalone CLI is complete (Theme C). `localvision` is
+now a first-class shell tool: one-shot queries (`localvision img.png --type ocr`),
+`--format json|yaml|xml|text|markdown`, batch processing (`*.png --output-dir
+out/ --meta`, glob/dir/stdin expansion, `--type compare` pairs), and a
+framework-free `setup` wizard (stdlib, zero new deps). The one interface change:
+`Executor.Run` returns `(raw, Stats, error)` to feed `--meta`.
 
-Theme C Phase 1 is **on `main`** (unreleased): the one-shot shell CLI works —
-`localvision img.png --type ocr --model qwen3.6-27b` — with per-phase progress
-indicators (downloading → loading → inferring, each timed), model name +
-llama.cpp build display, colored/structured output, and orphan-free cleanup.
-Phases 2–4 (`--format`, batch, TUI) remain.
+What **works**: 9 MCP tools (MCP `run` command); the full one-shot CLI;
+`--format` / batch / `--meta`; the `setup` wizard; hardware tier detection;
+spawn-on-demand lifecycle with warm reuse; SHA256 verification; HEIC; installs
+via **Homebrew**, `curl|sh`, `go install`.
 
-What **works**: 9 MCP tools (MCP `run` command); the one-shot CLI (`localvision
-img.png`); hardware tier detection; spawn-on-demand lifecycle; SHA256
-verification; HEIC; installs via **Homebrew**, `curl|sh`, `go install`.
-
-What's **next**: `--format` output (Phase 2), batch/`--output` (Phase 3), the
-TUI setup wizard (Phase 4), cross-platform (Theme D), hardening (Theme E).
+What's **next**: cross-platform support (Theme D — Linux/Windows + GPU
+backends), hardening (Theme E — streaming, tool prefixes, doctor --update),
+then the localhost HTTP API / OpenAI-compatible endpoint (Theme F), richer
+tools (video, PDF, UI→code), and far-future research ideas.
 
 ---
 
@@ -143,16 +143,18 @@ The reuse is clean: `tools.Tool.BuildRequest` + `Executor.Run` +
 are already **MCP-agnostic**. A new CLI subcommand can construct the executor
 exactly as `main.go:119-130` does and skip the MCP SDK entirely.
 
-### C1. Single executable: interactive setup + one-shot queries 🚧 `L` — *(Phase 1 one-shot done; TUI pending)*
+### C1. Single executable: interactive setup + one-shot queries ✅ `L` — *(done in v0.3.0)*
 
-- **No args** → interactive setup/configuration mode (TUI or prompted): pick a
-  model, set paths, detect hardware, optionally install into a harness (B4),
-  write `~/.localvision/config.toml`.
+- **No args** (interactive terminal) → `setup` wizard: detect hardware, pick a
+  model, check `llama-server`, show paths, write `~/.localvision/config.toml`.
+  No args over a non-TTY stdio (how MCP clients connect) → the MCP server.
 - **With args** → one-shot image query against a tool, prints to stdout.
 
-`main.go` currently hand-rolls a `run`/`doctor`/`version` switch on plain
-`flag`. Add a query/one-shot subcommand. This is the spine the rest of Theme C
-hangs off.
+Delivered with a **framework-free stdlib wizard** (numbered menus + the project's
+existing ANSI helpers) — zero new dependencies. A richer bubbletea TUI was
+evaluated and deferred to keep the v0.2-era lean dependency tree (4 direct deps)
+intact; tracked below as a future enhancement. `internal/setup` holds the
+testable logic; `cmd/localvision/setup.go` is the thin interactive driver.
 
 ### C2. `--type` query parameter with optimized prompts ✅ `S–M` — *(done)*
 
@@ -162,36 +164,29 @@ one-shot path: `--type ocr`, `--type diagram`, `--type chart`, `--type code`,
 `--type ui`, `--type error`, `--type compare`, default `describe`. No new
 prompts to write — reuse the 9 existing ones.
 
-### C3. `--format` output parameter 📋 `M–L` — *(idea 3)*
+### C3. `--format` output parameter ✅ `M–L` — *(done in v0.3.0)*
 
-`json | markdown | yaml | text | xml | exif`. Today the output format is
-**baked into each prompt constant** ("Output ONLY the code in a fenced block",
-"Output the text only — no Markdown"). To support a real format flag:
+Shipped as `--format text|markdown|json|yaml|xml` via a **CLI-layer
+post-processor** (`internal/tools/format`) rather than changing `ParseOutput` or
+the 9 prompts — the MCP path is untouched. Machine formats wrap the result in
+`{tool, result}` and are always structurally valid. *Limitation:* without
+constrained decoding (Theme F4), JSON wraps the model's natural output rather
+than imposing a per-tool schema; `extract_code`'s `{language, code}` is the one
+structured result today. `Config.default_format` sets a default.
 
-1. Strip the format clauses from the 9 prompts in `prompt.go`.
-2. Expand `Tool.ParseOutput(raw string)` → `ParseOutput(raw, opts ParseOptions)`
-   so the requested format flows in (`internal/tools/tool.go:53`,
-   `internal/mcpserver/tools.go:190`).
-3. Add format converters (the post-processing primitives `extractCodeBlock` /
-   `extractMarkdownTables` in `base.go` already exist as a starting point).
+**`exif`** (write the result as image metadata via `exiftool`) remains a future
+enhancement — it is a distinct output sink needing a writable target, so it is
+gated on a richer `--output` story.
 
-**`exif` is special** — it writes the result back as metadata *into the image*
-sidecar, not as stdout text; treat it as a distinct output sink.
+### C4. Output to file + batch processing ✅ `M` — *(done in v0.3.0)*
 
-Note: a clean structural format (JSON/YAML/XML) from a model that wants to emit
-prose may need either a converter pass or a format-aware prompt suffix. Markdown
-/ text are near-free; structured formats are more work.
-
-### C4. Output to file + batch processing 📋 `M` — *(idea 4)*
-
-`--output <file>` and `--output-dir <dir>` plus glob/directory input for batch
-runs. Single natural hook point: `buildResult` (`internal/mcpserver/tools.go:217`)
-sees both parsed and raw output and is the last Go-side transform before the
-result leaves the process. The image normalizer already handles N images
-(`normalizeImages`, `tools.go:260`), so batch is mostly a CLI + glob layer
-(`filepath.Glob`) on top. A `.meta.json` sidecar (model, tokens, elapsed) is
-possible but requires threading `ChatResponse.TokensIn/Out/ElapsedMs`
-(currently dropped at `executor.go:141`) back through `Executor.Run`.
+Shipped: `--output FILE` (single) / `--output-dir DIR` (one file per input),
+glob/directory/stdin input expansion (`cmd/localvision/expand.go`), `--recursive`,
+`--meta` telemetry sidecar, and `--type compare` grouping inputs into pairs.
+Threading the per-inference stats back required the one interface change in
+v0.3.0: `Executor.Run` now returns `(raw, Stats, error)` where
+`Stats{Model, TokensIn, TokensOut, ElapsedMs}` feeds `--meta`. A warm
+`llama-server` is reused across the batch.
 
 ### C5. Manual model override ✅ `S–M` — *(done)*
 

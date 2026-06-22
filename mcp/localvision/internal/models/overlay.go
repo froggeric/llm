@@ -86,7 +86,7 @@ func loadOverlays(dir string, into *Catalog) error {
 // this to implement true per-field merge semantics rather than naive
 // overwrite-everything.
 type overlayModelSpec struct {
-	DisplayName     *string   `toml:"display_name"`
+	DisplayName    *string   `toml:"display_name"`
 	GGUF           *string   `toml:"gguf"`
 	Mmproj         *string   `toml:"mmproj"`
 	GGUFSha256     *string   `toml:"gguf_sha256"`
@@ -107,8 +107,8 @@ type overlayModelSpec struct {
 // rawOverlay is what we decode an overlay TOML into. Models is a map of
 // overlayModelSpec keyed by model ID.
 type rawOverlay struct {
-	SchemaVersion *int                          `toml:"schema_version"`
-	Models        map[string]overlayModelSpec   `toml:"models"`
+	SchemaVersion *int                        `toml:"schema_version"`
+	Models        map[string]overlayModelSpec `toml:"models"`
 }
 
 // applyOverlayFile reads one overlay TOML and merges its models into into.

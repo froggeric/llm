@@ -4,13 +4,15 @@
 //
 // Usage:
 //
+//	localvision <image...> [--type T] [--model M] [--format F]   # one-shot query
+//	localvision setup                                            # first-run wizard
 //	localvision run [--config PATH] [--verbose] [--log-file PATH]
 //	localvision doctor [--config PATH] [--verbose]
 //	localvision version
 //	localvision --help
 //
-// The default subcommand is `run`, which starts the MCP server on stdio and
-// blocks until the client disconnects or the process is signalled.
+// With no args in an interactive terminal, `setup` runs; with no args over a
+// non-TTY stdio (how MCP clients connect), `run` starts the MCP server.
 package main
 
 import (
@@ -46,6 +48,13 @@ func main() {
 
 func run(args []string) int {
 	if len(args) == 0 {
+		// No args: an interactive terminal gets the guided setup wizard; a
+		// non-TTY invocation (how MCP clients pipe JSON-RPC over stdio) gets
+		// the MCP server. This way `localvision` typed by a human is helpful,
+		// while `command: localvision` in an MCP config keeps working.
+		if isTerminal(os.Stdin.Fd()) {
+			return runSetup(nil)
+		}
 		args = []string{"run"}
 	}
 
@@ -61,11 +70,12 @@ func run(args []string) int {
 		return runSubcommand(args[1:])
 	case "doctor":
 		return doctorSubcommand(args[1:])
+	case "setup":
+		return runSetup(args[1:])
 	default:
 		// Not a known subcommand: treat the arg list as a one-shot image query
 		// (positional image(s) + flags like --type). Supports `localvision img.png`
-		// and `localvision img.png --type ocr`. (No-args still runs the MCP server
-		// for now; the TUI setup lands in Phase 4.)
+		// and `localvision img.png --type ocr`.
 		return runOneShot(args)
 	}
 }
@@ -245,8 +255,8 @@ func doctorSubcommand(args []string) int {
 	fmt.Fprintln(w, "=== Tools ===")
 	// Use the same construction as the server so the count matches.
 	srv, srvErr := mcpserver.NewServer(mcpserver.Dependencies{
-		Logger:  logger,
-		Catalog: catalog,
+		Logger:   logger,
+		Catalog:  catalog,
 		Hardware: hw,
 	})
 	if srvErr != nil {
@@ -316,22 +326,45 @@ func printHelp(w io.Writer) {
 	fmt.Fprintln(w, `localvision — local vision-language model tools for MCP clients
 
 Usage:
-  localvision [run] [--config PATH] [--verbose] [--log-file PATH]
+  localvision <image...> [--type T] [--model M] [--format F] [flags]
+                          one-shot vision query (OCR, describe, compare, ...)
+  localvision setup [--config PATH]
+                          interactive first-run configuration wizard
+  localvision run [--config PATH] [--verbose] [--log-file PATH]
+                          start the MCP server on stdio (default in MCP clients)
   localvision doctor [--config PATH] [--verbose]
   localvision version
 
+One-shot query:
+  localvision img.png                        describe the image
+  localvision shot.png --type ocr            extract text (OCR)
+  localvision before.png after.png --type compare
+  localvision *.png --type ocr --output-dir out/ --format json --meta
+
+  --type      ocr|code|table|ui|diagram|chart|error|compare|describe
+  --model     override the auto-selected model (a catalog ID)
+  --format    text|markdown|json|yaml|xml (default: presentational)
+  --output F  write the single result to F
+  --output-dir D  write one result file per input into D (batch)
+  --recursive recurse into directories when expanding inputs
+  --meta      write a .meta.json sidecar (tokens/timing) per --output/--output-dir
+  --question  specific question (describe/read only)
+  Inputs may be file paths, globs, directories, "-" (stdin), or data:/file: URIs.
+
 Subcommands:
-  run (default)   Start the MCP server on stdio. Blocks until the client
-                  disconnects or the process receives SIGTERM/SIGINT.
-  doctor          Print diagnostics: hardware detection, catalog validation,
-                  default model selection, binary availability, tool count.
-                  Exits 0 regardless of issues; the report itself is the output.
-  version         Print version, commit, and build date.
+  setup   Guided first-run setup: detect hardware, pick a model, write config.
+          Run automatically on `+"`localvision`"+` with no args in a terminal.
+  run     Start the MCP server on stdio. Blocks until the client disconnects or
+          the process receives SIGTERM/SIGINT.
+  doctor  Print diagnostics: hardware, catalog, default model, binary, tool count.
+  version Print version, commit, and build date.
 
 Flags:
   --config PATH   Override the config file location. Default:
                   $XDG_CONFIG_HOME/localvision/config.toml or
                   ~/.localvision/config.toml.
+  --cache-dir D   Override the cache dir (redirects ALL storage incl. models).
+  --models-dir D  Override the models dir.
   --verbose       Set log level to debug.
   --log-file PATH Also write structured JSON logs to PATH (in addition to stderr).
 

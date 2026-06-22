@@ -67,7 +67,7 @@ func TestWaitForHealthTimeout(t *testing.T) {
 	port := srv.Listener.Addr().(*net.TCPAddr).Port
 
 	setHealthClient(&http.Client{Timeout: 100 * time.Millisecond})
-	t.Cleanup(func() { setHealthClient(&http.Client{})})
+	t.Cleanup(func() { setHealthClient(&http.Client{}) })
 
 	start := time.Now()
 	err := waitForHealth(context.Background(), port, 300*time.Millisecond)

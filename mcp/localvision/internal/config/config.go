@@ -24,9 +24,9 @@ const (
 	DefaultStartupTimeout = 2 * time.Minute
 	DefaultLogLevel       = "info"
 	// DefaultCacheDirName is appended to the user's home directory.
-	DefaultCacheDirName = ".localvision"
-	DefaultModelsSubdir = "models"
-	DefaultBinSubdir    = "bin"
+	DefaultCacheDirName    = ".localvision"
+	DefaultModelsSubdir    = "models"
+	DefaultBinSubdir       = "bin"
 	DefaultSafetyMarginGB  = 4.0
 	DefaultDownloadRetries = 3
 	// DefaultHFUser is the HuggingFace namespace model files are downloaded
@@ -53,8 +53,12 @@ type Config struct {
 	ModelsDir      string        `toml:"models_dir"`
 	BinDir         string        `toml:"bin_dir"`
 	DefaultModel   string        `toml:"default_model"`
-	SafetyMarginGB float64       `toml:"safety_margin_gb"`
-	HFUser         string        `toml:"hf_user"`
+	// DefaultFormat sets the default --format for the one-shot CLI
+	// (text/markdown/json/yaml/xml). Empty means presentational (colored
+	// markdown in a TTY, plain when piped). The MCP server path ignores it.
+	DefaultFormat  string  `toml:"default_format"`
+	SafetyMarginGB float64 `toml:"safety_margin_gb"`
+	HFUser         string  `toml:"hf_user"`
 
 	// LLAMAServerPinnedSHA256 is populated from internal/llama at link time
 	// (so the binary pins the hash it expects). Not set via TOML.
@@ -144,6 +148,63 @@ func Load(path string) (*Config, error) {
 	}
 
 	return c, nil
+}
+
+// Save writes the config to path as TOML. It is the write counterpart to Load,
+// used by the interactive `setup` command to persist a user's selections. It
+// writes the full user-facing field set (see savedConfig) so re-running `setup`
+// never silently drops a value the user hand-edited into their TOML; zero-valued
+// fields are omitted via `omitempty` to keep the file readable. The directory is
+// created if needed.
+func Save(path string, c *Config) error {
+	if path == "" {
+		return errors.New("config: Save called with empty path")
+	}
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return fmt.Errorf("create config dir: %w", err)
+	}
+	doc := savedConfig{
+		DefaultModel:   c.DefaultModel,
+		DefaultFormat:  c.DefaultFormat,
+		CacheDir:       c.CacheDir,
+		ModelsDir:      c.ModelsDir,
+		BinDir:         c.BinDir,
+		LogLevel:       c.LogLevel,
+		LogFile:        c.LogFile,
+		IdleTimeout:    c.IdleTimeout,
+		StartupTimeout: c.StartupTimeout,
+		SafetyMarginGB: c.SafetyMarginGB,
+		HFUser:         c.HFUser,
+	}
+	f, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("create %s: %w", path, err)
+	}
+	defer f.Close()
+	enc := toml.NewEncoder(f)
+	if err := enc.Encode(doc); err != nil {
+		return fmt.Errorf("encode %s: %w", path, err)
+	}
+	return nil
+}
+
+// savedConfig is the user-facing subset of Config written to disk by Save. It
+// must cover every user-settable field so that re-running `setup` (which calls
+// Save) never silently drops a value the user hand-edited into their TOML.
+// Internal/computed fields (e.g. LLAMAServerPinnedSHA256, toml:"-") are
+// intentionally excluded. omitempty keeps the file free of zero-valued noise.
+type savedConfig struct {
+	DefaultModel   string        `toml:"default_model,omitempty"`
+	DefaultFormat  string        `toml:"default_format,omitempty"`
+	CacheDir       string        `toml:"cache_dir,omitempty"`
+	ModelsDir      string        `toml:"models_dir,omitempty"`
+	BinDir         string        `toml:"bin_dir,omitempty"`
+	LogLevel       string        `toml:"log_level,omitempty"`
+	LogFile        string        `toml:"log_file,omitempty"`
+	IdleTimeout    time.Duration `toml:"idle_timeout,omitempty"`
+	StartupTimeout time.Duration `toml:"startup_timeout,omitempty"`
+	SafetyMarginGB float64       `toml:"safety_margin_gb,omitempty"`
+	HFUser         string        `toml:"hf_user,omitempty"`
 }
 
 // ApplyDirOverrides applies optional cache_dir / models_dir / bin_dir overrides

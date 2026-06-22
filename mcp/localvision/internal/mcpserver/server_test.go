@@ -30,10 +30,10 @@ type stubTool struct {
 	system      string
 }
 
-func (s stubTool) ID() string                    { return s.id }
-func (s stubTool) Description() string           { return s.description }
-func (s stubTool) MaxTokens() int                { return s.maxTokens }
-func (s stubTool) SystemPrompt() string          { return s.system }
+func (s stubTool) ID() string           { return s.id }
+func (s stubTool) Description() string  { return s.description }
+func (s stubTool) MaxTokens() int       { return s.maxTokens }
+func (s stubTool) SystemPrompt() string { return s.system }
 func (s stubTool) InputSchema() map[string]any {
 	return map[string]any{
 		"type": "object",
@@ -116,35 +116,35 @@ type recordingExecutor struct {
 }
 
 type execCall struct {
-	toolID    string
+	toolID     string
 	userPrompt string
-	images    int
-	maxTokens int
+	images     int
+	maxTokens  int
 }
 
-func (r *recordingExecutor) Run(ctx context.Context, toolID, systemPrompt, userPrompt string, images []tools.ImageRef, maxTokens int) (string, error) {
+func (r *recordingExecutor) Run(ctx context.Context, toolID, systemPrompt, userPrompt string, images []tools.ImageRef, maxTokens int) (string, tools.Stats, error) {
 	if r.delay > 0 {
 		select {
 		case <-time.After(r.delay):
 		case <-ctx.Done():
-			return "", ctx.Err()
+			return "", tools.Stats{}, ctx.Err()
 		}
 	}
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	r.calls = append(r.calls, execCall{
-		toolID:    toolID,
+		toolID:     toolID,
 		userPrompt: userPrompt,
-		images:    len(images),
-		maxTokens: maxTokens,
+		images:     len(images),
+		maxTokens:  maxTokens,
 	})
 	if r.err != nil {
-		return "", r.err
+		return "", tools.Stats{}, r.err
 	}
 	if r.response != "" {
-		return r.response, nil
+		return r.response, tools.Stats{}, nil
 	}
-	return "default response from " + toolID, nil
+	return "default response from " + toolID, tools.Stats{}, nil
 }
 
 // TestServerRegistersNineTools verifies the server's tool registration
@@ -279,9 +279,9 @@ func TestGracefulShutdownOnContextCancel(t *testing.T) {
 
 	// Fire a tool call; before it completes, cancel the context.
 	var (
-		wg       sync.WaitGroup
-		callErr  error
-		callRes  *mcp.CallToolResult
+		wg      sync.WaitGroup
+		callErr error
+		callRes *mcp.CallToolResult
 	)
 	wg.Add(1)
 	go func() {
@@ -506,7 +506,7 @@ func TestNormalizeImages(t *testing.T) {
 // nil (production safety).
 func TestExecutorNilCatalogReturnsError(t *testing.T) {
 	exec := NewCatalogExecutor(nil, nil, models.HardwareInfo{}, silentLogger())
-	_, err := exec.Run(context.Background(), "read_image", "sys", "user", nil, 100)
+	_, _, err := exec.Run(context.Background(), "read_image", "sys", "user", nil, 100)
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "catalog is nil")
 }

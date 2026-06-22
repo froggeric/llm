@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 	"sync/atomic"
 	"time"
@@ -54,20 +53,6 @@ var toolGlyph = map[string]string{
 	tools.ToolDescribeChart:   "Chart",
 	tools.ToolDiagnoseError:   "Error",
 	tools.ToolCompareImages:   "Compare",
-}
-
-// imageLabel renders the positional image args as a short label.
-func imageLabel(positionals []string) string {
-	switch len(positionals) {
-	case 0:
-		return ""
-	case 1:
-		return filepath.Base(positionals[0])
-	case 2:
-		return filepath.Base(positionals[0]) + " + " + filepath.Base(positionals[1])
-	default:
-		return fmt.Sprintf("%d images", len(positionals))
-	}
 }
 
 // elapsed returns seconds since start as a short string (e.g. "42.1s").

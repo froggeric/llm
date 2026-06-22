@@ -88,9 +88,19 @@ type ImageRef struct {
 // risk if Tool is used in selection logic).
 type Executor interface {
 	// Run loads the right model for this tool (via the catalog + lifecycle
-	// manager) and returns the model's response. ctx propagates to the
-	// underlying HTTP request for cancellation.
-	Run(ctx context.Context, toolID, systemPrompt, userPrompt string, images []ImageRef, maxTokens int) (string, error)
+	// manager) and returns the model's response plus per-inference telemetry
+	// (token counts, wall-clock). ctx propagates to the underlying HTTP
+	// request for cancellation.
+	Run(ctx context.Context, toolID, systemPrompt, userPrompt string, images []ImageRef, maxTokens int) (raw string, stats Stats, err error)
+}
+
+// Stats carries per-inference telemetry surfaced by the executor. The MCP
+// server ignores it; the CLI uses it for the --meta sidecar in batch mode.
+type Stats struct {
+	Model     string // the catalog ID that actually ran (override or selection)
+	TokensIn  int    // prompt + image tokens consumed
+	TokensOut int    // completion tokens generated
+	ElapsedMs int64  // wall-clock inference time (model + transport)
 }
 
 // Registry holds the 9 tool implementations indexed by ID.

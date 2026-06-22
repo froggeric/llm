@@ -25,22 +25,22 @@ const (
 // validSpec returns a ModelSpec that satisfies all Validate invariants.
 func validSpec(displayName, tier string, preferred bool, preferredFor []string) ModelSpec {
 	return ModelSpec{
-		DisplayName:   displayName,
-		GGUF:          ggufURL,
-		Mmproj:        mmprojURL,
-		GGUFSha256:    validHash64,
-		MmprojSha256:  validHash64,
-		Ctx:           32768,
-		GpuLayers:     -1,
-		MinVramGb:     8,
+		DisplayName:    displayName,
+		GGUF:           ggufURL,
+		Mmproj:         mmprojURL,
+		GGUFSha256:     validHash64,
+		MmprojSha256:   validHash64,
+		Ctx:            32768,
+		GpuLayers:      -1,
+		MinVramGb:      8,
 		MinSystemRamGb: 16,
-		Released:      "2025-10",
-		License:       "Apache-2.0",
-		HardwareTier:  HardwareTier(tier),
-		Preferred:     preferred,
-		PreferredFor:  preferredFor,
-		BenchToks:     43.0,
-		Notes:         "test model",
+		Released:       "2025-10",
+		License:        "Apache-2.0",
+		HardwareTier:   HardwareTier(tier),
+		Preferred:      preferred,
+		PreferredFor:   preferredFor,
+		BenchToks:      43.0,
+		Notes:          "test model",
 	}
 }
 
@@ -50,9 +50,9 @@ func validCatalog() *Catalog {
 	return &Catalog{
 		SchemaVersion: 1,
 		Models: map[string]ModelSpec{
-			"constrained-model":  validSpec("Constrained", "constrained", true, []string{"read_image"}),
-			"mainstream-model":   validSpec("Mainstream", "mainstream", true, []string{"read_image"}),
-			"high-end-model":     validSpec("HighEnd", "high_end", true, []string{"describe_chart"}),
+			"constrained-model": validSpec("Constrained", "constrained", true, []string{"read_image"}),
+			"mainstream-model":  validSpec("Mainstream", "mainstream", true, []string{"read_image"}),
+			"high-end-model":    validSpec("HighEnd", "high_end", true, []string{"describe_chart"}),
 		},
 	}
 }
@@ -350,7 +350,7 @@ func TestDefaultModel_TieBreakByDisplayName(t *testing.T) {
 	c := &Catalog{
 		SchemaVersion: 1,
 		Models: map[string]ModelSpec{
-			"zeta":  {DisplayName: "Zeta",  MinVramGb: 8, HardwareTier: TierMainstream, GGUF: ggufURL, Mmproj: mmprojURL, GGUFSha256: validHash64, MmprojSha256: validHash64, Ctx: 4096, License: "MIT"},
+			"zeta":  {DisplayName: "Zeta", MinVramGb: 8, HardwareTier: TierMainstream, GGUF: ggufURL, Mmproj: mmprojURL, GGUFSha256: validHash64, MmprojSha256: validHash64, Ctx: 4096, License: "MIT"},
 			"alpha": {DisplayName: "Alpha", MinVramGb: 8, HardwareTier: TierMainstream, GGUF: ggufURL, Mmproj: mmprojURL, GGUFSha256: validHash64, MmprojSha256: validHash64, Ctx: 4096, License: "MIT"},
 		},
 	}

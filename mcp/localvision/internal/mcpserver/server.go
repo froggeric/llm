@@ -115,8 +115,8 @@ func NewServer(deps Dependencies) (*Server, error) {
 		Version: version.Version,
 	}
 	opts := &mcp.ServerOptions{
-		Logger:        logger,
-		Instructions:  "Local vision tools backed by a local llama.cpp server. Each call loads a vision-language model and runs one inference. Tool descriptions include expected latency; budget 30-60 seconds per call.",
+		Logger:       logger,
+		Instructions: "Local vision tools backed by a local llama.cpp server. Each call loads a vision-language model and runs one inference. Tool descriptions include expected latency; budget 30-60 seconds per call.",
 		// KeepAlive: leave zero — stdio transport doesn't need pings.
 	}
 	mcpServer := mcp.NewServer(impl, opts)

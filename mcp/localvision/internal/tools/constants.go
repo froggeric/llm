@@ -27,15 +27,15 @@ const (
 // --type → tool map). The lowercase consts above remain the canonical IDs
 // returned by each tool's ID() method.
 const (
-	ToolReadImage      = idReadImage
-	ToolExtractText    = idExtractText
-	ToolExtractCode    = idExtractCode
-	ToolExtractTable   = idExtractTable
-	ToolDescribeUI     = idDescribeUI
+	ToolReadImage       = idReadImage
+	ToolExtractText     = idExtractText
+	ToolExtractCode     = idExtractCode
+	ToolExtractTable    = idExtractTable
+	ToolDescribeUI      = idDescribeUI
 	ToolDescribeDiagram = idDescribeDiagram
-	ToolDescribeChart  = idDescribeChart
-	ToolDiagnoseError  = idDiagnoseError
-	ToolCompareImages  = idCompareImages
+	ToolDescribeChart   = idDescribeChart
+	ToolDiagnoseError   = idDiagnoseError
+	ToolCompareImages   = idCompareImages
 )
 
 // latencyHint is appended to every tool's Description() so the calling LLM

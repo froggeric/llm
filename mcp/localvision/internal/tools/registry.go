@@ -28,15 +28,15 @@ package tools
 // catalog's preferred_for lists; the registry_test.go enforces the count.
 func allTools() []Tool {
 	return []Tool{
-		compareImagesTool{},    // compare_images
-		describeChartTool{},    // describe_chart
-		describeDiagramTool{},  // describe_diagram
-		describeUITool{},       // describe_ui
-		diagnoseErrorTool{},    // diagnose_error
-		extractCodeTool{},      // extract_code
-		extractTableTool{},     // extract_table
-		extractTextTool{},      // extract_text
-		readImageTool{},        // read_image
+		compareImagesTool{},   // compare_images
+		describeChartTool{},   // describe_chart
+		describeDiagramTool{}, // describe_diagram
+		describeUITool{},      // describe_ui
+		diagnoseErrorTool{},   // diagnose_error
+		extractCodeTool{},     // extract_code
+		extractTableTool{},    // extract_table
+		extractTextTool{},     // extract_text
+		readImageTool{},       // read_image
 	}
 }
 

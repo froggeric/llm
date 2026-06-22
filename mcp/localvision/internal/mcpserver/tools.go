@@ -94,10 +94,10 @@ func (s *Server) registerTool(t tools.Tool) {
 //     become JSON-RPC error responses.
 func (s *Server) callTool(ctx context.Context, req *mcp.CallToolRequest, t tools.Tool) (*mcp.CallToolResult, error) {
 	// In-flight counter (reserved for future observability). Currently
-// informational only; the inFlightWG in server.go drives graceful
-// shutdown.
-		atomic.AddInt64(&inFlightCount, 1)
-		defer atomic.AddInt64(&inFlightCount, -1)
+	// informational only; the inFlightWG in server.go drives graceful
+	// shutdown.
+	atomic.AddInt64(&inFlightCount, 1)
+	defer atomic.AddInt64(&inFlightCount, -1)
 	s.inFlightWG.Add(1)
 	defer s.inFlightWG.Done()
 
@@ -168,7 +168,7 @@ func (s *Server) callTool(ctx context.Context, req *mcp.CallToolRequest, t tools
 		return res, nil
 	}
 
-	raw, err := s.executor.Run(ctx, t.ID(), systemPrompt, userPrompt, images, t.MaxTokens())
+	raw, _, err := s.executor.Run(ctx, t.ID(), systemPrompt, userPrompt, images, t.MaxTokens())
 	if err != nil {
 		logger.Warn("executor returned error", "error", err)
 		res := &mcp.CallToolResult{}
@@ -436,7 +436,7 @@ func dataURIToTempFile(dataURI string) (string, error) {
 	if comma < 0 {
 		return "", fmt.Errorf("data URI missing comma separator")
 	}
-	header := dataURI[:comma]  // e.g. "data:image/png;base64"
+	header := dataURI[:comma] // e.g. "data:image/png;base64"
 	payload := dataURI[comma+1:]
 
 	var decoded []byte
@@ -527,7 +527,7 @@ func isSetupError(err error) bool {
 // Image-input errors. Wrapped rather than sentinel because the wrap
 // context (which key, which index) is part of the message.
 var (
-	errInvalidImageInput     = errors.New("invalid image input")
-	errNoImageProvided       = errors.New("no image provided")
+	errInvalidImageInput      = errors.New("invalid image input")
+	errNoImageProvided        = errors.New("no image provided")
 	errUnsupportedImageSource = errors.New("unsupported image source")
 )

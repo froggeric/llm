@@ -78,12 +78,12 @@ func (e *CatalogExecutor) SetOverrideModel(id string) { e.overrideModel = id }
 //
 // Errors are surfaced as wrapped Go errors; the MCP handler translates
 // them to structured MCP errors.
-func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPrompt string, images []tools.ImageRef, maxTokens int) (string, error) {
+func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPrompt string, images []tools.ImageRef, maxTokens int) (string, tools.Stats, error) {
 	if e.catalog == nil {
-		return "", fmt.Errorf("executor: catalog is nil; first-run setup required")
+		return "", tools.Stats{}, fmt.Errorf("executor: catalog is nil; first-run setup required")
 	}
 	if e.lifecycle == nil {
-		return "", fmt.Errorf("executor: lifecycle manager is nil; first-run setup required")
+		return "", tools.Stats{}, fmt.Errorf("executor: lifecycle manager is nil; first-run setup required")
 	}
 
 	// Step 1: pick the model. An explicit override (--model / config
@@ -93,10 +93,10 @@ func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPro
 		var err error
 		modelID, err = e.catalog.ModelFor(toolID, e.hardware)
 		if err != nil {
-			return "", fmt.Errorf("selecting model for tool %q: %w", toolID, err)
+			return "", tools.Stats{}, fmt.Errorf("selecting model for tool %q: %w", toolID, err)
 		}
 	} else if _, ok := e.catalog.Models[modelID]; !ok {
-		return "", fmt.Errorf("override model %q is not in the catalog", modelID)
+		return "", tools.Stats{}, fmt.Errorf("override model %q is not in the catalog", modelID)
 	} else if !e.catalog.Fits(modelID, e.hardware) {
 		e.logger.Warn("override model may not fit the detected hardware; proceeding anyway",
 			"model_id", modelID)
@@ -107,7 +107,7 @@ func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPro
 	// mutex so concurrent tool calls don't race on the subprocess.
 	client, release, err := e.lifecycle.Acquire(ctx, modelID)
 	if err != nil {
-		return "", fmt.Errorf("loading model %q: %w", modelID, err)
+		return "", tools.Stats{}, fmt.Errorf("loading model %q: %w", modelID, err)
 	}
 	// release decrements the active-inference refcount. When refcount
 	// reaches zero, the idle timer becomes eligible to fire (F1.9).
@@ -130,7 +130,7 @@ func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPro
 	// strict win for vision per our v6 benchmark).
 	spec, ok := e.catalog.Models[modelID]
 	if !ok {
-		return "", fmt.Errorf("executor: model %q not in catalog after selection", modelID)
+		return "", tools.Stats{}, fmt.Errorf("executor: model %q not in catalog after selection", modelID)
 	}
 
 	req := llama.ChatRequest{
@@ -153,7 +153,7 @@ func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPro
 
 	resp, err := client.ChatVision(ctx, req)
 	if err != nil {
-		return "", fmt.Errorf("inference for model %q: %w", modelID, err)
+		return "", tools.Stats{}, fmt.Errorf("inference for model %q: %w", modelID, err)
 	}
 
 	e.logger.Debug("inference complete",
@@ -162,7 +162,13 @@ func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPro
 		"tokens_out", resp.TokensOut,
 		"elapsed_ms", resp.ElapsedMs,
 	)
-	return resp.Content, nil
+	stats := tools.Stats{
+		Model:     modelID,
+		TokensIn:  resp.TokensIn,
+		TokensOut: resp.TokensOut,
+		ElapsedMs: resp.ElapsedMs,
+	}
+	return resp.Content, stats, nil
 }
 
 // Compile-time check that CatalogExecutor satisfies tools.Executor.

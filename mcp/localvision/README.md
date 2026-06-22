@@ -8,9 +8,10 @@ It runs entirely on your machine. There is no telemetry, no outbound HTTP
 except to `huggingface.co/froggeric/` for the initial model download, and
 the `llama-server` subprocess binds to `127.0.0.1` only.
 
-> **Status:** **v0.2.2 released**; `main` carries the in-progress standalone
-> CLI — one-shot queries work (`localvision img.png --type ocr`). Next:
-> `--format`, batch, and the TUI setup wizard. Apple Silicon (darwin/arm64) only.
+> **Status:** **v0.3.0** — the standalone CLI is complete: one-shot queries
+> (`localvision img.png --type ocr`), `--format json`, batch processing
+> (`*.png --output-dir out/ --meta`), and a first-run `setup` wizard.
+> Apple Silicon (darwin/arm64) only.
 
 ---
 
@@ -82,16 +83,19 @@ directory is on your `PATH`.
 
 ### What happens on first run
 
-On the first `localvision run`, the binary will:
+Run `localvision setup` (it also starts automatically on `localvision` with no
+args in a terminal) to pick a model and write `~/.localvision/config.toml`. Then
+the first real query will:
 
 1. Download a pinned `llama-server` build (≈ 80 MB) to
-   `~/.localvision/bin/` and verify its SHA256.
-2. Download the smallest model that fits your hardware from
-   `huggingface.co/froggeric/` (the v0.2 smallest is Qwen3.5 4B, ~3 GB).
-3. Surface install progress to the MCP client (`tools/list` still works
-   while this happens; tools are marked unavailable).
+   `~/.localvision/bin/` and verify its SHA256 — unless a `llama-server` is
+   already on your `$PATH` (e.g. `brew install llama.cpp`), which is used as-is.
+2. Download the model you selected (or the smallest that fits your hardware)
+   from `huggingface.co/froggeric/`.
+3. Run the inference. In MCP mode, `tools/list` keeps working while this
+   happens; tools are marked unavailable until the model is ready.
 
-This first-run experience takes 5–15 minutes on a fast connection. You can
+This first-run download takes 3–15 minutes on a fast connection. You can
 speed it up by pre-running `localvision doctor` after install.
 
 ## Quick start
@@ -124,6 +128,31 @@ Then ask Claude Code something like:
 Claude will call the tool, the MCP server will spawn `llama-server`, load
 the right model, and stream back the description (typically within
 30–70 seconds; see *Latency* below).
+
+## Standalone CLI
+
+`localvision` is also a normal shell tool — you don't need an MCP client. Run a
+one-shot query directly:
+
+```bash
+localvision setup                          # first run: pick a model, write config
+localvision img.png                        # describe an image
+localvision shot.png --type ocr            # extract text (OCR)
+localvision err.png  --type error          # diagnose an error/stack trace
+localvision chart.png --type chart --format json | jq .
+localvision a.png b.png --type compare     # diff two images
+localvision *.png --type ocr --output-dir out/ --format json --meta
+```
+
+`--type` selects one of nine tools (`ocr|code|table|ui|diagram|chart|error|
+compare|describe`). Inputs may be file paths, globs, directories (`--recursive`),
+or `-` for stdin (`find . -name '*.png' | localvision - --type ocr`).
+`--model` overrides the auto-selected model; `--output`/`--output-dir` write
+results to files; `--meta` writes a `.json` telemetry sidecar per output.
+
+With no arguments, `localvision` runs `setup` in a terminal and the MCP server
+when invoked over a pipe (i.e. by an MCP client). Run `localvision --help` for
+the full flag reference.
 
 ## Privacy
 
@@ -190,12 +219,13 @@ coordination via Ollama's API.
 
 ## Roadmap
 
-The near-term plan: green CI and a real pinned release (GitHub Releases +
-Homebrew), then a standalone shell CLI — `localvision describe img.png` with
-`--type`, `--format`, `--output`, and `--model` — then cross-platform
-(Linux/Windows + GPU backends), then hardening. Beyond that: a localhost HTTP
-API and OpenAI-compatible endpoint, richer tools (video, PDF, UI→code), and
-far-future research ideas. Every item, its effort, and its target version is in
+**v0.3.0** ships the standalone CLI (one-shot queries, `--format`, batch
+`--output-dir`/`--meta`, and the `setup` wizard). Next: cross-platform support
+(Linux/Windows + GPU backends — Theme D), then hardening and a localhost HTTP
+API / OpenAI-compatible endpoint (Theme F), richer tools (video, PDF, UI→code),
+and far-future research ideas. A richer (bubbletea) TUI for `setup` is tracked
+as a future enhancement, deferred to keep the dependency tree lean. Every item,
+its effort, and its target version is in
 [`ROADMAP.md`](./ROADMAP.md) (themes A–H).
 
 ## Project layout

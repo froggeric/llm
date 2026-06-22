@@ -69,22 +69,22 @@ type HardwareInfo struct {
 //   - HardwareTier is one of the defined constants
 //   - PreferredFor references valid tool IDs (Track E defines the set)
 type ModelSpec struct {
-	DisplayName     string   `toml:"display_name"`
-	GGUF           string   `toml:"gguf"`
-	Mmproj         string   `toml:"mmproj"`
-	GGUFSha256     string   `toml:"gguf_sha256"`
-	MmprojSha256   string   `toml:"mmproj_sha256"`
-	Ctx            int      `toml:"ctx"`
-	GpuLayers      int      `toml:"gpu_layers"` // -1 = all
-	MinVramGb      int      `toml:"min_vram_gb"`
-	MinSystemRamGb int      `toml:"min_system_ram_gb"`
-	Released       string   `toml:"released"`    // YYYY-MM
-	License        string   `toml:"license"`     // SPDX ID
+	DisplayName    string       `toml:"display_name"`
+	GGUF           string       `toml:"gguf"`
+	Mmproj         string       `toml:"mmproj"`
+	GGUFSha256     string       `toml:"gguf_sha256"`
+	MmprojSha256   string       `toml:"mmproj_sha256"`
+	Ctx            int          `toml:"ctx"`
+	GpuLayers      int          `toml:"gpu_layers"` // -1 = all
+	MinVramGb      int          `toml:"min_vram_gb"`
+	MinSystemRamGb int          `toml:"min_system_ram_gb"`
+	Released       string       `toml:"released"` // YYYY-MM
+	License        string       `toml:"license"`  // SPDX ID
 	HardwareTier   HardwareTier `toml:"hardware_tier"`
-	Preferred      bool     `toml:"preferred"`
-	PreferredFor   []string `toml:"preferred_for"`
-	BenchToks      float64  `toml:"bench_toks"`
-	Notes          string   `toml:"notes"`
+	Preferred      bool         `toml:"preferred"`
+	PreferredFor   []string     `toml:"preferred_for"`
+	BenchToks      float64      `toml:"bench_toks"`
+	Notes          string       `toml:"notes"`
 	// ChatTemplateKwargs is forwarded as `chat_template_kwargs` in the
 	// chat-completion request body. Used for hybrid thinking models
 	// (Qwen3.5/3.6) where `enable_thinking = false` skips the reasoning

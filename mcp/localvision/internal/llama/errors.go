@@ -167,8 +167,8 @@ func IsErrPortInUse(err error) bool {
 // It is safe for concurrent use: cmd.Wait() reads tail concurrently with
 // the spawner's writes.
 type limitedBuffer struct {
-	max  int
-	buf  []byte
+	max int
+	buf []byte
 }
 
 // newLimitedBuffer returns a buffer that retains at most the last max bytes.

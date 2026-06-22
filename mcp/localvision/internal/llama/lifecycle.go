@@ -167,8 +167,8 @@ type Options struct {
 type LifecycleManager struct {
 	opts Options
 
-	mu    sync.Mutex
-	cond  *sync.Cond // broadcast on state change; wraps m.mu
+	mu   sync.Mutex
+	cond *sync.Cond // broadcast on state change; wraps m.mu
 
 	state          State
 	loadedModelID  string
@@ -804,12 +804,12 @@ type Client struct {
 
 // ChatRequest is a single vision-language chat completion request.
 type ChatRequest struct {
-	Model        string         // model ID as known to the registry (informational)
-	SystemPrompt string         // task-tuned system prompt from the tool
-	UserPrompt   string         // user-turn prompt from the tool
-	ImagePaths   []string       // absolute local paths to image files
-	MaxTokens    int            // per-tool output budget
-	Temperature  float64        // usually 0.1 for deterministic output
+	Model        string   // model ID as known to the registry (informational)
+	SystemPrompt string   // task-tuned system prompt from the tool
+	UserPrompt   string   // user-turn prompt from the tool
+	ImagePaths   []string // absolute local paths to image files
+	MaxTokens    int      // per-tool output budget
+	Temperature  float64  // usually 0.1 for deterministic output
 	// TopP / TopK carry v6 benchmark sampling (0.95 / 64). buildChatRequestBody
 	// applies these as defaults when left at zero; the executor always sets them.
 	TopP float64
