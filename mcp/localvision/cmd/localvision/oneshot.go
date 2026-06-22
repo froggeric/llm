@@ -228,7 +228,7 @@ func runOneShot(args []string) int {
 		summary += " · " + modelName
 	}
 	if ver != "" {
-		summary += " · llama.cpp v" + strings.TrimSpace(strings.TrimPrefix(ver, "version:"))
+		summary += " · llama.cpp " + strings.TrimSpace(strings.TrimPrefix(ver, "version:"))
 	}
 	fmt.Fprintf(os.Stderr, "%s %s\n", paint(cGreen, "✓"), summary)
 	printPhaseSummary(phaseTimes)
