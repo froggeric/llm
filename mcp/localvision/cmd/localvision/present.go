@@ -151,8 +151,8 @@ func phaseLabel(phase string) string {
 // printPhaseSummary prints the per-phase elapsed-time breakdown to stderr.
 func printPhaseSummary(phases []phaseTime) {
 	for _, p := range phases {
-		fmt.Fprintf(os.Stderr, "  %s  %s  %s\n",
-			paint(cDim, phaseLabel(p.phase)), p.detail,
+		fmt.Fprintf(os.Stderr, "  %s  %s\n",
+			paint(cDim, phaseLabel(p.phase)),
 			paint(cDim, fmt.Sprintf("%.1fs", p.elapsed.Seconds())))
 	}
 }
