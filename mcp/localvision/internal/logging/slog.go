@@ -74,15 +74,33 @@ func ParseLevel(s string) (slog.Level, error) {
 // Setup does NOT close the file when the program exits; the OS reaps it.
 // Long-running tests that call Setup repeatedly should call CloseLogFile
 // between invocations to avoid leaking file handles.
+// Setup configures logging to stderr (+ optional file).
 func Setup(level, logFile string) (*slog.Logger, error) {
+	return setup(level, logFile, false)
+}
+
+// SetupQuiet is like Setup but suppresses the stderr text handler (logs go only
+// to the optional --log-file). Used by the interactive one-shot CLI so the
+// terminal shows just the status/result, not the slog stream.
+func SetupQuiet(level, logFile string) (*slog.Logger, error) {
+	return setup(level, logFile, true)
+}
+
+func setup(level, logFile string, quiet bool) (*slog.Logger, error) {
 	lvl, err := ParseLevel(normalizeLevel(level))
 	if err != nil {
 		return nil, err
 	}
 
-	// Stderr handler: human-readable text. Stderr is the canonical MCP
-	// log surface (stdout is reserved for JSON-RPC frames).
-	stderrHandler := slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
+	// Text handler for the human-readable surface. Normally stderr (the
+	// canonical MCP log surface; stdout is reserved for JSON-RPC frames).
+	// quiet routes it to discard so the interactive one-shot CLI shows only
+	// its own status/result lines (use --verbose or --log-file to recover).
+	stderrW := io.Writer(os.Stderr)
+	if quiet {
+		stderrW = io.Discard
+	}
+	stderrHandler := slog.NewTextHandler(stderrW, &slog.HandlerOptions{
 		Level: lvl,
 	})
 

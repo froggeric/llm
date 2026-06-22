@@ -96,7 +96,7 @@ func runSubcommand(args []string) int {
 		return exitBadArgs
 	}
 
-	cfg, logger, err := loadAndConfigure(cf)
+	cfg, logger, err := loadAndConfigure(cf, false)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "localvision: %v\n", err)
 		return exitUnsetConfig
@@ -158,7 +158,7 @@ func doctorSubcommand(args []string) int {
 		return exitBadArgs
 	}
 
-	cfg, logger, err := loadAndConfigure(cf)
+	cfg, logger, err := loadAndConfigure(cf, false)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "doctor: %v\n", err)
 		return exitUnsetConfig
@@ -275,7 +275,7 @@ func doctorSubcommand(args []string) int {
 // both. The returned logger writes to stderr (and an optional file) and is
 // also installed as the slog default so libraries that call slog.Info
 // without a logger argument use it.
-func loadAndConfigure(cf commonFlags) (*config.Config, *slog.Logger, error) {
+func loadAndConfigure(cf commonFlags, quiet bool) (*config.Config, *slog.Logger, error) {
 	cfg, err := config.Load(cf.configPath)
 	if err != nil {
 		return nil, nil, fmt.Errorf("load config: %w", err)
@@ -294,7 +294,12 @@ func loadAndConfigure(cf commonFlags) (*config.Config, *slog.Logger, error) {
 		logFile = cf.logFile
 	}
 
-	logger, err := logging.Setup(level, logFile)
+	var logger *slog.Logger
+	if quiet {
+		logger, err = logging.SetupQuiet(level, logFile)
+	} else {
+		logger, err = logging.Setup(level, logFile)
+	}
 	if err != nil {
 		return nil, nil, fmt.Errorf("setup logging: %w", err)
 	}

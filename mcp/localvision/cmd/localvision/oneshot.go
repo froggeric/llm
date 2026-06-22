@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/froggeric/llm/mcp/localvision/internal/mcpserver"
 	"github.com/froggeric/llm/mcp/localvision/internal/tools"
@@ -103,7 +104,7 @@ func runOneShot(args []string) int {
 		return exitBadArgs
 	}
 
-	cfg, logger, err := loadAndConfigure(cf)
+	cfg, logger, err := loadAndConfigure(cf, stderrIsTTY && !cf.verbose)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "localvision: %v\n", err)
 		return exitUnsetConfig
@@ -184,20 +185,31 @@ func runOneShot(args []string) int {
 		}
 	}()
 
-	fmt.Fprintln(os.Stderr, "localvision: loading model (cold start can take 30-70s)...")
+	// Presentation: an animated spinner on stderr while the model loads and
+	// infers (TTY only), so the 30-70s wait isn't silent. stdout stays plain
+	// for piping.
+	label := toolGlyph[toolID]
+	if label == "" {
+		label = toolID
+	}
+	msg := label + " · " + imageLabel(positionals)
+	start := time.Now()
+	sp := newSpinner(msg)
 	raw, err := exec.Run(ctx, toolID, system, user, refs, tool.MaxTokens())
+	sp.halt()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "localvision: %v\n", err)
+		renderError(label, err)
 		return exitGeneric
 	}
+	fmt.Fprintf(os.Stderr, "%s %s (%s)\n", paint(cGreen, "✓"), msg, elapsed(start))
 
 	parsed, _ := tool.ParseOutput(raw)
 	if s, ok := parsed.(string); ok {
-		fmt.Println(s)
+		renderResult(s)
 	} else {
 		// Structured output (e.g. extract_code returns a map). Phase 2's
 		// --format handles proper encoding; for now print the raw text.
-		fmt.Println(raw)
+		renderResult(raw)
 	}
 	return exitOK
 }
