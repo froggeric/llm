@@ -17,4 +17,4 @@ Repository structure
 
 ## MCP servers
 
-- mcp/local-vision-mcp/ — a Go MCP server that wraps a local `llama.cpp` subprocess to give text-only coding LLMs (Claude Code, Codex CLI, etc.) vision capabilities. Runs entirely on-device; PolyForm Noncommercial license. See [mcp/local-vision-mcp/README.md](./mcp/local-vision-mcp/README.md).
+- mcp/localvision/ — a Go MCP server that wraps a local `llama.cpp` subprocess to give text-only coding LLMs (Claude Code, Codex CLI, etc.) vision capabilities. Runs entirely on-device; PolyForm Noncommercial license. See [mcp/localvision/README.md](./mcp/localvision/README.md).

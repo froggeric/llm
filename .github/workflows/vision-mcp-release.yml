@@ -1,6 +1,6 @@
-# Release workflow for local-vision-mcp.
+# Release workflow for localvision.
 #
-# Triggers when a tag matching mcp/local-vision-mcp/v* is pushed. This is
+# Triggers when a tag matching mcp/localvision/v* is pushed. This is
 # the Go subdirectory-module convention; proxy.golang.org looks for tags in
 # this format when resolving `go install ...@latest`.
 #
@@ -27,7 +27,7 @@ name: vision-mcp-release
 on:
   push:
     tags:
-      - 'mcp/local-vision-mcp/v*'
+      - 'mcp/localvision/v*'
 
 # Release runs are not safe to race; never cancel a release in flight.
 concurrency:
@@ -43,7 +43,7 @@ jobs:
     runs-on: macos-14
     defaults:
       run:
-        working-directory: mcp/local-vision-mcp
+        working-directory: mcp/localvision
 
     steps:
       - name: Checkout
@@ -56,7 +56,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.25.3'
-          cache-dependency-path: mcp/local-vision-mcp/go.sum
+          cache-dependency-path: mcp/localvision/go.sum
 
       - name: Install goreleaser
         # Pin to a known-good major version; bump intentionally.
