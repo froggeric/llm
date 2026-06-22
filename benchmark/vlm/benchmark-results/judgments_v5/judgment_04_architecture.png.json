@@ -1,0 +1,295 @@
+{
+  "image": "04_architecture.png",
+  "judgments": [
+    {
+      "model_variant": "gemma4-12b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 7 components named verbatim with correct text",
+        "Both protocols HTTPS and gRPC correctly placed",
+        "Correct left-to-right flow with branching",
+        "Accurate colors (blue/orange/green/pink)",
+        "Correctly notes rectangles are rounded and Postgres/Redis are ovals/ellipses",
+        "FastAPI subtext noted"
+      ],
+      "key_misses": [
+        "Did not mention the dangling/phantom third line from the gRPC split",
+        "Says the gRPC arrow 'splits into two paths' rather than three"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent, complete, and faithful description. All components, protocols, colors, and shapes are correct. Only misses the dangling-line design quirk, which is a minor detail."
+    },
+    {
+      "model_variant": "gemma4-26b-a4b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 7 components correctly identified with verbatim text",
+        "HTTPS and gRPC protocols correctly placed",
+        "Accurate color description including 'darker borders'",
+        "Correctly distinguishes rounded rectangles from ovals for databases",
+        "Clear layout description with upper/lower branch split"
+      ],
+      "key_misses": [
+        "Did not mention the dangling third line from the gRPC split",
+        "Says line 'splits into two separate arrows'"
+      ],
+      "hallucinations": [],
+      "justification": "Very thorough and accurate. Captures all components, colors, shapes, and protocols. Misses only the dangling-line quirk."
+    },
+    {
+      "model_variant": "gemma4-31b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 7 components correctly identified",
+        "HTTPS and gRPC protocols correctly placed",
+        "Accurate colors and color-coding interpretation",
+        "Good connection flow description"
+      ],
+      "key_misses": [
+        "Did not mention the dangling third line from gRPC split",
+        "Claims text is 'monospaced' font (unverifiable/slightly off)",
+        "Does not explicitly note rounded corners or oval shapes for databases"
+      ],
+      "hallucinations": [
+        "Asserts all text is monospaced font - questionable detail"
+      ],
+      "justification": "Strong description of components and flow, but includes an unverified claim about monospaced font and is less precise about shapes."
+    },
+    {
+      "model_variant": "gemma4-e4b|think",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 7 components correctly identified",
+        "HTTPS and gRPC protocols correctly placed",
+        "Reasonable flow description"
+      ],
+      "key_misses": [
+        "Did not mention the dangling third line",
+        "Says Postgres and Redis are 'pink/purple rectangular boxes' - INCORRECT, they are ovals",
+        "Does not mention rounded corners or oval database shapes"
+      ],
+      "hallucinations": [
+        "Describes Postgres and Redis as 'pink/purple rectangular boxes' when they are clearly ovals - significant shape error"
+      ],
+      "justification": "Component identification and protocols are correct, but a significant shape error misidentifies the database ovals as rectangular boxes, which conflicts with the ground truth."
+    },
+    {
+      "model_variant": "glm-4.6v-flash-9b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 7 components correctly identified with verbatim text",
+        "HTTPS and gRPC protocols correctly placed",
+        "Accurate colors (blue/orange/green/pink)",
+        "Correctly notes rectangles vs ovals for databases",
+        "Clear horizontal flowchart description"
+      ],
+      "key_misses": [
+        "Did not mention the dangling third line from the gRPC split"
+      ],
+      "hallucinations": [],
+      "justification": "Concise and fully accurate. Correctly captures components, protocols, colors, and shapes. Only misses the dangling-line quirk."
+    },
+    {
+      "model_variant": "qwen3-vl-4b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 7 components correctly identified with verbatim text",
+        "HTTPS and gRPC protocols correctly placed",
+        "Accurate colors (blue/orange/green/pink)",
+        "Notes rectangles vs ovals for databases",
+        "Explicitly notes '(FastAPI)' as smaller subtext",
+        "Correctly states no people in image"
+      ],
+      "key_misses": [
+        "Did not mention the dangling third line from gRPC split"
+      ],
+      "hallucinations": [],
+      "justification": "Highly accurate and detailed. All components, protocols, colors, and shapes are correct. Misses only the dangling line."
+    },
+    {
+      "model_variant": "qwen3-vl-8b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 7 components correctly identified with verbatim text",
+        "HTTPS and gRPC protocols correctly placed",
+        "Accurate colors (blue/orange/green/pink)",
+        "Correctly notes rounded rectangles and oval database shapes",
+        "Clear component-by-component connection list"
+      ],
+      "key_misses": [
+        "Did not mention the dangling third line from gRPC split"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent, well-structured description with all components, protocols, colors, and shapes correct. Misses only the dangling line."
+    },
+    {
+      "model_variant": "qwen3.5-4b|nothink",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 main components correctly identified",
+        "HTTPS and gRPC protocols correctly placed",
+        "Accurate colors (blue/yellow/green/pink)",
+        "Notes oval shapes for databases with 'rounded edges'",
+        "Clear flow description"
+      ],
+      "key_misses": [
+        "Did not mention the dangling third line",
+        "Claims background has 'black border at top and bottom' - not in ground truth, possibly hallucinated"
+      ],
+      "hallucinations": [
+        "Describes 'black border at top and bottom' of canvas - unverifiable"
+      ],
+      "justification": "Mostly accurate component and protocol description, but adds an unverified detail about canvas borders. Uses excessive emojis in formatting but content is sound."
+    },
+    {
+      "model_variant": "qwen3.5-4b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 7 components correctly identified with verbatim text",
+        "HTTPS and gRPC protocols correctly placed",
+        "Accurate colors (blue/yellow/green/pink)",
+        "Notes rounded rectangles and oval database shapes",
+        "Explicitly identifies '(FastAPI)' subtext",
+        "Organized into 4 logical stages"
+      ],
+      "key_misses": [
+        "Did not mention the dangling third line from gRPC split"
+      ],
+      "hallucinations": [],
+      "justification": "Clear, well-organized description with all components, protocols, colors, and shapes correct. Misses only the dangling line."
+    },
+    {
+      "model_variant": "qwen3.5-9b|nothink",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 7 components correctly identified with verbatim text",
+        "HTTPS and gRPC protocols correctly placed",
+        "Detailed border color descriptions (teal, magenta)",
+        "Notes rectangles vs ovals for databases",
+        "Explicitly notes 'no people in image'",
+        "Clear color-coding interpretation"
+      ],
+      "key_misses": [
+        "Did not mention the dangling third line"
+      ],
+      "hallucinations": [],
+      "justification": "Thorough and faithful description with detailed color and shape notes. Only misses the dangling-line design quirk."
+    },
+    {
+      "model_variant": "qwen3.5-9b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 7 components correctly identified with verbatim text",
+        "HTTPS and gRPC protocols correctly placed",
+        "Accurate colors with position details",
+        "Notes rounded rectangles and oval database shapes",
+        "Clear three-stage layout (client/gateway/data)"
+      ],
+      "key_misses": [
+        "Did not mention the dangling third line",
+        "Claims title text is 'dark grey' - minor unverifiable detail"
+      ],
+      "hallucinations": [],
+      "justification": "Well-structured and accurate description of all components, protocols, colors, and shapes. Only misses the dangling line."
+    },
+    {
+      "model_variant": "qwen3.6-27b|nothink",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 7 components correctly identified with verbatim text",
+        "HTTPS and gRPC protocols correctly placed",
+        "Detailed border color descriptions (teal, magenta)",
+        "Notes rounded rectangles and oval database shapes",
+        "Explicitly states 'no people in diagram'",
+        "Clear horizontal flow description"
+      ],
+      "key_misses": [
+        "Did not mention the dangling third line from gRPC split"
+      ],
+      "hallucinations": [],
+      "justification": "Comprehensive and accurate description. All components, protocols, colors, and shapes are correct. Misses only the dangling line."
+    },
+    {
+      "model_variant": "qwen3.6-27b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 7 components correctly identified with verbatim text",
+        "HTTPS and gRPC protocols correctly placed",
+        "Accurate colors with position detail",
+        "Notes rounded rectangles and oval database shapes",
+        "Clear four-stage layout description"
+      ],
+      "key_misses": [
+        "Did not mention the dangling third line"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent, well-structured description with all components, protocols, colors, and shapes correct. Misses only the dangling line."
+    },
+    {
+      "model_variant": "qwen3.6-35b-a3b|nothink",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 7 components correctly identified with verbatim text",
+        "HTTPS and gRPC protocols correctly placed",
+        "Accurate colors and border descriptions",
+        "Notes rounded rectangles and oval database shapes",
+        "Clear flow description"
+      ],
+      "key_misses": [
+        "Did not mention the dangling third line"
+      ],
+      "hallucinations": [],
+      "justification": "Detailed and accurate description. All components, protocols, colors, and shapes are correct. Misses only the dangling line."
+    },
+    {
+      "model_variant": "qwen3.6-35b-a3b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 7 components correctly identified with verbatim text",
+        "HTTPS and gRPC protocols correctly placed",
+        "Accurate colors and border descriptions",
+        "Notes rounded rectangles and oval database shapes",
+        "Clear pipeline layout description"
+      ],
+      "key_misses": [
+        "Did not mention the dangling third line",
+        "Says gRPC label is near 'connection from the API Gateway to the Auth Service' specifically, slightly less accurate placement"
+      ],
+      "hallucinations": [],
+      "justification": "Comprehensive and accurate description of components, protocols, colors, and shapes. Misses only the dangling line."
+    }
+  ],
+  "ranking": [
+    "gemma4-12b|think",
+    "qwen3-vl-8b|think",
+    "glm-4.6v-flash-9b|think",
+    "qwen3.5-9b|nothink",
+    "qwen3.6-27b|nothink",
+    "qwen3-vl-4b|think",
+    "qwen3.5-4b|think",
+    "qwen3.6-27b|think",
+    "qwen3.5-9b|think",
+    "qwen3.6-35b-a3b|nothink",
+    "qwen3.6-35b-a3b|think",
+    "gemma4-26b-a4b|think",
+    "qwen3.5-4b|nothink",
+    "gemma4-31b|think",
+    "gemma4-e4b|think"
+  ],
+  "notes": "This is a clear, simple architecture diagram and almost every model produced highly accurate, essentially equivalent descriptions. All 15 models correctly identified the 7 components, both protocols (HTTPS, gRPC), the left-to-right flow with branching, and the color scheme. None of the 15 models mentioned the notable 'dangling third line' from the gRPC split described in the ground truth - this is the only meaningful differentiator and is a minor detail. gemma4-e4b|think ranks last due to a shape error (described Postgres/Redis as 'rectangular boxes' when they are ovals). gemma4-31b|think includes a questionable 'monospaced font' claim. qwen3.5-4b|nothink includes an unverified 'black border at top and bottom' detail. The top tier (gemma4-12b, qwen3-vl-8b, glm-4.6v-flash-9b, qwen3.5-9b, qwen3.6-27b) produced the most complete, well-organized descriptions with verbatim text, accurate shapes, and no hallucinated details. Differences between the top 10 are minimal and could easily re-order on re-judging."
+}

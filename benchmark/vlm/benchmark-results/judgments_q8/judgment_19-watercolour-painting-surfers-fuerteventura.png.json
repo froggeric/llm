@@ -1,0 +1,178 @@
+{
+  "image": "19-watercolour-painting-surfers-fuerteventura.png",
+  "judgment_date": "2026-06-21",
+  "ground_truth_summary": "Watercolour painting, north coast of Fuerteventura. TWO surfers verified: (1) foreground man with short BROWN hair, seen from back, sitting on black volcanic rocks, wearing BLUE-PURPLE shortie wetsuit, watching the surfer; (2) male surfer riding ~2.5m A-frame wave, short board pointing RIGHT (goofy footed), just took off, no turn yet. Purple/lavender mountains in background (Lanzarote across strait).",
+  "critical_checks": {
+    "surfer_count_must_be_two": true,
+    "foreground_hair_must_be_brown": "preferred but not always visible at Q8",
+    "foreground_wetsuit_must_be_blue_purple": "preferred, generic 'dark' is partial credit",
+    "mountains_must_be_purple_lavender": true
+  },
+  "evaluations": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "surfer_count_correct": true,
+      "hair_color_correct": true,
+      "wetsuit_color_correct": true,
+      "mountains_correct": true,
+      "errors": [],
+      "strengths": [
+        "Explicitly identifies 2 figures (seated man + lone surfer)",
+        "States 'short brown hair' for foreground observer",
+        "Wetsuit described as 'dark navy blue or deep purple' — correct hedge matching blue-purple",
+        "Lavender/violet mountains"
+      ],
+      "score": 9.5,
+      "score_rationale": "Accurate count, hair color, and wetsuit color. No real errors."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "surfer_count_correct": true,
+      "hair_color_correct": false,
+      "wetsuit_color_correct": true,
+      "mountains_correct": true,
+      "errors": [
+        "Does not specify hair color of foreground observer"
+      ],
+      "strengths": [
+        "Correctly identifies 2 figures (foreground seated + surfer)",
+        "Wetsuit 'dark blue or purple long-sleeved top' — matches blue-purple",
+        "Lavender mountains"
+      ],
+      "score": 8.5,
+      "score_rationale": "Accurate count and wetsuit color; omits hair color detail."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "surfer_count_correct": true,
+      "hair_color_correct": false,
+      "wetsuit_color_correct": true,
+      "mountains_correct": true,
+      "errors": [
+        "Says 'short hair' without specifying brown"
+      ],
+      "strengths": [
+        "Correctly identifies 2 figures (person on rocks + surfer)",
+        "'Dark blue/purple for both individuals' — matches blue-purple for observer",
+        "Muted purples/blues for mountains",
+        "Concise and structured"
+      ],
+      "score": 8.5,
+      "score_rationale": "Accurate count and wetsuit color; hair color only 'short' without brown. Otherwise very clean."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "surfer_count_correct": true,
+      "hair_color_correct": false,
+      "wetsuit_color_correct": false,
+      "mountains_correct": true,
+      "errors": [
+        "Wetsuits described as 'navy blue or black' — misses the purple/blue-purple",
+        "No hair color specified for observer"
+      ],
+      "strengths": [
+        "Explicitly states 'two figures—one actively surfing and another observing'",
+        "Purple/blue mountains correct",
+        "Good layout and mood description"
+      ],
+      "score": 8.0,
+      "score_rationale": "Correct count and scene; wetsuit color partially off (misses purple)."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "surfer_count_correct": true,
+      "hair_color_correct": true,
+      "wetsuit_color_correct": true,
+      "mountains_correct": true,
+      "errors": [],
+      "strengths": [
+        "Explicitly 'two surfers'",
+        "'Short, light brown hair' for seated surfer — close to brown",
+        "'Dark, possibly purple or navy, wetsuit' — matches blue-purple",
+        "Purple/lavender mountains"
+      ],
+      "score": 9.5,
+      "score_rationale": "All critical checks correct. Light brown is essentially brown at this resolution."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "surfer_count_correct": true,
+      "hair_color_correct": false,
+      "wetsuit_color_correct": false,
+      "mountains_correct": true,
+      "errors": [
+        "Figures described as 'dark clothing' / 'dark silhouettes' — misses blue-purple wetsuit color",
+        "No hair color specified"
+      ],
+      "strengths": [
+        "Correctly identifies 2 figures (surfer + observer)",
+        "Purple mountains correct",
+        "Strong layout, colors, and notable features sections"
+      ],
+      "score": 8.0,
+      "score_rationale": "Correct count and scene; loses detail on hair and wetsuit color. Otherwise comprehensive."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "surfer_count_correct": true,
+      "hair_color_correct": false,
+      "wetsuit_color_correct": false,
+      "mountains_correct": true,
+      "errors": [
+        "Wetsuit described generically as 'dark wetsuit' — misses blue-purple",
+        "No hair color specified for observer"
+      ],
+      "strengths": [
+        "Correctly identifies 2 figures (surfer + observer)",
+        "Lavender/purple mountains correct",
+        "Good layout and color palette"
+      ],
+      "score": 8.0,
+      "score_rationale": "Correct count and scene; loses hair and wetsuit color detail."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "surfer_count_correct": true,
+      "hair_color_correct": false,
+      "wetsuit_color_correct": false,
+      "mountains_correct": true,
+      "errors": [
+        "Wetsuit 'dark long-sleeved top (possibly a wetsuit)' — generic, misses blue-purple",
+        "No hair color specified"
+      ],
+      "strengths": [
+        "Correctly identifies 2 figures (surfer + observer)",
+        "Purple mountains correct",
+        "Excellent compositional and stylistic analysis"
+      ],
+      "score": 8.0,
+      "score_rationale": "Correct count and scene; hair/wetsuit color unspecified. Strong artistic analysis."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|think",
+      "surfer_count_correct": true,
+      "hair_color_correct": true,
+      "wetsuit_color_correct": true,
+      "mountains_correct": true,
+      "errors": [],
+      "strengths": [
+        "Explicitly identifies 'two figures'",
+        "'Short brown hair' for observer — correct",
+        "'Dark purple or blue wetsuit' — matches blue-purple",
+        "Lavender/purple mountains"
+      ],
+      "score": 9.5,
+      "score_rationale": "All critical checks correct. Best-in-class detail."
+    }
+  ],
+  "summary": {
+    "all_models_correct_surfer_count": true,
+    "top_performers": [
+      "gemma4-12b-Q8|think",
+      "qwen3-vl-8b-Q8|think",
+      "qwen3.5-9b-Q8|think"
+    ],
+    "weakest_aspect_across_models": "Several Qwen3.5 variants (4b-nothink, 4b-think, 9b-nothink) and qwen3-vl-4b describe the wetsuits as generic 'dark' without naming the blue-purple color, and omit the foreground observer's brown hair.",
+    "no_real_errors": "All 9 variants correctly identified TWO surfers — no count errors, no invented content, no missing foreground observer."
+  }
+}

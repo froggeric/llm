@@ -1,0 +1,263 @@
+{
+  "image": "25-mri-brain-parkinson.jpeg",
+  "judgments": {
+    "gemma4-12b|think": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2x3 grid of six MRI panels",
+        "Three anatomical planes: coronal, sagittal, axial",
+        "Coronal top-left and bottom panels, sagittal middle, axial top-right",
+        "Orientation markers R and MF",
+        "Distinctive AL marker identified"
+      ],
+      "key_misses": [
+        "Claims 5cm scale on each panel - incorrect, middle column lacks scale bar"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate plane identification and captures the distinctive AL marker, but incorrectly states 5cm scale is on every panel. No false lesions or annotations claimed."
+    },
+    "gemma4-26b-a4b|think": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2x3 grid layout",
+        "Three anatomical planes correctly identified per panel",
+        "Correctly notes 5cm only on some panels (top-middle, top-right, bottom-middle)",
+        "Captures distinctive AL marker on bottom-middle",
+        "R and MF markers listed per panel"
+      ],
+      "key_misses": [
+        "Places 5cm on bottom-middle which actually lacks it; scale is absent from entire middle column"
+      ],
+      "hallucinations": [],
+      "justification": "Most accurate scale reporting of the gemma variants, correctly limiting 5cm to subset of panels and identifying the rare AL marker. Minor scale placement errors but no fabricated pathology."
+    },
+    "gemma4-31b|think": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2x3 grid",
+        "Three planes correctly identified per panel",
+        "Captures AL on bottom-middle",
+        "R and MF markers listed per panel",
+        "Notes scale bars in middle and right columns only"
+      ],
+      "key_misses": [
+        "Lists 5cm on bottom-middle which is part of the middle column lacking the scale"
+      ],
+      "hallucinations": [],
+      "justification": "Strong structural description with accurate plane identification and AL marker. Slight scale placement inaccuracy but no hallucinated lesions or annotations."
+    },
+    "gemma4-e4b|think": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2x3 grid",
+        "Captures R, MF, AL markers",
+        "Notes scale bar on most images"
+      ],
+      "key_misses": [
+        "Hedges on bottom-left calling it Coronal/Axial",
+        "Top row claimed as Axial/Sagittal/Axial - top-left is actually coronal",
+        "Scale placement imprecise"
+      ],
+      "hallucinations": [],
+      "justification": "Captures the markers but plane identification is weaker and inconsistent, mislabeling top-left as axial and hedging on bottom-left. No fabricated pathology."
+    },
+    "glm-4.6v-flash-9b|think": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2-row 3-column grid",
+        "Three planes identified per panel correctly",
+        "Captures AL on bottom-middle",
+        "R and MF markers noted"
+      ],
+      "key_misses": [
+        "Claims 5cm scale marker on right of each image - incorrect, middle column lacks scale"
+      ],
+      "hallucinations": [],
+      "justification": "Good plane identification and captures AL, but incorrectly universalizes the 5cm scale to every panel. No fabricated pathology."
+    },
+    "qwen3-vl-4b|think": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2x3 grid",
+        "Captures R, MF, AL markers",
+        "Notes 5cm on first, second, third columns"
+      ],
+      "key_misses": [
+        "Claims AL is on the fourth column - there is no fourth column in a 2x3 grid",
+        "Says spinal cord visible in sagittal views - imprecise"
+      ],
+      "hallucinations": [
+        "References a fourth column that does not exist in the image"
+      ],
+      "justification": "Captures markers but introduces confusion by referencing a nonexistent fourth column. Plane identification is reasonable but spatial reasoning is broken."
+    },
+    "qwen3-vl-8b|think": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2x3 grid layout",
+        "Top row planes correct (frontal/sagittal/axial)",
+        "Captures R, MF, AL markers"
+      ],
+      "key_misses": [
+        "Claims 5cm on each panel - incorrect, middle column lacks it",
+        "Labels bottom-left as Axial when it is coronal"
+      ],
+      "hallucinations": [],
+      "justification": "Reasonable marker capture and top-row plane ID, but incorrectly universalizes 5cm scale and mislabels bottom-left as axial. No fabricated lesions."
+    },
+    "qwen3.5-4b|nothink": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2x3 grid",
+        "Three planes correctly identified per panel",
+        "Captures AL on bottom-center with MF",
+        "R and MF markers noted"
+      ],
+      "key_misses": [
+        "Claims 5cm scale bar on all panels - incorrect, middle column lacks it"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate plane identification and correctly notes AL on bottom-center panel. Scale universalization error but no fabricated pathology."
+    },
+    "qwen3.5-4b|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2x3 grid",
+        "All six panels' planes correctly identified",
+        "Captures AL on bottom-middle",
+        "Correctly notes 5cm on top-left/top-right/bottom-right and on left of top-middle/bottom-middle - closely matches actual pattern",
+        "R and MF markers noted"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Best-in-class accuracy: correctly identifies all six planes, the distinctive AL marker, and the irregular scale bar placement pattern (some on right, some on left of middle column). No hallucinations."
+    },
+    "qwen3.5-9b|nothink": {
+      "holistic_score": 5,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "2x3 grid",
+        "Top row planes correctly identified",
+        "Captures R, MF, AL markers"
+      ],
+      "key_misses": [
+        "Claims 5cm on right of each panel - incorrect",
+        "Response cut off mid-sentence in summary"
+      ],
+      "hallucinations": [],
+      "justification": "Reasonable marker and plane capture but truncated before completion and incorrectly universalizes the 5cm scale. No fabricated pathology."
+    },
+    "qwen3.5-9b|think": {
+      "holistic_score": 6,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "2x3 grid",
+        "All six planes correctly identified",
+        "Captures AL on bottom-middle",
+        "R and MF markers noted"
+      ],
+      "key_misses": [
+        "Claims 5cm on bottom-middle which actually lacks it",
+        "Response cut off mid-sentence",
+        "Misses 5cm absence on bottom-left or top-middle"
+      ],
+      "hallucinations": [],
+      "justification": "Strong plane identification and AL capture, but truncated and includes bottom-middle among panels with 5cm which is incorrect."
+    },
+    "qwen3.6-27b|nothink": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2x3 grid",
+        "All six planes correctly identified",
+        "Captures AL on bottom-center",
+        "Notes 5cm on most panels",
+        "R and MF markers noted"
+      ],
+      "key_misses": [
+        "Claims mandible and teeth visible in sagittal views - unlikely in these slices"
+      ],
+      "hallucinations": [
+        "Claims mandible (jawbone) and teeth visible in sagittal views"
+      ],
+      "justification": "Good structural description with accurate planes and AL marker, but introduces mild hallucination about teeth/mandible visibility. Scale reporting is appropriately hedged."
+    },
+    "qwen3.6-27b|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2x3 grid",
+        "All six planes correctly identified",
+        "Captures AL on bottom-middle",
+        "Correctly describes irregular scale placement - 5cm on right of top-right/bottom-right and left of top-left/bottom-left/bottom-middle",
+        "R and MF markers noted"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Excellent accuracy matching the actual scale placement pattern, captures AL marker, identifies all six planes correctly. No hallucinations."
+    },
+    "qwen3.6-35b-a3b|nothink": {
+      "holistic_score": 4,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "2x3 grid layout",
+        "Captures R, MF, AL markers"
+      ],
+      "key_misses": [
+        "Claims all panels include 5cm scale - incorrect",
+        "Response truncated mid-sentence"
+      ],
+      "hallucinations": [
+        "Speculates sequence is T2-weighted or FLAIR without supporting evidence",
+        "Speculates CSF appears dark due to FLAIR - unfounded"
+      ],
+      "justification": "Truncated response with significant over-speculation about MRI sequence weighting (T2/FLAIR) that cannot be verified from the image, and incorrectly universalizes the 5cm scale. Marker capture is adequate."
+    },
+    "qwen3.6-35b-a3b|think": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2x3 grid",
+        "All six planes correctly identified",
+        "Captures AL on bottom-middle",
+        "Correctly notes 5cm on top-left, top-right, bottom-right, and notes scale bar on bottom-middle",
+        "R and MF markers noted"
+      ],
+      "key_misses": [
+        "Includes 5cm scale on bottom-middle which actually lacks it",
+        "Speculates about different MRI weighting (T1 vs T2) across panels"
+      ],
+      "hallucinations": [
+        "Speculates about different MRI weighting between top and bottom rows without evidence"
+      ],
+      "justification": "Strong plane identification and AL capture, with mostly accurate scale placement. Minor hallucination about sequence weighting differences between rows, but no fabricated lesions."
+    }
+  },
+  "ranking": [
+    "qwen3.5-4b|think",
+    "qwen3.6-27b|think",
+    "gemma4-26b-a4b|think",
+    "gemma4-31b|think",
+    "qwen3.6-35b-a3b|think",
+    "gemma4-12b|think",
+    "qwen3.5-4b|nothink",
+    "qwen3.6-27b|nothink",
+    "glm-4.6v-flash-9b|think",
+    "qwen3.5-9b|think",
+    "qwen3-vl-8b|think",
+    "qwen3.5-9b|nothink",
+    "gemma4-e4b|think",
+    "qwen3-vl-4b|think",
+    "qwen3.6-35b-a3b|nothink"
+  ],
+  "notes": "This image has a deceptive ground-truth detail: the 5cm scale bar is absent from the entire middle column, but most models incorrectly claim it appears on every panel. The distinctive 'AL' marker on the bottom-middle panel is a strong differentiator - models that caught it (gemma4-26b/31b, glm-4.6v-flash-9b, qwen3.5-4b both variants, qwen3.5-9b think, qwen3.6-27b/35b) demonstrated better attention. The qwen3.5-4b|think and qwen3.6-27b|think variants stood out by correctly describing the irregular scale placement pattern. No model fabricated Parkinson's-specific features (substantia nigra, lesions) which is the most important anti-hallucination criterion. Minor hallucinations: qwen3.6-27b|nothink claimed teeth/mandible visibility, qwen3.6-35b-a3b|nothink heavily speculated on FLAIR/T2 sequence weighting, qwen3.6-35b-a3b|think speculated on T1/T2 differences between rows, qwen3-vl-4b|think referenced a nonexistent fourth column."
+}

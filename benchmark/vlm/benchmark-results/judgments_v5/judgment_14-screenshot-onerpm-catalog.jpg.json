@@ -1,0 +1,158 @@
+{
+  "image": "14-screenshot-onerpm-catalog.jpg",
+  "judgments": [
+    {
+      "model": "gemma4-12b|think",
+      "holistic_score": 1,
+      "failure_mode": "severe_hallucination",
+      "key_hits": ["Mentions Presque Louis", "Mentions London", "Mentions Something's Wrong"],
+      "key_misses": ["Platform name wrong (Erno instead of ONErpm)", "URL wrong (erno.com)", "User wrong (Frankie instead of Frederic)", "Account wrong", "Misses most correct album titles"],
+      "hallucinations": ["Voodoo", "Still and Sad", "Winds", "Benjamin Ben Sertilo", "A Big Reel Moment", "Cumple y Bailo", "Galactic Cruise", "Friction Ocean", "Nirvana", "Whale in the Sea Symphony", "Summer's First Light", "Point of View", "Erno platform", "Frankie", "La Sonora Vibra Latina"],
+      "justification": "Massive hallucination. Misidentifies the platform as 'Erno', the user as 'Frankie', and fabricates nearly all album titles (Voodoo, Winds, Galactic Cruise, etc.). Almost nothing matches the actual image."
+    },
+    {
+      "model": "gemma4-26b-a4b|think",
+      "holistic_score": 6,
+      "failure_mode": "partial_correct_with_errors",
+      "key_hits": ["URL dashboard.onerp.com (close)", "Neurological Waves Science account", "Winding Down", "Silk and Steel", "A Sky Remembered", "Presque Louis highlighted yellow", "Cumbia del Barrio"],
+      "key_misses": ["Truncates before completing the grid", "Misspells Waikiki as 'Wakkie'", "Misspells TENDIDO CERO SENTIDO as 'TEJIDO CERO SENTIDO'"],
+      "hallucinations": ["onerp.com (one letter off - 'r' missing)"],
+      "justification": "Reasonably accurate description of the top rows with most titles correct, but truncates mid-description and has small spelling errors (Wakkie, TEJIDO). Missing the second half of the catalog entirely."
+    },
+    {
+      "model": "gemma4-31b|think",
+      "holistic_score": 5,
+      "failure_mode": "partial_correct_with_hallucinations",
+      "key_hits": ["Platform ONErpm", "URL dashboard.onerpm.com implied", "Neurological Waves Science", "Winding Down", "Silk and Steel", "A Sky Remembered", "Cumbia del Barrio", "Presque Louis", "Gaelic Cradle Song", "Endless Ocean", "Where the Sea Remembers", "Spring's First Light", "Flight of the Phoenix", "London", "Something's Wrong", "SPIRITS OF THE WIND"],
+      "key_misses": ["Misspells Waikiki as 'Wakkie'", "Misspells TENDIDO CERO SENTIDO as 'Tenido Cero Sentido'", "Misspells Numb as 'Numbo'"],
+      "hallucinations": ["Sueños del Sol (should be Secreto del Sur)", "SOL (should be SOL SOL)", "OCEAN OF LIGHT (should be OCEAN FLUTE)"],
+      "justification": "Good coverage of most album titles but introduces several hallucinations and misspellings in row 4 (Sueños del Sol, OCEAN OF LIGHT). Multiple typos in visible titles."
+    },
+    {
+      "model": "gemma4-e4b|think",
+      "holistic_score": 4,
+      "failure_mode": "partial_correct_incomplete",
+      "key_hits": ["Platform ONErpm", "dashboard.onerpm.com URL", "Status tags DISTRIBUTED/APPROVED/INCOMPLETE", "Winding Down", "Silk and Steel", "Presque Louis", "A Sky Remembered", "Somethings Wrong"],
+      "key_misses": ["Does not list all 20 album titles", "Misses most of row 2-4 titles", "Does not identify highlighted album"],
+      "hallucinations": ["The Sound of the Sea (not in image)"],
+      "justification": "Correctly identifies the platform and overall structure but only lists a handful of titles and invents 'The Sound of the Sea'. Lacks depth and completeness."
+    },
+    {
+      "model": "glm-4.6v-flash-9b|think",
+      "holistic_score": 8,
+      "failure_mode": "minor_errors",
+      "key_hits": ["URL dashboard.onerpm.com (close)", "ONErpm brand", "Neurological Waves Science", "Winding Down", "Silk and Steel", "Waikiki", "Tendido Cero Sentido", "A Sky Remembered", "Cumbia del Barrio", "Presque Louis highlighted yellow", "Gaelic Cradle Song (misspelled Caelic)", "Endless Ocean", "Numb", "Where the Sea Remembers", "Spring's First Light", "Flight of the Phoenix", "London", "Something's Wrong", "INCOMPLETE on Something's Wrong"],
+      "key_misses": ["Misspells Gaelic as 'Caelic'", "Says 'Secreto del Sol' instead of 'Secreto del Sur'", "Truncates at row 4 start"],
+      "hallucinations": ["Secreto del Sol (wrong - should be del Sur)"],
+      "justification": "Strong performance with nearly all titles correctly identified through row 3, including status tags and the yellow highlight. Only minor spelling errors and one hallucination in row 4. Truncates but does not invent."
+    },
+    {
+      "model": "qwen3-vl-4b|think",
+      "holistic_score": 9,
+      "failure_mode": "minor_errors",
+      "key_hits": ["dashboard.onerpm.com URL", "ONErpm brand", "Frederic user", "Neurological Waves Science", "All 15 visible titles correct", "All 5 thumbnail titles correct (Secreto del Sur, SOL Sol, OCEAN FLUTE, SPIRITS OF THE WIND, TIMELESS WHISPERS)", "Status tags correct", "MANAGE MUSIC/MANAGE VIDEOS tabs"],
+      "key_misses": ["Minor: 'cutut' for the feat artist"],
+      "hallucinations": [],
+      "justification": "Excellent near-complete listing of all 20 album titles including the difficult thumbnail-only titles. No hallucinations. Best-in-class for this image."
+    },
+    {
+      "model": "qwen3-vl-8b|think",
+      "holistic_score": 9,
+      "failure_mode": "minor_errors",
+      "key_hits": ["dashboard.onerpm.com URL", "ONErpm", "Frederic user", "Neurological Waves Science", "All 15 visible titles", "All 5 thumbnail titles (Secreto del Sur, SOL Sol, OCEAN FLUTE, SPIRITS OF THE WIND, TIMELESS WHISPERS)", "Presque Louis highlighted", "Something's Wrong INCOMPLETE"],
+      "key_misses": ["Misspells Gaelic as 'Gaelsic'"],
+      "hallucinations": [],
+      "justification": "Comprehensive and accurate listing of all 20 album titles including hard thumbnail titles. Only one minor spelling variant. Excellent."
+    },
+    {
+      "model": "qwen3.5-4b|nothink",
+      "holistic_score": 9,
+      "failure_mode": "truncated",
+      "key_hits": ["dashboard.onerpm.com URL", "ONERpm", "Frederic", "Neurological Waves Science", "Winding Down", "Silk and Steel", "Waikiki", "Tendido Cero Sentido", "A Sky Remembered", "Cumbia del Barrio", "Presque Louis highlighted", "Gaelic Cradle Song", "Endless Ocean", "Numb", "Where the Sea Remembers", "Spring's First Light", "Flight of the Phoenix"],
+      "key_misses": ["Truncates after row 3 start, missing row 4"],
+      "hallucinations": [],
+      "justification": "Very accurate through row 3 with correct titles, status tags, and yellow highlight noted. Truncates before reaching the difficult row 4 titles but no hallucinations."
+    },
+    {
+      "model": "qwen3.5-4b|think",
+      "holistic_score": 9,
+      "failure_mode": "truncated",
+      "key_hits": ["URL (with onerp typo)", "Frederic user", "Neurological Waves Science", "All visible row 1-3 titles correct", "Presque Louis highlighted", "Secreto del Sur APPROVED", "Sol Sol APPROVED", "Something's Wrong INCOMPLETE"],
+      "key_misses": ["Truncates after Sol Sol", "Minor URL typo onerp.com"],
+      "hallucinations": [],
+      "justification": "Excellent accuracy for all titles it does list, including hard row 4 titles Secreto del Sur and Sol Sol with APPROVED status. Only truncated output limits completeness."
+    },
+    {
+      "model": "qwen3.5-9b|nothink",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["dashboard.onerpm.com URL", "ONERpm", "Frederic", "Neurological Waves Science", "All 15 visible titles correct", "All 5 thumbnail-only titles correct", "All status tags correct", "Presque Louis highlighted yellow", "Tabs MANAGE MUSIC/MANAGE VIDEOS"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Perfect listing of all 20 album titles including the difficult thumbnail-only titles (Secreto del Sur, Sol Sol, Ocean Flute, Spirits of the Wind, Timeless Whispers) with correct status tags and yellow highlight. Best response."
+    },
+    {
+      "model": "qwen3.5-9b|think",
+      "holistic_score": 9,
+      "failure_mode": "truncated",
+      "key_hits": ["dashboard.onerpm.com URL", "ONErpm", "Frederic", "Neurological Waves Science", "All row 1-3 titles correct", "Presque Louis highlighted", "Secreto del Sur APPROVED", "Sol Sol APPROVED", "Ocean Flute", "Spirits of the Wind"],
+      "key_misses": ["Truncates mid row 4", "Missing Timeless Whispers"],
+      "hallucinations": [],
+      "justification": "Extremely accurate for everything listed including the difficult row 4 titles with correct APPROVED/DISTRIBUTED statuses. Only limitation is truncation before Timeless Whispers."
+    },
+    {
+      "model": "qwen3.6-27b|nothink",
+      "holistic_score": 9,
+      "failure_mode": "truncated",
+      "key_hits": ["dashboard.onerpm.com URL", "ONERpm", "Frederic", "Neurological Waves Science", "All row 1-3 titles correct", "Presque Louis highlighted yellow", "Something's Wrong INCOMPLETE", "All status tags"],
+      "key_misses": ["Truncates after row 3, missing row 4"],
+      "hallucinations": [],
+      "justification": "Very accurate and detailed listing through row 3 with correct titles, statuses, and highlight. Truncation prevents full coverage of row 4 but no hallucinations."
+    },
+    {
+      "model": "qwen3.6-27b|think",
+      "holistic_score": 8,
+      "failure_mode": "truncated",
+      "key_hits": ["dashboard.onerpm.com URL", "ONErpm", "Frederic", "Neurological Waves Science", "Row 1-2 titles correct", "Presque Louis highlighted", "Status tags"],
+      "key_misses": ["Truncates mid row 3 (after Spring's First Light)", "Missing most of row 3 and all of row 4"],
+      "hallucinations": [],
+      "justification": "Accurate for what it covers but truncates much earlier than peers, only completing rows 1-2 plus two items from row 3. No hallucinations but limited completeness."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|nothink",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["dashboard.onerpm.com URL", "ONErpm", "Neurological Waves Science", "All 15 visible titles correct", "All 5 thumbnail-only titles correct (Secreto del Sur, SOL Sol, Ocean Flute, Spirits of the Wind, Timeless Whispers)", "All status tags correct", "Presque Louis highlighted yellow", "MANAGE MUSIC/MANAGE VIDEOS tabs"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Complete and perfect listing of all 20 album titles including all 5 hard thumbnail-only titles with correct statuses and the yellow highlight. Tied for best response."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|think",
+      "holistic_score": 9,
+      "failure_mode": "truncated",
+      "key_hits": ["dashboard.onerpm.com URL", "ONErpm", "Neurological Waves Science", "All row 1-3 titles correct", "Presque Louis highlighted yellow", "Secreto del Sur APPROVED", "SOL Sol APPROVED", "Ocean Flute", "Spirits of the Wind"],
+      "key_misses": ["Truncates mid row 4 before Timeless Whispers"],
+      "hallucinations": [],
+      "justification": "Excellent accuracy including hard row 4 titles with correct statuses. Only limited by truncation missing Timeless Whispers. No hallucinations."
+    }
+  ],
+  "ranking": [
+    "qwen3.5-9b|nothink",
+    "qwen3.6-35b-a3b|nothink",
+    "qwen3-vl-4b|think",
+    "qwen3-vl-8b|think",
+    "qwen3.5-4b|nothink",
+    "qwen3.5-4b|think",
+    "qwen3.5-9b|think",
+    "qwen3.6-27b|nothink",
+    "qwen3.6-35b-a3b|think",
+    "glm-4.6v-flash-9b|think",
+    "qwen3.6-27b|think",
+    "gemma4-26b-a4b|think",
+    "gemma4-31b|think",
+    "gemma4-e4b|think",
+    "gemma4-12b|think"
+  ],
+  "notes": "This image tests two distinct skills: reading clearly visible titles (15 albums) and reading titles only on small thumbnail covers in row 4 (5 albums: Secreto del Sur, SOL SOL, Ocean Flute, Spirits of the Wind, Timeless Whispers). The Qwen3.5/3.6 family dominated, with two perfect scores (qwen3.5-9b|nothink and qwen3.6-35b-a3b|nothink) and several near-perfect responses limited only by output truncation. The Gemma models struggled significantly: gemma4-12b|think produced catastrophic hallucinations (claiming the platform is 'Erno' with fake titles like 'Voodoo' and 'Galactic Cruise'), while gemma4-31b|think fabricated 'Sueños del Sol' and 'OCEAN OF LIGHT'. Notably, the smaller Qwen3-VL-4b outperformed all Gemma variants, suggesting Qwen's OCR/training is particularly strong on dense catalog screenshots. Truncation was a recurring issue across think-mode variants but never produced hallucinated content - the failure mode was always missing content rather than invented content. The |nothink variants of Qwen3.5/3.6 generally produced more complete (non-truncated) responses than their |think counterparts."
+}

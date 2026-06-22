@@ -51,7 +51,7 @@ Requires Go 1.23+ (we use `log/slog`, range-over-func, and other 1.23+ features)
 - Unit tests cover every public function.
 - Concurrency tests use `-race` and run under load.
 - Integration tests (real `llama-server` + real model) are gated behind `//go:build integration` and not run in CI.
-- The benchmark suite (`local-vlm-research/` in the parent repo) is the source of truth for model quality claims in the catalog.
+- The benchmark suite at [`../../../benchmark/vlm/`](../../../benchmark/vlm/) is the source of truth for model quality claims in the catalog.
 
 ## Adding a new tool
 

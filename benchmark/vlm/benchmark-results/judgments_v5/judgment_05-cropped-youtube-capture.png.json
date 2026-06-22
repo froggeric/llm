@@ -1,0 +1,408 @@
+{
+  "image": "05-cropped-youtube-capture.png",
+  "judgments": [
+    {
+      "model": "gemma4-12b|think",
+      "run_id": "2",
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Chinese cultural/religious setting",
+        "scroll text 茶香四溢 (close: 茶香四溢滿清屋 — extra 清)",
+        "altar text 功德",
+        "red Chinese knot",
+        "framed photo on wall",
+        "potted plant",
+        "temple-like setting implied"
+      ],
+      "key_misses": [
+        "no mention of shaolin",
+        "no mention of qigong/yi jin jing",
+        "no explicit temple/shrine label",
+        "no flag identification",
+        "Pope not identified (just 'possibly a monk or elder')",
+        "Chinese knot described but 'flag pole' not identified as flag"
+      ],
+      "hallucinations": [
+        "scroll text '茶香四溢滿清屋' adds extra 清 char (minor OCR error)",
+        "'功德三' on altar — adds 三"
+      ],
+      "justification": "Reasonable general description but misses the central Shaolin/qigong theme entirely. Minor OCR errors on scroll and altar. No flag or Pope identification. Generic 'martial arts pose' without naming the tradition."
+    },
+    {
+      "model": "gemma4-26b-a4b|think",
+      "run_id": "1",
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "scroll 茶香四溢满屋 (correct)",
+        "altar 功德, 佛, 广 (correct chars)",
+        "Chinese knot",
+        "Kung Fu reference",
+        "temple/practice space suggested"
+      ],
+      "key_misses": [
+        "no mention of shaolin",
+        "no mention of qigong/yi jin jing",
+        "no explicit temple/shrine label",
+        "Pope not identified ('several people' vague)"
+      ],
+      "hallucinations": [
+        "'Canadian flag' — WRONG (actually Austrian flag)",
+        "'yellow prayer beads' — actually appear differently (minor)",
+        "framed photo described as 'several people' — not identified as Pope"
+      ],
+      "justification": "Good OCR on scroll and altar chars. Says 'Kung Fu' but misses Shaolin/qigong explicitly. Flag misidentified as Canadian (common error — Austrian is correct). Vague on the framed photo."
+    },
+    {
+      "model": "gemma4-31b|think",
+      "run_id": "3",
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "scroll 茶香四溢滿屋 (correct)",
+        "altar 功德 (correct)",
+        "flag with red and white sections (partial — colors right)",
+        "Tai Chi or Kung Fu reference",
+        "Chinese knot"
+      ],
+      "key_misses": [
+        "no mention of shaolin",
+        "no mention of qigong/yi jin jing",
+        "no explicit temple/shrine label",
+        "flag not identified as Austrian (just 'red and white')",
+        "Pope not identified ('older man')"
+      ],
+      "hallucinations": [
+        "'blue cloth' on altar — actually yellow",
+        "'Tai Chi' guess without evidence"
+      ],
+      "justification": "Correct scroll OCR. Recognizes flag colors but doesn't identify Austria. Better than 26b on flag honesty (doesn't claim Canadian) but still misses Shaolin theme. Misidentifies altar cloth color."
+    },
+    {
+      "model": "gemma4-e4b|think",
+      "run_id": "3",
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "altar 功德, 佛 (correct)",
+        "Chinese knot decoration",
+        "red and white flag/banner (colors right)",
+        "martial arts/traditional dance pose",
+        "Chinese culture/martial arts/religious practice context"
+      ],
+      "key_misses": [
+        "no mention of shaolin",
+        "no mention of qigong/yi jin jing",
+        "no explicit temple/shrine label",
+        "flag not country-identified",
+        "Pope not identified"
+      ],
+      "hallucinations": [
+        "scroll text '恭香田溢滿屋' — significant OCR errors (恭 for 茶, 田 for 四)",
+        "'广神' — wrong character (actually 广种福 area)",
+        "'red ornament or lantern' — Chinese knot is correct but lantern guess"
+      ],
+      "justification": "Weakest OCR on scroll (two character errors: 恭/茶, 田/四). Recognizes the cultural setting generically. Altar chars partially correct but '广神' is hallucinated. Misses Shaolin/qigong theme entirely."
+    },
+    {
+      "model": "glm-4.6v-flash-9b|think",
+      "run_id": "3",
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "scroll 茶香四溢滿屋 (correct)",
+        "altar 功德 (correct)",
+        "Chinese knot",
+        "religious/temple-like setting",
+        "red-and-white flag (partial)"
+      ],
+      "key_misses": [
+        "no mention of shaolin",
+        "no mention of qigong/yi jin jing",
+        "no explicit temple/shrine label (says 'spiritual/meditative space')",
+        "flag not identified as Austrian",
+        "Pope not identified"
+      ],
+      "hallucinations": [
+        "'广种福田' (4 chars) — actually 广种福 (3 chars) per ground truth",
+        "'possibly Canadian' flag — WRONG (Austrian)",
+        "'blue socks with dark stripes' — minor detail not verifiable"
+      ],
+      "justification": "Good scroll OCR. Infers 'spiritual/meditative space' but doesn't use temple/shrine explicitly. Falls for the Canadian flag error (hedged). Expands 广种福 to the 4-char idiom 广种福田 (acceptable inference but technically hallucination per ground truth)."
+    },
+    {
+      "model": "qwen3-vl-4b|think",
+      "run_id": "2",
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "scroll 茶香四溢滿屋 (correct)",
+        "altar 功德, 佛 (correct)",
+        "qigong pose mentioned explicitly",
+        "Buddhist monk reference",
+        "Chinese knot",
+        "red and white flag",
+        "seated Buddhist figure painting"
+      ],
+      "key_misses": [
+        "no mention of shaolin",
+        "no explicit temple/shrine label",
+        "flag not country-identified",
+        "Pope not identified ('two elderly men in white robes')"
+      ],
+      "hallucinations": [
+        "'廣種' on altar (only partial — actually 广种福)",
+        "'滿' on altar — not actually present there (it's on the scroll)",
+        "'澤' character on scroll — invented/hallucinated"
+      ],
+      "justification": "One of the few models to mention 'qigong' explicitly. Good scroll OCR. But hallucinated '澤' on scroll and '滿' on altar. Still misses Shaolin and temple keywords. Solid cultural reading overall."
+    },
+    {
+      "model": "qwen3-vl-8b|think",
+      "run_id": "1",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "scroll 茶香四溢滿屋 (correct)",
+        "altar 功德, 佛 (correct)",
+        "Buddhist monk/qigong stance",
+        "temple/practice room",
+        "Pope Francis correctly identified in framed photo",
+        "seated Buddha painting",
+        "yellow bracelets, blue jeans (correct details)"
+      ],
+      "key_misses": [
+        "no explicit mention of shaolin",
+        "no yi jin jing",
+        "flag identified as Canadian — WRONG (Austrian)"
+      ],
+      "hallucinations": [
+        "'possibly the Canadian flag' — WRONG flag ID (common error; Austrian is correct)"
+      ],
+      "justification": "Excellent holistic description. Correctly identifies Pope Francis (rare and accurate). Good OCR. Mentions qigong. Only major miss is the flag (Canadian vs Austrian) and absence of 'Shaolin'. Best of the qwen3-vl variants."
+    },
+    {
+      "model": "qwen3.5-4b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "scroll 茶香四溢满屋 (close — extra 香: 茶香四溢满屋香)",
+        "altar 功德, 佛 (close: 功德无量)",
+        "广种福田 (close to actual 广种福)",
+        "temple/monastery explicit mention",
+        "Chinese knot",
+        "potted plant",
+        "yellow prayer beads",
+        "monk/practitioner identification"
+      ],
+      "key_misses": [
+        "no mention of shaolin",
+        "no mention of qigong/yi jin jing",
+        "flag not mentioned at all",
+        "Pope not identified ('two individuals, possibly monks or teachers')"
+      ],
+      "hallucinations": [
+        "'功德无量' — adds 无量 (the actual text is just 功德)",
+        "'广种福田' (4 chars) — actually 广种福 (3 chars)",
+        "'golden lotus symbol' beneath 佛 — not clearly present",
+        "scroll adds extra 香 char (茶香四溢满屋香)"
+      ],
+      "justification": "Strong on temple/monastery context. Mentions multiple Chinese phrases but expands them to common Buddhist idioms (功德无量, 广种福田) that aren't actually fully written. Misses Shaolin/qigong. Omits flag and Pope ID. Reasonable interpretation but over-OCR."
+    },
+    {
+      "model": "qwen3.5-4b|think",
+      "run_id": "2",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "scroll 茶香四溢滿屋 (correct)",
+        "altar 功德, 佛, 广种福 (all correct)",
+        "Buddhist monk identification",
+        "temple hall mention",
+        "Chinese knot",
+        "Kung Fu reference",
+        "red flag (partial)"
+      ],
+      "key_misses": [
+        "no mention of shaolin",
+        "no mention of qigong/yi jin jing explicitly",
+        "flag misidentified as 'Chinese national flag' — WRONG",
+        "Pope not identified ('person in white robes')"
+      ],
+      "hallucinations": [
+        "'possibly the Chinese national flag' — WRONG (Austrian)",
+        "'sari-pavati' — likely a garbled term (should be samghati/kasaya)"
+      ],
+      "justification": "Best OCR accuracy on altar text (功德, 佛, 广种福 all exact). Explicitly says 'temple hall'. Mentions Kung Fu. Wrong flag ID (Chinese instead of Austrian). Misses Shaolin/qigong keywords. Solid overall with minor terminology hallucination."
+    },
+    {
+      "model": "qwen3.5-9b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "scroll 茶香四溢滿屋 (correct)",
+        "altar 功德, 佛 (correct)",
+        "广种福田 (close to actual 广种福)",
+        "Pope Francis correctly identified in framed photo",
+        "explicit Shaolin Kung Fu mention",
+        "temple/shrine/home shrine context",
+        "Canadian flag guess (common error, with detail)"
+      ],
+      "key_misses": [
+        "no qigong/yi jin jing mention",
+        "flag identified as Canadian — WRONG (Austrian)"
+      ],
+      "hallucinations": [
+        "'功德無量' — adds 無量 (actual: 功德)",
+        "'廣種福田' (4 chars) — actual is 广种福 (3)",
+        "'淨' character above Buddha illustration — likely invented",
+        "flag explicitly identified as Canadian (wrong)"
+      ],
+      "justification": "One of only two models to explicitly say 'Shaolin Kung Fu'. Correctly identifies Pope Francis. Good scroll OCR. Expands altar phrases to common idioms (over-OCR). Wrong on flag (Canadian). Strong cultural reading despite minor hallucinations."
+    },
+    {
+      "model": "qwen3.5-9b|think",
+      "run_id": "1",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "scroll 茶香四溢满屋 (correct)",
+        "altar 功德, 佛, 广种福 (all exact)",
+        "Buddhist monk",
+        "home shrine or small temple space",
+        "Kung Fu or Tai Chi reference",
+        "kasaya terminology"
+      ],
+      "key_misses": [
+        "no mention of shaolin",
+        "no qigong/yi jin jing",
+        "flag misidentified as Canadian — WRONG",
+        "Pope not identified ('religious leader', vague)"
+      ],
+      "hallucinations": [
+        "'Canadian flag with red maple leaf' — WRONG (Austrian, no maple leaf visible)"
+      ],
+      "justification": "Most accurate OCR on altar (功德, 佛, 广种福 exact, 3 chars). Says 'home shrine or small temple'. Misses Shaolin/qigong. Falls for the Canadian flag error (most specific wrong claim). Vague on Pope ID. Solid text reading."
+    },
+    {
+      "model": "qwen3.6-27b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "scroll 茶香四溢滿屋 (correct)",
+        "altar 功德, 佛 (correct)",
+        "Buddhist/monk context",
+        "temple space reference",
+        "Chinese knot",
+        "altar/table setup"
+      ],
+      "key_misses": [
+        "no mention of shaolin",
+        "no qigong/yi jin jing",
+        "flag not country-identified (just 'red flag or banner')",
+        "Pope identified as 'Pope Benedict XVI' — WRONG Pope (Francis is correct)"
+      ],
+      "hallucinations": [
+        "'Pope Benedict XVI' — WRONG (actually Pope Francis)",
+        "'changshan' — that's a male traditional Chinese robe, not a monk's robe (should be kasaya)",
+        "staff/pole description minor"
+      ],
+      "justification": "Good OCR. Identifies a Pope but the WRONG Pope (Benedict XVI vs Francis). Misses Shaolin/qigong. Terminology error ('changshan' is secular Han robe, not monastic). Otherwise solid description."
+    },
+    {
+      "model": "qwen3.6-27b|think",
+      "run_id": "2",
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "scroll 茶香四溢滿屋 (correct)",
+        "altar 功德, 佛, 广种福 (all exact)",
+        "Tai Chi or Kung Fu",
+        "monk/martial arts practitioner",
+        "Pope vague reference ('possibly the Pope')"
+      ],
+      "key_misses": [
+        "no mention of shaolin",
+        "no qigong/yi jin jing",
+        "no explicit temple/shrine label",
+        "flag misidentified as Japan — WRONG"
+      ],
+      "hallucinations": [
+        "'flag of Japan (white with a red circle)' — WRONG (Austrian flag)"
+      ],
+      "justification": "Accurate altar OCR. Vague Pope hint ('possibly the Pope') without commitment. Misses Shaolin/qigong entirely. Badly wrong on flag (claims Japan's red circle design — Austrian is horizontal red-white-red). Decent but flag error is notable."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|nothink",
+      "run_id": "nothink-3",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "scroll 茶香四溢满屋 (correct)",
+        "altar 功德, 佛, 广种福 (all exact)",
+        "Pope Francis correctly identified",
+        "Buddhist monk/kasaya",
+        "altar table, Buddha statue",
+        "Chinese knot",
+        "home shrine/practice space context",
+        "Canadian flag guess (common, with detail)"
+      ],
+      "key_misses": [
+        "no mention of shaolin",
+        "no qigong/yi jin jing",
+        "flag misidentified as Canadian — WRONG"
+      ],
+      "hallucinations": [
+        "'Canadian flag (red maple leaf on white square)' — WRONG (Austrian, no maple leaf)",
+        "'striped socks' — minor unverifiable detail",
+        "'golden Buddha statue' specifically (close but unverified)"
+      ],
+      "justification": "Top-tier description. Perfect altar OCR (功德, 佛, 广种福 exact). Correctly identifies Pope Francis. Mentions kasaya. Only significant miss is Shaolin/qigong and the Canadian flag error. Very comprehensive overall."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|think",
+      "run_id": "1",
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "scroll 茶香四溢满屋 (correct)",
+        "altar 功德, 佛, 广种福 (all exact)",
+        "Buddhist monk",
+        "kasaya/samghati terminology",
+        "dojo/temple hall/multi-purpose room"
+      ],
+      "key_misses": [
+        "no mention of shaolin",
+        "no qigong/yi jin jing",
+        "flag misidentified as Indonesia — WRONG",
+        "Pope not identified ('religious leader', vague)"
+      ],
+      "hallucinations": [
+        "'flag of Indonesia (red on top, white on bottom)' — WRONG (Austrian flag is red-white-red horizontal stripes)"
+      ],
+      "justification": "Perfect altar OCR. Good terminology (kasaya/samghati). Misses Shaolin/qigong. Wrong flag (Indonesia — also a common error pattern). Vague on Pope ID. Dojo/temple hall is reasonable."
+    }
+  ],
+  "ranking": [
+    "qwen3-vl-8b|think",
+    "qwen3.6-35b-a3b|nothink",
+    "qwen3.5-9b|nothink",
+    "qwen3.5-4b|think",
+    "qwen3.5-9b|think",
+    "qwen3.6-27b|nothink",
+    "qwen3-vl-4b|think",
+    "qwen3.5-4b|nothink",
+    "qwen3.6-27b|think",
+    "qwen3.6-35b-a3b|think",
+    "glm-4.6v-flash-9b|think",
+    "gemma4-31b|think",
+    "gemma4-26b-a4b|think",
+    "gemma4-12b|think",
+    "gemma4-e4b|think"
+  ],
+  "notes": "Notable findings: (1) NO model mentioned 'shaolin' except qwen3.5-9b|nothink (which said 'Shaolin Kung Fu'). (2) Only qwen3-vl-4b|think used the word 'qigong' explicitly; none mentioned 'yi jin jing'. (3) The Austrian flag was NOT correctly identified by ANY model — common errors were Canadian (4 models: gemma4-26b-a4b, qwen3.5-9b both variants, qwen3.6-35b-a3b nothink), Indonesian (qwen3.6-35b-a3b think), Japanese (qwen3.6-27b think), Chinese (qwen3.5-4b think). Three models just said 'red and white' without country. (4) Pope Francis correctly identified by 3 models (qwen3-vl-8b think, qwen3.5-9b nothink, qwen3.6-35b-a3b nothink); qwen3.6-27b nothink hallucinated Pope Benedict XVI (wrong Pope). (5) Altar text 广种福 (3 chars per ground truth) was frequently expanded to the 4-character idiom 广种福田 — counted as minor hallucination per the spec. (6) Most accurate altar OCR: qwen3.5-4b think, qwen3.5-9b think, qwen3.6-27b think, qwen3.6-35b-a3b both. (7) Top performers distinguished themselves mainly by correctly identifying the Pope; qwen3-vl-8b|think leads because it got both Pope and qigong-context best despite the Canadian flag error. (8) Gemma models uniformly struggled most — missing cultural context, weaker OCR, no Shaolin/qigong recognition. (9) Think vs nothink differences are real: qwen3.5-4b think > nothink (better OCR), qwen3.5-9b think ≈ nothink (nothink got Shaolin keyword, think got better OCR), qwen3.6-27b think < nothink (think got Japan flag wildly wrong), qwen3.6-35b-a3b nothink > think (nothink got Pope right, think picked Indonesian flag)."
+}

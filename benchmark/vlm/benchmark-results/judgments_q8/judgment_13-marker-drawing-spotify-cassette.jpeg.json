@@ -1,0 +1,192 @@
+{
+  "image": "13-marker-drawing-spotify-cassette.jpeg",
+  "image_path": "test-images/13-marker-drawing-spotify-cassette.jpeg",
+  "ground_truth_summary": "Marker drawing of a Spotify-themed cassette tape. Magnetic tape unspools from bottom and flows into abstract green/teal watercolor-like waves. French handwritten text 'MUSIQUE À VOLONTÉ' in upper right, with hand-drawn arrow pointing to the cassette. White background, black ink + green/teal/lime watercolor-marker washes.",
+  "judgments": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly captures French text 'MUSIQUE À VOLONTÉ' with proper accent on É",
+        "Identifies cassette tape as central subject with reels and clear window",
+        "Magnetic tape unspooling into abstract waves",
+        "Correctly identifies lime green + forest green/teal palette",
+        "Notes arrow pointing from text toward cassette",
+        "White background, mixed ink + watercolor/marker style",
+        "Provides translation of the French phrase"
+      ],
+      "key_misses": [
+        "Says cassette is 'facing downward toward the right' / tilted slightly — actual orientation has cassette in upper-left with tape flowing downward-right (minor)",
+        "Calls it 'compact cassette' rather than the Spotify-themed detail (Spotify branding not visible in this marker drawing anyway)"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent all-around: captures the rare French OCR with proper accent, accurate palette, correct identification of mixed media (ink + watercolor/marker), and notes the arrow. Minor imprecision on cassette orientation but composition is essentially right."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "holistic_score": 4,
+      "failure_mode": "imprecise",
+      "key_hits": [
+        "Captures French text 'MUSIQUE À VOLONTÉ' with accent",
+        "Identifies green/chartreuse and teal color palette",
+        "White background",
+        "Provides translation of French phrase"
+      ],
+      "key_misses": [
+        "Describes cassette as a 'Cassette Player/Recorder' with 'translucent front panel' — wrong object (it is just a cassette tape, not a player)",
+        "Says the text appears 'twice' on the image — it appears only once",
+        "Describes 'a thick black winding cord' descending from the cassette — this is the unspooling magnetic tape, misidentified",
+        "Misses the arrow detail"
+      ],
+      "hallucinations": [
+        "Text appears 'twice' on the image (false)",
+        "'Cassette Player/Recorder' rather than a bare cassette tape",
+        "'Cord/Cable' rather than magnetic tape"
+      ],
+      "justification": "Despite getting the rare French OCR right, this response badly misidentifies the central object (calls a cassette tape a 'player/recorder'), fabricates a second occurrence of the text, and mislabels the magnetic tape as a 'cord/cable'. Major object-recognition failures drag the score down."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Captures the two key French words 'MUSIQUE' and 'À VOLONTE' (dropped accent on final É)",
+        "Identifies audio cassette with reels, slider, and buttons",
+        "Magnetic tape flowing in wavy loops",
+        "Green and blue/teal watercolor washes creating movement",
+        "White background, hand-drawn ink/watercolor style",
+        "Notes arrow from text down to cassette",
+        "Provides translation"
+      ],
+      "key_misses": [
+        "Writes 'VOLONTE' without accent (should be 'VOLONTÉ')",
+        "Says cassette has 'control buttons (e.g., play/pause, stop)' — those are part of cassette body detail but a minor overstatement",
+        "Cassette colors listed as 'shades of gray' (body is more green-tinted in the artwork)"
+      ],
+      "hallucinations": [],
+      "justification": "Solid response that captures both French words and identifies the main composition, arrow, and color palette. Loses points for dropping the accent on VOLONTÉ (key fact: French OCR accuracy is rewarded) and slightly overstating the cassette's button detail."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly captures French text 'MUSIQUE À VOLONTÉ' verbatim with accent on É, formatted as two lines",
+        "Identifies audio cassette with transparent shell, two spools, control panel",
+        "Magnetic tape shown as flowing, coiled mass",
+        "Arrow connecting text to cassette explicitly noted",
+        "Lime green / teal watercolor washes with black outlines, off-white background",
+        "Notes the medium as ink + watercolor/marker",
+        "Provides translation and notes the symbolic meaning"
+      ],
+      "key_misses": [
+        "Says background is 'light off-white' rather than pure white (minor — image background is essentially white)"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent response. Verbatim French OCR with proper accent, well-organized description, accurate palette and medium, and explicitly notes the arrow. Only the most minor off-white vs white quibble."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Captures French text 'MUSIQUE À VOLONTÉ' verbatim with accent",
+        "Cassette tape with transparent shell, green stripe across top, spools visible",
+        "Magnetic tape swirling mass in green/teal with black outlines",
+        "Arrow pointing from text to cassette",
+        "Watercolor-like washes, green/teal palette, white background",
+        "Provides translation"
+      ],
+      "key_misses": [
+        "Says the central hub is 'detailed with a circular pattern' (mild over-reading of cassette detail)",
+        "Refers to music-representing lines as 'swirling mass' that 'represent music' — slight interpretive overstep but harmless"
+      ],
+      "hallucinations": [],
+      "justification": "Strong, concise response with verbatim French OCR (accent preserved), correct cassette description with the green stripe detail, and accurate palette. Minor over-reading of cassette internal detail keeps it just below the top."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Captures French text 'MUSIQUE À VOLONTÉ' verbatim with accent",
+        "Cassette with two spools, label area, side-release latches, rounded corners",
+        "Magnetic tape unspooling into abstract wave form",
+        "Lime to forest green + teal + black palette, white background",
+        "Arrow pointing from text to cassette",
+        "Notes mixed marker + watercolor style"
+      ],
+      "key_misses": [
+        "Describes 'side-release latches' and 'visible screws or rivets' — minor over-reading of cassette detail that is not clearly present",
+        "Refers to tape as 'magnetic tape wound around spool' (correct) but then says one spool is 'partially filled with black tape' — interpretive"
+      ],
+      "hallucinations": [
+        "'Side-release latches' and 'visible screws or rivets at the edges' — not clearly visible in the marker drawing"
+      ],
+      "justification": "Captures the rare French OCR perfectly with accent, describes the abstract wave transformation well, and nails the palette. Minor over-reading of fine cassette hardware details (latches, screws) that aren't really visible in this hand-drawn image."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly captures French text 'MUSIQUE À VOLONTÉ' with accent on É",
+        "Identifies audio cassette with clear plastic casing, two reels, central window",
+        "Magnetic tape unspooling in serpentine shape ending in wavy strokes resembling sound waves",
+        "Arrow pointing diagonally toward cassette",
+        "Lime green / teal / forest green palette, white background",
+        "Notes mixed ink + watercolor/marker medium",
+        "Provides translation"
+      ],
+      "key_misses": [
+        "Describes tape end as 'cluster of wavy, horizontal strokes that resemble a pile of fabric or sound waves' — 'pile of fabric' is an odd interpretation",
+        "Says cassette shows 'small buttons, switches' — minor over-reading"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent response. French OCR with accent preserved, accurate cassette description, correct palette and medium, arrow noted. Only minor deduction for the 'pile of fabric' phrasing for the abstract wave end."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Captures French text 'MUSIQUE À VOLONTÉ' verbatim with accent",
+        "Cassette tape with two spools, green-tinted tape, translucent casing",
+        "Tape stream flowing into abstract wave form",
+        "Layered green/teal + black strokes representing sound waves",
+        "Arrow pointing toward cassette",
+        "White background, mixed line work + watercolor washes",
+        "Provides translation"
+      ],
+      "key_misses": [
+        "Says spools have 'green-tinted magnetic tape wound around them' (mild — tape is mostly black with green watercolor washes around it)",
+        "Lists 'hub caps and mechanism details' visible through the casing — minor over-reading"
+      ],
+      "hallucinations": [],
+      "justification": "Very good response: verbatim French with accent, accurate identification of cassette + tape + waves + arrow, correct palette and style. Minor over-reading of internal cassette mechanism detail."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly captures French text 'MUSIQUE À VOLONTÉ' verbatim with accent on É, formatted as two lines",
+        "Cassette with clear plastic casing, lime-green strip across top, two spools, magnetic tape visible",
+        "Black magnetic tape streaming out and looping into abstract shape",
+        "Arrow from text down to cassette",
+        "Lime green + light green/teal/dark green washes, white background, black ink",
+        "Identifies medium as markers (possibly Posca) + watercolor/ink wash",
+        "Provides translation 'Music at will' / 'Music to your heart's content'"
+      ],
+      "key_misses": [
+        "Describes the abstract shape as 'resembles a hand with fingers spread out, or perhaps a stylized wave' — 'hand with fingers' is a creative over-interpretation",
+        "Mentions 'metal shutter mechanism' — minor over-reading"
+      ],
+      "hallucinations": [
+        "Says abstract shape 'resembles a hand with fingers spread out' — interpretive, not really visible"
+      ],
+      "justification": "Top-tier response: verbatim French with proper accent, accurate identification of every key element (cassette, tape, arrow, palette, medium), and even names Posca markers as a plausible medium. Only minor deduction for the creative 'hand with fingers' interpretation of the abstract wave shape."
+    }
+  ]
+}

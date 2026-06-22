@@ -1,0 +1,298 @@
+{
+  "image": "12-manga-nausicaa-colour.png",
+  "image_path": "test-images/12-manga-nausicaa-colour.png",
+  "ground_truth_summary": "Nausicaa of the Valley of the Wind (Hayao Miyazaki / Studio Ghibli), coloured edition, page 10. Nausicaa discovers the Ohm shell. 11 panels. Panel 9 shows gunpowder detonation to detach the transparent eye dome from the Ohm shell. Dark industrial/cavernous setting.",
+  "judgments": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "run_id": "q8-1",
+      "identification": "none",
+      "identified_terms": [],
+      "panel_count_correct": true,
+      "panel_count_claimed": 11,
+      "explosion_present": true,
+      "explosion_correctly_attributed": true,
+      "ocr_quality": "excellent",
+      "hallucination_severity": "low",
+      "key_errors": [
+        "Does not identify Nausicaa, Miyazaki, Ghibli, or Ohm",
+        "Describes protagonist as 'humanoid figure' rather than named character",
+        "Misidentifies gunpowder detonation as 'large bubble explodes' (still present but framed differently)"
+      ],
+      "score": 72,
+      "score_breakdown": {
+        "identification": 0,
+        "panel_count": 10,
+        "ocr": 15,
+        "object_description": 15,
+        "explosion_reporting": 10,
+        "character_appearance": 10,
+        "environment": 12
+      },
+      "notes": "Best overall description. Correctly counts 11 panels, transcribes most OCR verbatim, describes the explosion, character gear (blue tunic, brown helmet with goggles, respirator mask, sword, futuristic handgun), and bioluminescent environment accurately. Most accurate of the Q8 set despite no source identification."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "run_id": "q8-2",
+      "identification": "none",
+      "identified_terms": [],
+      "panel_count_correct": false,
+      "panel_count_claimed": "approximately 20 (4 cols x 5 rows)",
+      "explosion_present": true,
+      "explosion_correctly_attributed": "partial",
+      "ocr_quality": "good",
+      "hallucination_severity": "medium",
+      "key_errors": [
+        "Does not identify source material",
+        "Wrong panel count (overestimates significantly)",
+        "Describes protagonist as 'male character' — Nausicaa is female",
+        "Misreads 'HYAH!' as 'OHWW!'",
+        "Describes ceramic blade test as 'combat'"
+      ],
+      "score": 50,
+      "score_breakdown": {
+        "identification": 0,
+        "panel_count": 0,
+        "ocr": 10,
+        "object_description": 12,
+        "explosion_reporting": 8,
+        "character_appearance": 8,
+        "environment": 12
+      },
+      "notes": "Reasonable OCR but structural and character errors. Misgenders the protagonist. Panel count wildly off."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "run_id": "q8-2",
+      "identification": "none",
+      "identified_terms": [],
+      "panel_count_correct": false,
+      "panel_count_claimed": "13 (3+3+2+3+2)",
+      "explosion_present": true,
+      "explosion_correctly_attributed": "partial",
+      "ocr_quality": "good",
+      "hallucination_severity": "medium",
+      "key_errors": [
+        "Does not identify source",
+        "Wrong panel count (13 vs 11)",
+        "Describes 'multiple characters' and 'one with red hair' — hallucination, only one protagonist",
+        "Treats Ohm shell as 'insect-like creature'",
+        "Japanese onomatopoeia partially misread (ボム instead of ボッ)"
+      ],
+      "score": 45,
+      "score_breakdown": {
+        "identification": 0,
+        "panel_count": 0,
+        "ocr": 10,
+        "object_description": 10,
+        "explosion_reporting": 8,
+        "character_appearance": 5,
+        "environment": 12
+      },
+      "notes": "Hallucinates multiple characters and red hair. Structural errors in panel count. Environment description reasonable."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "run_id": "q8-2",
+      "identification": "none",
+      "identified_terms": [],
+      "panel_count_correct": false,
+      "panel_count_claimed": 10,
+      "explosion_present": true,
+      "explosion_correctly_attributed": "partial",
+      "ocr_quality": "good",
+      "hallucination_severity": "medium",
+      "key_errors": [
+        "Does not identify source",
+        "Describes protagonist as 'young man with brown hair' — Nausicaa is female",
+        "Wrong panel count (10 vs 11)",
+        "Misreads onomatopoeia (カリン / ボム / カチッ — partially correct but with errors)",
+        "Treats organic structures as 'armor piece' or 'giant insect carapace' — closer but not Ohm"
+      ],
+      "score": 52,
+      "score_breakdown": {
+        "identification": 0,
+        "panel_count": 0,
+        "ocr": 12,
+        "object_description": 12,
+        "explosion_reporting": 8,
+        "character_appearance": 8,
+        "environment": 12
+      },
+      "notes": "Detailed description with reasonable OCR, but misgenders protagonist and misidentifies the Ohm shell as armor."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "run_id": "q8-2",
+      "identification": "none",
+      "identified_terms": [],
+      "panel_count_correct": false,
+      "panel_count_claimed": 9,
+      "explosion_present": false,
+      "explosion_correctly_attributed": false,
+      "ocr_quality": "good",
+      "hallucination_severity": "high",
+      "key_errors": [
+        "Does not identify source",
+        "Wrong panel count (9 vs 11)",
+        "Misses the explosion entirely",
+        "Repeatedly hallucinates identical 'hands working on small metallic object' description across panels 5, 6, and 8 — collapsed multiple panels into one",
+        "Misreads Japanese onomatopoeia (キーン, カーン — fabricated)",
+        "Describes protagonist's helmet as having 'tusk-like visor'"
+      ],
+      "score": 35,
+      "score_breakdown": {
+        "identification": 0,
+        "panel_count": 0,
+        "ocr": 8,
+        "object_description": 8,
+        "explosion_reporting": 0,
+        "character_appearance": 7,
+        "environment": 12
+      },
+      "notes": "Worst-performing of the set. Repeats descriptions across multiple panels (hallucinatory collapse), misses the key explosion event, fabricates onomatopoeia."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "run_id": "q8-nothink-2",
+      "identification": "none",
+      "identified_terms": [],
+      "panel_count_correct": false,
+      "panel_count_claimed": 9,
+      "explosion_present": true,
+      "explosion_correctly_attributed": "partial",
+      "ocr_quality": "good",
+      "hallucination_severity": "medium",
+      "key_errors": [
+        "Does not identify source",
+        "Describes protagonist as 'young adventurer with brown hair' — implied male, Nausicaa is female",
+        "Wrong panel count (9 vs 11)",
+        "Misreads onomatopoeia (ボム / カチン — partially correct)",
+        "Calls setting 'steampunk-inspired manga' — wrong genre"
+      ],
+      "score": 48,
+      "score_breakdown": {
+        "identification": 0,
+        "panel_count": 0,
+        "ocr": 10,
+        "object_description": 10,
+        "explosion_reporting": 8,
+        "character_appearance": 8,
+        "environment": 12
+      },
+      "notes": "Decent OCR and structure but misgenders protagonist and categorizes as steampunk. Environment description solid."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "run_id": "q8-think-3",
+      "identification": "none",
+      "identified_terms": [],
+      "panel_count_correct": false,
+      "panel_count_claimed": 12,
+      "explosion_present": true,
+      "explosion_correctly_attributed": true,
+      "ocr_quality": "good",
+      "hallucination_severity": "medium",
+      "key_errors": [
+        "Does not identify source",
+        "Describes protagonist as 'young male character with brown hair and a beard' — Nausicaa is female, no beard",
+        "Wrong panel count (12 vs 11)",
+        "Helmet described as 'rabbit-like mask with long white ears' — bizarre hallucination",
+        "Calls the structures 'alien artifacts'"
+      ],
+      "score": 42,
+      "score_breakdown": {
+        "identification": 0,
+        "panel_count": 0,
+        "ocr": 12,
+        "object_description": 10,
+        "explosion_reporting": 8,
+        "character_appearance": 0,
+        "environment": 12
+      },
+      "notes": "Oddly claims protagonist has a beard and rabbit-like helmet — major hallucinations. OCR is good."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "run_id": "q8-nothink-3",
+      "identification": "none",
+      "identified_terms": [],
+      "panel_count_correct": false,
+      "panel_count_claimed": 9,
+      "explosion_present": true,
+      "explosion_correctly_attributed": "partial",
+      "ocr_quality": "good",
+      "hallucination_severity": "medium",
+      "key_errors": [
+        "Does not identify source",
+        "Gas mask filters described as 'resembling tusks or horns'",
+        "Calls it 'fantasy or sci-fi manga' — partially right",
+        "Reads 'HYAH!' as 'HIAH!' — OCR error",
+        "Wrong panel count (9 vs 11)",
+        "Hallucinates 'multi-barreled weapon' being assembled"
+      ],
+      "score": 50,
+      "score_breakdown": {
+        "identification": 0,
+        "panel_count": 0,
+        "ocr": 10,
+        "object_description": 10,
+        "explosion_reporting": 8,
+        "character_appearance": 10,
+        "environment": 12
+      },
+      "notes": "Decent overall description with reasonable environment and gear description. Some hallucinated details (multi-barreled weapon) and OCR errors."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|think",
+      "run_id": "q8-think-1",
+      "identification": "none",
+      "identified_terms": [],
+      "panel_count_correct": false,
+      "panel_count_claimed": "roughly 10",
+      "explosion_present": true,
+      "explosion_correctly_attributed": true,
+      "ocr_quality": "good",
+      "hallucination_severity": "medium",
+      "key_errors": [
+        "Does not identify source",
+        "Compares protagonist to 'Link from The Legend of Zelda' — wrong franchise",
+        "Describes 'white gas mask or breathing apparatus with tubes' — closer to truth",
+        "Says 'he' / 'his' — Nausicaa is female",
+        "Misreads 'HYAH!' sound effect as キー — fabricated",
+        "Calls the Ohm eye dome 'shell' or 'bubble' — close but not named"
+      ],
+      "score": 55,
+      "score_breakdown": {
+        "identification": 0,
+        "panel_count": 5,
+        "ocr": 10,
+        "object_description": 12,
+        "explosion_reporting": 10,
+        "character_appearance": 8,
+        "environment": 10
+      },
+      "notes": "Best of the qwen3.5 set. Detailed panel-by-panel breakdown, accurately captures the explosion, but misgenders protagonist and references Link from Zelda. Gas mask description is closest to ground truth."
+    }
+  ],
+  "ranking": [
+    {"model": "gemma4-12b-Q8|think", "score": 72},
+    {"model": "qwen3.5-9b-Q8|think", "score": 55},
+    {"model": "qwen3-vl-4b-Q8|think", "score": 52},
+    {"model": "qwen3.5-9b-Q8|nothink", "score": 50},
+    {"model": "gemma4-e4b-Q8|think", "score": 50},
+    {"model": "qwen3.5-4b-Q8|nothink", "score": 48},
+    {"model": "glm-4.6v-flash-9b-Q8|think", "score": 45},
+    {"model": "qwen3.5-4b-Q8|think", "score": 42},
+    {"model": "qwen3-vl-8b-Q8|think", "score": 35}
+  ],
+  "common_failures": [
+    "ZERO of 9 models identified the source material (Nausicaa, Miyazaki, Ghibli, or Ohm). This is consistent with the rarity note.",
+    "8 of 9 models misgendered or failed to recognize Nausicaa as the female protagonist (typically calling her 'male character', 'young man', or 'he').",
+    "8 of 9 models got the panel count wrong (most said 9-10, ground truth is 11; gemma4-12b was the only correct count).",
+    "Several models hallucinated extra characters (glm-flash mentioned 'red-haired character', 'multiple characters').",
+    "Most models caught the explosion but framed it as 'bubble exploding' rather than 'gunpowder detonation'.",
+    "qwen3-vl-8b was the only model to miss the explosion entirely and hallucinated repeated identical panel descriptions."
+  ],
+  "overall_assessment": "All 9 Q8 models failed to identify the source material, which is expected given its rarity. Quality varies widely: gemma4-12b is clearly the strongest (accurate panel count, near-perfect OCR, correctly describes explosion and character gear), while qwen3-vl-8b is the weakest (missed explosion, repeated descriptions, fabricated onomatopoeia). Common failure modes: misgendering Nausicaa, miscounting panels, and misreading the gunpowder detonation as a bubble explosion."
+}

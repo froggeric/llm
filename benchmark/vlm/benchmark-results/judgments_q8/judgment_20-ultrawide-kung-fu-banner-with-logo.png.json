@@ -1,0 +1,372 @@
+{
+  "image": "20-ultrawide-kung-fu-banner-with-logo.png",
+  "judge": "claude-vlm-judge",
+  "ground_truth_summary": "Ultrawide banner with 9 Shaolin performers (7 light-blue disciples + 2 darker-robed monks in center, unarmed). Left badge: yellow border, yellow text 'SHAOLIN TEMPLE ÖSTERREICH' + 少林寺, yellow Bodhidharma drawing. Right logo: black hands+heart+laurel. Weapons: 3 swords (1 each), 1 double-sword, 1 lance, 1 shield, 1 staff, red cloth flags.",
+  "evaluations": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "run_id": "q8-2",
+      "failure_mode": "normal",
+      "content_excerpt": "...nine individuals performing a choreographed martial arts routine... Left Side Logo: circular emblem with a thick red border and a yellow interior. Inside the circle is a stylized yellow figure... text reads: SHAOLIN TEMPEL ÖSTERREICH... Right Side Logo: black silhouette - heart cradled by two hands, enclosed within a circular laurel wreath...",
+      "people_count_correct": true,
+      "people_count_reported": 9,
+      "people_count_truth": 9,
+      "monk_count_correct": true,
+      "monk_count_reported": 2,
+      "monk_count_truth": 2,
+      "monks_unarmed_correct": true,
+      "badge_description_correct": false,
+      "badge_errors": [
+        "Reports 'thick red border' — actual is YELLOW border",
+        "Reports 'yellow interior' (background) — actual background is dark/maroon with yellow text/drawing, not yellow background"
+      ],
+      "right_logo_correct": true,
+      "weapons_described": true,
+      "other_errors": [
+        "Performer-by-performer breakdown describes gray/navy monks but lists weapons for nearly everyone (Man 4 woman has 'small red tassel' not weapon - ambiguous); shield described with 'red and yellow' which matches ground truth",
+        "Calls middle group 'Man 1, Man 2' etc. and assigns 'Woman 1/Woman 2' — speculative gender",
+        "Spells 'TEMPEL' (German) — ground truth badge reads 'TEMPLE' (English spelling) but this is plausible given Austria context"
+      ],
+      "score": 6,
+      "score_rationale": "Correctly counts 9 people, identifies 2 darker-robed central monks as unarmed, and nails the right-side heart/hands/laurel logo. Loses points for the left badge: invents 'thick red border' (actual is yellow) and reverses background/foreground colors. Per-performer weapon details are largely accurate (shield, staff, swords, red tassels) but mix of gender speculation and TEMPEL spelling is acceptable for Austria context.",
+      "strengths": [
+        "Correct 9-count",
+        "Correctly identifies 2 unarmed central monks in darker robes",
+        "Accurate right-side logo (hands cradling heart, laurel wreath)",
+        "Detailed per-performer weapon breakdown matching ground truth"
+      ],
+      "weaknesses": [
+        "Wrong left badge border color (red vs yellow)",
+        "Wrong left badge background interpretation",
+        "Speculative gender assignments"
+      ]
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "run_id": "q8-1",
+      "failure_mode": "normal",
+      "content_excerpt": "...nine individuals... The text is found within the circular logo on the left side: SHAOLIN, TEMPEL, ÖSTERREICH... large circular logo on the left featuring a stylized figure... A large, stylized black graphic on the right depicting two cupped hands holding a heart shape, surrounded by a laurel wreath...",
+      "people_count_correct": true,
+      "people_count_reported": 9,
+      "people_count_truth": 9,
+      "monk_count_correct": false,
+      "monk_count_reported": "not specified distinctly",
+      "monk_count_truth": 2,
+      "monks_unarmed_correct": false,
+      "badge_description_correct": false,
+      "badge_errors": [
+        "Does not mention border color, background color, or text color of left badge at all",
+        "Says 'stylized figure' but no Bodhidharma identification or yellow detail"
+      ],
+      "right_logo_correct": true,
+      "weapons_described": true,
+      "other_errors": [
+        "Hallucinates 'large, round, yellow mask/prop featuring a stylized, grinning face (resembling a lion or fierce character)' — this is the round shield, misdescribed as a mask",
+        "Reports 'all adult males' which is mostly accurate but contradicts itself later",
+        "Identifies one performer as 'performing a high kick while holding a curved sword overhead' - ground truth has the leftmost with a sword in a kick pose"
+      ],
+      "score": 5,
+      "score_rationale": "Correctly counts 9 people and describes right logo accurately. However, the left badge description is essentially empty (no colors mentioned, just 'stylized figure' and 'SHAOLIN TEMPEL ÖSTERREICH'), and the model hallucinates a 'grinning yellow mask' that is actually the round shield. No clear distinction of the two unarmed central monks. Less detailed and less accurate than gemma4-12b.",
+      "strengths": [
+        "Correct 9-count",
+        "Right logo accurately described (hands holding heart, laurel wreath)",
+        "Spelling of ÖSTERREICH correct"
+      ],
+      "weaknesses": [
+        "Left badge has no color or border detail (yellow border + yellow text omitted)",
+        "Hallucinates a 'lion mask' instead of shield",
+        "Does not distinguish the 2 unarmed monks"
+      ]
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "run_id": "q8-2",
+      "failure_mode": "normal",
+      "content_excerpt": "...Top Chinese characters: 少林寺... Bottom text (curved): SHAOLIN TEMPEL ÖSTERREICH... Nine individuals in dynamic martial arts stances... Weapons: Axes, swords, a circular shield (yellow face, red border), red flags, a staff... Right logo: black graphic of a heart with hands/wreath...",
+      "people_count_correct": true,
+      "people_count_reported": 9,
+      "people_count_truth": 9,
+      "monk_count_correct": false,
+      "monk_count_reported": "1 man in gray robe + 1 man in dark blue robe (unarmed but in dynamic stances)",
+      "monk_count_truth": 2,
+      "monks_unarmed_correct": true,
+      "badge_description_correct": false,
+      "badge_errors": [
+        "Does not specify badge border/background/text colors explicitly",
+        "Mentions 'red (left logo background)' in colors — implies red background, which is partially true but misses yellow border detail"
+      ],
+      "right_logo_correct": true,
+      "weapons_described": true,
+      "other_errors": [
+        "Lists 'axes' as a weapon type — ground truth has no axes (leftmost performer holds a sword, not an axe)",
+        "Says leftmost holds 'axe overhead' — should be sword",
+        "Mixes gender speculation ('woman in blue' for positions 4 and 7)"
+      ],
+      "score": 7,
+      "score_rationale": "Strong response. Correctly counts 9, spells ÖSTERREICH correctly, includes 少林寺, gets right logo (heart/hands/wreath) right, and correctly identifies the shield (yellow face, red border). The two central monks are described as unarmed (man in gray crouched + man in dark blue forward stance), matching ground truth. Loses points for hallucinating 'axes' as a weapon type and not explicitly stating badge border is yellow.",
+      "strengths": [
+        "Correct 9-count",
+        "Includes 少林寺 Chinese characters",
+        "Spells ÖSTERREICH correctly",
+        "Identifies 2 unarmed central monks (gray + dark blue robes)",
+        "Shield accurately described (yellow face, red border)",
+        "Right logo (heart/hands/wreath) correct"
+      ],
+      "weaknesses": [
+        "Hallucinates 'axes' as weapon type — should be swords",
+        "Says leftmost holds an axe (actually sword)",
+        "Does not specify badge has yellow border"
+      ]
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "run_id": "q8-1",
+      "failure_mode": "truncated",
+      "content_excerpt": "...Left Logo: Yellow text on a red background, reading 'SHAOLIN TEMPEL ÖSTERREICH'... Right Logo: black silhouette... long, thin sword held by the ninth performer... long, thin sword held by the tenth performer... [continues hallucinating dozens more performers]...",
+      "people_count_correct": false,
+      "people_count_reported": "claims dozens (runaway loop)",
+      "people_count_truth": 9,
+      "monk_count_correct": false,
+      "monk_count_reported": "not specified",
+      "monk_count_truth": 2,
+      "monks_unarmed_correct": false,
+      "badge_description_correct": false,
+      "badge_errors": [
+        "Reports 'Yellow text on a red background' — text is yellow, background is maroon-ish (close), but misses yellow border",
+        "Says '少林寺 written in yellow, stylized font, arranged in an arc around the central emblem' — actually at top, not arc"
+      ],
+      "right_logo_correct": true,
+      "weapons_described": false,
+      "other_errors": [
+        "CATASTROPHIC HALLUCINATION: enters infinite loop inventing performers 10, 11, 12, ..., 35+ each 'holding a long, thin sword'. This is a degenerate output, completely unusable.",
+        "Truncated at output limit mid-hallucination"
+      ],
+      "score": 2,
+      "score_rationale": "Degenerate failure. After correct initial recognition of left/right logos, the model enters a runaway loop inventing dozens of fake performers (10th through 35th+) each described identically as 'holding a long, thin sword'. Truncated at output limit. Despite correctly stating 'wide-format panoramic photograph' initially, the per-performer enumeration is completely broken. Single worst failure of the 9.",
+      "strengths": [
+        "Correctly identifies left logo as Shaolin Temple Austria with 少林寺",
+        "Spells ÖSTERREICH correctly",
+        "Right logo described as heart held by hands/wreath"
+      ],
+      "weaknesses": [
+        "Runaway hallucination loop inventing 35+ performers",
+        "Wrong people count (claims dozens)",
+        "Does not specify badge has yellow border",
+        "No weapon detail per actual person"
+      ]
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "run_id": "q8-2",
+      "failure_mode": "normal",
+      "content_excerpt": "...group of eight martial artists posing dynamically... There are eight individuals... gold lettering on a red background [left badge]... right panel: black logo of two hands holding a heart, encircled by a laurel wreath...",
+      "people_count_correct": false,
+      "people_count_reported": 8,
+      "people_count_truth": 9,
+      "monk_count_correct": false,
+      "monk_count_reported": "1 dark grey robe + 1 dark blue robe (2 darker performers noted but counted within the 8)",
+      "monk_count_truth": 2,
+      "monks_unarmed_correct": false,
+      "badge_description_correct": false,
+      "badge_errors": [
+        "Reports 'gold lettering on a red background' — actual badge has yellow text but on a maroon/dark background with YELLOW BORDER, not just gold-on-red",
+        "Misses yellow border",
+        "Misses Bodhidharma line drawing"
+      ],
+      "right_logo_correct": true,
+      "weapons_described": true,
+      "other_errors": [
+        "WRONG PEOPLE COUNT: says 'eight individuals' instead of 9",
+        "Describes only 8 performers in the line-up (leftmost, 2nd, 3rd, 4th, 5th, 6th, 7th, 8th-from-left rightmost)",
+        "Notes 5th-from-left wears 'dark grey robe and yellow socks' (matches the unarmed gray monk) and 6th 'dark blue robe' (matches the unarmed dark blue monk) but assigns them 'small, dark object (possibly short staff or weapon)' — ground truth says monks have NO weapons"
+      ],
+      "score": 5,
+      "score_rationale": "Notable miss on people count (says 8 instead of 9), dropping a person entirely from the lineup. Otherwise decent: identifies two darker-robed central performers, accurately describes right-side heart/hands/laurel logo, includes 少林寺 + ÖSTERREICH. But assigns weapons to the monks (which should be unarmed) and gets badge coloration wrong (gold-on-red rather than yellow border + yellow text).",
+      "strengths": [
+        "Identifies 2 darker-robed performers (grey + dark blue)",
+        "Right logo correctly described",
+        "Spelling ÖSTERREICH correct",
+        "Includes 少林寺"
+      ],
+      "weaknesses": [
+        "WRONG people count (8 vs 9)",
+        "Gives weapons to monks (should be unarmed)",
+        "Misses yellow border on badge"
+      ]
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "run_id": "q8-nothink-1",
+      "content_excerpt": "...dynamic group of nine martial artists... Left Logo: 少林寺 (Shàolín Sì)... 'SHAOLIN TEMPEL ÖSTERREICH'... Right Logo: black heart centered between two stylized hands (one open palm, one fist), flanked by laurel wreaths... There are nine individuals... mostly men, with one woman...",
+      "people_count_correct": true,
+      "people_count_reported": 9,
+      "people_count_truth": 9,
+      "monk_count_correct": false,
+      "monk_count_reported": "1 dark gray/black robe (center) + 1 dark blue robe (next to center) - 2 darker robes noted but not labeled as monks",
+      "monk_count_truth": 2,
+      "monks_unarmed_correct": true,
+      "badge_description_correct": false,
+      "badge_errors": [
+        "Says left logo is 'red and gold' — misses that border is yellow (not gold-on-red)",
+        "Says badge background is red — partially accurate but ignores yellow border",
+        "Says Bodhidharma drawing is implied via 'stylized figure' but doesn't identify it"
+      ],
+      "right_logo_correct": true,
+      "weapons_described": true,
+      "other_errors": [
+        "Says right logo has 'one open palm, one fist' — speculative, but heart+hands+wreath is correct",
+        "Center performer described as 'pointing forward with both hands' — matches the unarmed central monks",
+        "Notes 'one man wears white sneakers' — matches the gray monk with white shoes",
+        "Identifies 'woman' for some positions — gender speculation"
+      ],
+      "score": 7,
+      "score_rationale": "Solid response. Correctly counts 9, includes 少林寺 + ÖSTERREICH (correct umlaut), describes both central monks as unarmed (gray robe with white sneakers + dark blue robe), and captures the right-side heart/hands/laurel logo. Notes the yellow shield and red flags. Loses points for badge coloration (calls it 'red and gold' rather than 'yellow border + yellow text/drawing on dark background') and gender speculation.",
+      "strengths": [
+        "Correct 9-count",
+        "Both central monks correctly described as unarmed",
+        "Notes white sneakers on gray monk (matches ground truth)",
+        "Yellow shield with face described",
+        "Includes 少林寺",
+        "Spelling ÖSTERREICH correct"
+      ],
+      "weaknesses": [
+        "Badge described as 'red and gold' — misses yellow border",
+        "Gender speculation ('one woman')",
+        "Says right logo has 'one open palm, one fist' — speculative detail"
+      ]
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "run_id": "q8-think-3",
+      "content_excerpt": "...Left Logo: A red circular emblem with gold detailing. Chinese characters at top reading '少林'... English text at bottom reading 'SHAOLIN TEMPEL ÖSTERREICH'... Right Logo: black graphic logo featuring a heart shape flanked by two hands... enclosed within a wreath of leaves... nine individuals lined up horizontally...",
+      "people_count_correct": true,
+      "people_count_reported": 9,
+      "people_count_truth": 9,
+      "monk_count_correct": false,
+      "monk_count_reported": "2 darker-robed (1 dark grey/black + 1 dark blue)",
+      "monk_count_truth": 2,
+      "monks_unarmed_correct": true,
+      "badge_description_correct": false,
+      "badge_errors": [
+        "Says badge is 'red circular emblem with gold detailing' — misses yellow border entirely",
+        "Says 'Chinese characters at top reading 少林' — actually 少林寺 (3 chars, drops the third)",
+        "Misses yellow Bodhidharma drawing"
+      ],
+      "right_logo_correct": true,
+      "weapons_described": true,
+      "other_errors": [
+        "Per-performer breakdown is accurate: bald men at edges with high kicks, central grey robe with white sneakers + dark blue robe",
+        "Notes red flags attached to weapons (matches ground truth)",
+        "Identifies shield as 'yellow face with red border' (matches)",
+        "Hallucinates 'axe or cleaver' for far-left bald man — should be sword"
+      ],
+      "score": 7,
+      "score_rationale": "Good response overall. Correctly counts 9 people, accurately describes 2 darker-robed central performers as unarmed (gray robe with white sneakers + dark blue robe), and gets the right logo (heart/hands/wreath) correct. Per-performer breakdown is detailed and mostly matches ground truth. Loses points for the badge (calls it 'red with gold detailing' instead of yellow border), drops a Chinese character (少林 instead of 少林寺), and hallucinates 'axe' for the sword-wielding leftmost performer.",
+      "strengths": [
+        "Correct 9-count",
+        "Includes 少林寺 (mostly)",
+        "Spelling ÖSTERREICH correct",
+        "Accurately notes central monks unarmed",
+        "Notes white sneakers on gray monk",
+        "Shield (yellow face, red border) correct",
+        "Right logo (heart/hands/leaves) correct"
+      ],
+      "weaknesses": [
+        "Misses yellow border on badge (says 'red with gold')",
+        "Drops one Chinese character (少林 vs 少林寺)",
+        "Hallucinates 'axe' for sword-wielding performer"
+      ]
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "run_id": "q8-nothink-2",
+      "content_excerpt": "...nine martial artists performing dynamic poses... Left Logo: 'SHAOLIN TEMPEL ÖSTERREICH' (circular emblem with Chinese characters 少林寺)... Right Logo: No text — only a black-and-white graphic symbol... nine individuals, mostly male, with one female... 1. Man — bald, raising a curved sword overhead, left leg lifted... 5. Man — in gray robe, fist forward, yellow leg wraps, white shoes... 6. Man — in dark blue robe, fist forward... 9. Man — bald, holding a staff vertically, left leg raised...",
+      "people_count_correct": true,
+      "people_count_reported": 9,
+      "people_count_truth": 9,
+      "monk_count_correct": false,
+      "monk_count_reported": "1 gray robe + 1 dark blue robe (2 darker central figures)",
+      "monk_count_truth": 2,
+      "monks_unarmed_correct": true,
+      "badge_description_correct": false,
+      "badge_errors": [
+        "Says 'red-and-gold circular logo' — misses yellow border detail",
+        "Mentions 'gold logo border and inner design' in accent colors — close to yellow border but labeled gold"
+      ],
+      "right_logo_correct": true,
+      "weapons_described": true,
+      "other_errors": [
+        "Notes 'pink ribbon' — speculative (ground truth says red flags/cloth)",
+        "Notes 'olive green (side panel backgrounds)' for the beige vertical strips",
+        "Says 'curved sword (dao)' for leftmost — ground truth says sword (acceptable)",
+        "Says 'curved sword (dao)' for second-from-right (woman) — possible"
+      ],
+      "score": 8,
+      "score_rationale": "Strongest response. Correctly counts 9, captures both central unarmed monks (gray robe with yellow leg wraps + white shoes, dark blue robe with fist forward), correctly describes the right logo as 'black-and-white emblem — heart within laurels flanked by hands', includes 少林寺 + ÖSTERREICH with correct umlaut. Detailed per-performer lineup with bald men at edges, glasses, blonde bun, etc. Loses points for badge coloration (calls it red-and-gold rather than yellow border) and 'pink ribbon' speculation.",
+      "strengths": [
+        "Correct 9-count with detailed per-performer breakdown",
+        "Identifies 2 unarmed central monks with correct clothing colors",
+        "Notes yellow leg wraps and white sneakers on gray monk",
+        "Includes 少林寺 (correct)",
+        "Spelling ÖSTERREICH correct with umlaut",
+        "Right logo (heart + hands + laurels) accurately described",
+        "Notes red flags on weapons"
+      ],
+      "weaknesses": [
+        "Badge described as 'red-and-gold' — misses yellow border explicitly",
+        "'Pink ribbon' speculation (ground truth: red flags/cloth)",
+        "'Olive green side panel backgrounds' — actually beige"
+      ]
+    },
+    {
+      "model": "qwen3.5-9b-Q8|think",
+      "run_id": "q8-think-2",
+      "content_excerpt": "...Left Logo: inside a red circular emblem with a yellow border, the text 'SHAOLIN TEMPEL ÖSTERREICH' is written in yellow capital letters... Above the central figure in the logo are three Chinese characters (likely reading 'Shaolin Temple')... Right Logo: contains no text... nine people arranged in a staggered line... The fifth person from the left is wearing a dark grey/black outfit with yellow socks. The sixth person from the left is wearing a dark blue/black outfit...",
+      "people_count_correct": true,
+      "people_count_reported": 9,
+      "people_count_truth": 9,
+      "monk_count_correct": false,
+      "monk_count_reported": "2 darker central figures (5th: dark grey/black + yellow socks; 6th: dark blue/black)",
+      "monk_count_truth": 2,
+      "monks_unarmed_correct": false,
+      "badge_description_correct": true,
+      "badge_errors": [],
+      "right_logo_correct": true,
+      "weapons_described": true,
+      "other_errors": [
+        "ONLY MODEL to correctly state 'red circular emblem with a YELLOW BORDER' and 'yellow capital letters' — matches ground truth's 'yellow border + yellow text'",
+        "Says 'three Chinese characters' which matches 少林寺",
+        "Notes 'red flags or ribbons attached to hilts' — matches",
+        "Does not explicitly note the 2 central monks as unarmed (doesn't assign weapons to them either, just describes them generically)",
+        "Says right logo is 'black heart shape surrounded by a wreath of hands or leaves' — slightly garbled but acceptable"
+      ],
+      "score": 9,
+      "score_rationale": "BEST response. Only model that correctly captures the badge's yellow border + yellow text coloring ('red circular emblem with a yellow border, the text is written in yellow capital letters'). Also correctly counts 9 people, mentions 'three Chinese characters' (少林寺), identifies the 2 darker-robed central figures (5th in dark grey/black + yellow socks, 6th in dark blue/black), describes the shield (red with yellow face), notes red flags/ribbons attached to weapons, and gets the right logo's heart+hands+wreath concept. Only minor weaknesses: doesn't explicitly state central monks are unarmed, and right logo is described as 'wreath of hands or leaves' (slight ambiguity).",
+      "strengths": [
+        "ONLY MODEL to correctly describe badge yellow border + yellow text",
+        "Correct 9-count",
+        "Mentions 'three Chinese characters' (matches 少林寺)",
+        "Spelling ÖSTERREICH correct",
+        "Identifies 2 darker-robed central figures with correct color detail (yellow socks)",
+        "Shield (red with yellow face) correctly described",
+        "Notes red flags attached to weapons",
+        "Right logo (heart + wreath) conceptually correct"
+      ],
+      "weaknesses": [
+        "Doesn't explicitly note central monks as unarmed",
+        "Right logo described as 'wreath of hands or leaves' — slight ambiguity"
+      ]
+    }
+  ],
+  "ranking": [
+    {"model": "qwen3.5-9b-Q8|think", "score": 9, "notes": "Only one to nail badge yellow border + yellow text"},
+    {"model": "qwen3.5-9b-Q8|nothink", "score": 8, "notes": "Detailed correct 9-count with right monks"},
+    {"model": "glm-4.6v-flash-9b-Q8|think", "score": 7, "notes": "Correct 9 + 少林寺 + unarmed monks, but hallucinates axes"},
+    {"model": "qwen3.5-4b-Q8|nothink", "score": 7, "notes": "Solid 9-count, unarmed monks, badge coloration off"},
+    {"model": "qwen3.5-4b-Q8|think", "score": 7, "notes": "Good 9-count detail, drops 少 character, axe hallucination"},
+    {"model": "gemma4-12b-Q8|think", "score": 6, "notes": "Correct 9-count and unarmed monks, but wrong badge border"},
+    {"model": "gemma4-e4b-Q8|think", "score": 5, "notes": "Correct 9, but no badge detail and mask hallucination"},
+    {"model": "qwen3-vl-8b-Q8|think", "score": 5, "notes": "WRONG count (8), weapons on unarmed monks"},
+    {"model": "qwen3-vl-4b-Q8|think", "score": 2, "notes": "Runaway hallucination loop inventing 35+ performers"}
+  ]
+}

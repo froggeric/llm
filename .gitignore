@@ -44,3 +44,7 @@ coverage/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# benchmark/vlm Python artifacts
+benchmark/vlm/**/__pycache__/
+benchmark/vlm/benchmark-results/logs/

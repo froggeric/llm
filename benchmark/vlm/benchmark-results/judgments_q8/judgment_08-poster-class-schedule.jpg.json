@@ -1,0 +1,154 @@
+{
+  "image": "08-poster-class-schedule.jpg",
+  "image_category": "dense_text_poster",
+  "ground_truth_summary": "VIC Health Club weekly schedule, 11 classes Mon-Fri, legend Blue=Yoga / Orange=Shaolin / Green=Fitness, footer 'Register online at https://vichealth.club' + QR code.",
+  "evaluations": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with exact times, days, titles captured",
+        "Correct color-code mapping (Blue=Yoga, Orange=Shaolin, Green=Fitness)",
+        "Footer URL https://vichealth.club verbatim",
+        "Legend, header logo, QR code, decorative lotus all noted",
+        "Verbatim text block at end confirms perfect OCR"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "QR code described as having 'a small globe icon in the center' — not verifiable but plausible"
+      ],
+      "justification": "Comprehensive, well-structured extraction with 100% schedule accuracy. Minor unverifiable detail on QR code center does not detract from correctness."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct days, times, titles",
+        "Correct color/legend mapping",
+        "Footer URL captured verbatim",
+        "Header, logo, legend, QR code all described"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Icon for Osteoporosis described as 'figure next to a skeletal/bone icon' — actual is person standing from a squat"
+      ],
+      "justification": "Perfect schedule OCR and color coding. Only a minor icon-description inaccuracy that does not affect textual content accuracy."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct times, days, titles, colors",
+        "Legend colors correct",
+        "Footer URL verbatim with QR code noted",
+        "Background decorative elements (lotus, brushstrokes) described"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Complete and accurate extraction of every schedule item with correct color coding and footer. Clean, well-organized output."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct times, days, titles",
+        "Correct legend color mapping",
+        "Footer URL and QR code captured",
+        "Background design and layout accurately described"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Footer banner described as 'dark navy blue' — actual is black"
+      ],
+      "justification": "Full accurate schedule extraction. Trivial color shade mislabel of the black footer banner does not affect content correctness."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct times, days, titles, colors",
+        "Legend color mapping correct",
+        "Footer URL verbatim and QR code noted",
+        "Logo, header, decorative elements all described"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Perfect extraction of every class, time, day, and color. Excellent organization and accuracy throughout."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct times, days, titles, color codes",
+        "Legend mapping correct",
+        "Footer URL and QR code captured",
+        "Notes overlapping time slots intelligently"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "QR code described as having 'a globe icon embedded in its center' — unverifiable",
+        "Tuesday 13:00-14:00 noted as overlapping with Yoga — correct observation but framed speculatively ('possibly concurrent or sequential')",
+        "Monday Osteoporosis icon described as 'person lifting weights' — actual is standing from a squat"
+      ],
+      "justification": "Schedule content is fully accurate. Minor speculative commentary on overlaps and an unverifiable QR detail, but no factual schedule errors."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct times, days, titles, colors",
+        "Legend mapping correct",
+        "Footer URL verbatim and QR code noted",
+        "Background and decorative elements described"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Footer described as 'dark blue/black bar' — actual is solid black",
+        "Osteoporosis icon described as 'person lifting weights' — actual is person standing from a squat"
+      ],
+      "justification": "Complete and accurate schedule extraction. Trivial shade description on black footer and minor icon description do not affect textual accuracy."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct times, days, titles",
+        "Correct legend color mapping",
+        "Footer URL verbatim and QR code noted",
+        "Provides hex color approximations for legend",
+        "Logo and decorative elements accurately described"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Osteoporosis Prevention icon described as 'person stretching arms upward' — actual is person standing from a squat",
+        "Described Wednesday as having overlapping slots — but Wednesday has no overlap (only Calisthenics 12-13 and Yoga 13-14)"
+      ],
+      "justification": "Full and accurate OCR of all classes and footer. One minor incorrect claim about Wednesday overlaps and a slightly off icon description, but schedule text is perfect."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct times, days, titles, colors",
+        "Correct legend mapping",
+        "Footer URL verbatim and QR code noted",
+        "Logo and background decoration accurately described"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Osteoporosis icon described as 'person lifting weights' — actual is person standing from a squat"
+      ],
+      "justification": "Clean, well-organized, fully accurate schedule extraction. Only a minor icon description miss; all textual content is correct."
+    }
+  ],
+  "summary": "All 9 Q8 model variants achieved near-perfect extraction of the VIC Health Club weekly schedule, correctly capturing all 11 classes with accurate times, days, titles, and color coding, plus the footer URL and QR code. Scores cluster at 10 with only minor non-textual icon-description inaccuracies (e.g., the Osteoporosis Prevention icon) and trivial color-shade quibbles about the black footer; qwen3.5-4b-Q8|nothink scored 9 due to additional speculative commentary and an unverifiable QR globe claim."
+}

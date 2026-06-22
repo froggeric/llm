@@ -1,0 +1,333 @@
+{
+  "image": "13-colour-swatch-nausicaa.jpg",
+  "image_path": "test-images/13-colour-swatch-nausicaa.jpg",
+  "ground_truth_summary": "Minimalist vertical colour-palette / swatch fan-art poster for Nausicaä of the Valley of the Wind. Title 'NAUSICAÄ' + 'HAYAO MIYAZAKI' top-left in black sans-serif; 10 horizontal colour swatches stacked vertically on white background; small footer text 'THE COLORS OF' in bottom-right corner. No hex codes printed.",
+  "judgments": [
+    {
+      "model": "gemma4-12b|think",
+      "run_id": "2",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies Nausicaä / Hayao Miyazaki / Studio Ghibli context",
+        "Correct count of 10 colour bars",
+        "Correctly reads 'THE COLORS OF' bottom-right and 'NAUSICAÄ' + 'HAYAO MIYAZAKI' top-left",
+        "Reasonably accurate colour descriptions (dark teal, forest green, taupe, dusty rose, cream, pale yellow, sand, sage, sky blue, azure)",
+        "Notes minimalist/gallery aesthetic correctly"
+      ],
+      "key_misses": [
+        "Says 'sand' for bar 7 which is more peach/apricot",
+        "Does not explicitly note absence of hex codes"
+      ],
+      "hallucinations": [],
+      "justification": "Strong, accurate description with correct count, text, and context. Colour names mostly on target with only minor hue drift on bar 7."
+    },
+    {
+      "model": "gemma4-26b-a4b|think",
+      "run_id": "2",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 10-bar count",
+        "Correct reading of all three text elements including 'THE COLORS OF.'",
+        "Correct Ghibli/Miyazaki attribution",
+        "Good colour progression (dark teal, charcoal/forest, olive-brown, dusty rose, off-white, pale yellow, cream, mint, sky/cyan, cerulean)"
+      ],
+      "key_misses": [
+        "Slightly inconsistent labelling between bars (e.g., 'light cream/beige' for bar 7 vs. peach in reality)",
+        "Does not flag absence of hex codes"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and well-structured. Slight colour-naming imprecision but overall faithful representation."
+    },
+    {
+      "model": "gemma4-31b|think",
+      "run_id": "2",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 10-bar count",
+        "Correct text reading including 'THE COLORS OF.'",
+        "Notes progression from dark to light to bright blues",
+        "Recognises Nausicaä inspiration"
+      ],
+      "key_misses": [
+        "Bar 7 described as 'light beige' (more peachy in reality)",
+        "No mention of hex codes absence"
+      ],
+      "hallucinations": [],
+      "justification": "Concise and accurate. Same minor drift on bar 7 colour as sibling Gemma variants but otherwise solid."
+    },
+    {
+      "model": "gemma4-e4b|think",
+      "run_id": "2",
+      "holistic_score": 6,
+      "failure_mode": "object_count_error",
+      "key_hits": [
+        "Correctly reads NAUSICAÄ + HAYAO MIYAZAKI + THE COLORS OF",
+        "Recognises minimalist palette/swatch concept",
+        "Good Ghibli/Nausicaä context"
+      ],
+      "key_misses": [
+        "WRONG bar count: says 'eight distinct horizontal color stripes' — there are 10",
+        "Lists only 8 colours, dropping 2 swatches",
+        "Mentions 'thin black border framing' which is not present"
+      ],
+      "hallucinations": [
+        "Claims image has only 8 stripes (actual: 10)",
+        "Mentions a black border that is not visible"
+      ],
+      "justification": "Major object-count error — missing 2 of 10 swatches undermines the core purpose of the image. Hallucinated border framing. Text reading is fine."
+    },
+    {
+      "model": "glm-4.6v-flash-9b|think",
+      "run_id": "2",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 10-bar count",
+        "Correct text reads (NAUSICAA / HAYAO MIYAZAKI / THE COLORS OF.)",
+        "Reasonable colour sequence matching actual palette"
+      ],
+      "key_misses": [
+        "Misses the umlaut on NAUSICÄ (writes 'NAUSICAA' without diacritic)",
+        "Bar 6 'bright yellow' is overstated (more pale)",
+        "Bar 10 'turquoise/medium blue' is imprecise"
+      ],
+      "hallucinations": [],
+      "justification": "Functional description with correct count, but loses the diacritic and slightly oversaturates the yellow. Adequate but less polished than larger models."
+    },
+    {
+      "model": "qwen3-vl-4b|think",
+      "run_id": "2",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 10-bar count",
+        "Preserves NAUSICAÄ with umlaut",
+        "Correct 'THE COLORS OF.' reading noting it is intentionally cut off",
+        "Good colour sequence description",
+        "Notes minimal border framing correctly"
+      ],
+      "key_misses": [
+        "Bar 1 'deep navy blue' is a misread (actually dark teal/green)",
+        "Bar 7 'pale yellow' duplicate is slightly off",
+        "Minor imprecision in bar 8 (light green) vs. mint"
+      ],
+      "hallucinations": [],
+      "justification": "Strong result for a 4B model — preserves diacritic, correct count, accurate text. Only the top bar colour is misidentified (navy vs. teal)."
+    },
+    {
+      "model": "qwen3-vl-8b|think",
+      "run_id": "2",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 10-bar count",
+        "Correctly reads NAUSICAA + HAYAO MIYAZAKI + THE COLORS OF",
+        "Accurately names dark teal, olive, brown, pinkish rose, ivory, yellow, pale yellow, mint, sky blue, cyan blue",
+        "Correctly attributes to 1986 Nausicaä film"
+      ],
+      "key_misses": [
+        "Spells NAUSICAA without umlaut (loses diacritic)",
+        "Says 'THE COLORS OF.' with trailing period — likely accurate but ambiguous",
+        "No explicit note on absence of hex codes"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent colour identification and count. Only drops the umlaut; otherwise accurate and well-organized."
+    },
+    {
+      "model": "qwen3.5-4b|nothink",
+      "run_id": "nothink-3",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 10-bar count",
+        "Preserves NAUSICAÄ umlaut",
+        "Correct 'THE COLORS OF.' reading with thoughtful note on incompleteness",
+        "Detailed colour-by-colour descriptions with thematic interpretations",
+        "Recognises Miyazaki/Ghibli context correctly"
+      ],
+      "key_misses": [
+        "Overreaches with interpretive claims ('invites viewer completion')",
+        "Says final 'Ä' is 'German umlaut' — it is technically a diaeresis and not German-specific",
+        "Bar 9 'sky blue' and bar 10 'deep cyan/teal' slightly off (bar 10 is more azure/cerulean)"
+      ],
+      "hallucinations": [
+        "Adds speculative cultural/linguistic commentary about romanization accuracy that goes beyond image content"
+      ],
+      "justification": "Very thorough and accurate on count, text, and basic colours. Loses points for excessive interpretive embellishment and minor colour drift, but a strong nothink result."
+    },
+    {
+      "model": "qwen3.5-4b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 10-bar count",
+        "Preserves NAUSICAÄ with umlaut and explicitly notes the diaeresis",
+        "Correct 'THE COLORS OF.' reading",
+        "Excellent colour sequence (dark forest/teal, olive, taupe, dusty pink, cream, pale yellow, light yellow/cream, sage, medium blue/cyan, bright blue)",
+        "Notes minimalist design with solid blocks, no gradients",
+        "Recognises Nausicaä film inspiration"
+      ],
+      "key_misses": [
+        "Bar 7 'light yellow/cream' slightly off (more peach in reality)",
+        "Does not explicitly note absence of hex codes"
+      ],
+      "hallucinations": [],
+      "justification": "Top-tier result. Preserves diacritic, perfect count, accurate colour naming, clean structure. Only the most minor hue drift on bar 7."
+    },
+    {
+      "model": "qwen3.5-9b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 5,
+      "failure_mode": "object_count_error",
+      "key_hits": [
+        "Correctly identifies NAUSICAA + HAYAO MIYAZAKI + THE COLORS OF",
+        "Correct Ghibli/Miyazaki context",
+        "Good colour descriptions for the bars it does list"
+      ],
+      "key_misses": [
+        "WRONG bar count: claims 'nine horizontal color bars' when there are 10",
+        "Internally contradictory: lists 10 colours but then says 'actually 9 bars'",
+        "Bar 7 'light peach/apricot' then bar 8 sage — confuses count and skips/collapses",
+        "Loses umlaut in NAUSICAA"
+      ],
+      "hallucinations": [
+        "Self-correcting count confusion ('Note: There are actually 9 bars') is incorrect"
+      ],
+      "justification": "Significant object-count failure with confused self-correction. Drops one of ten swatches and contradicts itself. Text reading is fine but the count error is critical for a swatch image."
+    },
+    {
+      "model": "qwen3.5-9b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 10-bar count",
+        "Preserves 'umlaut/diaeresis' note on NAUSICÄ",
+        "Correct 'THE COLORS OF.' reading",
+        "Excellent colour progression matching actual swatches",
+        "Notes left-aligned bar layout and small uniform gaps",
+        "Correct Studio Ghibli / Nausicaä attribution"
+      ],
+      "key_misses": [
+        "Spells title 'NAUSICAA' without umlaut in main text (though acknowledges it in description)",
+        "Bar 7 'pale yellow' slightly off (more peach)",
+        "No mention of absence of hex codes"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent result with accurate count, layout, and colour naming. Minor inconsistency in title rendering but acknowledges the diacritic. One of the strongest entries."
+    },
+    {
+      "model": "qwen3.6-27b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 5,
+      "failure_mode": "hallucinated_text",
+      "key_hits": [
+        "Correct 10-bar count",
+        "Correct HAYAO MIYAZAKI reading",
+        "Correct 'THE COLORS OF.' reading",
+        "Good colour sequence"
+      ],
+      "key_misses": [
+        "HALLUCINATES the title as 'NAUSICAAÄ' with a doubled A before the umlaut",
+        "Speculates wrongly about 'stylized typographic variation' to justify the hallucination",
+        "Bar 7 'light peach / pale orange-yellow' is reasonable; bar 10 'vibrant teal/cerulean' is acceptable"
+      ],
+      "hallucinations": [
+        "Invents 'NAUSICAAÄ' spelling — not present in the image",
+        "Fictional justification about typographic branding variation"
+      ],
+      "justification": "Major OCR hallucination: invents an extra 'A' in the title and rationalises it with speculation. Undermines reliability of text reading despite otherwise good description."
+    },
+    {
+      "model": "qwen3.6-27b|think",
+      "run_id": "2",
+      "holistic_score": 6,
+      "failure_mode": "hallucinated_text",
+      "key_hits": [
+        "Correct 10-bar count",
+        "Correct HAYAO MIYAZAKI reading",
+        "Correct 'THE COLORS OF.' reading",
+        "Generally accurate colour sequence",
+        "Notes minimalism and clean typography"
+      ],
+      "key_misses": [
+        "HALLUCINATES title as 'NAUSICÄÄ' with two umlauts — image has single 'NAUSICAÄ'",
+        "Wrong rationalisation that 'NAUSICÄÄ' is a 'stylised choice often seen in posters'",
+        "Bar 7 'pale yellow/beige' slightly off"
+      ],
+      "hallucinations": [
+        "Invents 'NAUSICÄÄ' double-umlaut spelling and fabricates justification"
+      ],
+      "justification": "Same family of OCR hallucination as the nothink sibling — corrupts the title with extra diacritic and invents post-hoc reasoning. Colour description is fine but text fidelity is compromised."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 10-bar count",
+        "Preserves NAUSICAÄ with correct umlaut and notes the diaeresis",
+        "Correct HAYAO MIYAZAKI + 'THE COLORS OF.' readings",
+        "Excellent colour progression (deep teal, olive, warm brown, dusty rose/mauve, off-white, pale yellow, peach/apricot, sage, sky blue, vibrant cyan-blue)",
+        "Notes minimalism, mood-board aesthetic, no people"
+      ],
+      "key_misses": [
+        "Bar 7 'light peach/apricot' is good (one of few to nail this hue)",
+        "Minor: bar 10 'vibrant cyan-blue' could be more azure"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent across the board: correct count, faithful diacritic, accurate colour naming including the tricky peach bar 7. One of the strongest entries."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 10-bar count",
+        "Preserves NAUSICAÄ with correct umlaut, explicitly noted",
+        "Correct HAYAO MIYAZAKI + 'THE COLORS OF.' readings",
+        "Excellent colour sequence (deep teal/black, olive, earthy brown, dusty rose, cream/off-white, pale yellow, light yellow/cream, pale sage, sky blue, azure)",
+        "Good thematic interpretation of palette progression (depths -> earth -> sky/ocean)",
+        "Notes minimalism and clean typography"
+      ],
+      "key_misses": [
+        "Bar 7 'light yellow/cream' is slightly off (more peach in reality)",
+        "No explicit mention of absence of hex codes"
+      ],
+      "hallucinations": [],
+      "justification": "Top-tier result. Faithful text reading with diacritic, correct count, accurate colours, good thematic interpretation. Minor drift only on bar 7."
+    }
+  ],
+  "ranking": [
+    "qwen3.5-4b|think",
+    "qwen3.5-9b|think",
+    "qwen3.6-35b-a3b|nothink",
+    "qwen3.6-35b-a3b|think",
+    "gemma4-12b|think",
+    "gemma4-26b-a4b|think",
+    "gemma4-31b|think",
+    "qwen3-vl-4b|think",
+    "qwen3-vl-8b|think",
+    "qwen3.5-4b|nothink",
+    "glm-4.6v-flash-9b|think",
+    "gemma4-e4b|think",
+    "qwen3.6-27b|think",
+    "qwen3.6-27b|nothink",
+    "qwen3.5-9b|nothink"
+  ],
+  "notes": [
+    "Key discriminators on this image are: (a) correct swatch count of 10, (b) faithful title OCR preserving the NAUSICAÄ diaeresis, (c) accurate hue naming (especially bar 7 which is peach/apricot, not pale yellow).",
+    "Two qwen3.6-27b variants (both think and nothink) hallucinate the title spelling — 'NAUSICÄÄ' and 'NAUSICAAÄ' respectively — and rationalise the corruption with speculative design commentary. This is a notable OCR failure pattern for this model on diacritics.",
+    "gemma4-e4b undercounts to 8 swatches and qwen3.5-9b-nothink undercounts to 9 with confused self-correction; both represent object-count failures on a simple swatch stack.",
+    "qwen3.5-4b-think and the two qwen3.6-35b-a3b variants form the top tier, combining correct count, faithful diacritic preservation, and accurate hue naming.",
+    "Most models describe the bottom text with a trailing period ('THE COLORS OF.'). The dot is part of the printed design (small typographic mark), so this reading is consistent and not a hallucination.",
+    "No model explicitly noted the absence of hex codes; this is a minor missed detail across the board but not heavily weighted since the prompt-focused tasks centre on count and identification.",
+    "Gemma family has a systematic drift on bar 7 — describes it as 'sand'/'beige' rather than the peach/apricot hue — suggesting a shared colour-perception bias in that model family."
+  ]
+}

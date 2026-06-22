@@ -1,0 +1,291 @@
+{
+  "image": "28-xray-ribfracture-lowerright.jpg",
+  "judgments": {
+    "gemma4-12b|think": {
+      "holistic_score": 3,
+      "failure_mode": "missed_primary_finding",
+      "key_hits": [
+        "Identified as frontal chest X-ray",
+        "Noted no visible text/markings",
+        "Mentioned spine, ribs, clavicles, lungs, heart, diaphragm"
+      ],
+      "key_misses": [
+        "Completely missed the left 10th posterior rib fracture",
+        "Did not comment on rib integrity at all"
+      ],
+      "hallucinations": [
+        "Claimed heart is in 'center-left of chest (viewer's right)' — confused anatomical description"
+      ],
+      "justification": "Generic descriptive overview with no radiologic findings; missed the load-bearing fracture entirely. Heart laterality description is confused but mostly descriptive, not a false diagnostic claim."
+    },
+    "gemma4-26b-a4b|think": {
+      "holistic_score": 3,
+      "failure_mode": "missed_primary_finding",
+      "key_hits": [
+        "Identified as frontal chest X-ray",
+        "Mentioned costophrenic angles appear clear",
+        "Noted no visible text",
+        "Lung fields described as well-aerated (consistent with no pneumothorax)"
+      ],
+      "key_misses": [
+        "Completely missed the left 10th posterior rib fracture",
+        "Did not explicitly evaluate rib integrity"
+      ],
+      "hallucinations": [
+        "Claimed 'gastric bubble' visible below diaphragm — not clearly present"
+      ],
+      "justification": "Cleaner description than gemma4-12b, correctly notes costophrenic angles clear, but the primary finding (fracture) is entirely absent."
+    },
+    "gemma4-31b|think": {
+      "holistic_score": 3,
+      "failure_mode": "missed_primary_finding",
+      "key_hits": [
+        "Identified as frontal chest X-ray",
+        "Noted no text/markings",
+        "Correctly described heart offset to viewer's right (patient's left)"
+      ],
+      "key_misses": [
+        "Completely missed the left 10th posterior rib fracture",
+        "Did not evaluate rib cortex continuity"
+      ],
+      "hallucinations": [],
+      "justification": "Competent anatomic description but diagnostically empty; missed the fracture entirely. No hallucinations, which is mildly better than peers."
+    },
+    "gemma4-e4b|think": {
+      "holistic_score": 3,
+      "failure_mode": "missed_primary_finding",
+      "key_hits": [
+        "Identified as frontal chest radiograph (PA or AP)",
+        "Noted symmetry and anatomical landmarks",
+        "Mentioned costophrenic angles visible"
+      ],
+      "key_misses": [
+        "Completely missed the left 10th posterior rib fracture",
+        "Did not assess rib integrity"
+      ],
+      "hallucinations": [],
+      "justification": "Generic descriptive overview; missed the load-bearing finding. No explicit false claims about ribs being intact, but did not look for fractures either."
+    },
+    "glm-4.6v-flash-9b|think": {
+      "holistic_score": 3,
+      "failure_mode": "active_false_negative",
+      "key_hits": [
+        "Correctly identified PA view",
+        "Noted no visible text",
+        "Clear lung fields, no pneumothorax/effusion implied",
+        "Costophrenic angles sharp (implicitly correct)"
+      ],
+      "key_misses": [
+        "Completely missed the left 10th posterior rib fracture"
+      ],
+      "hallucinations": [
+        "Explicitly claimed 'Ribs and vertebral column appear intact with no obvious fractures or deformities' — an active false negative on the primary finding"
+      ],
+      "justification": "Detailed and well-structured, but explicitly and wrongly asserts no rib fractures. This is the worst form of miss — confident false negative on the load-bearing finding."
+    },
+    "qwen3-vl-4b|think": {
+      "holistic_score": 3,
+      "failure_mode": "active_false_negative",
+      "key_hits": [
+        "Identified as frontal chest radiograph",
+        "Noted no verbatim text or annotations",
+        "Lungs clear, heart normal size"
+      ],
+      "key_misses": [
+        "Completely missed the left 10th posterior rib fracture"
+      ],
+      "hallucinations": [
+        "Explicitly concluded 'appears to be a normal chest radiograph, with no obvious signs of pathology' — false negative on primary finding",
+        "Called it AP view (ground truth is PA)"
+      ],
+      "justification": "Confident normal-read that explicitly misses the fracture. Stating 'no obvious signs of pathology' is a significant diagnostic error."
+    },
+    "qwen3-vl-8b|think": {
+      "holistic_score": 3,
+      "failure_mode": "active_false_negative",
+      "key_hits": [
+        "Correctly identified PA chest X-ray",
+        "Noted no visible text/annotations",
+        "Lungs well-inflated, no consolidation/effusion"
+      ],
+      "key_misses": [
+        "Completely missed the left 10th posterior rib fracture"
+      ],
+      "hallucinations": [
+        "Explicitly claimed 'ribs appear to be intact and without any obvious fractures or deformities' — false negative on primary finding",
+        "Concluded 'healthy individual with no obvious signs of pathology'"
+      ],
+      "justification": "Well-structured and correct on view/orientation, but explicitly false-negative on the ribs. Confident wrong diagnosis."
+    },
+    "qwen3.5-4b|nothink": {
+      "holistic_score": 3,
+      "failure_mode": "active_false_negative",
+      "key_hits": [
+        "Correctly identified PA view",
+        "Detailed anatomic breakdown",
+        "Correctly noted costophrenic angles sharp, no pneumothorax, no pleural effusion",
+        "Noted no visible text/labels"
+      ],
+      "key_misses": [
+        "Completely missed the left 10th posterior rib fracture"
+      ],
+      "hallucinations": [
+        "Explicitly stated 'No obvious pathology such as pneumonia, tumor, fracture, or cardiomegaly' — false negative on fracture",
+        "Speculated 'likely male or post-menopausal female' from absence of breast shadows — unsupported",
+        "Speculated 'young adult to middle-aged' age — unsupported from CXR",
+        "Claimed 'aortic knob' visible and normal — overconfident",
+        "Claimed 'subdiaphragmatic gas (stomach bubble) may be faintly visible' — hedged but speculative"
+      ],
+      "justification": "Very thorough but confidently wrong; explicitly lists 'fracture' under no-pathology. Heavy speculation on patient demographics adds hallucination penalty."
+    },
+    "qwen3.5-4b|think": {
+      "holistic_score": 5,
+      "failure_mode": "partial_localization_wrong_characterization",
+      "key_hits": [
+        "Localized an abnormality to the lower lung field on the right side of the image (correct side, near the actual fracture)",
+        "Correctly noted costophrenic angles sharp, no pleural effusion",
+        "Correctly noted right hemidiaphragm higher than left",
+        "Noted no visible text"
+      ],
+      "key_misses": [
+        "Did not identify the rib fracture as a fracture",
+        "Mischaracterized it as 'faint patchy opacities' suggesting atelectasis/infiltrate",
+        "Did not specify rib number (10th) or posterior location"
+      ],
+      "hallucinations": [
+        "Claimed 'humerus' proximal ends visible at top corners — not part of standard cropped CXR field, likely scapulae misidentified",
+        "Diagnosis of 'mild atelectasis or early infiltrate' is wrong — this is a rib fracture"
+      ],
+      "justification": "Uniquely among all models, this one localized an abnormality on the CORRECT side (right of image = patient's left, matching fracture location). However, it mischaracterized the finding as opacities/atelectasis rather than a rib fracture. Best localization, wrong diagnosis — scores above the pure misses."
+    },
+    "qwen3.5-9b|nothink": {
+      "holistic_score": 3,
+      "failure_mode": "active_false_negative",
+      "key_hits": [
+        "Identified as frontal chest radiograph",
+        "Correctly noted costophrenic angles sharp, no pneumothorax, no pleural effusion",
+        "Cardiac silhouette normal size",
+        "Noted no visible text"
+      ],
+      "key_misses": [
+        "Completely missed the left 10th posterior rib fracture"
+      ],
+      "hallucinations": [
+        "Explicitly claimed 'Bony structures appear intact — no fractures or lytic lesions' — false negative on primary finding",
+        "Claimed 'humerus heads' visible at edges — likely scapulae misidentified",
+        "Overconfident detailed claims (e.g., cardiothoracic ratio < 0.5)"
+      ],
+      "justification": "Thorough but explicitly false-negative on the ribs. Confident wrong diagnosis on the load-bearing finding."
+    },
+    "qwen3.5-9b|think": {
+      "holistic_score": 3,
+      "failure_mode": "missed_primary_finding",
+      "key_hits": [
+        "Identified as standard chest radiograph",
+        "Noted no visible text/markers",
+        "Correctly noted costophrenic angles sharp",
+        "Correctly described heart in center-left (viewer's left) of mediastinum"
+      ],
+      "key_misses": [
+        "Completely missed the left 10th posterior rib fracture",
+        "Did not explicitly evaluate rib integrity"
+      ],
+      "hallucinations": [
+        "Claimed 'humerus heads' visible at top corners — likely scapulae",
+        "Mentioned 'aortic knob' visible near top of heart shadow — overconfident"
+      ],
+      "justification": "Competent anatomic description but does not even attempt fracture assessment. Misses load-bearing finding without explicit false negative."
+    },
+    "qwen3.6-27b|nothink": {
+      "holistic_score": 3,
+      "failure_mode": "active_false_negative",
+      "key_hits": [
+        "Identified as frontal chest radiograph",
+        "Correctly noted costophrenic angles sharp, no pneumothorax, no pleural effusion",
+        "Correctly described heart in patient's left (right of image)",
+        "Noted no visible text/markers"
+      ],
+      "key_misses": [
+        "Completely missed the left 10th posterior rib fracture"
+      ],
+      "hallucinations": [
+        "Explicitly stated 'no obvious signs of pathology such as pneumonia, pneumothorax, pleural effusion, fractures, or masses' — false negative on fracture"
+      ],
+      "justification": "Detailed and well-organized, but explicitly lists 'fractures' under no-pathology. Confident wrong diagnosis on the primary finding."
+    },
+    "qwen3.6-27b|think": {
+      "holistic_score": 3,
+      "failure_mode": "missed_primary_finding",
+      "key_hits": [
+        "Identified as frontal chest X-ray",
+        "Noted no visible text/markers",
+        "Correctly placed heart on viewer's right (patient's left)",
+        "Noted costophrenic angles clear"
+      ],
+      "key_misses": [
+        "Completely missed the left 10th posterior rib fracture",
+        "Did not explicitly evaluate rib cortex integrity"
+      ],
+      "hallucinations": [],
+      "justification": "Clean descriptive overview without explicit false negatives, but missed the load-bearing finding. No hallucinations, slightly better than peers that confidently asserted no fractures."
+    },
+    "qwen3.6-35b-a3b|nothink": {
+      "holistic_score": 3,
+      "failure_mode": "active_false_negative",
+      "key_hits": [
+        "Identified as frontal chest radiograph",
+        "Correctly noted costophrenic angles sharp, no pneumothorax, no pleural effusion",
+        "Cardiac silhouette within normal limits",
+        "Noted no visible text/markers"
+      ],
+      "key_misses": [
+        "Completely missed the left 10th posterior rib fracture"
+      ],
+      "hallucinations": [
+        "Explicitly claimed 'All visible ribs... show normal cortical margins without fractures' — false negative on primary finding",
+        "Speculated 'breast shadows... suggests female patient' — unsupported demographic inference",
+        "Claimed 'gastric air bubble' visible — speculative",
+        "Claimed 'aortic knob visible and unremarkable' — overconfident"
+      ],
+      "justification": "Confident, thorough, and wrong on the primary finding. Explicit false-negative on rib fractures plus demographic speculation pushes score down despite otherwise good structure."
+    },
+    "qwen3.6-35b-a3b|think": {
+      "holistic_score": 3,
+      "failure_mode": "missed_primary_finding",
+      "key_hits": [
+        "Identified as standard PA chest X-ray",
+        "Noted no visible text/markers",
+        "Correctly placed heart on viewer's right (patient's left)",
+        "Noted costophrenic angles sharp/clear (no pleural effusion)",
+        "Correctly noted right hemidiaphragm higher than left"
+      ],
+      "key_misses": [
+        "Completely missed the left 10th posterior rib fracture",
+        "Did not explicitly evaluate rib cortex integrity"
+      ],
+      "hallucinations": [
+        "Claimed 'gastric bubble' visible below left diaphragm — speculative",
+        "Claimed 'sterum implied by symmetry of rib attachments' — over-interpretation"
+      ],
+      "justification": "Well-structured PA description with correct laterality and several correct negatives, but missed the load-bearing fracture. No explicit false-negative statement on ribs, which is mildly better than peers."
+    }
+  },
+  "ranking": [
+    "qwen3.5-4b|think",
+    "gemma4-31b|think",
+    "gemma4-e4b|think",
+    "qwen3.6-27b|think",
+    "qwen3.6-35b-a3b|think",
+    "gemma4-26b-a4b|think",
+    "gemma4-12b|think",
+    "qwen3.5-9b|think",
+    "qwen3-vl-4b|think",
+    "qwen3-vl-8b|think",
+    "glm-4.6v-flash-9b|think",
+    "qwen3.5-9b|nothink",
+    "qwen3.5-4b|nothink",
+    "qwen3.6-27b|nothink",
+    "qwen3.6-35b-a3b|nothink"
+  ],
+  "notes": "This was an extremely difficult image for all 15 model variants — NONE correctly identified the left 10th posterior rib fracture (the load-bearing finding). Per the rubric, this caps all scores at 3-5. Only qwen3.5-4b|think scored above 3: it uniquely localized an abnormality on the CORRECT side (right of image, matching the fracture location), though it mischaracterized it as 'patchy opacities / atelectasis' rather than a fracture. Several models (glm-4.6v-flash-9b, qwen3-vl-4b, qwen3-vl-8b, qwen3.5-4b|nothink, qwen3.5-9b|nothink, qwen3.6-27b|nothink, qwen3.6-35b-a3b|nothink) made ACTIVE false-negative claims explicitly stating 'no fractures' or 'ribs intact' — these represent confident wrong diagnoses and are scored at 3 (no bonus for clean structure). Models that simply described anatomy without asserting fracture absence (gemma4 family, qwen3.5-9b|think, qwen3.6-27b|think, qwen3.6-35b-a3b|think) are also scored at 3 but ranked slightly higher for not actively misrepresenting the finding. The |nothink variants tended to be more confidently wrong (more explicit false negatives and demographic hallucinations) than their |think counterparts. Common hallucinations: gastric bubble, aortic knob specifics, humerus heads at image corners (actually scapulae), breast-shadow-based sex inference."
+}

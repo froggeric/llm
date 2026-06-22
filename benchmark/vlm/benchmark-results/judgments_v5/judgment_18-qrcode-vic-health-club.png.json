@@ -1,0 +1,158 @@
+{
+  "image": "18-qrcode-vic-health-club.png",
+  "judgments": [
+    {
+      "model": "gemma4-12b|think",
+      "holistic_score": 7,
+      "failure_mode": "minor_structure_error",
+      "key_hits": ["Correctly identifies plain QR code", "Three finder patterns in correct corners", "Correctly states no visible text", "Correctly states no people"],
+      "key_misses": ["Claims alignment pattern is toward bottom-right (correct) but calls it 'smaller nested square' - acceptable", "Does not mention absence of embedded images/globe"],
+      "hallucinations": [],
+      "justification": "Accurate structural description of a plain QR code. Correctly identifies three finder patterns and a bottom-right alignment pattern. No hallucinations of embedded images or text."
+    },
+    {
+      "model": "gemma4-26b-a4b|think",
+      "holistic_score": 6,
+      "failure_mode": "missing_alignment_pattern",
+      "key_hits": ["Correctly identifies plain QR code", "Three finder patterns in correct corners", "Correctly states no visible text", "Explicitly states no people, objects, or other elements"],
+      "key_misses": ["Fails to mention the alignment pattern in the bottom-right", "Does not mention absence of embedded images"],
+      "hallucinations": [],
+      "justification": "Clean and accurate but structurally incomplete - omits the alignment pattern. No hallucinations."
+    },
+    {
+      "model": "gemma4-31b|think",
+      "holistic_score": 7,
+      "failure_mode": "minor_structure_error",
+      "key_hits": ["Correctly identifies plain QR code", "Three finder patterns in correct corners", "Mentions alignment pattern (typically bottom-right)", "Correctly states no text"],
+      "key_misses": ["Phrasing 'typically towards the bottom-right, though integrated into the pattern' is slightly hedging but acceptable", "Does not explicitly note absence of embedded images"],
+      "hallucinations": [],
+      "justification": "Accurate structural description. Correctly identifies finder and alignment patterns. No hallucinations."
+    },
+    {
+      "model": "gemma4-e4b|think",
+      "holistic_score": 6,
+      "failure_mode": "alignment_pattern_plural_error",
+      "key_hits": ["Correctly identifies plain QR code", "Three finder patterns in correct corners", "Correctly states no text", "Correctly states no people"],
+      "key_misses": ["Claims 'Alignment Patterns: Smaller squares are distributed throughout the grid' (plural and distributed - QR has only one in bottom-right here)", "Does not explicitly note absence of embedded images"],
+      "hallucinations": ["Claims multiple alignment patterns distributed throughout the grid - incorrect for this code"],
+      "justification": "Mostly accurate but errors on alignment pattern description (plural/distributed vs single bottom-right). No image hallucination."
+    },
+    {
+      "model": "glm-4.6v-flash-9b|think",
+      "holistic_score": 5,
+      "failure_mode": "missing_alignment_pattern",
+      "key_hits": ["Correctly identifies plain QR code", "Three finder patterns in correct corners", "Correctly states no text", "Correctly states no people"],
+      "key_misses": ["Fails to mention the alignment pattern", "Does not mention absence of embedded images/globe"],
+      "hallucinations": [],
+      "justification": "Accurate but minimal description; misses the alignment pattern entirely. No hallucinations."
+    },
+    {
+      "model": "qwen3-vl-4b|think",
+      "holistic_score": 6,
+      "failure_mode": "minor_structure_error",
+      "key_hits": ["Correctly identifies plain QR code", "Three large patterns in correct corners", "Mentions smaller bottom-right pattern", "Correctly states no text/no people"],
+      "key_misses": ["Calls the finder patterns 'alignment patterns' (terminology error - they are finder/position detection patterns)", "Redundant duplicate sentence about modules"],
+      "hallucinations": [],
+      "justification": "Structurally accurate (three corner patterns + one bottom-right) but uses wrong terminology by calling finder patterns 'alignment patterns'. No image hallucination."
+    },
+    {
+      "model": "qwen3-vl-8b|think",
+      "holistic_score": 4,
+      "failure_mode": "missing_alignment_pattern_plus_error",
+      "key_hits": ["Correctly identifies plain QR code", "Three finder patterns in correct corners", "Correctly states no text/no people"],
+      "key_misses": ["Fails to mention the alignment pattern entirely", "Claims 'pattern is highly symmetrical' (data area is not symmetrical by design)", "Does not mention absence of embedded images"],
+      "hallucinations": ["Claims the data pattern is 'highly symmetrical' - QR data areas are deliberately non-symmetric"],
+      "justification": "Misses alignment pattern and falsely claims symmetry of data area. No image hallucination."
+    },
+    {
+      "model": "qwen3.5-4b|nothink",
+      "holistic_score": 4,
+      "failure_mode": "hallucinated_version_size",
+      "key_hits": ["Correctly identifies plain QR code", "Three finder patterns in correct corners", "Correctly states no text/no people"],
+      "key_misses": ["Hallucinated grid size '21x21 or similar' - unverifiable and the actual code is denser", "Mentions alignment patterns as 'scattered across the code' (plural/distributed, incorrect)", "Claims error correction Level 1 or 2 (not visible)"],
+      "hallucinations": ["Hallucinated QR version/size (21x21)", "Hallucinated error correction level", "Claims alignment patterns are scattered across the code"],
+      "justification": "Multiple hallucinations about version, size, and error correction level that cannot be determined visually. No globe hallucination but lots of fabricated technical detail."
+    },
+    {
+      "model": "qwen3.5-4b|think",
+      "holistic_score": 3,
+      "failure_mode": "hallucinated_central_alignment",
+      "key_hits": ["Correctly identifies plain QR code", "Three finder patterns in correct corners", "Correctly states no text/no people"],
+      "key_misses": [],
+      "hallucinations": ["Claims 'Alignment Pattern: A smaller square pattern located near the center of the grid' - the alignment pattern is in the bottom-right, NOT center", "Claims 'Center Marker: The alignment pattern is positioned roughly in the center' - false"],
+      "justification": "Hallucinates that the alignment pattern is in the center of the code (it is in the bottom-right). This is a structural error that could be confused with an embedded central image. No globe, but center-placement claim is wrong."
+    },
+    {
+      "model": "qwen3.5-9b|nothink",
+      "holistic_score": 4,
+      "failure_mode": "contradictory_alignment_claim",
+      "key_hits": ["Correctly identifies plain QR code", "Three finder patterns in correct corners", "Correctly states no text/no people", "Notes absence of logos/markings"],
+      "key_misses": ["Contradicts itself: lists 'Alignment Pattern' as an object then immediately says it is 'not present in this particular code'", "Hallucinated version 'Version 1 or 2' (cannot be determined and likely wrong given density)"],
+      "hallucinations": ["Self-contradicting claim about alignment pattern presence", "Hallucinated QR version"],
+      "justification": "Internally contradictory about the alignment pattern and hallucinates QR version. Correctly notes no logos/embedded images. No globe hallucination."
+    },
+    {
+      "model": "qwen3.5-9b|think",
+      "holistic_score": 7,
+      "failure_mode": "minor_position_hedging",
+      "key_hits": ["Correctly identifies plain QR code", "Three finder patterns in correct corners", "Correctly places alignment pattern in lower-right quadrant (~70%/70%)", "Correctly states no text/no people"],
+      "key_misses": ["Slightly hedged alignment position description"],
+      "hallucinations": [],
+      "justification": "Most accurate structural description. Correctly identifies finder patterns and places alignment pattern in lower-right. No hallucinations."
+    },
+    {
+      "model": "qwen3.6-27b|nothink",
+      "holistic_score": 4,
+      "failure_mode": "hallucinated_version_and_pattern_presence",
+      "key_hits": ["Correctly identifies plain QR code", "Three finder patterns in correct corners", "Correctly states no text/no people"],
+      "key_misses": ["Claims 'A small alignment pattern may also be present near the center-right area (though not always visible)' - hedging on a visible feature", "Hallucinated version 'Version 5-7 based on density'"],
+      "hallucinations": ["Hallucinated QR version (5-7)", "Hedges on visible alignment pattern"],
+      "justification": "Hallucinates QR version and hedges on alignment pattern visibility. No globe hallucination."
+    },
+    {
+      "model": "qwen3.6-27b|think",
+      "holistic_score": 8,
+      "failure_mode": "none",
+      "key_hits": ["Correctly identifies plain QR code", "Three finder patterns in correct corners", "Explicitly states NO central logo or embedded image ('Unlike many modern QR codes, there is no central logo or image embedded within the data area; it is a raw data matrix')", "Correctly states no text/no people"],
+      "key_misses": ["Hedged version estimate 'Version 4 or similar' but caveats it appropriately"],
+      "hallucinations": [],
+      "justification": "Best response. Explicitly and correctly states there is no central logo or embedded image - directly addresses the trap. Minor hedged version estimate is caveated. No hallucinations."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|nothink",
+      "holistic_score": 7,
+      "failure_mode": "hallucinated_version",
+      "key_hits": ["Correctly identifies plain QR code", "Three finder patterns in correct corners", "Correctly places alignment pattern in bottom-right", "Explicitly notes 'No logo or branding: Unlike some custom QR codes, this one has no embedded image or company logo - pure QR code'", "Correctly states no text/no people"],
+      "key_misses": ["Hallucinated grid size 'likely 33x33 or 41x41 based on complexity'"],
+      "hallucinations": ["Hallucinated QR version/grid size (33x33 or 41x41)"],
+      "justification": "Strong response that correctly notes no embedded image/logo. Loses points for hallucinated grid size. No globe hallucination."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|think",
+      "holistic_score": 7,
+      "failure_mode": "none",
+      "key_hits": ["Correctly identifies plain QR code", "Three finder patterns in correct corners", "Correctly places alignment pattern in lower-right quadrant", "Correctly states no text/no people"],
+      "key_misses": ["Does not explicitly address absence of embedded images/logos"],
+      "hallucinations": [],
+      "justification": "Accurate structural description with correct finder and alignment pattern placement. No hallucinations."
+    }
+  ],
+  "ranking": [
+    {"model": "qwen3.6-27b|think", "score": 8, "reason": "Explicitly corrects the embedded-image trap; accurate structure"},
+    {"model": "gemma4-12b|think", "score": 7, "reason": "Accurate structure, correct alignment placement"},
+    {"model": "gemma4-31b|think", "score": 7, "reason": "Accurate structure with slight hedging on alignment"},
+    {"model": "qwen3.5-9b|think", "score": 7, "reason": "Most accurate alignment placement (~70%/70%)"},
+    {"model": "qwen3.6-35b-a3b|nothink", "score": 7, "reason": "Correctly notes no embedded logo; minor version hallucination"},
+    {"model": "qwen3.6-35b-a3b|think", "score": 7, "reason": "Clean accurate description"},
+    {"model": "gemma4-26b-a4b|think", "score": 6, "reason": "Accurate but omits alignment pattern"},
+    {"model": "gemma4-e4b|think", "score": 6, "reason": "Errors on plural/distributed alignment patterns"},
+    {"model": "qwen3-vl-4b|think", "score": 6, "reason": "Correct structure, wrong terminology"},
+    {"model": "glm-4.6v-flash-9b|think", "score": 5, "reason": "Accurate but minimal; omits alignment"},
+    {"model": "qwen3-vl-8b|think", "score": 4, "reason": "Misses alignment; false symmetry claim"},
+    {"model": "qwen3.5-4b|nothink", "score": 4, "reason": "Hallucinated version/size and error correction level"},
+    {"model": "qwen3.5-9b|nothink", "score": 4, "reason": "Self-contradicting alignment claims; hallucinated version"},
+    {"model": "qwen3.6-27b|nothink", "score": 4, "reason": "Hallucinated version 5-7; hedges on visible alignment"},
+    {"model": "qwen3.5-4b|think", "score": 3, "reason": "Hallucinates alignment pattern is in center (it is bottom-right)"}
+  ],
+  "notes": "Ground truth: plain black-and-white QR code, no globe, no embedded image/icon, three finder patterns (TL/TR/BL) + one alignment pattern in bottom-right, no visible text. None of the 15 models hallucinated a globe or central embedded image - the primary trap was avoided by all. The dominant failure modes were: (1) hallucinated QR version/grid size claims (qwen3.5-4b|nothink, qwen3.5-9b|nothink, qwen3.6-27b|nothink, qwen3.6-35b-a3b|nothink), (2) wrong placement of the alignment pattern - qwen3.5-4b|think placed it in the center (most serious structural error), (3) omitted or hedged alignment pattern (glm-4.6v-flash-9b, gemma4-26b-a4b, qwen3-vl-8b), and (4) terminology errors (qwen3-vl-4b called finder patterns 'alignment patterns'). Best performer was qwen3.6-27b|think, the only model that explicitly addressed and dismissed the embedded-image possibility. Smaller qwen3.5 models tended to fabricate version numbers and error-correction levels not determinable from the image alone."
+}

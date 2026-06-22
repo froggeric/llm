@@ -1,0 +1,181 @@
+{
+  "image": "16-album-cover-lofi.jpg",
+  "image_path": "test-images/16-album-cover-lofi.jpg",
+  "judgments": [
+    {
+      "model": "gemma4-12b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["square-format mentioned implicitly via low-angle interior composition", "ceiling correctly identified as canvas for colored light", "window on the right with streetlamp glowing yellow through it", "verbatim text 'songs to stare at the ceiling to'", "lo-fi / dust-and-scratches texture", "low-angle perspective from inside room", "no people"],
+      "key_misses": ["does not explicitly call out square-format aspect ratio"],
+      "hallucinations": ["calls streetlamp 'sharp, distant' — minor interpretive framing, acceptable"],
+      "justification": "Strong description with the text verbatim, correct identification of the ceiling as the light-projected surface, the window on the right, and the streetlamp through the glass. Correctly notes lo-fi/dust-and-scratches texture and the introspective mood. Minor: does not explicitly state square format; otherwise excellent."
+    },
+    {
+      "model": "gemma4-26b-a4b|think",
+      "run_id": "2",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["explicitly identifies as album/playlist cover with lo-fi aesthetic", "low-angle perspective looking upward from bed", "ceiling occupies majority of upper/left", "dark wooden window frame on right", "streetlamp glowing yellow through glass", "verbatim text 'songs to stare at the ceiling to'", "rainbow gradient of light across ceiling", "lo-fi dust/grain texture", "no people"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Excellent response — explicitly recognizes this as album/playlist cover art, nails the lo-fi aesthetic, the low-angle looking-up perspective, the ceiling as primary surface, the wooden window frame on the right, the yellow streetlamp through glass, and the verbatim text. Color description of rainbow light gradient is accurate. Best-of-class response."
+    },
+    {
+      "model": "gemma4-31b|think",
+      "run_id": "2",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["verbatim text 'songs to stare at the ceiling to'", "ceiling as primary focus/canvas for colored light", "dark wooden window frame on right", "single glowing yellow street lamp through window", "low-angle perspective implying person in bed", "square composition", "rainbow/blurred spectrum of colors", "lo-fi grain/dust texture", "no people"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Concise but complete. Explicitly states 'square composition', correctly identifies the ceiling as the focus for colorful light, the window on the right, the yellow streetlamp through the glass, and transcribes text verbatim. Mentions foreground silhouette implying a person lying in bed. Tight and accurate."
+    },
+    {
+      "model": "gemma4-e4b|think",
+      "run_id": "2",
+      "holistic_score": 3,
+      "failure_mode": "text_hallucination_emoji",
+      "key_hits": ["dark window frame on right", "yellow streetlamp visible through window", "interior space with abstract neon lighting", "no people", "lo-fi film grain texture"],
+      "key_misses": ["does not identify the ceiling as the main surface — focuses on generic 'interior space'", "claims 'album art or visual mood piece' but doesn't mention lo-fi playlist vibe strongly"],
+      "hallucinations": ["CRITICAL: appends emoji to verbatim text — claims text reads 'songs to stare at the ceiling to 😫' (no emoji is present in the image)"],
+      "justification": "Serious failure: the model hallucinates an emoji '😫' at the end of the title text that does not exist in the image. This is a fabricated character injected into the verbatim text, which is the most important fact to extract. Additionally it fails to identify the ceiling as the primary subject and gives a more generic 'interior space' description. Below passing."
+    },
+    {
+      "model": "glm-4.6v-flash-9b|think",
+      "run_id": "2",
+      "holistic_score": 5,
+      "failure_mode": "scene_misidentification",
+      "key_hits": ["verbatim text 'songs to stare at the ceiling to'", "streetlight with warm yellow light", "no people", "grainy/scratched vintage texture"],
+      "key_misses": ["does not identify the ceiling — instead describes the scene as exterior 'building with multiple windows' and 'starry sky'", "calls orientation 'Vertical (portrait)' — image is square"],
+      "hallucinations": ["describes scene as exterior building/sky rather than interior ceiling with colored light", "calls layout portrait when it is square", "calls scattered dust specks 'stars'"],
+      "justification": "Significant scene misread: the model describes an exterior view of a building with windows against a starry sky rather than the interior ceiling bathed in colored light through a window. Also incorrectly calls the format portrait when it is square. Text is verbatim-correct, but the overall perceptual interpretation is wrong, missing the defining feature (ceiling as canvas)."
+    },
+    {
+      "model": "qwen3-vl-4b|think",
+      "run_id": "2",
+      "holistic_score": 8,
+      "failure_mode": "minor_perceptual_error",
+      "key_hits": ["verbatim text 'songs to stare at the ceiling to'", "ceiling viewed from low angle dominates upper portion", "window frame on right with weathered/dark appearance", "streetlamp visible through window casting warm yellowish glow", "rainbow gradient of colors", "lo-fi grain/dust texture", "no people", "notes album-cover implication"],
+      "key_misses": [],
+      "hallucinations": ["describes 'reflection of streetlamp and night sky on window glass' — interpretation, not necessarily accurate", "describes the dark background as 'speckled with white dots resembling stars' — these are film grain, not stars"],
+      "justification": "Solid description with verbatim text, correct identification of the ceiling as the dominant feature, the weathered window frame on the right, and the yellow streetlamp. Correctly notes album-cover implication. Minor inaccuracies: calls dust specks 'stars' and embellishes reflections; substantively correct."
+    },
+    {
+      "model": "qwen3-vl-8b|think",
+      "run_id": "2",
+      "holistic_score": 6,
+      "failure_mode": "scene_misidentification",
+      "key_hits": ["verbatim text 'songs to stare at the ceiling to'", "warm yellow street lamp reflection", "no people", "vibrant surreal color palette", "lo-fi film grain/scratches"],
+      "key_misses": ["describes 'colorful sky' as primary subject rather than ceiling", "calls the foreground 'star-speckled band' — these are film grain"],
+      "hallucinations": ["describes 'a building with multiple windows is visible on the right' — image shows a single window frame, not a building with multiple windows", "claims text is 'cut off at the end' — text is complete", "describes 'snow'-like specks as celestial elements"],
+      "justification": "Text is verbatim-correct, but the scene description is materially off. It describes 'a building with multiple windows' when there is a single window frame, calls dust specks 'stars/snow', and falsely claims the text is cut off. The core vibe (low-angle colorful scene with streetlamp) is captured but perceptual details are unreliable."
+    },
+    {
+      "model": "qwen3.5-4b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 8,
+      "failure_mode": "minor_perceptual_error",
+      "key_hits": ["verbatim text 'songs to stare at the ceiling to'", "ceiling as dominant feature with nebula-like gradient", "two windows framed in dark wood on right side", "streetlamp glowing yellow-white through windows", "dark curved foreground grounding composition", "no people", "lo-fi film grain/scratches", "identifies as album cover"],
+      "key_misses": [],
+      "hallucinations": ["describes 'faint silhouettes of bare tree branches' outside windows — not visible", "claims ground outside is 'snow-covered' — not visible", "claims two windows — image appears to have one window structure"],
+      "justification": "Strong overall description with correct verbatim text, proper identification of ceiling as primary feature, windows on the right, and the streetlamp. Correctly identifies album-cover aesthetic and lo-fi texture. Downgraded for fabricating bare tree branches and snow outside the windows, which are not visible in the image."
+    },
+    {
+      "model": "qwen3.5-4b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["verbatim text 'songs to stare at the ceiling to'", "ceiling resembling starry night/nebula with smooth gradient", "window frame on right cutting diagonally", "old/weathered wooden window", "yellow street lamp in distance through window", "vibrant psychedelic color palette", "lo-fi film grain/dust/scratches", "dark foreground frame"],
+      "key_misses": [],
+      "hallucinations": ["mentions 'faint silhouettes of bare tree branches' outside window — not clearly visible"],
+      "justification": "Very accurate description: verbatim text, ceiling correctly identified as the main surface with gradient, window on right with diagonal cut, weathered wooden frame, yellow streetlamp through glass, and lo-fi texture all captured. Only minor fabrication is the bare tree branches outside. Overall strong."
+    },
+    {
+      "model": "qwen3.5-9b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 7,
+      "failure_mode": "minor_perceptual_error",
+      "key_hits": ["verbatim text 'songs to stare at the ceiling to'", "prominent wooden window frame on right", "yellow streetlamp reflection against dark sky", "ceiling/wall surface bathed in vibrant colored light", "dark curved foreground silhouette", "no people", "lo-fi film grain/scratches"],
+      "key_misses": [],
+      "hallucinations": ["claims 'Raindrops or condensation are visible on the glass' — not visible", "claims 'cobra-head style' street lamp — detail not substantiated"],
+      "justification": "Good overall description with verbatim text, correct identification of ceiling/wall surface with colored light, window frame on the right, and streetlamp reflection. Captures the lo-fi texture well. Downgraded for fabricating raindrops/condensation on the glass and unnecessarily specifying 'cobra-head style' for the lamp, which is not clearly distinguishable."
+    },
+    {
+      "model": "qwen3.5-9b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["verbatim text 'songs to stare at the ceiling to'", "low-angle shot looking upward from inside room", "window frame on right side, dark weathered wood, angled diagonally", "reflection of glowing street lamp against dark blueish background", "ceiling heavily illuminated by colored lights creating surreal effect", "vibrant moody color gradient", "lo-fi film grain/dust/scratches", "introspective melancholic atmosphere"],
+      "key_misses": [],
+      "hallucinations": ["describes street lamp as 'cobra-head style' — interpretive, not clearly visible"],
+      "justification": "Detailed and accurate. Text verbatim, low-angle looking upward, window frame on right made of dark weathered wood and angled diagonally, ceiling illuminated by external colored lights, and lo-fi grain all captured. Only minor embellishment is the 'cobra-head style' lamp descriptor. Excellent."
+    },
+    {
+      "model": "qwen3.6-27b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 8,
+      "failure_mode": "minor_perceptual_error",
+      "key_hits": ["verbatim text 'songs to stare at the ceiling to'", "lowercase sans-serif white font centered near bottom", "diagonally oriented window frame on right (weathered, peeling paint)", "glowing streetlamp reflection in upper-right pane with warm yellow light", "no people", "surreal cosmic sky/aurora-like", "lo-fi film grain/scratches", "identifies album/playlist cover"],
+      "key_misses": ["describes 'multiple panes' — single window structure"],
+      "hallucinations": ["describes streetlamp as 'hexagonal-shaped' — not substantiated by image", "claims 'illuminating dust particles or raindrops on the glass' — not visible"],
+      "justification": "Strong description with verbatim text, correct identification of weathered window frame on right, streetlamp reflection in upper pane, and lo-fi texture. Correctly identifies as album/playlist cover. Downgraded slightly for inventing a 'hexagonal-shaped' streetlamp and raindrops/dust particles on the glass that aren't visible. Otherwise excellent."
+    },
+    {
+      "model": "qwen3.6-27b|think",
+      "run_id": "2",
+      "holistic_score": 6,
+      "failure_mode": "scene_misidentification",
+      "key_hits": ["verbatim text 'songs to stare at the ceiling to'", "single warm yellow street lamp reflection", "no people", "lo-fi film grain/dust/scratches"],
+      "key_misses": ["describes exterior 'building with brick or stone' rather than interior ceiling", "calls the colorful area 'night sky' rather than ceiling"],
+      "hallucinations": ["describes 'corner of a building' with 'brick or stone' construction on right — image shows interior wooden window frame, not building exterior", "calls the main surface 'night sky' rather than illuminated ceiling", "describes 'windows' (plural) on building — image shows single window frame"],
+      "justification": "Text is correct, but the scene interpretation is materially wrong. It describes the right-side element as a brick/stone building corner with windows seen from outside, when in fact the image shows an interior wooden window frame looking outward. The main colorful surface is misidentified as 'night sky' rather than an illuminated ceiling. Significant perceptual failure despite correct text."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 7,
+      "failure_mode": "minor_perceptual_error",
+      "key_hits": ["verbatim text 'songs to stare at the ceiling to'", "prominent wooden window frame on right with weathered/chipped red and dark tones", "glowing streetlamp visible through rain-streaked/foggy glass with warm yellow-white light", "dark curved silhouette at bottom implying reclined person", "no people clearly visible", "cosmic sky gradient", "lo-fi film grain/scratches"],
+      "key_misses": [],
+      "hallucinations": ["describes 'rain-streaked or foggy glass' — not visible", "claims window frame has 'chipped red' tones — appears dark wood/metal", "calls the colored area 'cosmic sky gradient' rather than ceiling"],
+      "justification": "Verbatim text is correct and structural elements (window on right, streetlamp through glass, dark foreground silhouette) are captured. However the model fabricates rain on the glass, invents chipped red paint on the frame, and labels the colored surface as cosmic sky rather than ceiling. Several perceptual inaccuracies pull it below the top tier."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|think",
+      "run_id": "2",
+      "holistic_score": 7,
+      "failure_mode": "scene_misidentification",
+      "key_hits": ["verbatim text 'songs to stare at the ceiling to'", "window frame/weathered wooden structure on right", "single street lamp glowing yellowish-white", "no people", "vibrant gradient color palette", "lo-fi film grain/dust/scratches", "vertical composition / low-angle looking upward"],
+      "key_misses": ["calls the colorful surface 'night sky filled with stars' rather than ceiling", "describes 'the corner of a wooden structure, likely a window frame or the eaves of a house' — ambiguous, leans exterior"],
+      "hallucinations": ["describes scene as 'night sky filled with stars' — these are film grain on a ceiling, not stars", "claims window structure 'may be dormer window' or 'eaves of a house' — interpretive, not substantiated", "describes vertical composition — image is square"],
+      "justification": "Text is verbatim-correct and lo-fi aesthetic is captured, but the scene is misread as a starry night sky rather than an interior ceiling with colored light projection. Calls dust specks 'stars', labels the structure as possibly a dormer or eaves (ambiguous), and incorrectly describes the composition as vertical when it is square. Several perceptual issues."
+    }
+  ],
+  "ranking": [
+    {"model": "gemma4-26b-a4b|think", "holistic_score": 10},
+    {"model": "gemma4-31b|think", "holistic_score": 10},
+    {"model": "gemma4-12b|think", "holistic_score": 9},
+    {"model": "qwen3.5-4b|think", "holistic_score": 9},
+    {"model": "qwen3.5-9b|think", "holistic_score": 9},
+    {"model": "qwen3-vl-4b|think", "holistic_score": 8},
+    {"model": "qwen3.5-4b|nothink", "holistic_score": 8},
+    {"model": "qwen3.6-27b|nothink", "holistic_score": 8},
+    {"model": "qwen3.5-9b|nothink", "holistic_score": 7},
+    {"model": "qwen3.6-35b-a3b|nothink", "holistic_score": 7},
+    {"model": "qwen3.6-35b-a3b|think", "holistic_score": 7},
+    {"model": "qwen3-vl-8b|think", "holistic_score": 6},
+    {"model": "qwen3.6-27b|think", "holistic_score": 6},
+    {"model": "glm-4.6v-flash-9b|think", "holistic_score": 5},
+    {"model": "gemma4-e4b|think", "holistic_score": 3}
+  ],
+  "notes": [
+    "This lo-fi album cover is a deceptively hard perceptual task: the ceiling is bathed in a vivid cosmic-style color gradient that several models misread as an actual starry night sky. Models that correctly identified the surface as a ceiling (gemma4-12b/26b/31b, qwen3.5-4b, qwen3.5-9b) scored highest.",
+    "Every model transcribed the title text 'songs to stare at the ceiling to' verbatim and correctly noted the absence of people — text extraction is uniformly strong on this image. No model suffered from phrase-repetition failure (the phrase appears once and all models reported it once).",
+    "The most severe failure was gemma4-e4b|think, which hallucinated an emoji ('😫') appended to the verbatim title text. Injecting a fabricated character into the most important text string is a critical OCR failure.",
+    "Scene-misidentification failures (glm-4.6v-flash-9b, qwen3-vl-8b, qwen3.6-27b|think, qwen3.6-35b-a3b|think) all shared a common pattern: describing an exterior building/sky view rather than the interior ceiling, and/or calling dust grain 'stars'.",
+    "Common perceptual hallucinations across mid-tier models: fabricated raindrops/condensation on the window glass (qwen3.5-9b|nothink, qwen3.6-27b|nothink, qwen3.6-35b-a3b|nothink), invented 'bare tree branches' or 'snow' outside the window (qwen3.5-4b|nothink/think), and unsubstantiated lamp shapes like 'cobra-head' or 'hexagonal'.",
+    "Gemma4-26b-a4b|think and gemma4-31b|think were the only models to deliver both verbatim text AND a fully accurate scene interpretation (ceiling as primary subject, interior perspective, album-cover aesthetic) without any hallucinated details."
+  ]
+}

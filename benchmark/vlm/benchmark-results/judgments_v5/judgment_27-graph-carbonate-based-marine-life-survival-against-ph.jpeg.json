@@ -1,0 +1,332 @@
+{
+  "image": "27-graph-carbonate-based-marine-life-survival-against-ph.jpeg",
+  "judgments": {
+    "gemma4-12b|think": {
+      "holistic_score": 5,
+      "failure_mode": "hallucination_and_ocr_errors",
+      "key_hits": [
+        "Title correct",
+        "X-axis range 1940-2100 correct",
+        "Identifies 3 series (blue/yellow/red)",
+        "Captures 'Current position' annotation",
+        "Captures 'tipping point' annotation",
+        "Captures bottom 'mass starvation' annotation"
+      ],
+      "key_misses": [
+        "Says blue starts 100% in 1950 (should be 1940)",
+        "Says pH starts 8.2 in 1950 (should be 1940)",
+        "Says blue bottoms at 2050 (should be 2060)",
+        "Tipping point placed at 2050 (should be ~2042)",
+        "Yellow line trend poorly described (says 20% in 1940 to 100% by 2100)"
+      ],
+      "hallucinations": [
+        "HALLUCINATION: says 'Atomic acid produced by dinoflagellates' instead of 'Domoic acid' — critical sound-alike error"
+      ],
+      "justification": "Multiple OCR errors on X-axis start year (1950 vs 1940) for blue/pH lines plus a serious hallucination substituting 'Atomic acid' for 'Domoic acid'. Bottoms-out year wrong by a decade. Det score of 7.08 is generous; content quality is moderate-low."
+    },
+    "gemma4-26b-a4b|think": {
+      "holistic_score": 6,
+      "failure_mode": "ocr_errors_on_axis_year",
+      "key_hits": [
+        "Title correct",
+        "X-axis scale 1940-2100 correct with 20-year ticks",
+        "All 3 axes labels correct (left Y, right Y, X)",
+        "Captures all 5 annotations including 'Domoic acid' correctly",
+        "Good annotation-to-data-point mappings",
+        "Identifies tipping point near 2040"
+      ],
+      "key_misses": [
+        "Overview incorrectly says '1950 to approximately 2070'",
+        "Blue 'Starts near 100% in 1950' (should be 1940)",
+        "Yellow '20% survival in 1950' (should be 1940)",
+        "pH '8.2 in 1950' (should be 1940)",
+        "Blue bottoms around 2050 (should be 2060)"
+      ],
+      "hallucinations": [],
+      "justification": "Captures all annotation text including 'Domoic acid' correctly, but consistently misreads the X-axis start year as 1950 instead of 1940 for all three curves. Det score 10 is inflated; strong text OCR but systematic year OCR error."
+    },
+    "gemma4-31b|think": {
+      "holistic_score": 7,
+      "failure_mode": "minor_ocr_errors",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 in 20-year increments correct",
+        "All 3 axes labels correct",
+        "Captures all 5 annotations including 'Domoic acid' correctly",
+        "Correctly identifies yellow line rising to ~70% by 2050",
+        "pH 8.2 to 7.9 over 1940-2070 correctly described"
+      ],
+      "key_misses": [
+        "Blue 'Starts at 100% around 1950' (should be 1940)",
+        "Yellow '20% around 1950' (should be 1940)",
+        "pH '8.2 in 1950' (should be 1940)",
+        "Blue bottoms at 'roughly 2050' (should be 2060)"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent annotation capture including 'Domoic acid' verbatim. Tends to misread 1940 as 1950 across series start years, and bottoms-out year is ~2050 vs actual 2060. Otherwise accurate and detailed."
+    },
+    "gemma4-e4b|think": {
+      "holistic_score": 5,
+      "failure_mode": "missing_data_series",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 correct",
+        "Blue line correctly starts at 100% in 1940",
+        "pH starts at 8.2 correctly",
+        "Captures all 5 annotations including 'Domoic acid' correctly",
+        "Preserves original 'stravation' typo from image"
+      ],
+      "key_misses": [
+        "MISSING: completely omits the yellow 'bacteria, toxic dinoflagellate phytoplankton' series — describes 'two primary trends' instead of three",
+        "Says pH line is orange (should be red)",
+        "Blue decline 'extremely steep around 2040, dropping sharply toward 0% by 2100' (should bottom at 2060)",
+        "Tipping point placed at ~2060 (should be ~2042)"
+      ],
+      "hallucinations": [],
+      "justification": "Det score of 10 is unjustified: the model completely omits the yellow bacteria/dinoflagellate series, fundamentally misrepresenting the chart. Annotation OCR is good and preserves original typos, but missing an entire series is a major failure."
+    },
+    "glm-4.6v-flash-9b|think": {
+      "holistic_score": 5,
+      "failure_mode": "confused_axis_mapping",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 correct",
+        "All 3 axes labels correct",
+        "Blue starts ~100% in 1940 correct",
+        "Captures all 5 annotations including 'Domoic acid' correctly"
+      ],
+      "key_misses": [
+        "Confused: yellow line 'reaching pH 8.2 by 2100' conflates left/right axes",
+        "Red pH line 'Starts at ~100 (pH scale) in 1940' conflates axes",
+        "Blue 'Ends near 0% by 2100' (should be 2060)",
+        "Marker color/year mappings inaccurate"
+      ],
+      "hallucinations": [],
+      "justification": "Smaller model shows axis-confusion: maps survival percentages to pH scale and vice versa. Annotation text captured well. Numerical endpoint claims are wrong (2100 vs 2060/2070). Det score 10 is inflated."
+    },
+    "qwen3-vl-4b|think": {
+      "holistic_score": 6,
+      "failure_mode": "endpoint_year_errors_and_marker_misattribution",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 correct",
+        "Blue starts ~100% in 1940 correct",
+        "Yellow starts ~20% in 1940 correct",
+        "pH starts at 8.2 in 1940 correct",
+        "Captures 'Domoic acid' (as 'Domosic' — minor OCR variant)"
+      ],
+      "key_misses": [
+        "Blue 'drops to near 0% by 2080' (should be 2060)",
+        "Yellow '100% by 2080' (should be ~2044)",
+        "pH '7.9 by 2080' (should be 2070)",
+        "Repeatedly mis-attributes three different annotations to the 'Current position' marker at 2020"
+      ],
+      "hallucinations": [],
+      "justification": "Small VL model gets start years right but endpoint years wrong by ~20 years. Marker-to-annotation mappings confused (labels three different annotations with 'Current position'). 'Domosic' is a minor OCR variant, not a hallucination. Det score 10 inflated."
+    },
+    "qwen3-vl-8b|think": {
+      "holistic_score": 8,
+      "failure_mode": "minor_endpoint_errors",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 with 20-year intervals correct",
+        "Blue starts 100% in 1940 correct",
+        "Yellow ~20% in 1940 correct",
+        "pH 8.2 in 1940 correct",
+        "Blue near 0% by 2060 CORRECT (matches ground truth)",
+        "Captures all 5 annotations including 'Domoic acid' correctly",
+        "Preserves original 'stravation' typo"
+      ],
+      "key_misses": [
+        "Yellow '100% survival by 2060' (should be ~2044, flat thereafter)",
+        "pH '~7.9 by 2060' (should be 2070)",
+        "Says 'four distinct data lines' (actually 3 lines + 1 marker)"
+      ],
+      "hallucinations": [],
+      "justification": "Strong response: gets the critical blue-bottoms-at-2060 endpoint correct, all start years right, and all annotations including 'Domoic acid'. Minor errors on yellow/red endpoint years and series count. One of the more accurate responses."
+    },
+    "qwen3.5-4b|nothink": {
+      "holistic_score": 7,
+      "failure_mode": "minor_marker_year_errors",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 correct",
+        "All 3 axes labels correct",
+        "Captures all 5 annotations including 'Domoic acid' correctly",
+        "Reasonable trend descriptions (blue declining, yellow rising, red declining)",
+        "Tipping point near 2040 correct"
+      ],
+      "key_misses": [
+        "Does not explicitly state series start values (100% in 1940 etc.)",
+        "Marker colors described as 'light pink' and 'dark red' (actually green/orange/red)",
+        "Says blue bottom point is 2060 but in catastrophic-collapse context not strict timeline"
+      ],
+      "hallucinations": [],
+      "justification": "Solid nothink response: gets axes, annotations, tipping point (~2040) and general trends right without hallucinations. Less specific on numerical endpoints than the best responses. Det score 10 reasonable."
+    },
+    "qwen3.5-4b|think": {
+      "holistic_score": 7,
+      "failure_mode": "minor_ocr_year_errors",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 correct",
+        "All 3 axes labels correct",
+        "Blue near 0% by 2060 CORRECT",
+        "Yellow 'reaches top (pH 8.2) around 2040' close to actual ~2044",
+        "Captures all 5 annotations including 'Domoic acid' correctly"
+      ],
+      "key_misses": [
+        "Blue 'Starts at 100% survival around 1950' (should be 1940)",
+        "pH '8.2 in 1950' (should be 1940)",
+        "Yellow 'flat until roughly 1970, sharp upward around 2000' — slightly off"
+      ],
+      "hallucinations": [],
+      "justification": "Strong on annotation capture and key endpoints (blue bottoms 2060, yellow plateaus ~2040), but repeats the 1940→1950 OCR error on blue/pH start years. Trend descriptions are mostly accurate."
+    },
+    "qwen3.5-9b|nothink": {
+      "holistic_score": 7,
+      "failure_mode": "vague_trend_descriptions",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 correct",
+        "All 3 axes labels correct",
+        "Identifies 3 series correctly",
+        "Captures all 5 annotations including 'Domoic acid' correctly",
+        "Green circle at intersection correctly identified"
+      ],
+      "key_misses": [
+        "Does not give explicit series start values",
+        "'Current position' annotation placed at 'year 2000' (should be ~2020)",
+        "Tipping point placed at 'year 2050' (should be ~2042)",
+        "Catastrophic collapse annotation placed at 'year 2060' (roughly correct)",
+        "Trends described only qualitatively, no numeric endpoints"
+      ],
+      "hallucinations": [],
+      "justification": "Clean OCR of all annotations including 'Domoic acid', but marker-to-year mappings are off (Current position at 2000 instead of 2020). Lacks numeric precision on series endpoints. No hallucinations."
+    },
+    "qwen3.5-9b|think": {
+      "holistic_score": 9,
+      "failure_mode": "minor_marker_mapping",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 in 20-year increments correct",
+        "Blue 100% in 1940 correct",
+        "Yellow 20% in 1940 correct",
+        "pH 8.2 in 1940 correct",
+        "Blue near 0% by 2060 CORRECT",
+        "Yellow 100% by 2040 CORRECT (close to actual 2044)",
+        "pH 7.9 by 2070 CORRECT",
+        "Captures all 5 annotations including 'Domoic acid' correctly"
+      ],
+      "key_misses": [
+        "Tipping point placed at ~2050 (should be ~2042)",
+        "Two annotations both placed at 'approx. 2040' green circle (should be distinct markers)"
+      ],
+      "hallucinations": [],
+      "justification": "Outstanding response: all start years correct, all three endpoint years correct (blue 2060, yellow 2040, pH 2070), all annotations including 'Domoic acid' captured. Only minor marker-year imprecision. Det score 10 justified."
+    },
+    "qwen3.6-27b|nothink": {
+      "holistic_score": 8,
+      "failure_mode": "minor_year_error",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 correct",
+        "Blue 100% in 1940 correct",
+        "pH 8.2 in 1940 correct",
+        "Blue near 0% by 2060-2070 CORRECT",
+        "Yellow 100% by 2040 CORRECT",
+        "pH 7.9 by 2070 CORRECT",
+        "Captures all 5 annotations including 'Domoic acid' correctly"
+      ],
+      "key_misses": [
+        "Yellow 'Starts low (~20%) around 1950' (should be 1940)",
+        "Yellow 'Remains flat until ~1980' (actual flat start is earlier)"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent nothink response: nearly all endpoints correct (blue 2060, yellow 2040, pH 2070) and full annotation set including 'Domoic acid'. Only one minor year error (yellow start at 1950 vs 1940). Det score 10 justified."
+    },
+    "qwen3.6-27b|think": {
+      "holistic_score": 9,
+      "failure_mode": "negligible",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 in 20-year increments correct",
+        "Blue 100% around 1940 correct",
+        "pH 8.2 around 1940 correct",
+        "Yellow ~20% around 1940 correct",
+        "Blue near 0% by 2060 CORRECT",
+        "Yellow plateaus near 100% around 2040 CORRECT",
+        "pH 7.9 around 2070 CORRECT",
+        "Captures all 5 annotations including 'Domoic acid' correctly",
+        "Notes image typo 'dmgae' for damage and 'stravation' for starvation (preserves original)"
+      ],
+      "key_misses": [
+        "Tipping point placed at ~2040 (actual ~2042, close enough)",
+        "Places 'atmosphere toxic' annotation at 2040 and 'tipping point' at 2040 (slight clustering)"
+      ],
+      "hallucinations": [],
+      "justification": "Top-tier response: every numeric endpoint matches ground truth (1940 starts, blue 2060, yellow 2040, pH 2070), all 5 annotations captured including 'Domoic acid', and explicitly notes original typos. Best or near-best in set."
+    },
+    "qwen3.6-35b-a3b|nothink": {
+      "holistic_score": 9,
+      "failure_mode": "negligible",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 with 20-year ticks correct",
+        "Blue 100% in 1940 correct",
+        "Yellow ~20% in 1940 correct",
+        "pH 8.2 in 1940 correct",
+        "Blue near 0% by ~2060 CORRECT",
+        "Yellow 100% by ~2040 CORRECT",
+        "pH 7.9 by ~2070 CORRECT",
+        "Captures all 5 annotations including 'Domoic acid' correctly",
+        "Detailed marker-to-data-point mappings"
+      ],
+      "key_misses": [
+        "Tipping point placed at ~2040 (actual ~2042, close)",
+        "Marker shapes described as 'diamond' and 'square' (actual: all circles/squares consistent)"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent nothink response: all start years and endpoints correct, all annotations including 'Domoic acid' captured verbatim, detailed trend descriptions. Det score 10 fully justified."
+    },
+    "qwen3.6-35b-a3b|think": {
+      "holistic_score": 6,
+      "failure_mode": "systematic_year_ocr_errors",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 in 20-year increments correct",
+        "All 3 axes labels correct",
+        "Yellow 100% around 2040 CORRECT",
+        "pH 7.9 around 2070 CORRECT",
+        "Captures all 5 annotations including 'Domoic acid' correctly",
+        "Notes original 'brain dmg' OCR variant from image"
+      ],
+      "key_misses": [
+        "Blue 'Starts at 100% around 1950' (should be 1940)",
+        "Yellow 'around 20% in 1950' (should be 1940)",
+        "pH '8.2 in 1950' (should be 1940)",
+        "Blue 'reaching 0% around 2050' (should be 2060)"
+      ],
+      "hallucinations": [],
+      "justification": "Despite det score of 10, this think variant consistently misreads 1940 as 1950 for all three series start years and blue bottoms-out at 2050 instead of 2060. Yellow/pH endpoint years correct. Notably weaker than its nothink counterpart. Annotations captured well."
+    }
+  },
+  "ranking": [
+    "qwen3.6-27b|think",
+    "qwen3.5-9b|think",
+    "qwen3.6-35b-a3b|nothink",
+    "qwen3.6-27b|nothink",
+    "qwen3-vl-8b|think",
+    "qwen3.5-4b|think",
+    "qwen3.5-4b|nothink",
+    "gemma4-31b|think",
+    "qwen3.5-9b|nothink",
+    "qwen3.6-35b-a3b|think",
+    "gemma4-26b-a4b|think",
+    "qwen3-vl-4b|think",
+    "gemma4-e4b|think",
+    "glm-4.6v-flash-9b|think",
+    "gemma4-12b|think"
+  ],
+  "notes": "Larger Qwen3.5/3.6 variants excel with all start years (1940) and endpoints (blue 2060, yellow 2040, pH 2070) correct and 'Domoic acid' captured verbatim. Common failure pattern: misreading 1940 as 1950 (seen in gemma4-12b/26b/31b, qwen3.5-4b-think, qwen3.6-35b-think). One critical hallucination: gemma4-12b-think invents 'Atomic acid' instead of 'Domoic acid'. Notably gemma4-e4b-think omits the entire yellow bacteria/dinoflagellate series despite a det_score of 10 — clear over-rating by deterministic scoring. The nothink variants of qwen3.6-27b and qwen3.6-35b-a3b outperformed their think counterparts, suggesting thinking sometimes amplifies the 1950 OCR error."
+}

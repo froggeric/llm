@@ -1,0 +1,208 @@
+{
+  "image": "09-poster-artnight.jpg",
+  "ground_truth_summary": "ARTNIGHT poster: red/orange fiery horse painting (acrylic/oil, impasto) over dark blue swirling background, 3 stylized trees with brown/orange leaves on the right side (suspended in air), VIC Health Club + VIC Art Club logos in top-left corner (both on left, side-by-side), title 'PAINT YOUR MASTERPIECE / ARTNIGHT / TUESDAY 14 APRIL | 17:00 | THE VIC', QR code bottom-right with 'Scan to register / vichealth.club'.",
+  "judgments": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies ARTNIGHT title and full event details",
+        "Recognizes horse, swirling background, impasto/texture",
+        "Identifies both VIC Health Club and VIC Art Club logos",
+        "Mentions trees/branch structures with orange-red on right",
+        "Correctly places QR code bottom-right with Scan to register / vichealth.club"
+      ],
+      "key_misses": [
+        "Says VIC Art Club logo is 'top right' (both logos are actually top-left, side-by-side)",
+        "Does not note trees are suspended in air (deliberate artistic choice)"
+      ],
+      "hallucinations": [
+        "Says 'three stylized figures' in VIC Art Club logo — actually a statue motif, not three figures",
+        "Top-right placement of Art Club logo is incorrect"
+      ],
+      "justification": "Strong overall description with all key text verbatim and good visual analysis. Minor positional error on Art Club logo placement and a slight misread of the logo's contents keep it from a perfect score."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Captures all verbatim text correctly",
+        "Recognizes fiery red-orange horse in dynamic pose",
+        "Notes impasto/textured paint style",
+        "Identifies swirling blue/teal background and trees/reeds on right",
+        "Mentions both VIC Health and VIC Art clubs"
+      ],
+      "key_misses": [
+        "Says each logo features 'silhouette of human figure holding a heart' — conflates the two distinct logos",
+        "Repeatedly claims text 'appears twice' — false",
+        "Logos placement description is generic (upper corners) rather than both top-left",
+        "Does not mention trees are suspended in air"
+      ],
+      "hallucinations": [
+        "'VIC Health Club (Appears twice)' and 'VIC Art Club (Appears once)' — both logos appear once each",
+        "'PAINT YOUR MASTERPIECE (Appears twice)' and 'ARTNIGHT (Appears twice)' — each appears once",
+        "Conflates both logos as having 'heart held by figure' — wrong for Art Club"
+      ],
+      "justification": "Good core content but marred by repeated false 'appears twice' claims (likely a thinking artifact), and logo description conflates the two distinct logos. Text OCR is solid."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All visible text verbatim and correct",
+        "Correctly distinguishes the two logos: left = heart/hands laurel wreath (VIC Health Club), right = two human silhouettes in laurel wreath (VIC Art Club)",
+        "Identifies trees with orange foliage on right",
+        "Notes swirling background in dark teal/blue with orange accents",
+        "Mentions QR code"
+      ],
+      "key_misses": [
+        "Says 'Two logos aligned horizontally at top-left corner' but then describes them as left+right — slight inconsistency",
+        "Does not mention trees are suspended in air",
+        "Does not mention impasto/texture explicitly"
+      ],
+      "hallucinations": [],
+      "justification": "Concise and accurate. Distinguishes the two logos correctly (a hard task), captures all text, identifies the horse, background, trees, and QR. Clean response with no hallucinations."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All text verbatim and correctly placed",
+        "Detailed description of horse in mid-gallop with textured brushstrokes",
+        "Identifies stylized trees on the right with orange-red leaves",
+        "Notes swirling turbulent background of deep blues/teals/purples",
+        "Distinguishes two logos correctly",
+        "Correctly places QR code bottom-right"
+      ],
+      "key_misses": [
+        "Says VIC Art Club logo is 'top right' — both logos are top-left side-by-side",
+        "Does not note trees are suspended in air",
+        "Adds interpretive flair ('horse as symbol of freedom') — minor overreach"
+      ],
+      "hallucinations": [
+        "'dark purples' in background — slight inaccuracy (background is blue/teal/green/brown, not purple)"
+      ],
+      "justification": "Comprehensive and well-structured description with all key elements present. Main error is logo placement (Art Club placed top-right when actually top-left). Minor color hallucination."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All event text correct and complete",
+        "Detailed horse description in fiery red/orange with flowing mane",
+        "Identifies stylized trees on the right with orange-red leaves",
+        "Distinguishes two logos with laurel wreaths",
+        "Notes swirling turbulent background",
+        "QR code and registration URL correct"
+      ],
+      "key_misses": [
+        "Says 'In the top-left corner, two logos are displayed' but then describes them as separate positions — internally inconsistent",
+        "Does not mention trees are suspended in air",
+        "Does not mention impasto explicitly (only 'painterly')",
+        "Calls ARTNIGHT 'sans-serif' — actually serif per ground truth"
+      ],
+      "hallucinations": [
+        "Font classification errors: calls ARTNIGHT 'sans-serif' when ground truth specifies serif"
+      ],
+      "justification": "Solid description covering all major elements. Slight logo placement ambiguity and incorrect font classification (sans-serif vs serif for the title) lower the score."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All text verbatim and correctly placed",
+        "Both VIC Health Club and VIC Art Club logos correctly distinguished",
+        "Correctly notes both logos are top-left (not split between corners)",
+        "Horse with red-orange mane/tail in mid-gallop",
+        "Trees with orange-red foliage on the right",
+        "QR code bottom-right with caption",
+        "Compares to Van Gogh's Starry Night swirls"
+      ],
+      "key_misses": [
+        "Description of Art Club logo: 'silhouettes of two figures (one standing, one seated)' — actually a statue motif",
+        "Does not mention trees are suspended in air",
+        "Impasto not explicitly named (says 'painterly')",
+        "Response cuts off at end ('Event Clarity: All essential details (date, time, location) are cl')"
+      ],
+      "hallucinations": [
+        "VIC Art Club logo interpretation as 'one standing, one seated' is speculative"
+      ],
+      "justification": "Excellent content with both logos correctly placed in top-left (rare accuracy). However response is truncated mid-sentence, which is a real defect. Logo content interpretation is slightly off."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All text verbatim and correct",
+        "Horse in fiery red/orange/yellow with flowing mane and tail",
+        "Swirling background in deep blues/teals/dark greens",
+        "Trees with orange foliage on the right",
+        "Both logos correctly distinguished",
+        "Notes 'tall, thin trees with orange foliage' on right",
+        "QR code bottom-right"
+      ],
+      "key_misses": [
+        "Says Art Club logo shows 'two people standing next to a door or frame' — speculative",
+        "Does not mention trees are suspended in air",
+        "Does not mention impasto explicitly"
+      ],
+      "hallucinations": [
+        "Art Club logo as 'door or frame' is invented detail"
+      ],
+      "justification": "Comprehensive and accurate description with all key elements. Minor speculative detail on the Art Club logo content. Solid performance for a 4B model with thinking."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All text verbatim and correctly placed",
+        "Horse described with thick expressive brushstrokes, mane/tail flowing",
+        "Trees with autumnal orange-red foliage on the right side",
+        "Both logos correctly distinguished (heart+hands vs two figures)",
+        "Notes swirling wave-like patterns beneath hooves",
+        "Notes 'copper-colored' tagline — accurate color detail",
+        "QR code bottom-right with caption",
+        "Notes impasto/brushstroke texture"
+      ],
+      "key_misses": [
+        "Says 'top-left and top-right corners' — both logos are top-left side-by-side",
+        "Does not mention trees are suspended in air",
+        "Speculates 'THE VIC' refers to Victorian Arts Centre Melbourne (plausible but invented)"
+      ],
+      "hallucinations": [
+        "'THE VIC' interpretation as Melbourne Victorian Arts Centre — invented, not stated"
+      ],
+      "justification": "Outstandingly detailed and well-structured response. Captures subtle color details (copper tagline), impasto texture, swirling motion, and all text verbatim. Only minor positional slip on logo placement and one speculative interpretation. Best in the set."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All text verbatim and correctly placed",
+        "Detailed horse description with impasto and visible brushstrokes",
+        "Trees on the right with orange/brown foliage mirroring horse colors",
+        "Notes swirling landscape with deep teal/blue/green",
+        "Distinguishes both logos correctly (heart+hands, two silhouettes)",
+        "Notes tagline in 'spaced-out, orange capital letters' — accurate typography detail",
+        "QR code bottom-right with correct caption"
+      ],
+      "key_misses": [
+        "Says both logos in 'upper left corner' but labels them 'Left Logo' and 'Right Logo' — slight inconsistency",
+        "Does not mention trees are suspended in air"
+      ],
+      "hallucinations": [
+        "Identifies one silhouette as 'male' and one as 'female' — speculative gendering of stylized figures"
+      ],
+      "justification": "Excellent comprehensive description with typography insights (spaced-out capitals), explicit impasto mention, and accurate color/position details. Minor logo labeling inconsistency and speculative figure gendering."
+    }
+  ]
+}

@@ -1,0 +1,167 @@
+{
+  "image": "06-trading-card.jpg",
+  "image_path": "test-images/06-trading-card.jpg",
+  "ground_truth_summary": "Pop-art trading card, Pac-Man theme. Yin-yang: LEFT=yellow with RED GHOST (eyes white, looking right); RIGHT=red with YELLOW PACMAN (mouth open right). Background: CYAN with concentric BLACK CIRCLES (not spirals). Text: pacman 46 / 010 / ZEN MASTER / \"Inner peace!\" / ♦ RARE / 24,620 / beat my score → / pacman46.com.",
+  "judgments": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Yellow half contains red ghost (correct pairing)",
+        "Red half contains yellow Pac-Man (correct pairing)",
+        "Concentric circles (correct pattern)",
+        "All text verbatim and correctly placed",
+        "Cyan/teal background color",
+        "Identifies Blinky from Pac-Man"
+      ],
+      "key_misses": [
+        "Describes orientation as top-left/bottom-right rather than pure left/right (still implies correct halves)",
+        "Calls it 'high-score card / social media share' rather than trading card"
+      ],
+      "hallucinations": [],
+      "justification": "Correctly identifies the color-character pairings on each side of the yin-yang, the concentric circles, and all text. Loses points only for using top-left/bottom-right phrasing instead of clean left/right, and a slightly off classification of the card type."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "holistic_score": 6,
+      "failure_mode": "imprecise",
+      "key_hits": [
+        "Yellow and red halves mentioned",
+        "Concentric rings background (correct)",
+        "All text verbatim",
+        "Cyan/teal accents"
+      ],
+      "key_misses": [
+        "Does NOT specify which side (left/right) is yellow vs red",
+        "Refers to 'two Pac-Man characters' rather than identifying one as a ghost",
+        "Says background is 'predominantly black or very dark navy blue' (should be cyan)"
+      ],
+      "hallucinations": [],
+      "justification": "Vague on the critical orientation question and fails to clearly distinguish the ghost from Pac-Man. Background color description is muddied. Text OCR is solid, but the visual analysis lacks the precision needed for this card."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Yellow (left) / red (right) halves — explicitly correct",
+        "Yellow half contains red ghost with two eyes — correct",
+        "Red half contains yellow Pac-Man — correct",
+        "Concentric circles identified",
+        "Cyan/teal alternating with black",
+        "All text verbatim and well-organized"
+      ],
+      "key_misses": [
+        "Says circles create 'a hypnotic spiral effect' — incorrectly characterizes as spiral"
+      ],
+      "hallucinations": [
+        "Refers to 'spiral effect' of background (it is concentric circles, not spiral)"
+      ],
+      "justification": "Excellent on the critical orientation question (explicit left/right with correct characters) and full text OCR. Only real flaw is the 'spiral effect' descriptor for the concentric circles, which is a minor but flagged error in ground truth."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Explicitly correct: yang/left=yellow with red ghost (Blinky) facing right",
+        "Explicitly correct: yin/right=red with yellow Pac-Man mouth open facing left",
+        "Concentric alternating teal and black rings — correct",
+        "Ghost eyes wide, mouth closed — accurate detail",
+        "Pac-Man mouth open in 'C' shape — accurate",
+        "All text verbatim and correctly placed",
+        "Wavy/concentric lines within halves noted"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Flawless. Crystal-clear left/right orientation with correct color-character pairings, accurate detail on ghost eyes and Pac-Man mouth direction, correct concentric circle pattern, and complete verbatim text. Best response in the set."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Explicitly correct: left side yellow contains red ghost with two white eyes",
+        "Explicitly correct: right side red contains yellow Pacman with open mouth",
+        "Concentric circles alternating teal and black — correct",
+        "Both characters outlined in black — accurate",
+        "All text verbatim and correctly placed"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Perfect on the critical orientation, color-character pairings, and background pattern. Concise but fully accurate, with all text transcribed verbatim. Tied for best in the set."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Yellow half contains red Pac-ghost (Blinky) with wide eyes — correct pairing",
+        "Red half contains yellow Pac-Man with open mouth — correct pairing",
+        "Alternating cyan and black concentric circles — correct",
+        "All text verbatim and well-organized",
+        "Notes wavy/spiral lines around characters"
+      ],
+      "key_misses": [
+        "Does not explicitly state which side (left/right) is yellow vs red — orientation is only implied by order",
+        "Refers to 'spiral effect' for the concentric lines around characters"
+      ],
+      "hallucinations": [],
+      "justification": "Correct on all color-character pairings and background pattern, with thorough verbatim text. Slight deduction for not explicitly stating left/right orientation and for using 'spiral' language. Otherwise excellent."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Upper half yellow with red ghost (Blinky) — correct color-character pairing",
+        "Lower half red with yellow Pac-Man mouth open — correct pairing",
+        "Concentric circles alternating black and cyan — correct",
+        "All text verbatim and correctly placed",
+        "Blue border framing noted"
+      ],
+      "key_misses": [
+        "Uses upper/lower instead of left/right for the yin-yang halves — orientation ambiguous (though pairing is correct)"
+      ],
+      "hallucinations": [],
+      "justification": "Color-character pairings are correct and all OCR is complete and accurate. Loses points for describing the yin-yang in upper/lower terms rather than the actual left/right orientation, which leaves the spatial layout slightly ambiguous."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "holistic_score": 7,
+      "failure_mode": "imprecise",
+      "key_hits": [
+        "Mentions 'a red ghost and a yellow Pac-Man character' in the yin-yang",
+        "Concentric circles alternating teal and black — correct",
+        "All text verbatim and correctly placed",
+        "Cyan accents noted"
+      ],
+      "key_misses": [
+        "Does NOT specify which side of the yin-yang is yellow vs red",
+        "Does NOT specify where the ghost vs Pac-Man is positioned",
+        "Very vague on the central graphic composition"
+      ],
+      "hallucinations": [],
+      "justification": "OCR and background pattern are correctly captured, but the description of the central yin-yang is too vague — fails to commit on the critical left/right orientation and character placement. Solid text capture, weak spatial reasoning."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Yellow section in upper-left curve contains red ghost (Blinky) with white eyes — correct",
+        "Red section in lower-right curve contains yellow Pac-Man facing right — correct",
+        "Concentric circles alternating black and bright cyan/teal — correct",
+        "Notes characters colored in opposite hue of background",
+        "Notes curved black lines mimicking swirling motion",
+        "All text verbatim and correctly placed with colors"
+      ],
+      "key_misses": [
+        "Uses 'upper-left curve' / 'lower-right curve' rather than clean left/right (still correctly implies sides)"
+      ],
+      "hallucinations": [],
+      "justification": "Strongly accurate on the color-character pairings, the correct side placement (yellow/left=ghost, red/right=pacman), background pattern, and full verbatim text with color detail. Only minor deduction for using curve-based language instead of clean left/right."
+    }
+  ]
+}

@@ -1,0 +1,288 @@
+{
+  "image": "17-logo-vic-health-club.png",
+  "judgments": [
+    {
+      "model": "gemma4-12b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct verbatim text 'VIC Health Club'",
+        "Correctly identified heart, hands, and laurel wreath",
+        "Noted monochrome black and white",
+        "Described hands as cradling/supporting the heart",
+        "Described wreath encircling heart and hands",
+        "Noted symmetry and minimalist style"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Says 'VIC' is all caps while 'Health Club' is title case — actually appears all consistent caps but minor detail"
+      ],
+      "justification": "Excellent, comprehensive description matching all key facts. Minor font-weight detail speculation but otherwise accurate."
+    },
+    {
+      "model": "gemma4-26b-a4b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct verbatim text 'VIC Health Club'",
+        "Identified heart, hands, and wreath (laurel)",
+        "Noted monochromatic black on white",
+        "Described hands cupping the heart",
+        "Noted symmetry"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Says hands are 'oriented vertically, with fingers pointing upwards' — slightly off interpretation but plausible"
+      ],
+      "justification": "Very accurate and complete description. All key symbolic elements and text correctly identified."
+    },
+    {
+      "model": "gemma4-31b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct verbatim text 'VIC Health Club'",
+        "Identified heart, hands (cupped beneath), and laurel wreath",
+        "Noted two-tone high contrast (black on white)",
+        "Described minimalist silhouette style",
+        "Noted branches meet/cross at bottom"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Thorough and accurate description covering all key facts. Strong symbolic interpretation aligned with the design."
+    },
+    {
+      "model": "gemma4-e4b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct verbatim text 'VIC Health Club'",
+        "Identified heart, hands (cupping from beneath), and wreath (laurel branches)",
+        "Noted strictly monochromatic black on white",
+        "Noted minimalist style",
+        "Described centered stacked layout"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Excellent comprehensive description. All key elements and text correctly identified with strong thematic interpretation."
+    },
+    {
+      "model": "glm-4.6v-flash-9b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct verbatim text 'VIC Health Club'",
+        "Identified heart, hands (palms upward), and laurel wreath",
+        "Noted monochromatic black on white",
+        "Described symmetrical arrangement",
+        "Noted bold sans-serif font"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Concise but complete and accurate. All key elements correctly identified despite being the smallest model in this set."
+    },
+    {
+      "model": "qwen3-vl-4b|think",
+      "holistic_score": 3,
+      "failure_mode": "hallucinated_text",
+      "key_hits": [
+        "Identified heart at center",
+        "Noted monochromatic black on white",
+        "Noted symmetry"
+      ],
+      "key_misses": [
+        "Missed hands entirely",
+        "Missed laurel wreath (called it abstract leaf/flame shapes)"
+      ],
+      "hallucinations": [
+        "WRONG TEXT: 'Civic Health Club' instead of 'VIC Health Club'",
+        "Hallucinated 'mustache or pair of wings' at base",
+        "Called leaf shapes 'flame-like'"
+      ],
+      "justification": "Major text hallucination ('Civic' instead of 'VIC') and missed two of three symbolic elements. Interpreted hands as a 'mustache'. Poor performance."
+    },
+    {
+      "model": "qwen3-vl-8b|think",
+      "holistic_score": 6,
+      "failure_mode": "partial_elements",
+      "key_hits": [
+        "Correct text 'Vic Health Club' (case differs but correct letters)",
+        "Identified heart and hands cradling it",
+        "Noted monochrome black on white",
+        "Noted symmetrical centered layout"
+      ],
+      "key_misses": [
+        "Missed the laurel wreath entirely — no mention of foliage or surrounding frame"
+      ],
+      "hallucinations": [
+        "Claimed 'no visible fingers' on hands — slightly off",
+        "Speculated about lowercase vs capital letters in detail"
+      ],
+      "justification": "Got text mostly right and identified heart and hands, but completely missed the laurel wreath. Incomplete but not severely wrong."
+    },
+    {
+      "model": "qwen3.5-4b|nothink",
+      "holistic_score": 4,
+      "failure_mode": "hallucinated_text",
+      "key_hits": [
+        "Identified heart",
+        "Identified laurel wreath",
+        "Noted monochromatic black on white",
+        "Noted centered symmetrical layout"
+      ],
+      "key_misses": [
+        "Missed hands entirely"
+      ],
+      "hallucinations": [
+        "WRONG TEXT: 'WIC Health Club' instead of 'VIC Health Club'",
+        "Massive over-interpretation about WIC acronym (Women, Infants, and Children U.S. program)",
+        "Speculated about institutional/public health affiliations"
+      ],
+      "justification": "Got the heart and wreath but missed hands and wrong text ('WIC' vs 'VIC'). The lengthy speculative hallucination about WIC program drags down the score significantly."
+    },
+    {
+      "model": "qwen3.5-4b|think",
+      "holistic_score": 5,
+      "failure_mode": "hallucinated_text",
+      "key_hits": [
+        "Identified heart",
+        "Noted monochromatic black on white",
+        "Noted centered layout"
+      ],
+      "key_misses": [
+        "Confused hands with wreath ('Hands/Wreath' combined as one element)",
+        "Missed the separate hands element"
+      ],
+      "hallucinations": [
+        "WRONG TEXT: 'WIC Health Club' instead of 'VIC Health Club'",
+        "Says 'Health Club' is in lowercase (actually all caps)"
+      ],
+      "justification": "Wrong text 'WIC' and merged hands with wreath into one element. Missed two of three distinct symbolic features. Better than nothink version in restraint but still incorrect."
+    },
+    {
+      "model": "qwen3.5-9b|nothink",
+      "holistic_score": 3,
+      "failure_mode": "hallucinated_text",
+      "key_hits": [
+        "Identified heart, hands (cupping), and wreath-like surround",
+        "Noted monochrome black on white",
+        "Noted symmetrical composition"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "WRONG TEXT: 'Vivo Health Hub' instead of 'VIC Health Club' — completely wrong",
+        "Hallucinated 'Health Hub' instead of 'Health Club'",
+        "Speculated about 'Vivo' being bolder weight than 'Health Hub'",
+        "Speculated about 'flowing fabric' elements"
+      ],
+      "justification": "Got the symbolic elements right but the text is completely wrong ('Vivo Health Hub' vs 'VIC Health Club'). Severe OCR failure on the brand name."
+    },
+    {
+      "model": "qwen3.5-9b|think",
+      "holistic_score": 0,
+      "failure_mode": "empty",
+      "key_hits": [],
+      "key_misses": [
+        "No response — empty content"
+      ],
+      "hallucinations": [],
+      "justification": "Empty response — thinking-phase runaway failure. No usable output whatsoever. Maximum penalty applied."
+    },
+    {
+      "model": "qwen3.6-27b|nothink",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct verbatim text 'VIC Health Club'",
+        "Identified heart, hands (cupping from underneath), and laurel wreath",
+        "Noted monochromatic black on white",
+        "Noted centered vertical layout",
+        "Mentioned 'small berries' on wreath (subtle detail)"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Mentions 'small berries' on wreath — minor speculation, not clearly visible"
+      ],
+      "justification": "Perfect description hitting all key facts. Concise, accurate, well-structured. Best response in the set. Minor berry detail is plausible."
+    },
+    {
+      "model": "qwen3.6-27b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct verbatim text 'VIC Health Club'",
+        "Identified heart, hands (cupping/cradling from beneath), and wreath (laurel)",
+        "Noted monochromatic black on white",
+        "Described silhouette style with negative space",
+        "Noted centered vertical composition",
+        "Described ribbon-like base where wreath curls inward"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Excellent, thorough, and accurate description. All key elements identified correctly with thoughtful detail about negative space and silhouette style. Tied for best."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|nothink",
+      "holistic_score": 3,
+      "failure_mode": "hallucinated_text",
+      "key_hits": [
+        "Identified heart",
+        "Identified hands cradling heart",
+        "Noted monochrome black on white",
+        "Noted symmetrical centered layout"
+      ],
+      "key_misses": [
+        "Missed laurel wreath (called them 'flame-like or leaf-like shapes' / 'wings, flames')"
+      ],
+      "hallucinations": [
+        "WRONG TEXT: 'VIM Health Club' instead of 'VIC Health Club'",
+        "Hallucinated 'five fingers with rounded tips' on stylized hands",
+        "Called wreath elements 'wings or flames'",
+        "Speculated about font weight differences"
+      ],
+      "justification": "Wrong text ('VIM' instead of 'VIC') and missed the wreath entirely, calling it 'wings, flames'. Inaccurate on text and major element."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|think",
+      "holistic_score": 5,
+      "failure_mode": "hallucinated_text",
+      "key_hits": [
+        "Identified heart, hands, and wreath",
+        "Noted monochrome black on white",
+        "Noted symmetrical centered layout",
+        "Described silhouette style"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "WRONG TEXT: 'Vik Health Club' instead of 'VIC Health Club'",
+        "Says wreath elements 'resemble leaves or perhaps stylized flames'"
+      ],
+      "justification": "Got symbolic elements right but text wrong ('Vik' vs 'VIC'). Better than its nothink counterpart but still fails basic OCR of the brand name."
+    }
+  ],
+  "ranking": [
+    {"model": "qwen3.6-27b|nothink", "score": 10},
+    {"model": "qwen3.6-27b|think", "score": 10},
+    {"model": "gemma4-12b|think", "score": 9},
+    {"model": "gemma4-26b-a4b|think", "score": 9},
+    {"model": "gemma4-31b|think", "score": 9},
+    {"model": "gemma4-e4b|think", "score": 9},
+    {"model": "glm-4.6v-flash-9b|think", "score": 9},
+    {"model": "qwen3-vl-8b|think", "score": 6},
+    {"model": "qwen3.5-4b|think", "score": 5},
+    {"model": "qwen3.6-35b-a3b|think", "score": 5},
+    {"model": "qwen3.5-4b|nothink", "score": 4},
+    {"model": "qwen3-vl-4b|think", "score": 3},
+    {"model": "qwen3.5-9b|nothink", "score": 3},
+    {"model": "qwen3.6-35b-a3b|nothink", "score": 3},
+    {"model": "qwen3.5-9b|think", "score": 0}
+  ],
+  "notes": [
+    "Image is straightforward minimalist logo — Gemma models (12b/26b/31b/e4b) and GLM flash all performed strongly, identifying all three symbolic elements (heart, hands, laurel wreath) and correct verbatim text 'VIC Health Club'.",
+    "Qwen 3.6 27b (both think and nothink variants) achieved perfect scores — best in class.",
+    "Qwen models generally struggled with text OCR: 'VIC' was misread as 'Civic' (qwen3-vl-4b), 'WIC' (qwen3.5-4b x2), 'Vivo' (qwen3.5-9b nothink), 'VIM' (qwen3.6-35b nothink), 'Vik' (qwen3.6-35b think). This is a striking pattern of V/C confusion in Qwen variants.",
+    "qwen3.5-9b|think returned an EMPTY response — thinking-phase runaway failure, scored 0 per instructions.",
+    "qwen3.5-4b|nothink produced an extended hallucination about the WIC (Women, Infants, and Children) government program — severe over-interpretation.",
+    "qwen3.5-9b|nothink invented 'Vivo Health Hub' — both the brand name AND the suffix ('Health Club' → 'Health Hub') were wrong."
+  ]
+}

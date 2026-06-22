@@ -1,0 +1,407 @@
+{
+  "image": "29-painting-hundertwasser.jpeg",
+  "judgments": {
+    "gemma4-12b|think": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "3 buildings identified",
+        "Red tower with onion dome on left",
+        "Yellow buildings in center/right with onion domes",
+        "Blue teardrop shapes in windows correctly identified",
+        "Human face on rightmost building",
+        "Bold saturated colors with yellow dominant",
+        "Heavy dark outlines noted"
+      ],
+      "key_misses": [
+        "Did not identify Hundertwasser as artist",
+        "Called face 'bottom right of image' rather than lower-left of rightmost building",
+        "Called open-top buildings 'domed'",
+        "Did not note the 2 red dots on cheeks (said 'bright red lips' only)",
+        "Wrong date '2011' instead of 1965",
+        "Described buildings as 'Russian architecture' (Hundertwasser is Austrian, imaginary)"
+      ],
+      "hallucinations": [
+        "Read signature date as '2011' instead of 1965",
+        "Said 'thick textured paint application' - somewhat off",
+        "Suggested 'night-like atmosphere' for the sky which is more of a horizon/sky"
+      ],
+      "justification": "Solid overall description of the three buildings, the teardrop motifs, and the face. Correctly identifies many stylistic elements but misses the artist entirely and hallucinates a wrong date. Face location is described as 'bottom right of image' rather than the lower-left of the rightmost building."
+    },
+    "gemma4-26b-a4b|think": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "3 buildings identified",
+        "Red tower left with onion dome",
+        "Yellow buildings center/right",
+        "Blue teardrop motifs in windows",
+        "Face 'peeks out' on the right building at the bottom",
+        "2 red dots on cheeks explicitly noted ('small red dots on the cheeks')",
+        "Onion domes described in multiple colors",
+        "Floating colored rectangles noted",
+        "Saturated high-contrast palette"
+      ],
+      "key_misses": [
+        "Did not identify Hundertwasser",
+        "Signature text illegible (no date provided)",
+        "Did not mention buildings open at top"
+      ],
+      "hallucinations": [
+        "Suggested 'night sky' / 'dark night' for background"
+      ],
+      "justification": "One of the strongest responses: correctly identifies the 2 red dots on cheeks (a signature Hundertwasser motif), describes the face emerging from the right building's lower area, captures the teardrop motif, and provides detailed architectural descriptions. Does not name Hundertwasser but accurately captures many hallmark details. Loses points for 'night sky' interpretation."
+    },
+    "gemma4-31b|think": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "3 buildings identified",
+        "Red tower left with onion dome",
+        "Yellow center building with windows/teardrops",
+        "Yellow right building with peaked roof",
+        "Blue teardrop motif throughout",
+        "Face on rightmost building lower area",
+        "Multiple onion domes"
+      ],
+      "key_misses": [
+        "Did not identify Hundertwasser",
+        "Said single blue teardrop on cheek (wrong - should be 2 red dots)",
+        "Hallucinated signature 'Lukas-M. v. d. Heiden 2015' entirely",
+        "Did not mention buildings open at top"
+      ],
+      "hallucinations": [
+        "Fabricated artist name and date 'Lukas-M. v. d. Heiden 2015'",
+        "Said 'blue teardrop on cheek' instead of 2 red dots"
+      ],
+      "justification": "Good structural description with 3 buildings, teardrops, face placement, but severely hallucinates a fabricated artist name and date. The blue teardrop on cheek claim is incorrect (should be 2 red dots)."
+    },
+    "gemma4-e4b|think": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "3 buildings identified",
+        "Red tower left with onion dome",
+        "Yellow-green center building",
+        "Yellow right building",
+        "Blue teardrop motifs",
+        "Multiple onion domes",
+        "Saturated high-contrast palette",
+        "Geometric repetition noted"
+      ],
+      "key_misses": [
+        "Did not identify Hundertwasser",
+        "Hallucinated TWO faces (only one exists)",
+        "Said 'no discernible text' - missed signature entirely",
+        "Did not describe 2 red dots on cheeks",
+        "Called them 'pitched roof' and 'traditional house' (wrong - open tops)",
+        "Misidentified buildings as having onion domes on right (actually open-topped)"
+      ],
+      "hallucinations": [
+        "Claimed two human faces (center and right) - only one exists",
+        "Said 'no discernible text' - missed the signature",
+        "Described pitched/traditional roofs on yellow buildings (actually open-topped)"
+      ],
+      "justification": "Made a significant hallucination - claimed two human faces exist when only one does. Also missed the signature entirely. Generally got the building layout and teardrop motif right but missed key signature elements."
+    },
+    "glm-4.6v-flash-9b|think": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "3 buildings identified",
+        "Red tower left with arched windows",
+        "Yellow right building",
+        "Multiple colored onion domes (pink-purple, red-green, white-blue, green-yellow)",
+        "Blue teardrop decorations in windows",
+        "Face 'emerges from lower section of rightmost building'",
+        "Floating shapes in sky",
+        "Horizontal brushstrokes in sky"
+      ],
+      "key_misses": [
+        "Did not identify Hundertwasser",
+        "Signature reads 'M.K.' (illegible, no date)",
+        "Did not describe 2 red dots on cheeks",
+        "Said 'dark blue sky' rather than horizon+sky"
+      ],
+      "hallucinations": [
+        "Said 'blue eyes' for face - cannot verify",
+        "Suggested 'stained-glass-style windows' which is imprecise"
+      ],
+      "justification": "Decent structural description with good dome color variation. Face placement is correct ('lower section of rightmost building'). Misses the artist entirely and the red dots motif. Does not hallucinate any major false elements."
+    },
+    "qwen3-vl-4b|think": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "3 buildings identified",
+        "Red tower left with onion dome",
+        "Yellow center building",
+        "Yellow right building with triangular roof",
+        "Blue teardrop motifs in all buildings",
+        "Face 'peeking out from behind lower right corner of yellow building'",
+        "Explicitly noted 'small red dots on cheeks and forehead'",
+        "Dark textured ground at bottom correctly NOT called water",
+        "Saturated palette, yellow dominant"
+      ],
+      "key_misses": [
+        "Did not identify Hundertwasser",
+        "Hallucinated signature 'S.J.H. 1978'",
+        "Added forehead dots which are inaccurate",
+        "Said buildings have 'roofs' rather than open-topped"
+      ],
+      "hallucinations": [
+        "Fabricated signature 'S. J. H. 1978'",
+        "Said 'red dots on cheeks AND forehead' - extra hallucination",
+        "Said face has 'green eyes' - unverifiable"
+      ],
+      "justification": "Strong description that correctly notes red dots on cheeks, dark ground (not water), and 3 buildings. Face placement is correct. However, fabricates a signature with wrong date and adds incorrect forehead dots."
+    },
+    "qwen3-vl-8b|think": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "3 buildings identified",
+        "Red left building with onion dome",
+        "Yellow-green center building",
+        "Yellow-green right building",
+        "Blue teardrop motifs",
+        "Face on rightmost building",
+        "Deep blue textured background",
+        "Bold saturated palette"
+      ],
+      "key_misses": [
+        "Did not identify Hundertwasser",
+        "Said 'no visible text' - missed signature",
+        "Did not mention red dots on cheeks",
+        "Hallucinated title 'City of Windows'",
+        "Described as cubist - inaccurate",
+        "Did not mention open-topped buildings"
+      ],
+      "hallucinations": [
+        "Fabricated title 'City of Windows'",
+        "Claimed 'no visible text in the image' - missed signature"
+      ],
+      "justification": "Average description of the buildings, but fabricates a title and completely misses the signature. Does not capture the red dots motif. Mentions 'narrow alleyway' which is somewhat accurate but oversells the 'cubist' interpretation."
+    },
+    "qwen3.5-4b|nothink": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "3 buildings identified",
+        "Red tower left with arched windows",
+        "Lime-green center building",
+        "Yellow-green right building",
+        "Blue teardrops in all buildings",
+        "Onion domes noted as 'Russian Orthodox'",
+        "Face 'peeks out from behind the yellow building' at lower right",
+        "Small red dots near cheeks explicitly noted",
+        "Dark ground (pathway) at bottom - NOT called water",
+        "Deep blue night sky",
+        "Grid-like facades noted",
+        "Floating elements in sky"
+      ],
+      "key_misses": [
+        "Did not identify Hundertwasser",
+        "Signature described as illegible (no date)",
+        "Said 'one green eye, one brown eye' - unverifiable and odd",
+        "Did not note open-topped buildings"
+      ],
+      "hallucinations": [
+        "Said face has 'one green eye, one brown eye' - heterochromia not visible",
+        "Compared to M.C. Escher and Hieronymus Bosch ( stylistic stretch)"
+      ],
+      "justification": "One of the strongest descriptions: explicitly notes the red dots on cheeks, describes face location correctly, dark ground (not water), and comprehensive architectural detail. Misses the artist but captures many key stylistic features. Slight hallucination on eye color."
+    },
+    "qwen3.5-4b|think": {
+      "holistic_score": 1,
+      "failure_mode": "truncated",
+      "key_hits": [],
+      "key_misses": [
+        "Empty response - no content",
+        "Did not identify anything"
+      ],
+      "hallucinations": [],
+      "justification": "Completely empty/truncated response. No content to evaluate. Effectively failed on this image."
+    },
+    "qwen3.5-9b|nothink": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "3 buildings identified",
+        "Red tower left with onion domes",
+        "Multi-story yellow-green center",
+        "Large yellow right building",
+        "Blue teardrops throughout",
+        "Face emerges from 'lower right portion of the yellow house'",
+        "Small red dots on cheeks explicitly noted",
+        "Dark ground (pathway) NOT called water",
+        "Russian/Eastern European folk architecture reference",
+        "Horizontal brushstrokes in sky"
+      ],
+      "key_misses": [
+        "Did not identify Hundertwasser",
+        "Hallucinated signature 'D.K. 2005'",
+        "Said 'blue eyes' (unverifiable)",
+        "Did not mention open-topped buildings"
+      ],
+      "hallucinations": [
+        "Fabricated signature 'D. K. 2005' - wrong year",
+        "Said windows are 'orange' and 'red' filled (mostly yellow/teardrops)"
+      ],
+      "justification": "Strong description with explicit mention of red dots on cheeks and correct face location. Correctly describes dark ground as pathway, not water. However, fabricates a signature with wrong initials and date. Architecture description is detailed and accurate."
+    },
+    "qwen3.5-9b|think": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "3 buildings identified",
+        "Red tower left with onion dome",
+        "Blocky lime-green/yellow center building",
+        "Large yellow right building with peaked roof",
+        "Blue teardrops in windows",
+        "Face peeking from bottom right of yellow building",
+        "Multiple colored onion domes (red, green, white)",
+        "Deep blue textured sky",
+        "Saturated high-contrast palette"
+      ],
+      "key_misses": [
+        "Did not identify Hundertwasser",
+        "Signature said 'possibly Dorothy' - hallucinated name",
+        "Did not mention red dots on cheeks",
+        "Said 'rosy cheeks' rather than 2 red dots",
+        "Did not mention open-topped buildings"
+      ],
+      "hallucinations": [
+        "Fabricated artist name 'Dorothy...'",
+        "Said 'balloons or inflated shapes' for domes"
+      ],
+      "justification": "Good structural description of the three buildings and domes. Face location is correct. However, fabricates a name 'Dorothy' for the artist and misses the red dots motif, instead describing generic 'rosy cheeks'."
+    },
+    "qwen3.6-27b|nothink": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "3 buildings identified",
+        "Red tower left with purple onion dome",
+        "Lime-green center building",
+        "Yellow right building",
+        "Blue teardrops in windows",
+        "Face emerges from 'square opening in the yellow building' at bottom right",
+        "Red spots on cheeks explicitly noted",
+        "Deep blue sky with horizontal brushstrokes",
+        "Bold saturated palette",
+        "Thick black outlines"
+      ],
+      "key_misses": [
+        "Did not identify Hundertwasser",
+        "Signature said 'illegible' (no date)",
+        "Did not mention open-topped buildings",
+        "Said buildings have 'rooftops'/'pointed roofline'"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent clean description: explicitly notes 'red spots on cheeks', correctly places face in yellow building's lower area, captures the teardrop motif and architectural style. No major hallucinations. Loses points for not naming Hundertwasser and missing signature details."
+    },
+    "qwen3.6-27b|think": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "3 buildings identified",
+        "Red tower left with purple onion dome",
+        "Lime-green/yellow center building",
+        "Yellow right building",
+        "Blue teardrops in windows",
+        "Multiple colored onion domes",
+        "Face at 'very bottom of right-hand yellow building'",
+        "Yellow squares floating in sky",
+        "Saturated high-contrast palette"
+      ],
+      "key_misses": [
+        "Did not identify Hundertwasser",
+        "Signature year 'possibly 1993' - wrong",
+        "Did not mention 2 red dots on cheeks specifically (said 'rosy cheeks')",
+        "Did not mention open-topped buildings",
+        "Said face 'emerging from the ground' - inaccurate"
+      ],
+      "hallucinations": [
+        "Hallucinated signature year '1993'",
+        "Said background 'suggesting a night sky or deep ocean' - 'ocean' is a hallucination (this is sky)",
+        "Said face emerging 'from the ground' which is wrong"
+      ],
+      "justification": "Good architectural description with correct face placement on yellow building. However, hallucinates '1993' for signature and notably compares the background to 'deep ocean' which is a hallucination - the dark area is sky/ground, not water. Also misses the specific 2 red dots motif."
+    },
+    "qwen3.6-35b-a3b|nothink": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "3 buildings identified",
+        "Red tower left with purple onion dome",
+        "Lime-green center building",
+        "Bright yellow right building",
+        "Blue teardrops throughout",
+        "Multiple colored onion domes (red-green, white-yellow, yellow-green)",
+        "Face in 'lower right portion of rightmost building'",
+        "Red dots on cheeks explicitly noted",
+        "Dark blue-black spaces (not called water)",
+        "Floating geometric shapes in sky",
+        "Saturated contrasting palette",
+        "Folk-art / Eastern European reference"
+      ],
+      "key_misses": [
+        "Did not identify Hundertwasser",
+        "Signature 'too small and indistinct' - no date",
+        "Said buildings have 'roofs' rather than open-topped",
+        "Did not mention the open-top interiors"
+      ],
+      "hallucinations": [
+        "Truncated response at end"
+      ],
+      "justification": "Very strong comprehensive description: explicitly notes red dots on cheeks, correctly identifies face location, describes dark spaces accurately (not as water), captures all the architectural motifs. Loses points only for missing Hundertwasser identification and open-topped building detail. Truncation at end is minor."
+    },
+    "qwen3.6-35b-a3b|think": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "3 buildings identified",
+        "Red tower left with arched windows and onion dome",
+        "Lime-green center building with grid of windows",
+        "Yellow right building",
+        "Blue teardrops in windows",
+        "Multiple colored onion domes (red/green, white/blue, green, blue)",
+        "Face 'peeks out' from bottom right of yellow building",
+        "Pale skin, blue eyes, red lips/cheeks",
+        "Floating geometric shapes (yellow squares, red rectangles, blue squares)",
+        "Dark black area at bottom (not called water)",
+        "Russian architecture reference (St. Basil's)",
+        "Oil/acrylic medium"
+      ],
+      "key_misses": [
+        "Did not identify Hundertwasser",
+        "Signature 'possibly M. or K.' - no clear date",
+        "Did not specifically note 2 red dots (said 'red lips/cheeks')",
+        "Did not mention open-topped buildings"
+      ],
+      "hallucinations": [
+        "Said 'red lips/cheeks' rather than 2 distinct red dots"
+      ],
+      "justification": "Excellent detailed description with correct face placement, dark ground (not water), and comprehensive architectural details including dome colors. Mentions St. Basil's Cathedral reference. Loses points for not identifying Hundertwasser and missing the specific 2 red dots motif (says generic 'cheeks')."
+    }
+  },
+  "ranking": [
+    "qwen3.6-35b-a3b|nothink",
+    "qwen3.6-27b|nothink",
+    "gemma4-26b-a4b|think",
+    "qwen3.5-4b|nothink",
+    "qwen3.6-35b-a3b|think",
+    "qwen3.5-9b|nothink",
+    "gemma4-31b|think",
+    "qwen3.6-27b|think",
+    "glm-4.6v-flash-9b|think",
+    "qwen3-vl-4b|think",
+    "qwen3.5-9b|think",
+    "gemma4-12b|think",
+    "gemma4-e4b|think",
+    "qwen3-vl-8b|think",
+    "qwen3.5-4b|think"
+  ],
+  "notes": "No model identified Hundertwasser as the artist (consistent with the prompt note that this is rare). The best performers (qwen3.6-35b-a3b|nothink, qwen3.6-27b|nothink, gemma4-26b-a4b|think, qwen3.5-4b|nothink) all explicitly noted the 2 red dots on cheeks - a signature Hundertwasser motif. None of the models called the dark ground 'water', which is good. qwen3.6-27b|think made the closest 'ocean' hallucination by suggesting the background could be 'deep ocean'. Several models fabricated signature dates (gemma4-31b '2015', qwen3.5-9b '2005', qwen3-vl-4b '1978', gemma4-12b '2011', qwen3.6-27b '1993') - none correctly read 1965. gemma4-e4b hallucinated two faces when only one exists. qwen3.5-4b|think produced an empty/truncated response. The 'nothink' variants of qwen3.5-4b, qwen3.5-9b, qwen3.6-27b, and qwen3.6-35b-a3b all outperformed or matched their 'think' counterparts, suggesting thinking mode does not help on this image."
+}

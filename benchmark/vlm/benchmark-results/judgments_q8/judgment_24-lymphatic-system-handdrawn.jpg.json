@@ -1,0 +1,163 @@
+{
+  "image": "24-lymphatic-system-handdrawn.jpg",
+  "judgments": {
+    "gemma4-12b-Q8|think": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title 'Human Lymphatic System' verbatim",
+        "All six labels verbatim: Tonsils, Thymus, Spleen, Lymph Vessels, Lymph Nodes, Bone Marrow",
+        "Functions section header and all four bullets verbatim",
+        "Correct color mapping: Tonsils=pink, Thymus=orange, Spleen=purple, Lymph Vessels/Nodes=green, Bone Marrow=yellow",
+        "Correctly notes body outline in gray pencil and lined notebook paper with red margin",
+        "Identifies bone marrow as a single femur in the leg",
+        "Recognizes blue ink arrows and educational/student study-note aesthetic"
+      ],
+      "key_misses": [
+        "Does not mention the two grey smudges next to right hand and right foot"
+      ],
+      "hallucinations": [],
+      "justification": "Outstanding, comprehensive description with all text verbatim, perfect color coding, and accurate layout. Only minor miss is the two grey smudges, which are subtle and easily overlooked. Among the best responses."
+    },
+    "gemma4-e4b-Q8|think": {
+      "holistic_score": 6,
+      "failure_mode": "hallucination",
+      "key_hits": [
+        "Title 'Human Lymphatic System' verbatim",
+        "All six organ labels verbatim",
+        "Functions section header and all four bullets verbatim",
+        "Correct colors for Thymus=orange, Spleen=purple, Bone Marrow=yellow",
+        "Identifies stylized human figure and arrows connecting labels"
+      ],
+      "key_misses": [
+        "States the title 'Human Lymphatic System' appears twice - it appears only once",
+        "Groups Tonsils and Lymph Nodes both under pink/red color, but Lymph Nodes are green",
+        "Bone marrow location described as 'pelvic/hip area' rather than the leg"
+      ],
+      "hallucinations": [
+        "Claims title appears twice - it appears only once",
+        "Describes the human figure as 'semi-transparent' - it is a normal pencil outline, not semi-transparent"
+      ],
+      "justification": "All OCR text is largely correct, but the duplicate-title claim and 'semi-transparent figure' description are hallucinations. Color coding is also muddled (tonsils/nodes conflated). Weakest response in this set."
+    },
+    "glm-4.6v-flash-9b-Q8|think": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title 'Human Lymphatic System' verbatim",
+        "All six labels verbatim with correct arrow associations",
+        "Functions section header and all four bullets verbatim",
+        "Perfect color mapping for all six structures",
+        "Correctly identifies gray human outline",
+        "Correctly notes lined notebook paper with red vertical margin line",
+        "Notes hand-drawn educational style"
+      ],
+      "key_misses": [
+        "Does not mention the two grey smudges"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent, tightly-organized description with all text verbatim and perfect color mapping. Clean structure and accurate physical details. Among the strongest responses."
+    },
+    "qwen3-vl-4b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title 'Human Lymphatic System' verbatim",
+        "All six labels verbatim with arrow directions",
+        "Functions section header and all four bullets verbatim",
+        "Perfect color mapping for all six structures",
+        "Notes small grey smudge near hip area",
+        "Identifies lined notebook paper with blue lines and red margin"
+      ],
+      "key_misses": [
+        "Only mentions one smudge near right hip, missing the second smudge near the right foot",
+        "Describes tonsils as 'pinkish-red' rather than purely pink (minor)"
+      ],
+      "hallucinations": [],
+      "justification": "Very strong response with all text verbatim and accurate colors. Notably the only model to notice any of the grey smudges (catching one of two). Strong from the smallest Qwen thinker."
+    },
+    "qwen3-vl-8b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title 'Human Lymphatic System' verbatim",
+        "All six labels verbatim with accurate anatomical locations",
+        "Functions section header and all four bullets verbatim",
+        "Perfect color mapping: pink/orange/purple/green/yellow",
+        "Correctly identifies femur in lower right leg",
+        "Notes butterfly-shaped thymus and bean-shaped spleen",
+        "Identifies blue-lined notebook paper"
+      ],
+      "key_misses": [
+        "Does not mention the two grey smudges",
+        "Does not mention red vertical margin line"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, well-structured description with all text verbatim and accurate shape/location descriptions for each organ. Slightly less detail on physical artifacts (smudges, margin line) but no errors."
+    },
+    "qwen3.5-4b-Q8|nothink": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title 'Human Lymphatic System' verbatim",
+        "All six labels verbatim with correct arrow directions",
+        "Functions section header and all four bullets verbatim",
+        "Perfect color mapping including light green vessels vs dark green nodes distinction",
+        "Correctly identifies gray pencil sketch outline and red vertical margin line",
+        "Notes femur in right thigh",
+        "Recognizes hand-drawn student-made style"
+      ],
+      "key_misses": [
+        "Does not mention the two grey smudges"
+      ],
+      "hallucinations": [],
+      "justification": "Exceptional, comprehensive response with all text verbatim, accurate anatomical terminology (mediastinum, hypochondrium), and correct physical details. Cleanest color distinction (light vs dark green). Among the best."
+    },
+    "qwen3.5-4b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title 'Human Lymphatic System' verbatim",
+        "All six labels verbatim with accurate locations",
+        "Functions section header and all four bullets verbatim",
+        "Correct color mapping for all six structures",
+        "Correctly identifies femur and grey pencil outline",
+        "Notes butterfly-shaped thymus and bean-shaped spleen"
+      ],
+      "key_misses": [
+        "Does not mention the two grey smudges",
+        "Does not mention red vertical margin line on notebook paper",
+        "Spleen described as 'upper left abdomen (viewer's right)' - this is anatomically correct but description is reversed (spleen is on figure's right = viewer's left)"
+      ],
+      "hallucinations": [],
+      "justification": "Solid, accurate description with all text verbatim and correct colors. Minor directional ambiguity on spleen location is not a hallucination. Less detail on physical artifacts but no errors."
+    },
+    "qwen3.5-9b-Q8|nothink": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title 'Human Lymphatic System' verbatim",
+        "All six labels verbatim with arrow directions",
+        "Functions section header and all four bullets verbatim",
+        "Perfect color mapping for all six structures",
+        "Correctly notes two minor smudges/eraser marks near right hip and lower abdomen",
+        "Identifies red vertical margin line on notebook paper",
+        "Notes gray pencil sketch body outline"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Excellent, comprehensive response with all text verbatim, perfect colors, and notably the only model to mention both the smudges AND the red margin line. Adds useful context noting bone marrow is not exclusively lymphatic but is included as lymphocyte production site. Among the very best responses."
+    }
+  },
+  "ranking": [
+    "qwen3.5-9b-Q8|nothink",
+    "qwen3.5-4b-Q8|nothink",
+    "glm-4.6v-flash-9b-Q8|think",
+    "gemma4-12b-Q8|think",
+    "qwen3-vl-8b-Q8|think",
+    "qwen3.5-4b-Q8|think",
+    "qwen3-vl-4b-Q8|think",
+    "gemma4-e4b-Q8|think"
+  ],
+  "notes": "This hand-drawn lymphatic diagram has very legible handwriting and clear color coding, so most models OCR'd all text (title, six labels, four function bullets) perfectly. The differentiators are: (1) the two grey smudges - only qwen3.5-9b-Q8|nothink correctly identified both, qwen3-vl-4b caught one, others missed them; (2) the red vertical margin line - only gemma4-12b, glm-4.6v-flash-9b, qwen3-vl-4b, qwen3.5-4b-nothink, and qwen3.5-9b-nothink mentioned it; (3) hallucination - gemma4-e4b-Q8|think claimed the title appears twice and described the figure as 'semi-transparent', both clearly wrong, putting it last. The top tier (qwen3.5-9b-nothink, qwen3.5-4b-nothink, glm-4.6v-flash-9b, gemma4-12b) produced near-perfect descriptions with all verbatim text, accurate colors, and correct physical details. Notably the two nothink Qwen3.5 variants outperformed their think counterparts, consistent with the project's documented finding that hybrid thinkers benefit from --disable-thinking on vision tasks."
+}

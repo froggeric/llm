@@ -144,7 +144,7 @@ Max output: 1500 tokens.
 
 ## Known model behaviors
 
-From the benchmark (`local-vlm-research/BENCHMARK-SUMMARY.md`):
+From the benchmark ([`../../../benchmark/vlm/SUMMARY.md`](../../../benchmark/vlm/SUMMARY.md)):
 
 - **Qwen3-VL 8B**: best OCR + fine detail. Verbose (1400–2200 tokens). Correct on the headcount test in our 7-model suite.
 - **Qwen3-VL 4B**: same family as 8B, slightly less precise on busy images. Fastest in the suite (61 tok/s).

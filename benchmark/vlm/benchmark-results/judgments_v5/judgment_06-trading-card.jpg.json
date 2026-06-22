@@ -1,0 +1,348 @@
+{
+  "image": "06-trading-card.jpg",
+  "image_path": "test-images/06-trading-card.jpg",
+  "ground_truth_summary": "Pac-Man themed pop-art trading card with a yin-yang symbol. LEFT side is YELLOW containing a RED GHOST (white eyes looking right). RIGHT side is RED containing a YELLOW PAC-MAN (mouth open to right). Background is CYAN with concentric BLACK CIRCLES (not spirals). Text: pacman 46 / 010 / ZEN MASTER / \"Inner peace!\" / RARE / 24,620 / beat my score → / pacman46.com.",
+  "judgments": [
+    {
+      "model_variant": "gemma4-12b|think",
+      "holistic_score": 8.0,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct character placement: yellow half has red ghost, red half has yellow Pac-Man",
+        "Background is concentric circles (described as ripple-like)",
+        "Cyan/teal color named correctly",
+        "All verbatim text accurate"
+      ],
+      "key_misses": [
+        "Described orientation as 'top-left yellow / bottom-right red' rather than LEFT/RIGHT halves — spatial imprecision",
+        "Says ghost is 'Blinky' (unverifiable but plausible)"
+      ],
+      "hallucinations": [],
+      "justification": "Character-to-color mapping is correct (the critical fact). Spatial description of halves is imprecise (top-left/bottom-right rather than clean left/right), but no factual errors. Text and colors are accurate."
+    },
+    {
+      "model_variant": "gemma4-26b-a4b|think",
+      "holistic_score": 9.0,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Explicit LEFT yellow with red ghost, RIGHT red with yellow Pac-Man — fully correct",
+        "Background as concentric circles in cyan and black",
+        "All verbatim text accurate"
+      ],
+      "key_misses": [
+        "Pacman described as 'facing left' (mouth actually opens to the right)",
+        "Hedges 'concentric circles (a spiral)' — slightly contradictory"
+      ],
+      "hallucinations": [
+        "Pacman facing direction stated as left (minor directional error)"
+      ],
+      "justification": "Strongest Gemma response: explicitly names left=yellow+ghost, right=red+pacman matching ground truth. Minor directional error on Pac-Man mouth and the parenthetical 'spiral' qualifier slightly weakens the otherwise excellent description."
+    },
+    {
+      "model_variant": "gemma4-31b|think",
+      "holistic_score": 9.0,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Explicit 'Left side: Yellow with a red ghost' and 'Right side: Red with a yellow Pac-Man' — exactly matches ground truth",
+        "Concentric circles in teal and black",
+        "Verbatim text accurate"
+      ],
+      "key_misses": [
+        "Border described as 'blue' (more accurately cyan/teal)"
+      ],
+      "hallucinations": [],
+      "justification": "Cleanest, most concise Gemma response. Orientation is exactly correct (left/right halves), background pattern is concentric circles, no hallucinations. Minor color naming variance on border."
+    },
+    {
+      "model_variant": "gemma4-e4b|think",
+      "holistic_score": 4.0,
+      "failure_mode": "hallucination",
+      "key_hits": [
+        "Identifies yin-yang symbol",
+        "Notes concentric rings background"
+      ],
+      "key_misses": [
+        "FAILS to identify the ghost entirely — describes BOTH halves as Pac-Man characters",
+        "Says 'yellow section features Pac-Man facing right' and 'red section features Pac-Man facing left' — entirely wrong about red half containing a ghost",
+        "No mention of cyan color (uses 'cyan/blue' loosely)"
+      ],
+      "hallucinations": [
+        "Claims both halves contain Pac-Man (the yellow half contains a GHOST, not Pac-Man)",
+        "Invents 'red section features Pac-Man facing left' — second Pac-Man is fabricated"
+      ],
+      "justification": "Major object-recognition failure: completely misses the red ghost in the yellow half, inventing two Pac-Man characters instead. The ghost is a defining feature of the image. Background description is acceptable but the central subject is fundamentally wrong."
+    },
+    {
+      "model_variant": "glm-4.6v-flash-9b|think",
+      "holistic_score": 8.0,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct: 'yellow half has red ghost', 'red half has yellow Pac-Man'",
+        "Background as 'concentric teal and black circular stripes'",
+        "All text accurate"
+      ],
+      "key_misses": [
+        "Does not explicitly state left/right orientation of the halves",
+        "Concentric circles described as 'stripes' (slightly imprecise)"
+      ],
+      "hallucinations": [],
+      "justification": "Small model performs well: correctly assigns ghost to yellow half and Pac-Man to red half. Lacks explicit left/right spatial labeling. Lower det_mean (7.3) suggests some inconsistency across runs, but this particular response is solid."
+    },
+    {
+      "model_variant": "qwen3-vl-4b|think",
+      "holistic_score": 9.5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Explicit 'Left Side (Yin): yellow... red ghost (Blinky)' and 'Right Side (Yang): red... yellow Pac-Man' — exactly matches ground truth",
+        "Background as concentric swirling rings alternating cyan-blue and black",
+        "White circular eyes on ghost noted"
+      ],
+      "key_misses": [
+        "Uses 'swirling' and 'psychedelic' which could imply spiral, but explicitly says concentric rings"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent for a 4B model. Orientation is exact (left=yellow+ghost, right=red+pacman), background correctly concentric. Det score was 10.0 — fully deterministic and accurate."
+    },
+    {
+      "model_variant": "qwen3-vl-8b|think",
+      "holistic_score": 9.5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Explicit 'left side (yin) yellow... red ghost' and 'right side (yang) red... yellow Pac-Man' — exact match",
+        "Background as concentric circles alternating teal and black",
+        "Pacman mouth open in classic eating pose"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Perfect orientation (left/right halves with correct character placement), correct background pattern, no hallucinations. Deterministic score 10.0. Among the strongest responses."
+    },
+    {
+      "model_variant": "qwen3.5-4b|nothink",
+      "holistic_score": 9.5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct: 'yellow half contains red Pac-Man ghost (Blinky)' and 'red half contains yellow Pac-Man'",
+        "Background as 'alternating cyan and black concentric circles' — exact match",
+        "Score, CTA, URL all verbatim"
+      ],
+      "key_misses": [
+        "Says ghost has 'wide eyes' (correct) but no left/right orientation labeling of halves"
+      ],
+      "hallucinations": [],
+      "justification": "Very accurate, especially the explicit 'cyan and black concentric circles' phrasing matching ground truth. Character-to-color mapping correct. Deterministic 10.0."
+    },
+    {
+      "model_variant": "qwen3.5-4b|think",
+      "holistic_score": 8.5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Character mapping correct: 'Top Half (Yellow): red Pac-Man ghost' and 'Bottom Half (Red): yellow Pac-Man mouth facing right'",
+        "Identifies concentric circles",
+        "Verbatim text accurate"
+      ],
+      "key_misses": [
+        "Orientation described as Top/Bottom rather than LEFT/RIGHT — spatial imprecision (the halves are left/right, not top/bottom)",
+        "Background described as 'concentric circles spiraling outward' — mixed terminology"
+      ],
+      "hallucinations": [],
+      "justification": "Character placement is correct (ghost in yellow, Pac-Man in red), but spatial framing as top/bottom halves is wrong — the yin-yang is split left/right. Pac-Man direction (facing right) is correctly noted."
+    },
+    {
+      "model_variant": "qwen3.5-9b|nothink",
+      "holistic_score": 9.5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct: 'yellow half contains a red ghost' and 'red half contains a yellow Pac-Man with his signature open mouth facing right'",
+        "Background as 'concentric circular rings in alternating black and cyan' — exact match",
+        "Pacman facing right noted"
+      ],
+      "key_misses": [
+        "No explicit left/right labeling of halves (uses 'yellow half'/'red half')"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent accuracy. Character mapping correct, background pattern exact (concentric cyan/black circles), Pac-Man direction right. Only lacks explicit spatial orientation labels."
+    },
+    {
+      "model_variant": "qwen3.5-9b|think",
+      "holistic_score": 9.0,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct: 'Top-Left (Yellow): red ghost' and 'Bottom-Right (Red): yellow Pac-Man facing right'",
+        "Background as concentric circles (ripples) alternating teal and black",
+        "Pacman facing right noted"
+      ],
+      "key_misses": [
+        "Orientation described as 'Top-Left/Bottom-Right' rather than clean LEFT/RIGHT halves — imprecise",
+        "Says ghost dots and Pac-Man dots replace center — interpretation, not error"
+      ],
+      "hallucinations": [],
+      "justification": "Character placement is correct (ghost in yellow section, Pac-Man in red section). Spatial labeling (top-left/bottom-right) is imprecise but character-color mapping is right. Background pattern correct."
+    },
+    {
+      "model_variant": "qwen3.6-27b|nothink",
+      "holistic_score": 8.5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Character mapping correct: 'top half is yellow and contains a red Pac-Man ghost' and 'bottom half is red and contains the yellow Pac-Man'",
+        "Background as 'concentric circles in alternating black and cyan'",
+        "Black lines radiating from center noted"
+      ],
+      "key_misses": [
+        "Orientation described as 'top half'/'bottom half' rather than LEFT/RIGHT halves — spatial error",
+        "Concise — fewer verbatim text details than peers"
+      ],
+      "hallucinations": [],
+      "justification": "Character-to-color mapping is correct, background pattern correct. The 'top/bottom half' description is a real spatial error (yin-yang is split left/right, not horizontally). Concise but accurate on essentials."
+    },
+    {
+      "model_variant": "qwen3.6-27b|think",
+      "holistic_score": 8.5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Character mapping correct: 'Top Half (Yellow): red ghost (Blinky)' and 'Bottom Half (Red): yellow Pac-Man with mouth open'",
+        "Background as 'concentric circles radiating from the center' alternating teal and black",
+        "Thick rounded blue border noted"
+      ],
+      "key_misses": [
+        "Orientation described as Top/Bottom halves rather than LEFT/RIGHT halves — spatial error",
+        "Color section 'Blue' duplicated in palette list (minor)"
+      ],
+      "hallucinations": [],
+      "justification": "Character mapping (ghost in yellow, Pac-Man in red) is correct, background pattern is correct (concentric circles). Spatial labeling (top/bottom) is wrong — yin-yang halves are left/right. Otherwise detailed and accurate."
+    },
+    {
+      "model_variant": "qwen3.6-35b-a3b|nothink",
+      "holistic_score": 9.5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct: 'yellow half contains a red ghost (resembling Blinky or Inky)' and 'red half contains a yellow Pac-Man character facing right, mouth open'",
+        "Background as 'concentric circles alternating between cyan and black' — exact match",
+        "All verbatim text accurate"
+      ],
+      "key_misses": [
+        "No explicit left/right orientation labels (uses 'yellow half'/'red half')"
+      ],
+      "hallucinations": [],
+      "justification": "Top-tier accuracy. Character-color mapping correct, background pattern exact (cyan/black concentric circles), Pac-Man direction right. Comprehensive structured response. Deterministic 10.0."
+    },
+    {
+      "model_variant": "qwen3.6-35b-a3b|think",
+      "holistic_score": 9.5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct: 'Yellow Section: red arcade-style ghost' and 'Red Section: yellow Pac-Man character, facing right with its mouth open'",
+        "Background as 'concentric circles alternating between black and bright teal (cyan)' — exact match",
+        "Pacman facing right noted",
+        "Verbatim text accurate"
+      ],
+      "key_misses": [
+        "Orientation labeled as upper/lower rather than left/right halves — spatial imprecision",
+        "Says ghost has 'wavy mouth' (interpretation)"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent response. Character mapping is correct, background pattern is exact. Spatial framing (upper yellow/lower red) is imprecise — the yin-yang is split left/right, not top/bottom — but the character-color pairing is fully accurate. Deterministic 10.0."
+    }
+  ],
+  "ranking": [
+    {
+      "rank": 1,
+      "model_variant": "qwen3-vl-8b|think",
+      "holistic_score": 9.5,
+      "rationale": "Explicit left/right orientation matching ground truth exactly, plus concentric circles background. Zero hallucinations, fully deterministic."
+    },
+    {
+      "rank": 1,
+      "model_variant": "qwen3-vl-4b|think",
+      "holistic_score": 9.5,
+      "rationale": "Surprisingly strong for 4B: explicit left/right with correct character placement and concentric rings. Deterministic 10.0."
+    },
+    {
+      "rank": 1,
+      "model_variant": "qwen3.5-4b|nothink",
+      "holistic_score": 9.5,
+      "rationale": "Exact 'cyan and black concentric circles' phrasing; correct ghost/pacman-to-color mapping. Deterministic 10.0."
+    },
+    {
+      "rank": 1,
+      "model_variant": "qwen3.5-9b|nothink",
+      "holistic_score": 9.5,
+      "rationale": "Correct character mapping, exact background pattern, Pac-Man facing right. Clean and accurate."
+    },
+    {
+      "rank": 1,
+      "model_variant": "qwen3.6-35b-a3b|nothink",
+      "holistic_score": 9.5,
+      "rationale": "Comprehensive structured description with correct character placement, exact concentric cyan/black pattern. Deterministic 10.0."
+    },
+    {
+      "rank": 1,
+      "model_variant": "qwen3.6-35b-a3b|think",
+      "holistic_score": 9.5,
+      "rationale": "Correct character mapping, exact concentric circle background, Pac-Man facing right. Deterministic 10.0."
+    },
+    {
+      "rank": 7,
+      "model_variant": "gemma4-26b-a4b|think",
+      "holistic_score": 9.0,
+      "rationale": "Explicit left/right with correct character placement; minor Pac-Man direction and 'spiral' qualifier issues."
+    },
+    {
+      "rank": 7,
+      "model_variant": "gemma4-31b|think",
+      "holistic_score": 9.0,
+      "rationale": "Cleanest Gemma: explicit left=yellow+ghost, right=red+pacman matching ground truth exactly. Minor border color naming."
+    },
+    {
+      "rank": 7,
+      "model_variant": "qwen3.5-9b|think",
+      "holistic_score": 9.0,
+      "rationale": "Character mapping correct; spatial framing as top-left/bottom-right is imprecise but character-color pairings right."
+    },
+    {
+      "rank": 10,
+      "model_variant": "qwen3.5-4b|think",
+      "holistic_score": 8.5,
+      "rationale": "Character mapping correct but uses top/bottom rather than left/right orientation. Mixed spiral/concentric terminology."
+    },
+    {
+      "rank": 10,
+      "model_variant": "qwen3.6-27b|nothink",
+      "holistic_score": 8.5,
+      "rationale": "Correct character mapping but top/bottom spatial error. Concise but accurate on essentials."
+    },
+    {
+      "rank": 10,
+      "model_variant": "qwen3.6-27b|think",
+      "holistic_score": 8.5,
+      "rationale": "Correct character mapping and concentric background; top/bottom spatial labeling is wrong (should be left/right)."
+    },
+    {
+      "rank": 13,
+      "model_variant": "gemma4-12b|think",
+      "holistic_score": 8.0,
+      "rationale": "Character mapping correct but top-left/bottom-right spatial framing imprecise. Concentric circles noted."
+    },
+    {
+      "rank": 13,
+      "model_variant": "glm-4.6v-flash-9b|think",
+      "holistic_score": 8.0,
+      "rationale": "Correct character-color mapping for a small 9B model; lacks explicit left/right labels. Solid performance."
+    },
+    {
+      "rank": 15,
+      "model_variant": "gemma4-e4b|think",
+      "holistic_score": 4.0,
+      "rationale": "Major hallucination: claims BOTH halves contain Pac-Man, completely missing the red ghost. Fundamental object-recognition failure on the image's central feature."
+    }
+  ],
+  "notes": [
+    "This is a tricky benchmark because the critical facts are: (1) yellow=left+ghost, red=right+pacman (the 'orientation trap' — many models say reversed), (2) background is CONCENTRIC CIRCLES not spiral, (3) background is CYAN.",
+    "Only ONE model (gemma4-e4b|think) failed catastrophically by inventing two Pac-Man characters and missing the ghost entirely. This is a true hallucination.",
+    "Most models correctly identified ghost-in-yellow and Pac-Man-in-red. The most common minor error was spatial framing as top/bottom halves (qwen3.5-4b|think, qwen3.6-27b|nothink, qwen3.6-27b|think, qwen3.6-35b-a3b|think) rather than left/right halves — but the character-to-color mapping was still correct.",
+    "Concentric circles vs spiral: No model explicitly claimed pure spiral; several used mixed phrasing ('concentric circles spiraling outward', 'concentric circles (a spiral)') which is acceptable paraphrasing. The Gemma-26b 'spiral' qualifier is borderline.",
+    "Cyan color correctly identified by all models (variously as teal, cyan, turquoise, light blue) — all acceptable.",
+    "Qwen3.5/3.6 family performed best overall: 6 of top 6 scores. Gemma4-31b was the standout Gemma.",
+    "think vs nothink: For qwen3.5-4b and qwen3.5-9b, the nothink variants slightly outperformed their think counterparts (cleaner spatial and pattern descriptions). For qwen3.6-27b and qwen3.6-35b-a3b, nothink and think scored similarly.",
+    "Deterministic scoring (from input) correlates well with holistic judgment — the only divergence is gemma4-e4b|think which had det_mean 9.0 but the response contains a major ghost-miss hallucination that the holistic score penalizes heavily."
+  ]
+}

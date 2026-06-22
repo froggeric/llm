@@ -1,0 +1,384 @@
+{
+  "image": "26-graph-ocean-acidification-hawaii.jpg",
+  "judgments": {
+    "gemma4-12b|think": {
+      "holistic_score": 8,
+      "failure_mode": "minor_color_error",
+      "key_hits": [
+        "Title \"Ocean acidification\"",
+        "X-axis Year 1958-2018",
+        "Left Y CO2 275-425",
+        "Right Y pH 8.03-8.33",
+        "Three series identified (red/green/blue) with correct labels",
+        "Mauna Loa and ALOHA stations identified",
+        "Atmospheric CO2 ~315 ppm 1958 to >410 by 2018",
+        "Ocean pCO2 begins ~1988, ~325 to ~380",
+        "Ocean pH downward trend ~8.12 to ~8.06",
+        "Inset map of Hawaiian Islands"
+      ],
+      "key_misses": [
+        "Did not note Mauna Loa marker shape (called it red dot, ground truth says triangle)",
+        "Said data labels placed on right side (actually on plot area)"
+      ],
+      "hallucinations": [
+        "Said Mauna Loa marker is red dot (ground truth: red triangle); also said ALOHA is blue dot (ground truth: red dot). Confused marker colors/shapes"
+      ],
+      "justification": "Very accurate on values, series labels, axes, and trend description. Got the rare station OCR. But got the inset marker colors/shapes wrong (said Mauna Loa red dot, ALOHA blue dot, when both are actually red, with Mauna Loa a triangle). Otherwise excellent."
+    },
+    "gemma4-26b-a4b|think": {
+      "holistic_score": 7,
+      "failure_mode": "marker_shape_error",
+      "key_hits": [
+        "Title \"Ocean acidification\"",
+        "X-axis Year 1958-2018",
+        "Left Y CO2 275-425 with correct ticks",
+        "Right Y pH 8.03-8.33 with correct ticks",
+        "Three series identified with correct colors and labels",
+        "Atmospheric CO2 ~310 in 1958 to >410 by 2018",
+        "Ocean pCO2 begins ~1988, upward trend",
+        "Ocean pH downward trend",
+        "Inset map Hawaiian Islands, Mauna Loa and ALOHA stations named"
+      ],
+      "key_misses": [
+        "Atmospheric CO2 1958 value stated as ~310 (true is ~315)",
+        "Both stations marked with red dots (missed that Mauna Loa is a triangle)"
+      ],
+      "hallucinations": [
+        "Said Ocean pCO2 fluctuates 330-400 (overstates upper end)",
+        "Said both stations marked with red dots (ground truth: Mauna Loa is red triangle, ALOHA is red dot)"
+      ],
+      "justification": "Strong overall coverage of axes, series, stations, and trends. Slightly off on the Mauna Loa marker shape (both called red dots) and upper-bound pCO2 range. Got the rare station OCR correct."
+    },
+    "gemma4-31b|think": {
+      "holistic_score": 8,
+      "failure_mode": "minor_value_drift",
+      "key_hits": [
+        "Title \"Ocean acidification\"",
+        "Year axis 1958-2018 with correct ticks",
+        "Left Y CO2 275-425 with correct ticks",
+        "Right Y pH 8.03-8.33 with correct ticks",
+        "Verbatim listing of all visible text labels",
+        "Three series identified with correct labels",
+        "Atmospheric CO2 starts ~315 in 1958",
+        "Mauna Loa as red dot, ALOHA as blue dot on inset (recognized distinct markers)",
+        "Inset map of Hawaiian Islands"
+      ],
+      "key_misses": [
+        "Atmospheric CO2 ending value ~405 (true ~415)",
+        "Said Mauna Loa is red dot and ALOHA is blue dot (ground truth: Mauna Loa red triangle, ALOHA red dot)"
+      ],
+      "hallucinations": [
+        "ALOHA labeled as blue dot on inset (ground truth: red dot)",
+        "Mauna Loa labeled as red dot (ground truth: red triangle)"
+      ],
+      "justification": "Excellent verbatim OCR of all axis ticks and labels. Got the rare station names. However, swapped/confused inset marker colors (blue vs red) and understated the atmospheric 2018 value. Strong text recognition but slight marker/value errors."
+    },
+    "gemma4-e4b|think": {
+      "holistic_score": 7,
+      "failure_mode": "marker_color_inversion",
+      "key_hits": [
+        "Title \"Ocean acidification\"",
+        "X Year 1958-2018",
+        "Left Y CO2 275-425",
+        "Right Y pH 8.03-8.33",
+        "Three series identified with correct colors and labels",
+        "Stations Mauna Loa and ALOHA named",
+        "Inset map of Hawaiian Islands",
+        "Noted inverse CO2/pH correlation"
+      ],
+      "key_misses": [
+        "Specific end-values for each series not given numerically",
+        "Said Station ALOHA is red dot, Station Mauna Loa is blue dot (inverted vs ground truth)"
+      ],
+      "hallucinations": [
+        "Claimed Station ALOHA red dot and Mauna Loa blue dot (ground truth: Mauna Loa is red triangle, ALOHA is red dot)",
+        "Said red color used for marker of Station ALOHA and blue for Mauna Loa - this color assignment for markers contradicts the legend"
+      ],
+      "justification": "Good qualitative description of axes, series, trends, and inverse relationship. Identified both stations by name. However, inverted/confused the inset map marker colors and didn't provide specific end values for the time series. Solid but not precise."
+    },
+    "glm-4.6v-flash-9b|think": {
+      "holistic_score": 9,
+      "failure_mode": "minor_marker_swap",
+      "key_hits": [
+        "Title \"Ocean acidification\"",
+        "X Year 1958-2018",
+        "Left Y CO2 275-425",
+        "Right Y pH 8.03-8.33",
+        "Three series identified with correct labels",
+        "Stations ALOHA (red dot) and Mauna Loa (red triangle) named with correct marker shapes",
+        "Inset map of Hawaiian Islands",
+        "Mentioned multiple island labels (Kauai, Honolulu, Kahului, Kona, Hilo)",
+        "Clear ocean acidification narrative"
+      ],
+      "key_misses": [
+        "Said Station Mauna Loa marker is red dot (then later says red triangle) - inconsistent",
+        "Did not give specific numeric values for series endpoints"
+      ],
+      "hallucinations": [
+        "Initially said Station ALOHA marked with red dot AND Station Mauna Loa marked with red dot (then later corrected to triangle) - some inconsistency",
+        "Listed island city labels (Kona, Hilo, Kahului) that may or may not be visible - plausible but unverifiable"
+      ],
+      "justification": "Excellent coverage: correct axes, ranges, three series, both station names with marker shapes (red dot for ALOHA, red triangle for Mauna Loa matches ground truth), inset map title, and multiple island labels. Minor internal inconsistency on marker descriptions and lack of specific endpoint values. Highest accuracy on stations."
+    },
+    "qwen3-vl-4b|think": {
+      "holistic_score": 7,
+      "failure_mode": "value_and_marker_errors",
+      "key_hits": [
+        "Title \"Ocean acidification\"",
+        "X Year 1958-2018",
+        "Left Y CO2 275-425",
+        "Right Y pH 8.03-8.33",
+        "Three series with correct colors and labels",
+        "Station ALOHA red dot and Station Mauna Loa red triangle (correct markers)",
+        "Inset map of Hawaiian Islands",
+        "Mentioned island labels (Kauai, Oahu, Molokai, Niihau)"
+      ],
+      "key_misses": [
+        "Atmospheric CO2 stated as ~320 ppm in 1958 to over 420 ppm by 2018 (true 315 to 415)",
+        "Said Station ALOHA located on island of Oahu (it is offshore, north of islands)",
+        "Said Hā'ula is the main island label (likely hallucination)"
+      ],
+      "hallucinations": [
+        "Invented place name \"Hā'ula\" for the Big Island (no such name)",
+        "Atmospheric CO2 endpoints off by ~5-7 ppm",
+        "Said Station ALOHA is on Oahu (it is offshore)"
+      ],
+      "justification": "Good structural accuracy with both station names and correct marker shapes. But endpoint values drift (CO2 ~320/420 vs ~315/415), invented a place name, and mislocated Station ALOHA on Oahu. Solid OCR and station identification but geographic and numeric errors."
+    },
+    "qwen3-vl-8b|think": {
+      "holistic_score": 6,
+      "failure_mode": "series_count_error",
+      "key_hits": [
+        "Title \"Ocean acidification\"",
+        "X Year 1958-2018",
+        "Left Y CO2 275-425",
+        "Right Y pH 8.03-8.33",
+        "Stations ALOHA (red dot) and Mauna Loa (red triangle) identified",
+        "Inset map Hawaiian Islands with island labels"
+      ],
+      "key_misses": [
+        "Claimed FOUR data series but only described three (red, green, blue) - contradiction",
+        "No specific numeric endpoint values provided"
+      ],
+      "hallucinations": [
+        "Said \"The chart contains four data series\" when only three exist",
+        "Listed island names including Hawaii without distinguishing which island Mauna Loa is on"
+      ],
+      "justification": "Correct axes, ranges, three series labels, and station markers. But erroneously claimed four data series (only described three, no fourth). Lacks specific numeric values. The four-series claim is a clear hallucination that drags the score down."
+    },
+    "qwen3.5-4b|nothink": {
+      "holistic_score": 9,
+      "failure_mode": "minor_value_drift",
+      "key_hits": [
+        "Title \"Ocean acidification\"",
+        "X Year 1958-2018 with correct ticks",
+        "Left Y CO2 275-425 with correct ticks",
+        "Right Y pH 8.03-8.33 with correct ticks",
+        "Three series with correct colors and labels",
+        "Atmospheric CO2 ~315 ppm 1958 to ~415 ppm 2018",
+        "Station ALOHA red dot, Station Mauna Loa red triangle",
+        "Inset map of Hawaiian Islands with island labels",
+        "Noted pCO2 and pH begin later than atmospheric CO2"
+      ],
+      "key_misses": [
+        "Said ocean pCO2 begins ~1985 (true ~1990)",
+        "Said ocean pH begins ~1994 (true ~1988-1990)"
+      ],
+      "hallucinations": [
+        "Said X-axis major ticks every 2 years (actually every 12 years: 1958/1970/1982/etc.)",
+        "Start year for ocean data slightly off (~1985 and ~1994 vs ~1990)"
+      ],
+      "justification": "Excellent coverage with correct axes, ticks, series, station markers, and the atmospheric CO2 endpoints right on. Mentioned island labels. Minor errors on the tick interval and ocean-data start years. Best balance of accuracy and completeness among nothink variants."
+    },
+    "qwen3.5-4b|think": {
+      "holistic_score": 8,
+      "failure_mode": "minor_value_drift",
+      "key_hits": [
+        "Title \"Ocean acidification\"",
+        "X Year 1958-2018 with correct ticks",
+        "Left Y CO2 275-425",
+        "Right Y pH 8.03-8.33",
+        "Three series with correct colors and labels",
+        "Atmospheric CO2 ~315 in 1958 to over 410 by 2018",
+        "Station ALOHA red dot, Mauna Loa red triangle",
+        "Inset map of Hawaiian Islands with island names",
+        "Noted ocean data starts later (~1985)"
+      ],
+      "key_misses": [
+        "Said ocean pCO2 begins ~1985 (true ~1990)",
+        "Did not give specific value for ocean pCO2 end (only ~400)",
+        "Said pH ends near 8.03 (true ~8.06)"
+      ],
+      "hallucinations": [
+        "Claimed tick marks every 12 years but then also mentioned 1958/1970/1982/1994/2006/2018 - actually 12-year intervals which is correct",
+        "Said ocean pCO2 ends around 400 on the left axis (true ~380)"
+      ],
+      "justification": "Strong coverage of axes, series, station markers (correct shapes/colors), and inset map with island names. Atmospheric CO2 endpoints accurate. Slightly off on ocean data start (~1985 vs ~1990) and overstates pCO2 endpoint (~400 vs ~380), understates pH endpoint (8.03 vs ~8.06). High quality."
+    },
+    "qwen3.5-9b|nothink": {
+      "holistic_score": 9,
+      "failure_mode": "minor_value_drift",
+      "key_hits": [
+        "Title \"Ocean acidification\"",
+        "X Year 1958-2018 with correct ticks",
+        "Left Y CO2 275-425 with correct ticks",
+        "Right Y pH 8.03-8.33 with correct ticks",
+        "Verbatim OCR of all text labels",
+        "Three series with correct colors and labels",
+        "Atmospheric CO2 ~315 ppm 1958 to >410 ppm 2018",
+        "pH ~8.15 to ~8.05",
+        "Stations ALOHA (red dot) and Mauna Loa (red triangle)",
+        "Inset map of Hawaiian Islands with island labels"
+      ],
+      "key_misses": [
+        "pH starting value ~8.15 (true ~8.12)",
+        "Mentioned Kahoolui (likely Kahoolawe) - slight spelling drift"
+      ],
+      "hallucinations": [
+        "Said X-axis intervals of 4 years (actually 12-year intervals: 1958/1970/1982/etc.)",
+        "Spelling \"Kahoolui\" instead of \"Kahoolawe\""
+      ],
+      "justification": "Comprehensive and accurate. Correct axes/ticks, all three series with labels and correct colors, station markers correctly identified (ALOHA red dot, Mauna Loa red triangle), inset map with islands. Atmospheric CO2 endpoints accurate. Minor errors on tick interval framing and pH starting value. Top-tier response."
+    },
+    "qwen3.5-9b|think": {
+      "holistic_score": 8,
+      "failure_mode": "minor_value_drift",
+      "key_hits": [
+        "Title \"Ocean acidification\"",
+        "X Year 1958-2018 with correct ticks",
+        "Left Y CO2 275-425 with correct ticks",
+        "Right Y pH 8.03-8.33 with correct ticks",
+        "Three series with correct colors and labels",
+        "Atmospheric CO2 starts near 315 in 1958 to ~420 by 2018",
+        "Ocean pCO2 and pH begin ~1990",
+        "Station ALOHA red dot, Mauna Loa red triangle",
+        "Inset map Hawaiian Islands with extensive island labels"
+      ],
+      "key_misses": [
+        "Atmospheric CO2 endpoint ~420 (true ~415)",
+        "pH endpoint ~8.05-8.08 (true ~8.06)"
+      ],
+      "hallucinations": [
+        "Said major tick marks every two years (actually 12-year intervals)",
+        "Listed island names including Kaho'olawe, Hawai'i, Ni'ihau - plausible"
+      ],
+      "justification": "Excellent overall: correct axes, ticks, all three series labels, both stations with correct marker shapes, extensive island list, and approximate numeric values. Atmospheric CO2 endpoint slightly high (~420 vs ~415), tick interval framing incorrect. Strong response with rare station OCR success."
+    },
+    "qwen3.6-27b|nothink": {
+      "holistic_score": 9,
+      "failure_mode": "minor_value_drift",
+      "key_hits": [
+        "Title \"Ocean acidification\"",
+        "X Year 1958-2018 with correct ticks",
+        "Left Y CO2 275-425 with correct ticks",
+        "Right Y pH 8.03-8.33 with correct ticks",
+        "Three series with correct colors and labels",
+        "Atmospheric CO2 ~315 ppm 1958 to ~415 ppm 2018",
+        "Ocean pCO2 begins ~1990, ~325 to ~400 µatm",
+        "Ocean pH begins ~1990, ~8.13 to ~8.05",
+        "Stations ALOHA (red dot north of Oahu) and Mauna Loa (red triangle Big Island near Hilo)",
+        "Inset map with island labels and cities"
+      ],
+      "key_misses": [
+        "Ocean pCO2 endpoint ~400 µatm (true ~380)",
+        "pH starting value ~8.13 (true ~8.12)"
+      ],
+      "hallucinations": [
+        "Said Station ALOHA is \"north of Oahu\" - actually offshore north of the main island chain, but Oahu-adjacent is close",
+        "Mentioned Honolulu, Kahului, Hilo as cities on the inset (plausible)"
+      ],
+      "justification": "Very thorough and well-organized. Correct axes and ticks, three series labels, both stations with proper marker shapes and approximate locations, atmospheric CO2 endpoints correct, ocean data start (~1990) correct. Slightly overstates pCO2 endpoint. Verbatim text extracts add value. Top-tier."
+    },
+    "qwen3.6-27b|think": {
+      "holistic_score": 9,
+      "failure_mode": "minor_value_drift",
+      "key_hits": [
+        "Title \"Ocean acidification\"",
+        "X Year 1958-2018",
+        "Left Y CO2 275-425",
+        "Right Y pH 8.03-8.33",
+        "Verbatim axis tick numbers correct",
+        "Three series with correct colors and labels",
+        "Atmospheric CO2 starts ~315 ends >415",
+        "Ocean data begins ~1990",
+        "pH starts ~8.13 drops to ~8.08",
+        "Stations ALOHA red dot (north of chain), Mauna Loa red triangle (SE coast of Hawaii)",
+        "Inset map with island labels and Hilo city"
+      ],
+      "key_misses": [
+        "pH endpoint ~8.08 (true ~8.06)",
+        "pH starting ~8.13 (true ~8.12)"
+      ],
+      "hallucinations": [
+        "Sawtooth pattern on red line - actual atmospheric CO2 line is smooth, ocean lines are jagged"
+      ],
+      "justification": "Comprehensive and accurate. Verbatim OCR of all axis ticks, three series labels, both stations with correct marker shapes and geographic placement, atmospheric CO2 endpoints accurate, ocean data start (~1990) correct. Minor pH endpoint drift and one slight visual mischaracterization (sawtooth on red line). Excellent."
+    },
+    "qwen3.6-35b-a3b|nothink": {
+      "holistic_score": 9,
+      "failure_mode": "minor_value_drift",
+      "key_hits": [
+        "Title \"Ocean acidification\"",
+        "X Year 1958-2018 with correct ticks",
+        "Left Y CO2 275-425 with correct ticks",
+        "Right Y pH 8.03-8.33 with correct ticks",
+        "Three series with correct colors and labels",
+        "Atmospheric CO2 starts ~315 ppm 1958 to ~415 ppm 2018",
+        "Stations ALOHA red dot north of chain, Mauna Loa red triangle Big Island near Hilo",
+        "Inset map with island labels and cities",
+        "Verbatim OCR of all text labels"
+      ],
+      "key_misses": [
+        "Said ocean pCO2 begins ~1994 at ~320 ppm, ends ~390 ppm (true starts ~1990 at ~325, ends ~380)",
+        "Said ocean pH begins ~1994 at ~8.13, ends ~8.07 (true starts ~1990 at ~8.12, ends ~8.06)"
+      ],
+      "hallucinations": [
+        "Stated ocean data begins ~1994 (true ~1988-1990)",
+        "Inconsistent: first said all three show increasing trends then noted pH decreases"
+      ],
+      "justification": "Excellent structural accuracy: axes, ticks, three series, both stations with correct marker shapes and locations, atmospheric CO2 endpoints exactly right. Minor drift on ocean data start year (~1994 vs ~1990) and slight pH/pCO2 endpoint errors. Strong response with rare station OCR success."
+    },
+    "qwen3.6-35b-a3b|think": {
+      "holistic_score": 9,
+      "failure_mode": "minor_value_drift",
+      "key_hits": [
+        "Title \"Ocean acidification\"",
+        "X Year 1958-2018 with correct ticks",
+        "Left Y CO2 275-425 with correct ticks",
+        "Right Y pH 8.03-8.33 with correct ticks",
+        "Three series with correct colors and labels",
+        "Atmospheric CO2 ~315 to past 400 by 2018",
+        "Stations ALOHA red dot (north of chain), Mauna Loa red triangle (Big Island)",
+        "Inset map with island labels and cities (Kauai, Honolulu, Kahului, Kihei, Hilo)",
+        "Noted ocean data begins mid-1990s, atmospheric covers full timeline"
+      ],
+      "key_misses": [
+        "Said ocean pCO2 and pH start ~1994 (true ~1990)",
+        "Did not give specific atmospheric endpoint (only \"past 400\")"
+      ],
+      "hallucinations": [
+        "Listed \"Kihei\" as a visible label on the inset (may not be present)",
+        "Said ocean data starts ~1994 (true ~1990)"
+      ],
+      "justification": "Comprehensive and well-organized. Correct axes, ticks, three series labels, both stations with proper marker shapes and geographic placement. Atmospheric CO2 endpoints approximately correct. Minor drift on ocean data start year and some possibly hallucinated city labels. Strong response with rare station OCR."
+    }
+  },
+  "ranking": [
+    "qwen3.6-27b|nothink",
+    "qwen3.5-9b|nothink",
+    "qwen3.6-35b-a3b|nothink",
+    "qwen3.6-27b|think",
+    "glm-4.6v-flash-9b|think",
+    "qwen3.6-35b-a3b|think",
+    "qwen3.5-4b|nothink",
+    "qwen3.5-4b|think",
+    "qwen3.5-9b|think",
+    "gemma4-12b|think",
+    "gemma4-31b|think",
+    "qwen3-vl-4b|think",
+    "gemma4-e4b|think",
+    "gemma4-26b-a4b|think",
+    "qwen3-vl-8b|think"
+  ],
+  "notes": "This is a complex multi-series dual-axis chart with inset map and rare OCR of station names (Mauna Loa, ALOHA). All 15 model variants correctly identified the title, three data series, axis labels, and the inset map. About 10/15 correctly identified BOTH station names with correct marker shapes (ALOHA red dot, Mauna Loa red triangle), which is impressive given the small inset text. Common errors: (1) gemma variants often confused marker colors/shapes on the inset map; (2) qwen3-vl-8b erroneously claimed FOUR data series; (3) most variants slightly drift on ocean data start year (1985-1994 vs true ~1988-1990); (4) atmospheric CO2 2018 endpoints range from ~405 to ~420 (true ~415). pH endpoint values cluster around 8.05-8.08 (true ~8.06). The qwen3.6 family (27b and 35b) consistently delivered the most thorough and accurate responses with verbatim OCR and correct station markers. The nothink variants slightly outperformed think variants here, possibly because the task is descriptive rather than reasoning-heavy."
+}

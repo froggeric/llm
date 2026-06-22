@@ -1,0 +1,161 @@
+{
+  "image": "30-where-is-waldo.webp",
+  "judgments": {
+    "gemma4-12b-Q8|think": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies scene as 'Where's Waldo?' book style by Martin Handford",
+        "Identifies blue/white striped beach huts or cabanas",
+        "Identifies red/white striped structure (the unique red/white hut)",
+        "Sailboats with different colored sails (pink, white, yellow)",
+        "Steamships/ferries with prominent black smoke plumes",
+        "Large blue and white ferry-style boat on far right (acceptable hovercraft approximation)",
+        "Beach umbrellas (solid red, blue, yellow + multi-colored stripes)",
+        "Beach chairs with blue/white stripes",
+        "Beach balls, towels, coolers, large white cart/wagon",
+        "Numerous boats scattered across water",
+        "People sunbathing, walking, running, playing"
+      ],
+      "key_misses": [
+        "Does not mention horses near water",
+        "Does not identify specific Waldo characters (Waldo/Odlaw/Wizard)",
+        "Misses Punch and Judy booth, ice cream cart, volleyball, surfboards, human pyramid in water",
+        "Calls beach huts 'cabanas' / does not enumerate them precisely",
+        "Calls red/white striped structure 'possibly a lifeguard stand or kiosk' rather than a beach hut",
+        "Mentions speedboats in red/blue (not in GT - likely small confusion with sailboats/rafts)"
+      ],
+      "hallucinations": [
+        "Claims small motorboats and speedboats in red and blue - small watercraft are not prominent in GT",
+        "Claims people 'interacting with dogs' (no dogs in GT - this is a Waldo beach, no dogs confirmed)"
+      ],
+      "justification": "Strong structural description that correctly names the source material (Where's Waldo?), the beach huts with correct stripe patterns, the sailboat sail colors (pink/white/yellow), steamships with smoke, and the large blue/white vessel on the right. Misses several signature elements (horses, ice cream cart, volleyball, surfboards, pyramid, Punch & Judy, named characters) and lightly invents dogs and speedboats. No severe hallucinations - errors are minor overcalls in a dense scene."
+    },
+    "gemma4-e4b-Q8|think": {
+      "holistic_score": 4,
+      "failure_mode": "hallucination",
+      "key_hits": [
+        "Sailboats (small, colorful)",
+        "Large industrial steamships/freighters with white smoke",
+        "Large multi-decked vessel (ferry/cruise ship) on right side",
+        "Striped and solid-colored beach umbrellas",
+        "Beach chairs, towels, beach balls",
+        "People swimming, wading, sunbathing, playing volleyball (mentions volleyball)",
+        "Bright yellow sand, blue water, white clouds"
+      ],
+      "key_misses": [
+        "Does not identify Where's Waldo? style at all - generic 'whimsical illustration'",
+        "Completely misses beach huts (no mention of striped cabanas)",
+        "Misses horses entirely",
+        "Misses hovercraft detail - only says 'ferry or cruise ship'",
+        "Does not name any characters",
+        "Misses ice cream cart, surfboards, human pyramid, Punch and Judy, balloons, coolers",
+        "Mentions dinghies and lifeboats which are not in GT"
+      ],
+      "hallucinations": [
+        "Describes 'large industrial steamships/freighters' - GT specifies steamships/tugboats, 'freighters' is a slight overreach",
+        "Claims 'dinghies and lifeboats' which are not in the scene",
+        "Says 'distant landmass' visible on horizon - not in GT",
+        "Claims people are 'playing volleyball' - this is correct per GT but model lists it without clear identification"
+      ],
+      "justification": "Generic, surface-level description that misses the Where's Waldo identity entirely and fails to identify the signature blue/white striped beach huts. Misses many key GT elements (horses, beach huts, named characters). Several invented elements (freighters, dinghies, lifeboats, distant landmass). The response is vague and reads like a generic beach illustration rather than the specific image shown - a failure of detail capture that, combined with the invented maritime vessels, qualifies as a hallucination failure mode."
+    },
+    "qwen3-vl-4b-Q8|think": {
+      "holistic_score": 2,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Striped beach huts (blue and white, red and white)",
+        "Beach umbrellas (red/white, blue/white, green/white)",
+        "Yellow sailboat with red flag, pink sailboat",
+        "Red and white striped boat",
+        "Small red motorboat",
+        "Large blue and white ferry or cruise ship on the right",
+        "Steamships/cargo ships emitting plumes of smoke",
+        "Ice cream cart near bottom right",
+        "Red beach ball"
+      ],
+      "key_misses": [
+        "Response collapses into infinite repetition of 'A person is carrying a large, striped beach towel' (40+ times)",
+        "Does not describe the broader scene, people, activities",
+        "Misses horses, Punch and Judy, volleyball, surfboards, human pyramid, balloons, coolers",
+        "No mention of named characters",
+        "Does not identify Where's Waldo? style"
+      ],
+      "hallucinations": [
+        "Severe generation loop - repeated identical sentence dozens of times until truncation",
+        "Single observation ('person carrying striped beach towel') inflated into 40+ spurious instances"
+      ],
+      "justification": "Catastrophic generation failure. The model begins with promising detail (correctly identifies beach huts, sailboats, ferry, ice cream cart) but degenerates into an infinite repetition loop of a single sentence, producing dozens of fabricated instances of the same observation. The response is unusable as a description despite the early accuracy. This is the worst failure mode - the loop makes the bulk of the output nonsense."
+    },
+    "qwen3-vl-8b-Q8|think": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Cartoonish, graphic style; correctly evokes puzzle-book aesthetic",
+        "Beach huts with stripes (blue/white, red/white) scattered across sand",
+        "Beach umbrellas (red/white, blue/white, green/white)",
+        "Towels in red, blue, green, striped patterns",
+        "Sailboats with pink and white sails",
+        "Larger ships in distance emitting smoke (steamships)",
+        "Large blue and white ferry or boat on the right (hovercraft approximation)",
+        "Man in lower right pushing cart with ice cream (matches ice cream cart)",
+        "Person in lower left holding small dog on leash",
+        "Group playing with large beach ball",
+        "Sandcastles, buckets, shovels mentioned",
+        "Faint green landmass on far right horizon"
+      ],
+      "key_misses": [
+        "Does not mention horses near water",
+        "Does not name Where's Waldo? explicitly",
+        "Misses Punch and Judy booth, surfboards, human pyramid, balloons",
+        "Does not identify Waldo/Odlaw/Wizard characters",
+        "Calls right-side vessel 'ferry or boat' rather than hovercraft"
+      ],
+      "hallucinations": [
+        "Mentions sandcastles, buckets, shovels - not confirmed in GT but plausible for a beach scene",
+        "Mentions 'inflatable rafts' - not confirmed in GT",
+        "Person holding dog on leash - GT does not confirm dogs in this scene"
+      ],
+      "justification": "Clean, well-structured description with good detail on beach huts (correct stripe colors), umbrellas, sailboats (pink/white), steamships with smoke, and the large blue/white vessel on the right. Correctly spots the ice cream cart in the lower right. Does not hallucinate any severe content; minor inventions (sandcastles, rafts, dog) are plausible beach elements rather than gross errors. Misses the horses and named characters, but overall a competent reading of a dense scene."
+    },
+    "qwen3.5-4b-Q8|think": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Identifies 'several horses on the beach' - UNIQUE correct catch among all 5 models (GT: 6 horses near water)",
+        "Notes some horses being ridden by people",
+        "Beach huts with vertical blue/white stripes plus red/white striped huts",
+        "Beach umbrellas in red/white and blue/white patterns",
+        "Sailboats with white and pink sails",
+        "Steamships emitting plumes of white smoke",
+        "Smaller motorboats and inflatable rafts with people",
+        "Large white and blue structure on right with people on roof and deck (hovercraft approximation)",
+        "Small dogs near bottom left and center",
+        "Towels, bags, beach chairs",
+        "White and blue color scheme on right structure",
+        "Pale blue sky with fluffy white clouds"
+      ],
+      "key_misses": [
+        "Calls right-side hovercraft 'lifeguard station or restaurant' - misread but acceptable approximation",
+        "Does not identify Where's Waldo? by name",
+        "Misses ice cream cart, Punch and Judy booth, volleyball, surfboards, human pyramid",
+        "Does not name Waldo/Odlaw/Wizard characters",
+        "Does not quantify number of beach huts or sailboats precisely"
+      ],
+      "hallucinations": [
+        "Calls right-side hovercraft a 'lifeguard station or restaurant' - significant misread of the hovercraft, though the structure identification (white/blue, people on roof) is partially correct",
+        "Mentions 'inflatable rafts with people in them' - not confirmed in GT",
+        "Mentions 'small dogs' running through crowd - GT does not list dogs as a feature"
+      ],
+      "justification": "Strongest response of the five. UNIQUELY identifies the horses on the beach (a signature GT element missed by every other model). Correctly enumerates beach huts with stripe colors, umbrellas, sailboat sail colors (white/pink), steamships with smoke. Misreads the right-side hovercraft as a 'lifeguard station or restaurant' which is a notable error, and mentions dogs/rafts not in GT. Despite these weaknesses, the horse catch alone elevates this response. Well-organized, detailed, and shows genuine observation of the scene."
+    }
+  },
+  "ranking": [
+    "qwen3.5-4b-Q8|think",
+    "qwen3-vl-8b-Q8|think",
+    "gemma4-12b-Q8|think",
+    "gemma4-e4b-Q8|think",
+    "qwen3-vl-4b-Q8|think"
+  ],
+  "notes": "Dense Where's Waldo beach scene by Martin Handford. qwen3.5-4b-Q8|think wins uniquely by being the ONLY model to identify the horses near the water (a verified GT element missed by all four others). It also correctly enumerates beach huts, umbrellas, sailboat sail colors, and steamships with smoke; its main weakness is misreading the right-side hovercraft as a 'lifeguard station or restaurant'. qwen3-vl-8b-Q8|think is second with clean detail on huts, umbrellas, sailboats, steamships, and the ice cream cart. gemma4-12b-Q8|think correctly identifies the Where's Waldo? source material by name (unique) and gets the sail colors and ferry right but invents dogs and speedboats. gemma4-e4b-Q8|think is generic, fails to name Waldo, completely misses beach huts, and invents freighters/dinghies/lifeboats. qwen3-vl-4b-Q8|think suffers catastrophic truncation - after promising early detail it collapses into a 40+ repetition loop of 'A person is carrying a large, striped beach towel', rendering most of its output unusable. No model identified Waldo, Odlaw, or Wizard Whitebeard by name, and only gemma4-12b identified the Where's Waldo? source explicitly. The horses near water proved to be the differentiating GT element separating the best response (qwen3.5-4b) from the rest."
+}

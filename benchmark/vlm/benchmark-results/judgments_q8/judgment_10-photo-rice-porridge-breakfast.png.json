@@ -1,0 +1,193 @@
+{
+  "image": "10-photo-rice-porridge-breakfast.png",
+  "key_facts": [
+    "Rice porridge (congee)",
+    "Sunny-side-up egg with runny yolk",
+    "You tiao (fried dough) on red plate",
+    "Soy milk in glass",
+    "Brown chopsticks",
+    "Marble table"
+  ],
+  "judgments": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Congee / rice porridge correctly identified",
+        "Soft-boiled egg with bright orange yolk",
+        "Green onions / scallions, cilantro, ginger, fried shallots, soy sauce",
+        "Youtiao on red plate identified by name",
+        "Steaming glass of soy/warm milk on wooden coaster",
+        "Dark wooden chopsticks",
+        "Marble table"
+      ],
+      "key_misses": [
+        "Said 'soft-boiled egg' rather than explicitly sunny-side-up / runny yolk (minor)",
+        "Did not explicitly call soy milk (said 'likely warm milk or soy milk')"
+      ],
+      "hallucinations": [
+        "Mentions 'matching off-white ceramic spoon' — spoon handle is light colored and may not be ceramic (minor)"
+      ],
+      "justification": "Excellent comprehensive description. Identified congee by name, youtiao by name, marble table, red plate, chopsticks, steaming glass. Only minor imprecision on the exact yolk state and the milk identity."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "holistic_score": 5,
+      "failure_mode": "partial_hallucination",
+      "key_hits": [
+        "Congee / rice porridge",
+        "Red plate with golden-brown fried dough",
+        "Dark brown chopsticks on marble table",
+        "Milky light-colored beverage on wooden coaster",
+        "Marble table"
+      ],
+      "key_misses": [
+        "Did not explicitly call youtiao by name",
+        "Called it 'poached egg' rather than sunny-side-up",
+        "Did not specify soy milk"
+      ],
+      "hallucinations": [
+        "'Shredded meat (possibly pork floss or bacon)' — there is no meat on the congee; this is a fabricated topping. Ginger sticks / scallions / cilantro are the actual toppings"
+      ],
+      "justification": "The fabricated 'shredded meat / pork floss / bacon' is a clear hallucination not present in the image. Description is otherwise decent but the hallucination plus omission of youtiao name drags the score down."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Congee (rice porridge) explicitly named",
+        "Fried egg with golden yolk",
+        "Scallions, cilantro, ginger strips, fried shallots, soy/oyster sauce",
+        "Red ceramic plate with youtiao (fried dough sticks) by name",
+        "Clear glass of light beige liquid (warm milk or soy milk), steaming, on wooden tray",
+        "Dark wooden chopsticks",
+        "Marble-topped table"
+      ],
+      "key_misses": [
+        "Said 'fried egg' rather than sunny-side-up with runny yolk (minor)",
+        "Hedged between milk and soy milk"
+      ],
+      "hallucinations": [],
+      "justification": "Comprehensive and accurate. Named congee and youtiao explicitly, identified marble table, red plate, chopsticks, steaming soy/milk glass. Layout section correctly places red plate left, glass right. No hallucinations."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Congee (rice porridge) named",
+        "Sunny-side-up egg with runny orange yolk",
+        "Chopped green onions, cilantro, fried dough, red plate",
+        "Chopsticks",
+        "Marble-patterned table"
+      ],
+      "key_misses": [
+        "Did not explicitly name youtiao (said 'fried dough sticks')",
+        "Called beverage 'milk tea or similar' rather than soy milk",
+        "Did not mention ginger strips, soy sauce drizzle, fried shallots"
+      ],
+      "hallucinations": [
+        "Mentions 'small bottle with a red and blue cap' in background — not clearly verifiable, possibly condiment (minor)"
+      ],
+      "justification": "Good description with the egg correctly identified as runny/sunny-side-up. Missed the youtiao name and soy milk identification, and missed some toppings. Beverage identification was off."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Congee / rice porridge named",
+        "Sunny-side-up egg with bright orange intact yolk",
+        "Scallions, cilantro, ginger strips, fried shallots, soy sauce",
+        "Red plate with youtiao (fried dough fritters) by name",
+        "Dark brown wooden chopsticks",
+        "Speckled marble table"
+      ],
+      "key_misses": [
+        "Called beverage 'kopi or teh tarik' (coffee/pulled tea) rather than soy milk",
+        "Did not explicitly mention runny yolk state"
+      ],
+      "hallucinations": [
+        "Beverage identified as kopi/teh tarik — this is a confident misidentification of soy milk"
+      ],
+      "justification": "Strong description with youtiao named explicitly and full topping list. Main error is confidently calling the glass 'kopi or teh tarik' rather than soy milk, which is a notable misidentification."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "holistic_score": 7,
+      "failure_mode": "partial_hallucination",
+      "key_hits": [
+        "Congee named",
+        "Sunny-side-up egg with vibrant orange yolk",
+        "Green onions, ginger strips, cilantro, fried shallots, soy sauce",
+        "Red plate with youtiao named",
+        "Dark wooden chopsticks",
+        "Marble-patterned tabletop"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Called the glass 'milk tea (likely teh tarik or similar)' — actually soy milk",
+        "Cultural claim 'iconic to Malaysian breakfast culture, especially Penang or KL' — overconfident cultural speculation"
+      ],
+      "justification": "Detailed and largely accurate description with youtiao named. Main errors are the confident misidentification of the drink as milk tea/teh tarik (it is soy milk) and overconfident cultural framing. Toppings and items are otherwise well captured."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "holistic_score": 7,
+      "failure_mode": "partial_hallucination",
+      "key_hits": [
+        "Congee named",
+        "Sunny-side-up egg yolk, chopped green onions, shredded ginger, fried shallots, cilantro",
+        "Red plate with youtiao named",
+        "Dark wooden chopsticks diagonally on table",
+        "Marble-like speckled table"
+      ],
+      "key_misses": [
+        "Did not explicitly call out soy sauce drizzle"
+      ],
+      "hallucinations": [
+        "Called glass 'milky, light-brown beverage (likely milk tea or coffee)' — actually soy milk"
+      ],
+      "justification": "Solid topping list with youtiao named. Main error is again misidentifying the beverage as milk tea/coffee rather than soy milk. Otherwise accurate."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Congee / porridge named",
+        "Sunny-side-up egg with bright orange yolk",
+        "Green onions, shredded ginger or fried shallots, cilantro, dark soy sauce",
+        "Red plate with youtiao (Chinese fried dough sticks) named",
+        "Dark brown wooden chopsticks overlapping red plate",
+        "Marble tables"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Called the glass 'creamy, frothy milk tea (likely tè pái)' — actually soy milk",
+        "Says youtiao 'broken open to reveal airy interiors' — visible pieces appear cut, not split open (minor)"
+      ],
+      "justification": "Detailed and accurate on food and utensils, youtiao named explicitly. Main error is misidentifying the beverage as milk tea. Otherwise very thorough and accurate."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Congee named",
+        "Sunny-side-up egg with bright, runny yolk explicitly stated",
+        "Chopped green onions, shredded ginger, fried shallots, fresh cilantro, dark soy sauce drizzle",
+        "Red plate with youtiao (fried dough sticks) named",
+        "Dark wooden chopsticks",
+        "White marble table top with dark wooden base"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Hedges beverage as 'milk tea or soy milk' — at least soy milk is in the options (acceptable)"
+      ],
+      "justification": "Best of the bunch: explicitly noted the runny yolk, named youtiao, complete topping list including soy sauce drizzle, and correctly included soy milk as a possibility for the beverage. No fabricated items."
+    }
+  ]
+}

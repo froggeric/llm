@@ -1,0 +1,344 @@
+{
+  "image": "02_code_python.png",
+  "judgments": [
+    {
+      "model_variant": "gemma4-12b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "from fastapi import FastAPI",
+        "from pydantic import BaseModel",
+        "app = FastAPI()",
+        "class User(BaseModel)",
+        "id: int",
+        "name: str",
+        "email: str | None = None",
+        "@app.post(\"/users\")",
+        "async def create_user(user: User) -> User",
+        "# Persist to database",
+        "db.add(user)",
+        "await db.commit()",
+        "return user"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Perfect verbatim transcription of all 13 key code elements with accurate structure, indentation, and modern Python union type syntax. No hallucinated imports or fabricated code."
+    },
+    {
+      "model_variant": "gemma4-26b-a4b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "from fastapi import FastAPI",
+        "from pydantic import BaseModel",
+        "app = FastAPI()",
+        "class User(BaseModel)",
+        "id: int / name: str / email: str | None = None",
+        "@app.post(\"/users\")",
+        "async def create_user(user: User) -> User",
+        "# Persist to database",
+        "db.add(user)",
+        "await db.commit()",
+        "return user"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Complete and accurate verbatim code block with all key facts preserved. Clear structure and correct modern Python syntax recognition."
+    },
+    {
+      "model_variant": "gemma4-31b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "from fastapi import FastAPI",
+        "from pydantic import BaseModel",
+        "app = FastAPI()",
+        "class User(BaseModel)",
+        "id/name/email fields with types",
+        "@app.post(\"/users\")",
+        "async def create_user(user: User) -> User",
+        "# Persist to database",
+        "db.add(user)",
+        "await db.commit()",
+        "return user"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Accurate verbatim code transcription with correct field definitions, decorator, function signature, and database operations. No errors."
+    },
+    {
+      "model_variant": "gemma4-e4b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "from fastapi import FastAPI",
+        "from pydantic import BaseModel",
+        "app = FastAPI()",
+        "class User(BaseModel)",
+        "id: int, name: str, email: str | None = None",
+        "@app.post(\"/users\")",
+        "async def create_user(user: User) -> User",
+        "# Persist to database",
+        "db.add(user)",
+        "await db.commit()",
+        "return user"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Perfect verbatim transcription with accurate structural description of each code element. All key facts captured correctly."
+    },
+    {
+      "model_variant": "glm-4.6v-flash-9b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "from fastapi import FastAPI",
+        "from pydantic import BaseModel",
+        "app = FastAPI()",
+        "class User(BaseModel):",
+        "id: int, name: str, email: str | None = None",
+        "@app.post(\"/users\")",
+        "async def create_user(user: User) -> User:",
+        "# Persist to database",
+        "db.add(user)",
+        "await db.commit()",
+        "return user"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Complete line-by-line verbatim transcription of all key code elements. Smaller model still achieves perfect accuracy."
+    },
+    {
+      "model_variant": "qwen3-vl-4b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "from fastapi import FastAPI",
+        "from pydantic import BaseModel",
+        "app = FastAPI()",
+        "class User(BaseModel)",
+        "id: int, name: str, email: str | None = None",
+        "@app.post(\"/users\")",
+        "async def create_user(user: User) -> User",
+        "# Persist to database",
+        "db.add(user)",
+        "await db.commit()",
+        "return user"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Verbatim code block is fully accurate. All key code facts captured correctly despite being the smallest VL model."
+    },
+    {
+      "model_variant": "qwen3-vl-8b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "from fastapi import FastAPI",
+        "from pydantic import BaseModel",
+        "app = FastAPI()",
+        "class User(BaseModel)",
+        "id/name/email fields with types",
+        "@app.post(\"/users\")",
+        "async def create_user(user: User) -> User",
+        "# Persist to database",
+        "db.add(user)",
+        "await db.commit()",
+        "return user"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Minor color-description inconsistency: lists string literal as \"users\" (without leading slash) in the color legend section; the verbatim code block itself correctly shows \"/users\""
+      ],
+      "justification": "Verbatim code block is fully accurate and complete. Only a small inconsistency in the color-legend metadata (the slash in the route string). The actual code transcription is perfect."
+    },
+    {
+      "model_variant": "qwen3.5-4b|nothink",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "from fastapi import FastAPI",
+        "from pydantic import BaseModel",
+        "app = FastAPI()",
+        "class User(BaseModel)",
+        "id: int, name: str, email: str | None = None",
+        "@app.post(\"/users\")",
+        "async def create_user(user: User) -> User",
+        "# Persist to database",
+        "db.add(user)",
+        "await db.commit()",
+        "return user"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Perfect verbatim code transcription in the nothink configuration. All 13 key elements captured accurately."
+    },
+    {
+      "model_variant": "qwen3.5-4b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "from fastapi import FastAPI",
+        "from pydantic import BaseModel",
+        "app = FastAPI()",
+        "class User(BaseModel)",
+        "id: int, name: str, email: str | None = None",
+        "@app.post(\"/users\")",
+        "async def create_user(user: User) -> User",
+        "# Persist to database",
+        "db.add(user)",
+        "await db.commit()",
+        "return user"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Verbatim code block perfectly matches the source. All key facts captured with correct modern Python union syntax."
+    },
+    {
+      "model_variant": "qwen3.5-9b|nothink",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "from fastapi import FastAPI",
+        "from pydantic import BaseModel",
+        "app = FastAPI()",
+        "class User(BaseModel):",
+        "id: int, name: str, email: str | None = None",
+        "@app.post(\"/users\")",
+        "async def create_user(user: User) -> User:",
+        "# Persist to database",
+        "db.add(user)",
+        "await db.commit()",
+        "return user"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Complete and accurate verbatim transcription. Nothink variant produces the same excellent result as think."
+    },
+    {
+      "model_variant": "qwen3.5-9b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "from fastapi import FastAPI",
+        "from pydantic import BaseModel",
+        "app = FastAPI()",
+        "class User(BaseModel)",
+        "id: int, name: str, email: str | None = None",
+        "@app.post(\"/users\")",
+        "async def create_user(user: User) -> User",
+        "# Persist to database",
+        "db.add(user)",
+        "await db.commit()",
+        "return user"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Perfect verbatim code transcription with all 13 key elements correct. Think configuration adds analytical depth without introducing errors."
+    },
+    {
+      "model_variant": "qwen3.6-27b|nothink",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "from fastapi import FastAPI",
+        "from pydantic import BaseModel",
+        "app = FastAPI()",
+        "class User(BaseModel):",
+        "id: int, name: str, email: str | None = None",
+        "@app.post(\"/users\")",
+        "async def create_user(user: User) -> User:",
+        "# Persist to database",
+        "db.add(user)",
+        "await db.commit()",
+        "return user"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Verbatim code block is perfect. Notable response is truncated at the end ('documentat...') but does not affect code accuracy. All key facts captured."
+    },
+    {
+      "model_variant": "qwen3.6-27b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "from fastapi import FastAPI",
+        "from pydantic import BaseModel",
+        "app = FastAPI()",
+        "class User(BaseModel)",
+        "id: int, name: str, email: str | None = None",
+        "@app.post(\"/users\")",
+        "async def create_user(user: User) -> User",
+        "# Persist to database",
+        "db.add(user)",
+        "await db.commit()",
+        "return user"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Verbatim transcription is fully accurate with all 13 key code elements correct. No fabricated imports or code."
+    },
+    {
+      "model_variant": "qwen3.6-35b-a3b|nothink",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "from fastapi import FastAPI",
+        "from pydantic import BaseModel",
+        "app = FastAPI()",
+        "class User(BaseModel)",
+        "id: int, name: str, email: str | None = None",
+        "@app.post(\"/users\")",
+        "async def create_user(user: User) -> User",
+        "# Persist to database",
+        "db.add(user)",
+        "await db.commit()",
+        "return user"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Minor color-legend error: lists \"# Persist to database\" as a string literal — it is actually a comment. The verbatim code block itself is correct."
+      ],
+      "justification": "Verbatim code block is fully accurate. Only a minor classification error in the color legend (comment mislabeled as string literal). Code transcription is perfect."
+    },
+    {
+      "model_variant": "qwen3.6-35b-a3b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "from fastapi import FastAPI",
+        "from pydantic import BaseModel",
+        "app = FastAPI()",
+        "class User(BaseModel)",
+        "id: int, name: str, email: str | None = None",
+        "@app.post(\"/users\")",
+        "async def create_user(user: User) -> User",
+        "# Persist to database",
+        "db.add(user)",
+        "await db.commit()",
+        "return user"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Perfect verbatim code transcription with all 13 key elements captured accurately. No errors in code or surrounding metadata."
+    }
+  ],
+  "ranking": [
+    "gemma4-12b|think",
+    "gemma4-26b-a4b|think",
+    "gemma4-31b|think",
+    "gemma4-e4b|think",
+    "glm-4.6v-flash-9b|think",
+    "qwen3-vl-4b|think",
+    "qwen3.5-4b|nothink",
+    "qwen3.5-4b|think",
+    "qwen3.5-9b|nothink",
+    "qwen3.5-9b|think",
+    "qwen3.6-27b|nothink",
+    "qwen3.6-27b|think",
+    "qwen3.6-35b-a3b|think",
+    "qwen3-vl-8b|think",
+    "qwen3.6-35b-a3b|nothink"
+  ],
+  "notes": "This is an 'easy' code OCR test: well-formatted Python with no unusual characters, sufficient contrast, and standard syntax-highlighted dark theme. All 15 model variants produced near-perfect verbatim transcriptions of the code block, capturing all 13 key code elements (imports, app init, class def, three fields with types, decorator, async function signature, comment, two db operations, return statement). No hallucinated imports or fabricated code were observed in any response. Two responses had minor metadata (color-legend) inconsistencies that did NOT affect the code transcription: qwen3-vl-8b|think wrote the route as 'users' (without slash) in the color description (code block correct), and qwen3.6-35b-a3b|nothink mislabeled the comment as a string literal in its color legend (code block correct). These minor errors were not severe enough to warrant dropping below score 9. The think vs nothink distinction was negligible here — both configurations of qwen3.5-4b and qwen3.5-9b produced identical-quality code. qwen3.6-27b|nothink had a truncated response tail but the code block was complete. Overall, this test image does not effectively differentiate model quality — every variant excels."
+}

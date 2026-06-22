@@ -1,0 +1,370 @@
+{
+  "image": "30-where-is-waldo.webp",
+  "judgments": {
+    "gemma4-12b|think": {
+      "holistic_score": 7.5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies Where's Waldo style",
+        "mentions sailboats with yellow sails (yellow correct)",
+        "correctly notes steamships/tugs with black smoke (3 confirmed)",
+        "mentions surfboards, coolers, beach chairs",
+        "notes small striped blue-and-white beach huts/cabanas",
+        "mentions people with surfboards and paddleboards"
+      ],
+      "key_misses": [
+        "fails to mention the 6 horses near water",
+        "does not mention pink sail or half-yellow/half-white sail",
+        "misses the hovercraft on the right (calls it 'ferry/ship')",
+        "no mention of balloons, human pyramid, ice cream cart, Punch and Judy booth",
+        "no mention of tents separate from huts",
+        "no mention of volleyball being played"
+      ],
+      "hallucinations": [
+        "calls the right-side hovercraft a 'ferry/ship' (acceptable approximation per GT)",
+        "mentions jet skis and paddleboards (not verified)"
+      ],
+      "justification": "Solid structural description of Where's Waldo scene with correct major elements (steamships, sailboats, beach huts, coolers) but misses many of the specific micro-details that define this image (horses, pyramid, ice cream cart, balloons, Punch and Judy). Adequate but not thorough."
+    },
+    "gemma4-26b-a4b|think": {
+      "holistic_score": 6.0,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies Where's Waldo style",
+        "notes sailboats with yellow sails",
+        "mentions steamships with white/grey smoke",
+        "mentions coolers, surfboards, beach towels",
+        "notes striped beach huts (blue/white and red/white)",
+        "mentions ice cream cart near bottom right (CORRECT)"
+      ],
+      "key_misses": [
+        "fails to mention horses near water",
+        "misses pink sail",
+        "misses balloons, human pyramid, Punch and Judy booth",
+        "misses volleyball being played, tents"
+      ],
+      "hallucinations": [
+        "HALLUCINATES: 'On the far right, a white pier or jetty extends into the sea, with several people standing on it' — this is the hovercraft misidentified as a pier, an explicit GT hallucination",
+        "mentions people building sandcastles and playing frisbee (unverified)"
+      ],
+      "justification": "Caught the ice cream cart, which is notable. But commits the canonical hallucination for this image: calling the hovercraft a 'pier or jetty extending into the sea' — exactly the error flagged in GT. Loses significant points for this."
+    },
+    "gemma4-31b|think": {
+      "holistic_score": 5.0,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies Where's Waldo style",
+        "mentions sailboats with pink, white, and yellow sails (CORRECT - all three colors!)",
+        "mentions boats emitting grey smoke",
+        "mentions striped windbreaks (likely the beach huts)",
+        "notes umbrellas and beach gear"
+      ],
+      "key_misses": [
+        "fails to mention horses near water",
+        "misses balloons, human pyramid, ice cream cart, Punch and Judy booth",
+        "misses volleyball, surfboards/bodyboards, tents, coolers"
+      ],
+      "hallucinations": [
+        "HALLUCINATES: 'On the far right, a large white pier or dock extends from the right edge into the ocean' and 'a large, multi-level white concrete pier structure' — classic hovercraft-as-pier hallucination",
+        "calls windbreaks 'beach huts' mislabeling"
+      ],
+      "justification": "Gets the sail colors right (pink/white/yellow), which is impressive. But commits the pier hallucination twice with elaboration, and misses almost all of the micro-details. Middling accuracy."
+    },
+    "gemma4-e4b|think": {
+      "holistic_score": 4.5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "identifies crowded beach scene",
+        "mentions numerous beach umbrellas and small tents",
+        "notes sailboats, dinghies, larger ships"
+      ],
+      "key_misses": [
+        "fails to identify Where's Waldo style explicitly",
+        "no sail colors mentioned",
+        "fails to mention horses, pyramid, ice cream cart, Punch and Judy, balloons, volleyball",
+        "misses steamships detail, surfboards",
+        "very generic description"
+      ],
+      "hallucinations": [
+        "claims 'Small American flags are visible among the people' (unverified, likely false for a UK-style Waldo scene)",
+        "calls the right-side hovercraft a 'white passenger ship or liner' (acceptable approximation)"
+      ],
+      "justification": "Very generic, vague description. Misses nearly all the specific micro-details and the Where's Waldo identification. American flags claim is suspicious. Weakest of the Gemma variants."
+    },
+    "glm-4.6v-flash-9b|think": {
+      "holistic_score": 7.0,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly notes sailboats with yellow and white sails",
+        "mentions steamships emitting smoke (CORRECT)",
+        "CORRECTLY describes 'large blue-and-white ferry on the right side' - acceptable approximation for hovercraft",
+        "notes blue-and-white striped huts on left and right edges",
+        "mentions umbrellas in multiple colors",
+        "mentions 'white cooler with a lid' (CORRECT)",
+        "mentions red-and-white beach balls"
+      ],
+      "key_misses": [
+        "fails to mention pink sail (only yellow/white)",
+        "fails to mention horses near water",
+        "misses balloons, human pyramid, ice cream cart, Punch and Judy",
+        "misses volleyball, surfboards, tents"
+      ],
+      "hallucinations": [],
+      "justification": "Impressively accurate on what it does mention (steamships, blue/white ferry on right, coolers, sail colors). Avoids the pier hallucination. Loses points for missing many micro-details. Solid but compact description."
+    },
+    "qwen3-vl-4b|think": {
+      "holistic_score": 1.5,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "early content mentions sailboats with yellow and pink sails (CORRECT colors)",
+        "mentions steamships/cargo ships",
+        "mentions blue/white ferry on right (acceptable)",
+        "notes beach huts in multiple stripe patterns"
+      ],
+      "key_misses": [
+        "response truncated mid-sentence with massive repetition loop",
+        "completely unusable as a description due to repetition bug"
+      ],
+      "hallucinations": [
+        "Severe generation bug: infinite repetition of 'A man is carrying a large, striped beach towel' x50+ before truncation"
+      ],
+      "justification": "Catastrophic generation failure - the response degenerates into endless repetition of one phrase. Even though early content has some correct details, the response is fundamentally broken. Lowest possible score for a usable response."
+    },
+    "qwen3-vl-8b|think": {
+      "holistic_score": 6.5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies bustling beach scene",
+        "mentions sailboats with sails",
+        "mentions large blue/white boat on right (CORRECT)",
+        "mentions steamships in distance (CORRECT)",
+        "notes striped beach huts (blue/white and one red/white)",
+        "mentions beach balls and toys",
+        "notes inflatable rafts"
+      ],
+      "key_misses": [
+        "fails to mention pink and yellow sails specifically",
+        "misses horses near water",
+        "misses balloons, human pyramid, ice cream cart, Punch and Judy",
+        "misses volleyball being played, surfboards, tents, coolers"
+      ],
+      "hallucinations": [
+        "claims 'Sandcastles, beach balls, and other beach toys' - sandcastles unverified"
+      ],
+      "justification": "Reasonable general description but lacks the specific micro-details. Doesn't catch the iconic elements of this particular Waldo scene. Average."
+    },
+    "qwen3.5-4b|nothink": {
+      "holistic_score": 4.0,
+      "failure_mode": "normal",
+      "key_hits": [
+        "identifies crowded beach scene",
+        "mentions sailboats, motorboats, tugboats, ferries (tugboats CORRECT)",
+        "mentions 'large white-and-blue service boat docked on the right' (acceptable)",
+        "mentions horses near water's edge (CORRECT)",
+        "mentions beach chairs, loungers, umbrellas",
+        "mentions ice cream carts, picnic baskets (CORRECT)",
+        "mentions dogs, kayaks, paddleboards"
+      ],
+      "key_misses": [
+        "misses specific sail colors",
+        "misses balloons, human pyramid, Punch and Judy, volleyball"
+      ],
+      "hallucinations": [
+        "HALLUCINATES artist attribution: 'Dutch artist Dick Bruna' - Waldo is by Martin Handford (British) - explicit GT hallucination",
+        "HALLUCINATES: 'a pier or jetty extending into the sea' - the hovercraft-as-pier hallucination flagged in GT",
+        "claims 'men in suits' and 'formal wear' (unverified)",
+        "claims 'fish jumping', 'cat on a lap' (unverified)",
+        "claims 'lifeguard tower' (unverified)"
+      ],
+      "justification": "Impressive breadth (catches horses, ice cream carts, picnic baskets, tugboats) but undermined by multiple severe hallucinations including wrong artist (Dick Bruna), the pier hallucination, and many invented details. High recall, very low precision."
+    },
+    "qwen3.5-4b|think": {
+      "holistic_score": 7.0,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies pink sailboat on far left (CORRECT)",
+        "correctly identifies white sailboat near center-left (CORRECT)",
+        "correctly identifies yellow sailboat near center (CORRECT)",
+        "mentions yellow tugboat-like vessel emitting smoke (CORRECT - tugs)",
+        "mentions blue-and-white striped beach huts (left and right)",
+        "mentions red-and-white striped hut (CORRECT - possibly Punch and Judy)",
+        "mentions surfboards near water's edge (CORRECT)",
+        "mentions coolers (CORRECT)",
+        "mentions 'person riding a horse or mule near water's edge' (CORRECT - horses)",
+        "mentions 'group of people climbing a structure or tower in the water' - possibly the pyramid"
+      ],
+      "key_misses": [
+        "misses balloons",
+        "misses ice cream cart explicitly",
+        "misses volleyball, tents",
+        "misses the half-yellow/half-white sail (only 3 sails counted)"
+      ],
+      "hallucinations": [
+        "describes right-side structure as 'large, blue and white building or boat structure with crosses on its roof, resembling a church' - misidentification of hovercraft, though acknowledges it could be a boat"
+      ],
+      "justification": "Strong accuracy on key details: gets all three sail colors right, identifies horses, surfboards, coolers, multiple beach huts. Acknowledges uncertainty about right-side structure. Best balance of recall and precision among smaller models."
+    },
+    "qwen3.5-9b|nothink": {
+      "holistic_score": 4.5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies Where's Wally style",
+        "correctly notes sailboats with pink and yellow sails",
+        "mentions steamships emitting smoke trails",
+        "mentions large blue-and-white ferry on far right (CORRECT)",
+        "mentions surfers/bodyboarders (CORRECT)",
+        "mentions umbrellas, beach cabins, towels, beach balls",
+        "mentions coolers/baskets (CORRECT)"
+      ],
+      "key_misses": [
+        "misses white sail explicitly",
+        "misses horses (CRITICAL - hallucinates carriage instead)",
+        "misses human pyramid, ice cream cart, Punch and Judy, volleyball, balloons, tents"
+      ],
+      "hallucinations": [
+        "HALLUCINATES: 'Horses & Carriages: Two horses pulling a carriage near the right side of the beach' - GT explicitly states NO CARRIAGE EXISTS - canonical hallucination",
+        "HALLUCINATES: 'A Horse Pulling a Carriage near the right side of the beach' (repeated)",
+        "claims 'kite flying', 'badminton' (unverified)",
+        "claims 'small red lifeboat' (unverified)",
+        "claims 'cats being carried' (unverified)"
+      ],
+      "justification": "Good general description but commits the canonical 'carriage pulled by horses' hallucination explicitly flagged in GT. This is a major error. Misses many actual elements while inventing a non-existent carriage."
+    },
+    "qwen3.5-9b|think": {
+      "holistic_score": 8.5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies Where's Waldo style",
+        "CORRECTLY identifies three steamships on horizon with white smoke (matches GT '3 steamships')",
+        "CORRECTLY identifies group of people riding horses near water's edge on the right (matches GT '6 horses near water')",
+        "mentions sailboats including pink and white sails (CORRECT colors)",
+        "CORRECTLY describes large boxy blue and white boat on right (acceptable for hovercraft)",
+        "mentions beach huts, umbrellas, towels, beach ball"
+      ],
+      "key_misses": [
+        "misses yellow sail (only mentions pink and white)",
+        "misses balloons, ice cream cart, Punch and Judy, volleyball, human pyramid, surfboards, tents, coolers"
+      ],
+      "hallucinations": [
+        "claims 'dogs or other small animals' (uncertain, hedged)"
+      ],
+      "justification": "Excellent accuracy on the most distinctive elements: correctly counts 3 steamships, identifies the horse riders near water (key element), gets sail colors right, and avoids the pier/carriage hallucinations that plague other models. One of the best responses."
+    },
+    "qwen3.6-27b|nothink": {
+      "holistic_score": 7.0,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies Where's Waldo style",
+        "CORRECTLY identifies sailboats with pink, white, yellow sails (all three colors!)",
+        "mentions motorboats/yachts with smokestacks emitting white smoke (steamships CORRECT)",
+        "mentions 'Large Cruise Ship' on far right (acceptable approximation for hovercraft)",
+        "CORRECTLY identifies human pyramid near water's edge",
+        "CORRECTLY identifies volleyball being played",
+        "mentions people riding horses along shore",
+        "mentions surfers (CORRECT), eating ice cream",
+        "mentions coolers, bags, buckets, beach chairs"
+      ],
+      "key_misses": [
+        "misses balloons, ice cream cart explicitly, Punch and Judy booth",
+        "misses tents separate from huts, picnic baskets"
+      ],
+      "hallucinations": [
+        "claims 'person wearing a pirate hat and another in a clown outfit' (clown unverified per GT)",
+        "claims 'person in a full tuxedo on the beach', 'someone wearing a sombrero' (unverified)",
+        "claims 'sandcastles' (unverified)",
+        "claims 'distant factory or power plant on the horizon' (unverified)"
+      ],
+      "justification": "Outstanding breadth: catches the pyramid, volleyball, horses, all three sail colors, and avoids pier/carriage hallucinations. But sprinkles several unverified quirky details (tuxedos, clown, pirate hat, factory). High recall, moderate precision."
+    },
+    "qwen3.6-27b|think": {
+      "holistic_score": 8.5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies Where's Waldo style",
+        "CORRECTLY identifies three sailboats with distinct sails: pink (left), white (center), yellow (right) - all three colors correct!",
+        "CORRECTLY identifies steamships with smokestacks emitting white smoke trails",
+        "CORRECTLY identifies group of horses near water's edge on the right side being ridden",
+        "CORRECTLY describes large blue-and-white boat-like structure on right (acceptable for hovercraft)",
+        "mentions beach huts (blue/white striped plus one red/white)",
+        "mentions umbrellas, towels, beach balls",
+        "mentions surfboards/bodyboards being carried (CORRECT)",
+        "mentions coolers"
+      ],
+      "key_misses": [
+        "misses balloons, human pyramid, ice cream cart, Punch and Judy booth, volleyball, tents"
+      ],
+      "hallucinations": [
+        "calls right-side structure 'large, blue and white boat-like structure or pier' - borderline (uses 'or pier' but acknowledges boat possibility)"
+      ],
+      "justification": "Excellent precision: all three sail colors correct, horses identified, surfboards, coolers, steamships. Describes the right-side structure carefully ('boat-like structure or pier') showing appropriate uncertainty. Avoids the carriage hallucination. Among the best."
+    },
+    "qwen3.6-35b-a3b|nothink": {
+      "holistic_score": 7.5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies crowded beach scene style",
+        "CORRECTLY identifies sailboats with pink, white, yellow sails (all three!)",
+        "mentions motorboats and steamships emitting smoke plumes (CORRECT)",
+        "CORRECTLY describes large blue-and-white ferry/tour boat on right (acceptable for hovercraft)",
+        "CORRECTLY identifies horses with riders near shoreline (CORRECT)",
+        "mentions beach chairs and loungers (CORRECT)",
+        "mentions coolers and bags (CORRECT)",
+        "CORRECTLY mentions ice cream carts (CORRECT)",
+        "CORRECTLY mentions surfboards/bodyboards being carried (CORRECT)",
+        "mentions volleyballs (CORRECT - volleyball)",
+        "mentions inflatable rafts"
+      ],
+      "key_misses": [
+        "misses balloons, human pyramid, Punch and Judy booth",
+        "misses tents (only mentions 'shacks'), picnic baskets"
+      ],
+      "hallucinations": [
+        "HALLUCINATES: 'A large blue-and-white ferry terminal or pier structure on the far right' - explicitly calls it a pier",
+        "claims 'red-and-white striped lifeguard tower or kiosk' (unverified - may be confusing with Punch and Judy)",
+        "claims 'person in a suit, someone in a superhero cape' (unverified)"
+      ],
+      "justification": "Strong breadth: catches horses, ice cream carts, surfboards, volleyballs, all three sail colors, beach chairs, coolers. But commits the pier hallucination explicitly and invents some quirky characters. Good recall, moderate hallucination."
+    },
+    "qwen3.6-35b-a3b|think": {
+      "holistic_score": 9.0,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies Where's Wally style",
+        "CORRECTLY identifies sailboats: pink sail on left, white sail center, yellow sail right (all three CORRECT!)",
+        "CORRECTLY identifies three large steamships on horizon emitting white smoke trails (matches GT exactly)",
+        "CORRECTLY identifies large blue/white ferry/tour boat on right (acceptable approximation for hovercraft)",
+        "CORRECTLY identifies group of people riding horses along water's edge",
+        "CORRECTLY notes person carrying blue surfboard",
+        "CORRECTLY identifies red-and-white striped beach ball",
+        "mentions beach huts (blue/white left and right, red/white middle-right)",
+        "mentions umbrellas in multiple colors"
+      ],
+      "key_misses": [
+        "misses balloons, human pyramid, ice cream cart, Punch and Judy booth explicitly",
+        "misses volleyball, coolers/picnic baskets, tents"
+      ],
+      "hallucinations": [
+        "claims small black dots are 'pebbles or footprints' (reasonable interpretation, not a true hallucination)"
+      ],
+      "justification": "Best overall response: gets all three sail colors right, correctly counts 3 steamships on horizon, identifies the horse riders, mentions surfboard and beach ball, gets beach hut colors right. Avoids the pier/carriage/Dick Bruna hallucinations. Outstanding precision with good recall. The benchmark-setter for this image."
+    }
+  },
+  "ranking": [
+    "qwen3.6-35b-a3b|think",
+    "qwen3.5-9b|think",
+    "qwen3.6-27b|think",
+    "gemma4-12b|think",
+    "qwen3.6-35b-a3b|nothink",
+    "qwen3.6-27b|nothink",
+    "qwen3.5-4b|think",
+    "glm-4.6v-flash-9b|think",
+    "qwen3-vl-8b|think",
+    "gemma4-31b|think",
+    "qwen3.5-9b|nothink",
+    "gemma4-e4b|think",
+    "qwen3.5-4b|nothink",
+    "gemma4-26b-a4b|think",
+    "qwen3-vl-4b|think"
+  ],
+  "notes": "Dense Waldo scene rewards models that identify specific micro-elements (sail colors, horses, steamship count, pyramid, volleyball) and severely penalizes canonical hallucinations (hovercraft-as-pier, carriage-pulled-by-horses, Dick Bruna attribution). Top performers: qwen3.6-35b-a3b|think (9.0) nails all three sail colors, 3 steamships, and horses without hallucinating; qwen3.5-9b|think (8.5) and qwen3.6-27b|think (8.5) similarly strong. Notable that the think variants of larger Qwen models outperform their nothink counterparts here (35b: 9.0 vs 7.5, 27b: 8.5 vs 7.0, 9b: 8.5 vs 4.5) suggesting thinking helps with detail enumeration in dense scenes. qwen3-vl-4b|think failed catastrophically with repetition loop. gemma4-31b|think got all 3 sail colors but committed the pier hallucination elaborately. qwen3.5-4b|nothink uniquely caught horses/ice-cream-carts/picnic-baskets but fatally hallucinated Dick Bruna as artist. Deterministic scores in input were often overgenerous (e.g., 9.2 for several models that missed key details) — holistic scores are typically 1-3 points lower due to missed micro-elements and hallucinations the deterministic probes don't catch."
+}

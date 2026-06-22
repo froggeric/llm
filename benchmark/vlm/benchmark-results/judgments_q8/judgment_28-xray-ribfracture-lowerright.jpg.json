@@ -1,0 +1,171 @@
+{
+  "image": "28-xray-ribfracture-lowerright.jpg",
+  "ground_truth_summary": "PA chest X-ray with a rib fracture on the LEFT 10th posterior rib (patient's left = right side of displayed image). Fracture appears as a lucent line with NO displacement and NO pneumothorax. Costophrenic angles sharp.",
+  "judgments": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "score": 2,
+      "score_cap_reason": "Missed the key finding (rib fracture) — major diagnostic error, capped at 4-5 per protocol; further penalized for generic structure-only description with no abnormality mention.",
+      "correct_findings": [
+        "Correctly identified as a chest X-ray",
+        "Correctly identified ribs, clavicles, spine, lungs, heart, diaphragm",
+        "Correctly noted no visible text/labels"
+      ],
+      "incorrect_findings": [
+        "FAILED to detect the rib fracture on the left 10th posterior rib — the primary diagnostic finding",
+        "Claimed 'artifacts' are dust particles without exploring for actual pathology",
+        "Mentioned liver on wrong side (said 'left side of image = patient's right' is correct, but called it liver when describing below diaphragm)"
+      ],
+      "hallucinations": [
+        "Described 'tiny bright white specks scattered across the image, likely dust particles' — not a clinically relevant observation"
+      ],
+      "missing_findings": [
+        "Rib fracture on left 10th posterior rib (patient's left, right side of displayed image)",
+        "Fracture appears as lucent line",
+        "No displacement, no pneumothorax"
+      ],
+      "fracture_detected": false,
+      "fracture_location_correct": false,
+      "clinical_usefulness": "Low — describes anatomy but misses the only clinically actionable finding. A radiologist relying on this description would miss a rib fracture.",
+      "response_quality_notes": "Well-structured anatomical description but no clinical analysis. Did not look for or mention fractures, pathology, or abnormalities."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "score": 3,
+      "score_cap_reason": "Missed the key finding (rib fracture) — capped at 4-5 per protocol; score in lower range due to no clinical abnormality mention at all.",
+      "correct_findings": [
+        "Correctly identified as chest X-ray (PA/AP projection)",
+        "Correctly identified ribs, clavicles, spine, lungs, heart, diaphragm",
+        "Correctly noted no pneumothorax (incidentally true)",
+        "Correctly noted cardiothoracic ratio within normal limits"
+      ],
+      "incorrect_findings": [
+        "FAILED to detect the rib fracture on the left 10th posterior rib — primary diagnostic finding",
+        "Stated 'no obvious signs of acute consolidation or pneumothorax' without examining the ribs for fracture"
+      ],
+      "hallucinations": [],
+      "missing_findings": [
+        "Rib fracture on left 10th posterior rib",
+        "Fracture appearance as lucent line",
+        "Statement that ribs were 'clearly visible' but did not assess integrity"
+      ],
+      "fracture_detected": false,
+      "fracture_location_correct": false,
+      "clinical_usefulness": "Low — clean description of normal anatomy but missed the fracture entirely.",
+      "response_quality_notes": "Better-structured than gemma4-12b, with explicit mention of pneumothorax absence, but still completely missed the fracture."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "score": 2,
+      "score_cap_reason": "Missed the key finding (rib fracture) AND made an explicit false-negative statement ('no obvious fractures or dislocations'). Major diagnostic error capped at 4-5; lower score due to explicit false negative.",
+      "correct_findings": [
+        "Correctly identified as chest X-ray",
+        "Correctly identified skeletal and thoracic structures",
+        "Correctly noted no consolidation, pleural effusion, or masses",
+        "Correctly noted normal hemidiaphragm position (right slightly higher)"
+      ],
+      "incorrect_findings": [
+        "EXPLICIT FALSE NEGATIVE: 'The ribs and clavicles are well-defined with no obvious fractures or dislocations' — the rib fracture IS present",
+        "FAILED to detect the rib fracture on the left 10th posterior rib"
+      ],
+      "hallucinations": [],
+      "missing_findings": [
+        "Rib fracture on left 10th posterior rib (lucent line)",
+        "Assessment of rib integrity was performed and reported as normal, which is incorrect"
+      ],
+      "fracture_detected": false,
+      "fracture_location_correct": false,
+      "clinical_usefulness": "Very low — actively misleads by explicitly stating no fractures are present when one is. A clinician relying on this could discharge a patient with an undiagnosed rib fracture.",
+      "response_quality_notes": "Most harmful response of the group because it explicitly rules out the fracture that is present."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "score": 2,
+      "score_cap_reason": "Missed the key finding (rib fracture) AND made explicit false-negative statements about fracture absence. Major diagnostic error capped at 4-5; lower score for multiple false reassurances.",
+      "correct_findings": [
+        "Correctly identified as chest X-ray (frontal/AP)",
+        "Correctly identified ribs, spine, clavicles, lungs, heart, diaphragm"
+      ],
+      "incorrect_findings": [
+        "EXPLICIT FALSE NEGATIVE: 'The ribs are clearly visible, with no signs of fractures or deformities'",
+        "EXPLICIT FALSE NEGATIVE: 'no visible abnormalities or pathologies' (stated twice)",
+        "FAILED to detect the rib fracture on the left 10th posterior rib",
+        "Hallucinated a 'sternum visible as central vertical white line' — the sternum is not well-visualized on a PA chest X-ray in this manner"
+      ],
+      "hallucinations": [
+        "Claimed sternum visible as 'central, vertical white line running down the middle of the chest, connecting the ribs' — incorrect for PA chest X-ray",
+        "Claimed trachea visible as 'central, vertical line running down the middle of the chest' — overstated visibility"
+      ],
+      "missing_findings": [
+        "Rib fracture on left 10th posterior rib (lucent line)",
+        "Any mention of abnormality despite explicit pathology check"
+      ],
+      "fracture_detected": false,
+      "fracture_location_correct": false,
+      "clinical_usefulness": "Very low — explicitly normal report on an abnormal film, plus anatomical hallucinations.",
+      "response_quality_notes": "Confidently incorrect. Worst combination: missed the real finding and asserted normalcy while hallucinating anatomical details."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "score": 2,
+      "score_cap_reason": "Missed the key finding (rib fracture) AND made explicit false-negative statements. Major diagnostic error capped at 4-5; lower score for confident false reassurance.",
+      "correct_findings": [
+        "Correctly identified as PA chest X-ray",
+        "Correctly identified ribs, sternum, spine, clavicles, scapulae, lungs, heart, diaphragm, costophrenic angles",
+        "Correctly noted no consolidation/infiltrates, normal heart size, normal diaphragm level"
+      ],
+      "incorrect_findings": [
+        "EXPLICIT FALSE NEGATIVE: 'The ribs and spine appear to be intact, with no obvious fractures or deformities' — rib fracture IS present",
+        "EXPLICIT FALSE NEGATIVE: 'appears to be of a healthy individual, with no obvious signs of disease or pathology'",
+        "FAILED to detect the rib fracture on the left 10th posterior rib"
+      ],
+      "hallucinations": [],
+      "missing_findings": [
+        "Rib fracture on left 10th posterior rib (lucent line)",
+        "Specific rib integrity assessment was performed and incorrectly reported as normal"
+      ],
+      "fracture_detected": false,
+      "fracture_location_correct": false,
+      "clinical_usefulness": "Very low — explicitly normal report on abnormal film.",
+      "response_quality_notes": "More detailed than qwen3-vl-4b but equally wrong; explicit false negative on the fracture."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "score": 4,
+      "score_cap_reason": "Missed the key finding (rib fracture) — capped at 4-5 per protocol. Higher end of cap because it noted a faint opacity in the correct anatomical region (viewer's right lower lung field) near where the fracture is located, and avoided a hard false-negative on fracture absence.",
+      "correct_findings": [
+        "Correctly identified as chest X-ray (PA/AP)",
+        "Correctly identified skeletal and thoracic structures",
+        "Noted 'faint, patchy opacities (whiter areas) visible in the lower left lung field (viewer's right), near the diaphragm' — this region is in the correct area (viewer's right = patient's left = fracture location)",
+        "Correctly noted costophrenic angles sharp (no pleural effusion)",
+        "Correctly noted heart slightly to viewer's right (patient's left)"
+      ],
+      "incorrect_findings": [
+        "FAILED to explicitly detect the rib fracture on the left 10th posterior rib",
+        "Stated 'The visible bones appear intact with no obvious fractures or dislocations' — though less confident than Qwen3-VL siblings",
+        "Speculated the opacity was 'vascular markings, breast shadowing, or potentially early consolidation' rather than recognizing it could relate to rib pathology"
+      ],
+      "hallucinations": [],
+      "missing_findings": [
+        "Explicit identification of the lucent fracture line on the 10th posterior rib",
+        "Connection between the noted opacity region and possible rib abnormality"
+      ],
+      "fracture_detected": false,
+      "fracture_location_correct": false,
+      "clinical_usefulness": "Moderate — best of the group because it noted an abnormal finding in the correct region, even though it did not characterize it as a rib fracture. A clinician might investigate further based on the opacity mention.",
+      "response_quality_notes": "Only model to mention an abnormal finding in the fracture region. Did not explicitly rule out fractures with high confidence ('no OBVIOUS fractures'). Most cautious and closest-to-correct response."
+    }
+  ],
+  "summary": {
+    "all_models_missed_primary_finding": true,
+    "explicit_false_negatives": [
+      "glm-4.6v-flash-9b-Q8|think",
+      "qwen3-vl-4b-Q8|think",
+      "qwen3-vl-8b-Q8|think",
+      "qwen3.5-4b-Q8|think (softer wording)"
+    ],
+    "best_response": "qwen3.5-4b-Q8|think (score 4) — noted an opacity in the correct anatomical region near the fracture",
+    "worst_response": "glm-4.6v-flash-9b-Q8|think and qwen3-vl-4b-Q8|think (score 2) — explicit confident false negatives with hallucinations",
+    "common_pattern": "All models describe normal anatomy well but fail to detect rib fractures — a known VLM weakness on subtle linear lucencies in radiographs."
+  }
+}

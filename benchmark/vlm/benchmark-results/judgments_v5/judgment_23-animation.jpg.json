@@ -1,0 +1,346 @@
+{
+  "image": "23-animation.jpg",
+  "judgments": {
+    "gemma4-12b|think": {
+      "holistic_score": 3,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2x3 grid identified",
+        "Numbers 1-6 with top row 1-2-3, bottom row 4-5-6",
+        "Blue cartoon cat with peach inner ears",
+        "White muzzle, black nose",
+        "Solid pale blue background",
+        "Shadow beneath each cat"
+      ],
+      "key_misses": [
+        "Misses that this is a single run cycle; describes 6 distinct actions (walking/crawling, sitting, crouching, lying flat)"
+      ],
+      "hallucinations": [
+        "Pose 4 'sitting down in compact curled position'",
+        "Pose 6 'lying flat on belly in stretched-out, relaxed position'",
+        "Pose 2 'walking or crawling position' - misread"
+      ],
+      "justification": "Good structural and character description but commits the critical error of inventing 6 distinct unrelated actions (sitting, lying down, crawling) instead of recognizing the looping run cycle. The pose-by-pose narrative is largely fabricated."
+    },
+    "gemma4-26b-a4b|think": {
+      "holistic_score": 3,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2x3 grid layout",
+        "Numbers 1-6 correctly placed",
+        "Medium blue cat with peach inner ears",
+        "Solid pale pastel blue background"
+      ],
+      "key_misses": [
+        "Does not recognize single looping run cycle",
+        "Describes sequence as transitioning from high energy to low energy (sitting/lying)"
+      ],
+      "hallucinations": [
+        "Pose 4 'crouching or sitting position, looking slightly upward'",
+        "Pose 5 'sitting, body facing right but head turned back toward left'",
+        "Pose 6 'lying down horizontally'",
+        "'Large white eyes with small black pupils' (incorrect - eyes are black dots)",
+        "'White triangular nose' (incorrect - nose is black)"
+      ],
+      "justification": "Structural accuracy is fine, but the model fabricates 6 distinct poses and even invents wrong facial features (white eyes, white nose). Explicitly frames it as high-to-low energy transition, completely missing the looping run cycle."
+    },
+    "gemma4-31b|think": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2x3 grid layout",
+        "Numbers 1-6 in correct positions",
+        "Medium blue cat with pinkish-peach inner ears",
+        "Light periwinkle blue background",
+        "Small black dot eyes, black oval nose"
+      ],
+      "key_misses": [
+        "Frames it as a single jumping-and-landing sequence (partially closer to truth)",
+        "But ends with 'lying flat on belly stretched out' which is wrong"
+      ],
+      "hallucinations": [
+        "Pose 2 'in mid-air beginning descent'",
+        "Pose 3 'landing, front paws touching ground, back legs still in air'",
+        "Pose 5 'almost in a sitting position'",
+        "Pose 6 'lying flat on belly stretched out to right'"
+      ],
+      "justification": "Better than gemma4-12b in that it identifies a coherent motion (jump/landing), but still misses the run cycle concept and ends with fabricated lying-flat pose. Eye description (black dots) is more accurate than 26b."
+    },
+    "gemma4-e4b|think": {
+      "holistic_score": 3,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2x3 grid layout",
+        "Numbers 1-6 above panels",
+        "Single consistent character across panels",
+        "Light pale blue background",
+        "Medium blue character"
+      ],
+      "key_misses": [
+        "Describes 'running, sitting, crouching etc.' as range of motion",
+        "Misses run cycle concept entirely"
+      ],
+      "hallucinations": [
+        "'Sitting in panels 4 and 5' (wrong)",
+        "'Crouching in panel 6' (wrong - it's a stride phase)",
+        "Calls it a 'character reference sheet' showing range of motion rather than animation cycle"
+      ],
+      "justification": "Generic but accurate structural description. Misses the run cycle nature entirely, instead framing it as a pose reference sheet demonstrating different actions. Loses points for missing the core animation concept."
+    },
+    "glm-4.6v-flash-9b|think": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2-row 3-column grid",
+        "Numbers 1-6 in correct placement",
+        "Medium blue cats with light pink/peach inner ears",
+        "White muzzle area, black dot eyes",
+        "Pale light blue background",
+        "CORRECTLY identifies sequential motion as 'running or walking cycle'",
+        "Notes 'frame-by-frame animation of a cat's movement'"
+      ],
+      "key_misses": [
+        "Says 'white nose with small black tip' (nose is fully black)",
+        "Doesn't explicitly state single looping run cycle, hedges as 'running or walking'"
+      ],
+      "hallucinations": [
+        "Minor: 'white nose with a small black tip'"
+      ],
+      "justification": "One of the better responses. Correctly identifies this as a sequential motion cycle (running/walking) rather than 6 distinct actions. Keeps the description concise without inventing false per-frame actions. Minor facial feature error."
+    },
+    "qwen3-vl-4b|think": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Six frames in 2 rows of 3",
+        "Numbers 1-6 in dark blue sans-serif",
+        "Blue cat with pink inner ears, white muzzle, black eye and nose",
+        "Light blue background",
+        "Recognizes this as 'animation cycle' and 'motion of a cat running or leaping'"
+      ],
+      "key_misses": [
+        "Frame 4: 'landed or crouching with front paws down' - partially off",
+        "Frame 5: 'crouched preparatory stance' - off",
+        "Doesn't explicitly say 'looping' run cycle"
+      ],
+      "hallucinations": [
+        "Frame 6: 'final running pose similar to frame 1' (frames 1 and 6 are not actually similar)",
+        "Calls 'eye' singular - 'small round black eye'"
+      ],
+      "justification": "Good recognition of the animation/running concept. Frame-by-frame description is mostly run-cycle oriented but drifts into 'crouched preparatory stance' for frames 4-5. Better than gemma variants but less precise than qwen3-vl-8b."
+    },
+    "qwen3-vl-8b|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Six-frame animation sequence of a running cat (CORRECT core concept)",
+        "2x3 grid layout with frame positions",
+        "Numbers 1-6 in black",
+        "Medium-blue cat with pink inner ears, white muzzle, black nose",
+        "Solid light blue-gray background",
+        "Shadow beneath each cat",
+        "Explicitly: 'various stages of a running gait, with legs and tail moving in a cyclical pattern'",
+        "Notes 'continuous running motion', 'cyclical pattern', 'mechanics of a running stride'"
+      ],
+      "key_misses": [
+        "Says 'subtle gray shadow' - shadow is actually blue-tinted",
+        "Minor: 'black numeral positioned above or to the left' - numbers are above"
+      ],
+      "hallucinations": [],
+      "justification": "Best response. Explicitly and correctly identifies the looping run cycle, uses terms like 'cyclical pattern', 'running gait', 'mechanics of a running stride'. Avoids fabricating distinct actions. Character and layout details are accurate."
+    },
+    "qwen3.5-4b|nothink": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Six sequential frames in 2 rows of 3",
+        "Numbers 1-6 in dark blue above each frame",
+        "Blue cat with pink interior ears, white muzzle, black nose, black dot eyes",
+        "Solid pale blue background",
+        "Shadow beneath each cat",
+        "CORRECTLY: 'smooth, looping animation of the cat running or bounding forward'",
+        "Notes 'Frame 1 and Frame 6 are nearly identical... suggesting a loopable animation'",
+        "Explicitly identifies cyclical motion pattern"
+      ],
+      "key_misses": [
+        "Says frames 4-5 are 'slowing down or turning' - partially off",
+        "Calls nose 'white with black outline' (should be solid black)"
+      ],
+      "hallucinations": [
+        "Minor: 'white nose with black outline'",
+        "'Slowing down or turning' for frames 4-5"
+      ],
+      "justification": "Excellent response. Strongly identifies the looping animation concept, even noting that frames 1 and 6 are nearly identical (loop point). Frames it as bounding/running cycle rather than 6 distinct actions. Minor facial feature inaccuracy."
+    },
+    "qwen3.5-4b|think": {
+      "holistic_score": 0,
+      "failure_mode": "truncated",
+      "key_hits": [],
+      "key_misses": [
+        "Empty response - no analysis provided"
+      ],
+      "hallucinations": [],
+      "justification": "Empty/truncated response. No content to evaluate."
+    },
+    "qwen3.5-9b|nothink": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Six numbered labels in 2x3 grid",
+        "Numbers 1-6 in dark blue sans-serif",
+        "Medium blue cat with pink inner ears, white muzzle, black nose",
+        "Uniform pale lavender/blue background",
+        "Subtle gray-blue oval shadow under each cat"
+      ],
+      "key_misses": [
+        "Frames it as 'pose library' / 'behavioral states' rather than run cycle",
+        "Per-panel descriptions invent distinct actions"
+      ],
+      "hallucinations": [
+        "Panel 4: 'Cat sitting upright, tail curled behind' (wrong)",
+        "Panel 5: 'Cat in seated position with front paws tucked under' (wrong)",
+        "Panel 6: 'Cat lying down on stomach, front paws stretched forward' (wrong)",
+        "Says 'pose library' / 'behavioral states' rather than animation"
+      ],
+      "justification": "Good structural and character description but commits the critical error: describes 6 distinct actions (sitting, lying down) rather than a run cycle. Calls it a 'pose library' for a character."
+    },
+    "qwen3.5-9b|think": {
+      "holistic_score": 3,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Six panels in 2 rows x 3 columns",
+        "Numbers 1-6 in correct positions",
+        "Medium-blue cat with pink inner ears, white muzzle",
+        "Pale blue background",
+        "Faint light-blue oval shadow under cat"
+      ],
+      "key_misses": [
+        "Misses run cycle concept entirely",
+        "Describes 6 distinct unrelated poses"
+      ],
+      "hallucinations": [
+        "Panel 3: 'walking or trotting pose'",
+        "Panel 4: 'low crouch or sitting position'",
+        "Panel 5: 'sitting upright. Hind legs tucked beneath'",
+        "Panel 6: 'lying down in stretched-out position, resembling superman pose'",
+        "Panel 1: 'front legs extended forward, back legs extended backward' (overstretched)"
+      ],
+      "justification": "Surprisingly weak for the think variant. Commits the critical error of inventing 6 distinct actions (sitting, lying superman pose, trotting) rather than recognizing the run cycle. Detailed per-panel breakdown is mostly fabricated."
+    },
+    "qwen3.6-27b|nothink": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Six-panel animation sequence in 2 rows of 3",
+        "Numbers 1-6 in dark blue sans-serif",
+        "Medium blue cat with peach/pink inner ears, white nose area, black eyes",
+        "Solid light blue background",
+        "Soft elongated shadow beneath each cat",
+        "CORRECTLY: 'looping or cyclical movement - likely running or pouncing'",
+        "Notes 'panel 6 flows back into panel 1'",
+        "Frames it as continuous motion cycle"
+      ],
+      "key_misses": [
+        "Panel 3: 'standing upright, tail raised' - off",
+        "Panel 4: 'sitting/crouching' - partially off",
+        "Panel 5: 'relaxed, tail straighter' - off",
+        "Says 'small white oval nose with black dot for nostril' (nose is black)"
+      ],
+      "hallucinations": [
+        "Minor: white oval nose description",
+        "Panel-by-panel drifts into sitting/standing descriptions"
+      ],
+      "justification": "Strong response that explicitly identifies the looping/cyclical animation concept ('panel 6 flows back into panel 1'). Loses some points for drift in per-panel descriptions (sitting, standing upright) but overall captures the core run cycle concept."
+    },
+    "qwen3.6-27b|think": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Six animation frames in 2x3 grid",
+        "Numbers 1-6 in correct positions",
+        "Medium blue cat with pink inner ears, white muzzle, black nose",
+        "Pale icy blue background",
+        "Faint elongated shadow under cat",
+        "Mentions 'movement cycle' / 'walk, pounce, or playful stretch'"
+      ],
+      "key_misses": [
+        "Hedges on cycle type ('walk, pounce, or playful stretch')",
+        "Frame 3: 'standing or walking pose'",
+        "Frame 4-5: 'crouching or sitting'",
+        "Doesn't lock onto run cycle firmly"
+      ],
+      "hallucinations": [
+        "Frame 3: 'walking pose, tail curved upward in question-mark shape'",
+        "Frame 4: 'crouching or sitting position'",
+        "Frame 5: 'sitting or crouching, more relaxed'"
+      ],
+      "justification": "Recognizes it as a movement cycle but hedges between walk/pounce/stretch. Per-frame descriptions drift into sitting/crouching, partially missing the run cycle. Weaker than its nothink counterpart."
+    },
+    "qwen3.6-35b-a3b|nothink": {
+      "holistic_score": 3,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2x3 grid with numbers 1-6",
+        "Dark blue sans-serif numbers above each cat",
+        "Medium blue cat with pale pink inner ears, white muzzle, black nose",
+        "Soft uniform light blue background",
+        "Subtle oval shadow beneath each cat"
+      ],
+      "key_misses": [
+        "Misses run cycle completely",
+        "Calls it 'educational or reference sheet illustrating basic cat poses'",
+        "Lists 6 distinct unrelated poses"
+      ],
+      "hallucinations": [
+        "Pose 2: 'crouched low, preparing to pounce or land'",
+        "Pose 3: 'standing upright on all fours, alert and balanced - neutral stance'",
+        "Pose 4: 'sitting with hind legs tucked under'",
+        "Pose 5: 'low squat... stretching'",
+        "Pose 6: 'lying flat on stomach... relaxed or sneaking'",
+        "Calls it 'tutorial or character design guide'"
+      ],
+      "justification": "Clean structural description but completely misses the run cycle. Instead invents 6 distinct actions (sitting, lying, sneaking, pouncing) and frames it as a pose reference / drawing tutorial. Critical concept missed."
+    },
+    "qwen3.6-35b-a3b|think": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "2x3 grid with numbers 1-6",
+        "Medium blue cat with pink inner ears, white muzzle, black nose/eye",
+        "Pale blue background",
+        "Faint light blue oval shadow",
+        "Notes 'animation breakdown' / 'states of movement and rest'"
+      ],
+      "key_misses": [
+        "Frames it as 'movement and rest' rather than single run cycle",
+        "Per-pose descriptions invent distinct actions"
+      ],
+      "hallucinations": [
+        "Pose 3: 'standing on all fours, looking to the right'",
+        "Pose 4: 'crouching low, rear end tucked under'",
+        "Pose 5: 'sitting upright on haunches'",
+        "Pose 6: 'lying flat on stomach in loaf position but stretched out'",
+        "Calls it 'character design sheet'"
+      ],
+      "justification": "Acknowledges 'animation breakdown' but frames it as 'movement and rest' and lists 6 distinct actions including sitting upright and lying in loaf position. Misses the run cycle. Better than 35b-nothink on motion concept but still invents poses."
+    }
+  },
+  "ranking": [
+    "qwen3-vl-8b|think",
+    "qwen3.5-4b|nothink",
+    "qwen3.6-27b|nothink",
+    "glm-4.6v-flash-9b|think",
+    "qwen3-vl-4b|think",
+    "qwen3.6-27b|think",
+    "gemma4-31b|think",
+    "qwen3.6-35b-a3b|think",
+    "qwen3.5-9b|nothink",
+    "gemma4-12b|think",
+    "gemma4-e4b|think",
+    "gemma4-26b-a4b|think",
+    "qwen3.6-35b-a3b|nothink",
+    "qwen3.5-9b|think",
+    "qwen3.5-4b|think"
+  ],
+  "notes": "The critical discriminator on this image is recognizing that the 6 frames form a single looping RUN CYCLE, not 6 distinct actions (sitting, lying down, crouching, etc.). Top performers (qwen3-vl-8b, qwen3.5-4b-nothink, qwen3.6-27b-nothink, glm-4.6v-flash-9b) explicitly use cyclical/looping language and avoid fabricating unrelated poses. Most failures come from inventing 'sitting upright', 'lying flat', or 'superman pose' descriptions for frames that are actually mid-stride. Note qwen3.5-4b|think produced an empty/truncated response. Interestingly, several nothink variants outperformed their think counterparts (qwen3.5-4b, qwen3.6-27b), suggesting extended thinking sometimes led to over-interpretation of individual frames. Larger Gemma models (26b, 31b) did not outperform smaller ones meaningfully. Color and structural details (grid, numbers, palette) were nearly universally accurate - the differentiator is purely the animation-cycle insight."
+}

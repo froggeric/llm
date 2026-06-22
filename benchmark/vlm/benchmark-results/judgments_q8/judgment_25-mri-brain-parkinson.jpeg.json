@@ -1,0 +1,137 @@
+{
+  "image": "25-mri-brain-parkinson.jpeg",
+  "image_path": "test-images/25-mri-brain-parkinson.jpeg",
+  "category": "medical_mri",
+  "ground_truth_summary": "Six brain MRI slices in a 2x3 grid showing coronal/sagittal/axial planes. Orientation markers R, MF, and AL (AL only on bottom-middle). 5cm scale on all panels EXCEPT the middle column. NO annotations, arrows, or visible Parkinson's-specific lesions.",
+  "judgments": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "run_id": "q8-1",
+      "score": 9,
+      "hallucination": false,
+      "hallucination_details": "No fabricated lesions or annotations claimed. Anatomical descriptions are reasonable. Minor: scale-bar placement and MF/AL positions described loosely but not materially wrong.",
+      "accuracy": "Correctly identifies 2x3 grid, 6 MRI slices, planes (coronal/sagittal/axial). Correctly notes AL on bottom-middle panel, MF present, R marker present. Correctly identifies 5cm scale bars. No hallucinated Parkinson's features or lesions.",
+      "errors": [
+        "Claims '5cm' appears on top-middle panel scale, but ground truth says middle column has NO 5cm scale.",
+        "Claims '5cm' appears on bottom-middle panel, which ground truth states is in the middle column (no scale).",
+        "Slight imprecision on which exact panels have which marker placement."
+      ],
+      "completeness": "Comprehensive coverage of layout, text, panels, colors, and features.",
+      "ranking_rationale": "Excellent description overall; only minor errors on scale bar presence in middle column. No hallucination."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "run_id": "q8-3",
+      "score": 4,
+      "hallucination": true,
+      "hallucination_details": "MAJOR HALLUCINATION: Claims 'A highly notable feature is present in the bottom middle panel (sagittal view). This panel clearly shows a large, well-defined mass or lesion located in the posterior fossa, specifically involving the cerebellum. This mass is significantly larger than the surrounding normal tissue.' This is fabricated — the ground truth explicitly states no lesions or Parkinson's-specific features are visible.",
+      "accuracy": "Correctly identifies 2x3 grid and orientation markers. INCORRECTLY claims T2-weighted (ground truth notes likely T1). Hallucinates a large cerebellar mass/lesion.",
+      "errors": [
+        "HALLUCINATION: Fabricated large mass/lesion in posterior fossa/cerebellum in bottom-middle panel.",
+        "Claims T2-weighted sequence — not verified, possibly wrong.",
+        "Inconsistent view identification (e.g., says bottom-left is both axial and coronal in different places)."
+      ],
+      "completeness": "Covers layout and text, but the hallucinated pathology dominates the response.",
+      "ranking_rationale": "Disqualified by significant hallucination of a brain lesion that does not exist. This is exactly the kind of fabricated finding the prompt warns against."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "run_id": "q8-2",
+      "score": 7,
+      "hallucination": false,
+      "hallucination_details": "No fabricated lesions or specific Parkinson's markers claimed. Discusses sequences in general terms which is acceptable.",
+      "accuracy": "Correctly identifies 2x3 grid, coronal/sagittal/axial planes per panel, R/MF/AL markers. Notes 5cm scale bars. Does not hallucinate lesions.",
+      "errors": [
+        "Claims 5cm appears on bottom-middle panel which ground truth says is in middle column (no scale).",
+        "Claims 5cm on top-middle which is also middle column (no scale).",
+        "Decodes AL as 'axial level' — speculative but not a hallucination of a feature."
+      ],
+      "completeness": "Good coverage of layout, text, objects, colors, and features.",
+      "ranking_rationale": "Solid description with no hallucination; minor errors on middle-column scale bars."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "run_id": "q8-1",
+      "score": 6,
+      "hallucination": false,
+      "hallucination_details": "No fabricated lesions or Parkinson's markers claimed.",
+      "accuracy": "Correctly identifies 2x3 grid and orientation markers R, MF, AL. Identifies planes (coronal/sagittal/axial). Does not hallucinate lesions.",
+      "errors": [
+        "Claims 5cm scale appears on 'each of the three top images and the three bottom images' — implies all panels have scale, but middle column has no scale.",
+        "Identifies bottom-left as axial view, but ground truth says it's coronal.",
+        "Some panel view identifications are inconsistent or speculative."
+      ],
+      "completeness": "Good layout/text coverage but with redundancy and some inaccuracies in view identification.",
+      "ranking_rationale": "No hallucination, but multiple errors on scale-bar presence and panel views."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "run_id": "q8-2",
+      "score": 6,
+      "hallucination": false,
+      "hallucination_details": "No fabricated lesions claimed. Discusses anatomical features in general terms.",
+      "accuracy": "Correctly identifies 2x3 grid, R/MF/AL markers, 5cm scale. Identifies planes per panel. No hallucinated pathology.",
+      "errors": [
+        "Claims 5cm 'appears on the right side of each panel' — wrong, middle column has no scale.",
+        "Identifies bottom-left as axial but ground truth says coronal.",
+        "Describes anatomical features (optic chiasm, pituitary) that may not be clearly distinguishable — borderline over-claiming but not strict hallucination."
+      ],
+      "completeness": "Comprehensive but contains several factual errors on scale and views.",
+      "ranking_rationale": "No hallucination of lesions, but multiple errors on scale presence and view identification."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "run_id": "q8-nothink-2",
+      "score": 7,
+      "hallucination": false,
+      "hallucination_details": "No fabricated lesions claimed. Mentions evaluating tumors/abnormalities as clinical context, but doesn't claim to see any.",
+      "accuracy": "Correctly identifies 2x3 grid, R/MF/AL markers, coronal/sagittal/axial planes per panel. Notes 5cm scale bars.",
+      "errors": [
+        "Decodes 'MF' as 'Medical File' or patient identifier — speculative.",
+        "Decodes 'AL' as 'Anterior-Left' — speculative.",
+        "Slight imprecision on scale bar placement but generally correct that middle column is treated differently (says scale bars present in 'most' panels)."
+      ],
+      "completeness": "Detailed coverage of layout, text, objects, colors, features.",
+      "ranking_rationale": "Solid description without hallucination; minor speculation on label meanings but acceptable."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "run_id": "q8-think-1",
+      "score": 8,
+      "hallucination": false,
+      "hallucination_details": "No fabricated lesions claimed. Anatomical features described are within normal visible structures.",
+      "accuracy": "Correctly identifies 2x3 grid, R/MF/AL markers, planes per panel (coronal, sagittal, axial). Notes 5cm scale bars and their general placement.",
+      "errors": [
+        "Claims 5cm appears on right side of top-left, top-right, bottom-right and on left of bottom-middle — the bottom-middle claim conflicts with ground truth (middle column should have no scale).",
+        "Slight inconsistency on AL placement (described as left side of bottom-middle which matches)."
+      ],
+      "completeness": "Comprehensive coverage of layout, text, anatomical features, planes.",
+      "ranking_rationale": "Strong description with no hallucination; minor errors on scale placement in middle column."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "run_id": "q8-nothink-3",
+      "score": 5,
+      "hallucination": false,
+      "hallucination_details": "No fabricated lesions claimed.",
+      "accuracy": "Correctly identifies 2x3 grid, R/MF/AL markers, planes (coronal/sagittal/axial). Discusses anatomical structures.",
+      "errors": [
+        "HALLUCINATION-LITE: Claims '5cm appears vertically aligned on the right edge of every panel' — directly contradicts ground truth that middle column has no scale. Repeats this claim firmly.",
+        "Decodes MF as 'Medical Facility' or 'Modality Flag' — speculative.",
+        "Claims 'corpus callosum' prominently visible as C-shaped — borderline over-claiming but plausible."
+      ],
+      "completeness": "Comprehensive but contains a firm erroneous claim about scale presence on every panel.",
+      "ranking_rationale": "No lesion hallucination, but confidently states scale on every panel — directly wrong about middle column. Otherwise reasonable."
+    }
+  ],
+  "rankings": [
+    {"model": "gemma4-12b-Q8|think", "score": 9, "reason": "Best overall: accurate planes, markers, AL placement, no hallucination. Only minor scale-bar placement errors."},
+    {"model": "qwen3.5-4b-Q8|think", "score": 8, "reason": "Strong accurate description with no hallucination; minor scale placement imprecision."},
+    {"model": "glm-4.6v-flash-9b-Q8|think", "score": 7, "reason": "Accurate with no hallucination; minor errors on middle-column scale."},
+    {"model": "qwen3.5-4b-Q8|nothink", "score": 7, "reason": "Solid description without hallucination; some label decoding speculation."},
+    {"model": "qwen3-vl-8b-Q8|think", "score": 6, "reason": "No hallucination but several errors on scale and view identification."},
+    {"model": "qwen3-vl-4b-Q8|think", "score": 6, "reason": "No hallucination but errors on scale placement and view identification."},
+    {"model": "qwen3.5-9b-Q8|nothink", "score": 5, "reason": "Confidently claims scale on every panel (middle column has none); otherwise decent."},
+    {"model": "gemma4-e4b-Q8|think", "score": 4, "reason": "Major hallucination: fabricated large cerebellar mass/lesion in posterior fossa that does not exist."}
+  ]
+}

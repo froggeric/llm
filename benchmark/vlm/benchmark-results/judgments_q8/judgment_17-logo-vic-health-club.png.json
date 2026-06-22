@@ -1,0 +1,60 @@
+{
+  "image": "17-logo-vic-health-club.png",
+  "ground_truth": "Minimalist monochrome logo: heart at center top, two hands cradling/supporting it, laurel wreath encircling. Text: 'VIC Health Club'.",
+  "judgments": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "run_id": "q8-2",
+      "score": 10,
+      "rationale": "Perfect. Correctly identifies heart, hands cradling, laurel wreath encircling, monochrome black on white, and exact verbatim text 'VIC Health Club'. Note on 'VIC' all caps and 'Health Club' title case is accurate. No hallucinations."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "run_id": "q8-2",
+      "score": 9,
+      "rationale": "Very strong. Correctly identifies heart, hands cupping, wreath, monochrome black on white, and 'VIC Health Club' text. Minor deduction: claims text appears 'twice' which is incorrect (over-extrapolation from the implicit logo/wordmark)."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "run_id": "q8-2",
+      "score": 9,
+      "rationale": "Excellent. Correctly identifies heart, two hand silhouettes cupping, circular laurel wreath, monochrome, and exact text 'VIC Health Club'. Minor wording issue ('cross-like base' at the bottom of the wreath is a slight misread but not material)."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "run_id": "q8-3",
+      "score": 4,
+      "rationale": "Significant OCR failure: reads text as 'Civic Health Club' instead of 'VIC Health Club'. Also hallucinates a 'mustache-like shape' and mischaracterizes the hands/wreath as 'leaf-like or flame-like' and abstract shapes. Misses the hands entirely. Heart and monochrome correctly identified."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "run_id": "q8-2",
+      "score": 7,
+      "rationale": "Correctly identifies heart, two hands cupping/cradling, monochrome, and reads text as 'Vic Health Club' (capitalization error: should be 'VIC' all caps, not 'Vic'). Completely omits the laurel wreath — a notable miss given it is one of three key symbolic elements."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "run_id": "q8-nothink-3",
+      "score": 5,
+      "rationale": "OCR failure: reads text as 'WIC Health Club' instead of 'VIC Health Club', then compounds the error with an elaborate (and wrong) cultural-context explanation tying it to the WIC nutrition program. Does identify the heart and that flanking shapes form a wreath/crown structure, but fails to clearly identify the hands. Significant over-extrapolation from a misread."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "run_id": "q8-think-1",
+      "score": 5,
+      "rationale": "OCR failure: reads text as 'WIC Health Club' instead of 'VIC Health Club', with a hallucinated WIC/Women-Infants-Children cultural-context tangent. Correctly identifies heart and a wreath composed partly of stylized hands, but the analysis is muddled (hands appear both as part of wreath and at the bottom)."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "run_id": "q8-nothink-2",
+      "score": 5,
+      "rationale": "OCR failure: reads text as 'Vital Health Hub' instead of 'VIC Health Club' — completely wrong brand name. Correctly identifies heart, two hands cupped beneath, and a wreath-like arrangement; correctly notes monochrome black on white. Loses heavy points for the text error and the long fabricated brand-narrative built around the wrong name."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|think",
+      "run_id": "q8-think-2",
+      "score": 5,
+      "rationale": "OCR failure: reads text as 'vivo health hub' (lowercase) instead of 'VIC Health Club'. Correctly identifies heart, two cupped hands, and outer ring/wreath of small irregular leaf/petal shapes, plus monochrome. Also makes odd aside that the ring shapes might resemble 'cells or bacteria'. Loses heavy points for wrong text and lowercase claim."
+    }
+  ]
+}

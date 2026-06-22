@@ -1,0 +1,158 @@
+{
+  "image": "12-manga-nausicaa-colour.png",
+  "judgments": [
+    {
+      "model": "gemma4-12b|think",
+      "holistic_score": 4,
+      "failure_mode": "wrong_panel_count + wrong_character_count + wrong_text + wrong_setting",
+      "key_hits": ["page 10", "ceramic blade text", "eyeshield text", "OWWW OW", "explosion/impact moment", "cavernous setting", "multiple eyes close-up"],
+      "key_misses": ["Nausicaa/Miyazaki/Ghibli/Ohm identification", "correct panel count (11)", "single character not two", "gunpowder explosion in panel 9", "transparent eye dome"],
+      "hallucinations": ["Invents a second character (rugged man with white hair and beard)", "Fabricates 'energy canon' phrasing (actual: 'gunship canopy')", "Fabricates 'porta herdera' text", "Invents glowing crystals and minerals", "'arrowers' instead of 'armorers'"],
+      "justification": "Decent visual atmosphere and captures some text and the impact/explosion moment, but fabricates a second character, garbles multiple text passages, miscounts panels (10 vs 11), and misses every franchise identifier. Misidentifies the eyeshield as energy canon."
+    },
+    {
+      "model": "gemma4-26b-a4b|think",
+      "holistic_score": 5,
+      "failure_mode": "wrong_character_gender + wrong_art_attribution + text_garbling",
+      "key_hits": ["page 10", "ceramic blade text", "eyeshield text", "OWWW OW", "off the ground text", "explosion panel with bomu", "light/beautiful text", "multiple eye close-up"],
+      "key_misses": ["Nausicaa identification (calls character 'he')", "Miyazaki/Ghibli/Ohm", "correct panel count (lists ~11 but layout off)", "gunpowder detonation in panel 9", "transparent eye dome from Ohm shell"],
+      "hallucinations": ["Identifies character as male explorer/scientist with breathing apparatus", "'カッ' sound effects misidentified"],
+      "justification": "Strong text transcription and notes the explosion (panel 9 with ボム) and eye close-up. Calls character male (Nausicaa is female), no franchise recognition, but panel breakdown is more accurate than gemma4-12b."
+    },
+    {
+      "model": "gemma4-31b|think",
+      "holistic_score": 7,
+      "failure_mode": "no_franchise_id + minor_panel_count_off",
+      "key_hits": ["page 10", "11 panels (correct!)", "ceramic blade text", "armorers text", "HYAH", "eyeshield/gunship canopy", "OWWW OW", "off the ground", "panel 9 explosion with ボム", "so light/beautiful", "multiple dome eyes close-up", "protagonist in blue tunic with respirator mask"],
+      "key_misses": ["Nausicaa/Miyazaki/Ghibli/Ohm identification", "gunpowder detonation detail", "transparent eye dome terminology"],
+      "hallucinations": ["Rifle slung across back (likely a sword)", "purple fungal growths (debatable)"],
+      "justification": "Best panel count (correctly identifies 11). Strong text transcription across most panels, captures explosion with ボム and カチッ sound effects, recognizes respirator mask, dome eyes, and ceramic blade. Only misses franchise identity and minor setting details."
+    },
+    {
+      "model": "gemma4-e4b|think",
+      "holistic_score": 3,
+      "failure_mode": "wrong_panel_count + wrong_character_count + hallucinated_armor + text_partial",
+      "key_hits": ["page 10 implied", "some dialogue text (ceramic blade, eyeshield, OWWW OW, off the ground, so beautiful)", "explosion in panels"],
+      "key_misses": ["Nausicaa/Miyazaki/Ghibli/Ohm", "correct panel count (says 10)", "single character", "correct character description (says multiple male characters in futuristic armor)", "cavernous setting", "Ohm creature identity"],
+      "hallucinations": ["Multiple male characters in futuristic high-tech armor", "Bulky cyan-trimmed suits", "Handheld firearms", "Energy effects", "Smoke and debris everywhere"],
+      "justification": "Massively over-hallucinates: invents multiple armored soldiers and futuristic firearms when there is one character in a tunic. Captures some text but misidentifies essentially every visual element. Worst visual accuracy."
+    },
+    {
+      "model": "glm-4.6v-flash-9b|think",
+      "holistic_score": 5,
+      "failure_mode": "wrong_panel_count + sparse_panel_breakdown + minor_text_errors",
+      "key_hits": ["page 10", "armorers text", "ceramic blade text", "HYAH", "eyeshield/gunship canopy", "OWWW OW", "off the ground", "ボム explosion", "so light/beautiful", "multiple eye close-up", "blue tunic/brown helmet character"],
+      "key_misses": ["Nausicaa/Miyazaki/Ghibli/Ohm", "correct panel count (says 5 rows, ambiguous)", "gunpowder detonation detail", "transparent eye dome"],
+      "hallucinations": ["'purple flowers' on creature", "'mechanical device (weapon)' assembly"],
+      "justification": "Good text transcription and captures explosion and eye close-up. Layout breakdown is sparse and lists an empty panel incorrectly. No franchise recognition. Character description mostly accurate (blue tunic, brown helmet, mask)."
+    },
+    {
+      "model": "qwen3-vl-4b|think",
+      "holistic_score": 4,
+      "failure_mode": "wrong_panel_count + invented_companion + minor_setting_errors",
+      "key_hits": ["page 10", "ceramic blade text", "armorers text", "HYAH", "eyeshield", "OWWW OW", "off the ground", "so light/beautiful", "creature with multiple round glassy eyes"],
+      "key_misses": ["Nausicaa/Miyazaki/Ghibli/Ohm", "correct panel count (says 9)", "single character (invents companion)", "explosion panel partially missed"],
+      "hallucinations": ["Invents a second companion character in top right", "Underwater/subterranean environment with bioluminescent flora", "mollusk/crustacean creature description (close but Ohm-like)"],
+      "justification": "Decent text transcription and identifies the multi-eyed Ohm-like creature well. Invents a second character, miscounts panels, but the creature description (segmented, armored, multiple glassy eyes) is one of the better Ohm-adjacent descriptions despite not naming it."
+    },
+    {
+      "model": "qwen3-vl-8b|think",
+      "holistic_score": 5,
+      "failure_mode": "wrong_panel_count + minor_creature_misid + missing_explosion_detail",
+      "key_hits": ["page 10", "ceramic blade", "armorers text", "HYAH", "eyeshield", "OWWW OW", "off the ground", "ボム explosion", "so light/beautiful", "creature with multiple glass-like eyes", "blue tunic/brown hair character"],
+      "key_misses": ["Nausicaa/Miyazaki/Ghibli/Ohm", "correct panel count (says 9)", "gunpowder detonation detail", "transparent eye dome"],
+      "hallucinations": ["'tusks' on helmet (actually respirator tubes)", "Bubble as 'protective device'"],
+      "justification": "Good text transcription including Japanese onomatopoeia (ボム, カーン). Correctly identifies multi-eyed alien creature. Miscounts panels and gets helmet detail wrong (tusks vs respirator). No franchise recognition."
+    },
+    {
+      "model": "qwen3.5-4b|nothink",
+      "holistic_score": 6,
+      "failure_mode": "wrong_panel_count + minor_art_attribution_vagueness",
+      "key_hits": ["page 10", "ceramic blade text", "armorers text", "HYAH", "eyeshield/gunship canopy", "OWWW OW", "off the ground", "ボム explosion with カチン", "so light/beautiful", "bioluminescent environment", "single male protagonist in blue tunic", "ceramic blade vs alien armor"],
+      "key_misses": ["Nausicaa/Miyazaki/Ghibli/Ohm", "correct panel count (says 9)", "gunpowder detonation detail", "transparent eye dome from Ohm"],
+      "hallucinations": ["'long white protrusions (horns or sensors)' on helmet (respirator mask)", "'explosive device/grenade'"],
+      "justification": "Excellent text transcription including all Japanese SFX (ボム, カチン). Correctly identifies single protagonist, alien armor, bioluminescent setting, ceramic blade testing. Miscounts panels at 9 but overall narrative arc captured well."
+    },
+    {
+      "model": "qwen3.5-4b|think",
+      "holistic_score": 5,
+      "failure_mode": "wrong_art_attribution + wrong_panel_count + hallucinated_gun_assembly",
+      "key_hits": ["page 10", "ceramic blade text", "armorers text", "HYAH", "eyeshield/gunship canopy", "OWWW OW", "off the ground", "ボム explosion with カチン", "so light/beautiful", "bioluminescent setting", "blue tunic protagonist"],
+      "key_misses": ["Nausicaa/Miyazaki/Ghibli/Ohm", "correct panel count (says ~12)", "gunpowder detonation detail"],
+      "hallucinations": ["Art style attributed to Akira Toriyama (Dragon Ball creator) - WRONG", "Hands shown 'assembling a gun or weapon'"],
+      "justification": "Good text and atmosphere capture but commits a serious hallucination by attributing the art style to Akira Toriyama (it's Miyazaki). Also invents gun assembly. Despite being wrong on attribution, the visual description is otherwise decent."
+    },
+    {
+      "model": "qwen3.5-9b|nothink",
+      "holistic_score": 4,
+      "failure_mode": "wrong_franchise_id + wrong_panel_count + character_misidentification",
+      "key_hits": ["page 10", "ceramic blade text", "armorers text", "HYAH", "eyeshield/gunship canopy", "OWWW OW", "off the ground", "ボム explosion", "so light/beautiful", "multiple eye close-up", "blue tunic protagonist"],
+      "key_misses": ["Nausicaa/Miyazaki/Ghibli/Ohm (correct identification!)", "correct panel count (says 10)", "gunpowder detonation detail"],
+      "hallucinations": ["Identifies protagonist as 'Link from The Legend of Zelda' - WRONG", "'curved tubes resembling tusks or horns' on helmet"],
+      "justification": "Strong text transcription and captures all key elements (explosion, eyes, ceramic blade), but hallucinates the protagonist as Link from Zelda - a confident wrong identification that displaces the actual Nausicaa. No franchise credit due to wrong guess."
+    },
+    {
+      "model": "qwen3.5-9b|think",
+      "holistic_score": 4,
+      "failure_mode": "wrong_franchise_id + wrong_panel_count",
+      "key_hits": ["page 10", "ceramic blade", "armorers text", "HYAH", "eyeshield/gunship canopy", "OWWW OW", "off the ground", "ボム explosion with カチン", "so light/beautiful", "multiple eye close-up", "blue tunic/brown boots character"],
+      "key_misses": ["Nausicaa/Miyazaki/Ghibli/Ohm", "correct panel count (says 10)", "gunpowder detonation"],
+      "hallucinations": ["Identifies protagonist as 'resembling Link from The Legend of Zelda' - WRONG", "'tusks or snout' on mask"],
+      "justification": "Strong text transcription with Japanese SFX. Captures explosion panel and creature eyes well. But confidently misidentifies character as Link from Zelda - wrong franchise. Panel count off (10 vs 11)."
+    },
+    {
+      "model": "qwen3.6-27b|nothink",
+      "holistic_score": 7,
+      "failure_mode": "no_franchise_id + minor_panel_count_off",
+      "key_hits": ["page 10", "11 panels (CORRECT!)", "ceramic blade text", "armorers text", "HYAH", "eyeshield/gunship canopy", "OWWW OW", "off the ground", "ボム explosion with カチッ and カーン", "so light/beautiful", "multiple bulbous eyes close-up", "young protagonist in blue tunic", "bioluminescent environment"],
+      "key_misses": ["Nausicaa/Miyazaki/Ghibli/Ohm", "gunpowder detonation detail", "transparent eye dome terminology"],
+      "hallucinations": ["'mollusk-like beings' (Ohm-adjacent description)"],
+      "justification": "Excellent: correctly identifies 11 panels, captures all key text including Japanese SFX (ボム, カチッ, カーン, トドドド), recognizes single young protagonist with helmet/mask, bioluminescent cavern, and multi-eyed creature. Only misses franchise name and gunpowder detail. Top-tier description."
+    },
+    {
+      "model": "qwen3.6-27b|think",
+      "holistic_score": 6,
+      "failure_mode": "no_franchise_id + wrong_panel_count + minor_character_gender",
+      "key_hits": ["page 10", "ceramic blade", "armorers text", "HYAH with キ", "eyeshield/gunship canopy", "OWWW OW", "off the ground", "ボム explosion with カチッ", "so light/beautiful", "multiple glassy eyes close-up", "blue tunic protagonist", "bioluminescent cave setting"],
+      "key_misses": ["Nausicaa/Miyazaki/Ghibli/Ohm", "correct panel count (says ~12)", "female protagonist", "gunpowder detonation detail"],
+      "hallucinations": ["Calls character 'young man' (Nausicaa is female)", "'pig's snout or stylized beard' description of mask", "Hands 'assembling a mechanical device (gun or engine part)'"],
+      "justification": "Strong panel-by-panel breakdown with most Japanese SFX (キ, トコトコ, ボム, カチッ, カーン). Recognizes multi-eyed creature, bioluminescent cave, eyeshield, and ceramic blade. Misgenders Nausicaa as male, miscounts panels, but overall solid."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|nothink",
+      "holistic_score": 5,
+      "failure_mode": "no_franchise_id + wrong_panel_count",
+      "key_hits": ["page 10", "ceramic blade text", "armorers text", "HYAH", "eyeshield/gunship canopy", "OWWW OW", "off the ground", "ボム explosion with キーー/トントン/カチッ/カーン", "so light/beautiful", "multiple glowing eyes close-up", "young protagonist with reddish-brown hair", "bioluminescent flora"],
+      "key_misses": ["Nausicaa/Miyazaki/Ghibli/Ohm", "correct panel count (says 9)", "gunpowder detonation detail"],
+      "hallucinations": ["'pistol or sidearm being assembled'", "'rifle slung over shoulder'"],
+      "justification": "Comprehensive text transcription with multiple Japanese SFX. Captures all key visual elements (multi-eyed creature, eyeshield, bioluminescent jungle, ceramic blade). Miscounts panels at 9. No franchise recognition but visually accurate."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|think",
+      "holistic_score": 6,
+      "failure_mode": "no_franchise_id + minor_panel_count + minor_creature_misid",
+      "key_hits": ["page 10", "ceramic blade", "armorers text", "HYAH", "eyeshield/gunship canopy", "OWWW OW", "off the ground", "ボム explosion with トントン/カチッ", "so light/beautiful", "multiple glassy compound eyes close-up", "blue tunic/brown aviator helmet protagonist", "bioluminescent forest"],
+      "key_misses": ["Nausicaa/Miyazaki/Ghibli/Ohm", "correct panel count (says ~10)", "gunpowder detonation detail"],
+      "hallucinations": ["'insect-like creature' (Ohm is more crustacean-like)", "'rifle slung over back'", "'mechanical device being assembled'"],
+      "justification": "Detailed panel-by-panel breakdown with most Japanese SFX (トントン, ボム, カチッ, カリーン). Recognizes compound eyes, transparent eyeshield, ceramic blade, bioluminescent forest. Miscounts panels slightly and misidentifies creature as insect. Solid overall."
+    }
+  ],
+  "ranking": [
+    {"model": "gemma4-31b|think", "score": 7},
+    {"model": "qwen3.6-27b|nothink", "score": 7},
+    {"model": "qwen3.6-27b|think", "score": 6},
+    {"model": "qwen3.6-35b-a3b|think", "score": 6},
+    {"model": "qwen3.5-4b|nothink", "score": 6},
+    {"model": "qwen3.6-35b-a3b|nothink", "score": 5},
+    {"model": "qwen3-vl-8b|think", "score": 5},
+    {"model": "gemma4-26b-a4b|think", "score": 5},
+    {"model": "glm-4.6v-flash-9b|think", "score": 5},
+    {"model": "qwen3.5-4b|think", "score": 5},
+    {"model": "gemma4-12b|think", "score": 4},
+    {"model": "qwen3-vl-4b|think", "score": 4},
+    {"model": "qwen3.5-9b|nothink", "score": 4},
+    {"model": "qwen3.5-9b|think", "score": 4},
+    {"model": "gemma4-e4b|think", "score": 3}
+  ],
+  "notes": "Notable: NO model identified the franchise as Nausicaä, Miyazaki, Ghibli, or named the Ohm. Two models (gemma4-31b|think, qwen3.6-27b|nothink) correctly counted 11 panels - rare accuracy. Two qwen3.5-9b variants confidently misidentified the protagonist as 'Link from The Legend of Zelda' - a high-confidence wrong guess. qwen3.5-4b|think hallucinated the art style as Akira Toriyama (Dragon Ball) when it is Hayao Miyazaki. gemma4-e4b|think was worst, inventing multiple armored soldiers and futuristic firearms. Most models captured the panel 9 explosion (ボム) and the multi-eyed Ohm close-up well, demonstrating accurate visual recognition even without franchise knowledge. The English dialogue transcription was generally strong across all models, with Japanese SFX (カチン, カーン) captured inconsistently."
+}

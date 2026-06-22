@@ -1,0 +1,196 @@
+{
+  "image": "04_architecture.png",
+  "image_path": "test-images/04_architecture.png",
+  "judged_at": "2026-06-21",
+  "judgments": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "run_id": "q8-2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified (Web Client, API Gateway FastAPI, Auth Service, Worker Queue, Postgres, Redis)",
+        "Colors correct: light blue, orange, light green, pink",
+        "Protocols correct: HTTPS (Web Client to API Gateway), gRPC (API Gateway to Auth Service / Worker Queue)",
+        "Shape semantics captured: rectangles for services, ovals for databases",
+        "Verbatim text listed accurately"
+      ],
+      "key_misses": [
+        "Did not mention the dangling/phantom third gRPC line in the middle (notable design quirk)",
+        "Describes the gRPC arrow as splitting into 'two paths' but ground truth notes three lines"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent comprehensive description with verbatim text, accurate colors/shapes/protocols. Only missed the subtle dangling third gRPC line that the ground truth flagged as a design quirk."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "run_id": "q8-2",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified",
+        "Colors correct (blue, orange/yellow, green, pink/light red)",
+        "Protocols correct (HTTPS, gRPC)",
+        "Service vs database shape distinction (rectangular vs oval/pill)",
+        "Sequential left-to-right directional flow"
+      ],
+      "key_misses": [
+        "Did not mention the dangling/phantom third gRPC line",
+        "Says title 'System Architecture' appears twice (only appears once in the actual diagram)",
+        "Slightly less precise on verbatim text transcription (paraphrased some labels)"
+      ],
+      "hallucinations": [
+        "Claims 'System Architecture' title appears twice"
+      ],
+      "justification": "Strong overall description with correct components, colors, and protocols. Lost points for a small hallucination about the title appearing twice and missing the dangling line quirk."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "run_id": "q8-2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with exact labels",
+        "Colors all correct (light blue, orange, light green, pink)",
+        "Protocols correct and mapped to specific connections",
+        "Shape distinction (rectangles for services, ovals for databases)",
+        "Layout (left to right with top/bottom branches)",
+        "Verbatim text accurately listed"
+      ],
+      "key_misses": [
+        "Did not mention the dangling/phantom third gRPC line"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent structured description matching the ground truth on every load-bearing detail (components, colors, shapes, protocols, layout). Only missed the subtle dangling line quirk."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "run_id": "q8-2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with exact labels",
+        "Colors correct including border colors (dark blue, dark orange, dark green, dark pink)",
+        "Protocols correctly mapped to arrows",
+        "Shape distinction (rectangles for components, ovals for data stores)",
+        "Layout flow described accurately (gRPC splits to two services)"
+      ],
+      "key_misses": [
+        "Did not mention the dangling/phantom third gRPC line"
+      ],
+      "hallucinations": [],
+      "justification": "Very thorough description with accurate verbatim text, colors, shapes, protocols, and layout. Even noted border colors. Missed the dangling line quirk but otherwise exemplary."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "run_id": "q8-2",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified",
+        "Colors correct (light blue, orange, light green, light pink)",
+        "Protocols correctly mapped (HTTPS, gRPC)",
+        "Shape distinction (rounded rectangles vs ovals)",
+        "Layout flow accurate"
+      ],
+      "key_misses": [
+        "Did not mention the dangling/phantom third gRPC line",
+        "Described Postgres and Redis ovals as having 'dashed outline' (they appear solid in the diagram)"
+      ],
+      "hallucinations": [
+        "Claims Postgres and Redis have 'dashed outlines' (they are solid)"
+      ],
+      "justification": "Good structured description with accurate components/colors/protocols. Lost points for hallucinating dashed outlines on the database ovals and missing the dangling line quirk."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "run_id": "q8-nothink-2",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with exact labels",
+        "Colors all correct (light blue, yellow/orange, light green, light pink)",
+        "Protocols correctly mapped (HTTPS, gRPC)",
+        "Shape distinction (rounded rectangles vs ovals)",
+        "Layout flow accurate including the gRPC split",
+        "Recognizes FastAPI, gRPC, Postgres, Redis technologies"
+      ],
+      "key_misses": [
+        "Did not mention the dangling/phantom third gRPC line",
+        "Says 'API Gateway' is on top line and '(FastAPI)' below it (actually single line)",
+        "Response appears truncated at the end ('show')"
+      ],
+      "hallucinations": [
+        "Claims the API Gateway label is split across two lines ('API Gateway' / '(FastAPI)')",
+        "Claims 'neither Auth nor Worker services connect directly to databases - they go through the API Gateway' which contradicts its own earlier correct description that they do connect directly"
+      ],
+      "justification": "Comprehensive and largely accurate description but with two notable internal inconsistencies/hallucinations (split label claim, contradictory DB access claim) and a truncated ending. Missed the dangling line."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "run_id": "q8-think-2",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with exact labels",
+        "Colors correct (light blue, yellow/orange, light green, light pink)",
+        "Protocols correctly mapped (HTTPS, gRPC)",
+        "Shape distinction (rounded rectangles vs ovals)",
+        "Layout flow accurate (gRPC split into two parallel paths)",
+        "Recognizes three-stage flow (client, routing, processing/storage)"
+      ],
+      "key_misses": [
+        "Did not mention the dangling/phantom third gRPC line",
+        "Claims 'API Gateway' on top line and '(FastAPI)' on the bottom line (single line in actual diagram)"
+      ],
+      "hallucinations": [
+        "Claims the API Gateway label is split across two lines"
+      ],
+      "justification": "Clear, well-organized description with accurate components, colors, shapes, protocols, and layout. Lost points for hallucinating the split label and missing the dangling line quirk."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "run_id": "q8-nothink-2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with exact labels",
+        "Colors correct (light blue, yellow-orange, light green, pink)",
+        "Protocols correctly mapped (HTTPS, gRPC)",
+        "Shape distinction (rectangles for services, ovals for databases)",
+        "Layout flow accurate with layer breakdown",
+        "Verbatim text accurately listed",
+        "Recognizes the design patterns (gateway, microservices, async)"
+      ],
+      "key_misses": [
+        "Did not mention the dangling/phantom third gRPC line",
+        "Claims Auth Service/Worker Queue have 'teal border' (actually dark green)"
+      ],
+      "hallucinations": [
+        "Claims 'teal border' on Auth Service/Worker Queue",
+        "Claims 'magenta border' on Postgres/Redis"
+      ],
+      "justification": "Excellent comprehensive description with accurate components, colors (mostly), shapes, protocols, and layout. Minor hallucinations about exact border colors. Missed the dangling line."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|think",
+      "run_id": "q8-think-2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with exact labels",
+        "Colors correct (blue, yellow/orange, light green, pink)",
+        "Protocols correctly mapped (HTTPS, gRPC)",
+        "Shape distinction (rounded rectangles vs ovals)",
+        "Layout flow accurate with gRPC split into two paths",
+        "Verbatim text listed",
+        "Recognizes architecture pattern (microservices/layered)"
+      ],
+      "key_misses": [
+        "Did not mention the dangling/phantom third gRPC line"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent accurate description of components, colors, shapes, protocols, layout, and design patterns. Only missed the subtle dangling line quirk noted in ground truth."
+    }
+  ]
+}

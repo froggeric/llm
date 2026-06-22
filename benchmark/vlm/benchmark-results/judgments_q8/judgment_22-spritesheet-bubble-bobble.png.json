@@ -1,0 +1,298 @@
+{
+  "image": "22-spritesheet-bubble-bobble.png",
+  "image_path": "test-images/22-spritesheet-bubble-bobble.png",
+  "ground_truth_summary": "Fan-made Bubble Bobble spritesheet by 125scratch (Taito 1986). Title 'BUBBLE BOBBLE' = RED letters on YELLOW cloud-shaped background with PINK borders. Green dragon Bub (P1), blue/purple dragon Bob (P2). Ghost enemies present. Items: cake, cupcake, watermelon, apple, ice cream, mushroom, banana, etc. HUD: EXTEND, NICE 1P/2P, HAPPY END!, ROUND (not SOUND), CLEAR, Hurry up!!, HELP!!, Super, 10PTS!!. Credit: 'Sprites made by 125scratch, please give credit if used. Bubble Bobble belongs to Taito. Credit goes to Pac-Man Red on AtariAge for his Atari 7800 BB sprites...'. Hallucinations to penalize: 'Super Dragon boss', 'pink cumin seed', 'SOUND', 'Bobbie', 'D2Sereno', 'Taiko', misreading title letter color.",
+  "judgments": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "run_id": "q8-2",
+      "failure_mode": "normal",
+      "deterministic_score": 8.666666666666668,
+      "judge_score": 7.5,
+      "judge_rubric": {
+        "accuracy": 7.5,
+        "completeness": 8.5,
+        "hallucination": 6.5,
+        "ocr": 8.0,
+        "instruction_following": 7.5
+      },
+      "strengths": [
+        "Correctly identifies Bubble Bobble, Bub and Bob as main characters, EXTEND/NICE 1P/2P/HAPPY END/ROUND/CLEAR/0123456789, 'Super', 'HELP!'/'Hurry up!!'",
+        "Credits text largely accurate (correctly reads '125scratch', 'Taito', 'Pac-Man Red on AtariAge', 'Atari 7800 BB sprites')",
+        "Mentions Bub and Bob variants in multiple colors and animation states",
+        "Correctly says 'ROUND' (not 'SOUND')",
+        "Does not invent the 'Super Dragon boss' hallucination"
+      ],
+      "weaknesses": [
+        "Lists 'weapons/tools: swords, clubs, keys, magical artifacts' and 'gems: diamonds, circles, stars' — these are confabulations; the sprites are foods and bubbles, not weapons/gems",
+        "Says title is in 'large colorful letters' but does not pin down the correct RED-on-yellow-cloud-with-pink-borders color scheme",
+        "Misses ghost enemies entirely",
+        "Calls protagonists 'dragons' in various colors including 'red, brown, white, yellow' which is loose"
+      ],
+      "hallucinations_detected": [
+        "Swords, clubs, keys, magical-looking artifacts (not in image)",
+        "Gems (diamonds, circles, stars) as collectibles (overcounting)"
+      ],
+      "summary": "Strong overall OCR and structure, but over-generates weapon/gem categories that are not actually in the spritesheet and omits ghost enemies."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "run_id": "q8-1",
+      "failure_mode": "normal",
+      "deterministic_score": 8.5,
+      "judge_score": 7.0,
+      "judge_rubric": {
+        "accuracy": 7.0,
+        "completeness": 8.0,
+        "hallucination": 6.0,
+        "ocr": 8.0,
+        "instruction_following": 7.0
+      },
+      "strengths": [
+        "Best verbatim OCR block of the group: correctly captures 'BUBBLE BOBBLE', 'Super', 'EXTEND', 'HELP!!', 'Hurry up!!', 'NICE 1P! NICE 2P! 10PTS!!', 'HAPPY END!', 'ROUND', 'CLEAR', '0123456789'",
+        "Credits reproduced near-verbatim including '125scratch', 'Taito', 'Pac-Man Red on AtariAge', 'Atari 7800 BB sprites'",
+        "Recognizes Bub and Bob as protagonists",
+        "Uses 'ROUND' correctly"
+      ],
+      "weaknesses": [
+        "Hallucinates 'cannons and lasers' as weapons among items",
+        "Lists 'mushrooms, bombs' as items — bombs are not items (mushroom is correct)",
+        "'Swords'/'clubs' not in image",
+        "Misses ghost enemies",
+        "Does not specify the title color scheme (red letters on yellow cloud with pink borders)",
+        "Says Bub/Bob shown in 'green, brown, purple' — brown is questionable"
+      ],
+      "hallucinations_detected": [
+        "Cannons and lasers as weapons",
+        "Bombs as items"
+      ],
+      "summary": "Excellent OCR of HUD and credit text, but suffers from invented weapon categories (cannons, lasers, bombs) and lacks the precise title color description."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "run_id": "q8-1",
+      "failure_mode": "normal",
+      "deterministic_score": 6.611111111111111,
+      "judge_score": 3.5,
+      "judge_rubric": {
+        "accuracy": 3.5,
+        "completeness": 5.0,
+        "hallucination": 2.0,
+        "ocr": 3.0,
+        "instruction_following": 4.0
+      },
+      "strengths": [
+        "Identifies the spritesheet as Bubble Bobble",
+        "Mentions 'Hurry up!!', 'EXTEND', 'NICE 1P!/NICE 2P!/10PTS!!', 'Happy END!'",
+        "Recognizes musical notes, cakes, watermelon slices, fruits, hearts, stars",
+        "Recognizes black background and pixel-art style"
+      ],
+      "weaknesses": [
+        "MAJOR OCR error: reads title as 'BUBBLE GOBBLE' — completely wrong",
+        "MAJOR OCR error: reads 'ROUND' as 'Sound' (a flagged hallucination)",
+        "Hallucinates 'Sup?' text (the actual text is 'Super')",
+        "Misreads creator as '12Scratch' instead of '125scratch'",
+        "Describes the title as 'brown text with yellow cloud background' — letters are actually RED, and misses the pink borders",
+        "Calls the green dragon a 'boss-like' creature / 'likely a boss' — this matches the flagged 'Super Dragon boss' hallucination pattern (dragons are protagonists, not bosses)",
+        "Misses Pac-Man Red credit attribution",
+        "Misses 'ROUND/CLEAR' as a correct reading",
+        "Misses ghost enemies"
+      ],
+      "hallucinations_detected": [
+        "'BUBBLE GOBBLE' misread of title",
+        "'Sound' instead of 'ROUND' (explicitly flagged hallucination)",
+        "'Sup?' instead of 'Super'",
+        "'12Scratch' instead of '125scratch'",
+        "Boss-like creature interpretation of protagonist dragon"
+      ],
+      "summary": "Poorest performer: misreads the title as 'BUBBLE GOBBLE', reads 'ROUND' as the flagged 'Sound' hallucination, garbles 'Super' to 'Sup?' and '125scratch' to '12Scratch', and calls the protagonist a boss."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "run_id": "q8-1",
+      "failure_mode": "normal",
+      "deterministic_score": 8.666666666666668,
+      "judge_score": 7.0,
+      "judge_rubric": {
+        "accuracy": 7.0,
+        "completeness": 8.5,
+        "hallucination": 6.0,
+        "ocr": 7.5,
+        "instruction_following": 7.5
+      },
+      "strengths": [
+        "Recognizes 'BUBBLE BOBBLE' title, 'Super', 'EXTEND', 'HELP!!', 'Hurry up! Hurry up!!', 'NICE 1P! NICE 2P! 10PTS!!', 'HAPPY END!!', 'ROUND', 'CLEAR', '0123456789'",
+        "Credits accurate including '125scratch' (mostly), 'Taito', 'Pac-Man Red on AtariAge', 'Atari 7800 BB sprites'",
+        "Correctly identifies green main character (Bub) and purple variant (Bob)",
+        "Mentions 'Super' label and lightning bolts, stars, hearts, watermelon, cake, popsicle",
+        "Uses 'ROUND' correctly"
+      ],
+      "weaknesses": [
+        "Calls the green character 'Bubble Bobble' as if that's a single character name (it's the game title; characters are Bub and Bob)",
+        "Lists 'sword, staff, wand' as items — staff/wand not in image",
+        "Misses ghost enemies",
+        "Title described as 'green, cloud-like outline' — incorrect; the cloud background is YELLOW with PINK borders and letters are RED",
+        "Mentions a 'dragon-like creature' separately from the protagonist, suggesting it may be confusing Bub/Bob with an enemy"
+      ],
+      "hallucinations_detected": [
+        "Sword, staff, wand as items",
+        "Title described with green cloud outline (color misread)"
+      ],
+      "summary": "Solid OCR and item recognition, but mischaracterizes the title colors, lists fictional weapons (staff/wand), and treats the game name as a character name."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "run_id": "q8-2",
+      "failure_mode": "normal",
+      "deterministic_score": 6.944444444444445,
+      "judge_score": 5.0,
+      "judge_rubric": {
+        "accuracy": 5.0,
+        "completeness": 6.5,
+        "hallucination": 3.5,
+        "ocr": 5.5,
+        "instruction_following": 5.0
+      },
+      "strengths": [
+        "Recognizes Bub and Bob as main characters in different poses",
+        "Identifies 'EXTEND', 'HELP!!', 'NICE 1P! NICE 2P! 10PTS!', 'HAPPY END', 'ROUND', 'CLEAR', '0123456789', 'Super'",
+        "Notes the spritesheet layout (left section, right section, footer)",
+        "Recognizes bubbles, power-ups"
+      ],
+      "weaknesses": [
+        "MAJOR OCR error: reads 'Taito' as 'Taiko' in the credit line",
+        "Describes the title 'Bubble Bobble' as 'green and yellow color scheme' — incorrect (RED letters on YELLOW cloud with PINK borders)",
+        "Calls the green characters 'enemies, such as the green dinosaur-like creatures' — directly wrong; green Bub/Bob are protagonists",
+        "Misses ghost enemies",
+        "Less detail on items (no specific cake/watermelon/apple enumeration)",
+        "Uses 'ROUND' correctly but otherwise bland"
+      ],
+      "hallucinations_detected": [
+        "'Taiko' instead of 'Taito'",
+        "Calls green Bub/Bob 'enemies' (protagonist/antagonist confusion)",
+        "Title described as 'green and yellow' (wrong colors)"
+      ],
+      "summary": "Below-average accuracy: misreads 'Taito' as 'Taiko', incorrectly labels the green dragons as enemies, and gets the title colors wrong."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "run_id": "q8-nothink-2",
+      "failure_mode": "normal",
+      "deterministic_score": 8.833333333333332,
+      "judge_score": 6.0,
+      "judge_rubric": {
+        "accuracy": 6.0,
+        "completeness": 8.5,
+        "hallucination": 3.5,
+        "ocr": 8.0,
+        "instruction_following": 7.0
+      },
+      "strengths": [
+        "Best credit text reproduction: '125scratch', 'Taito', 'Pac-Man Red on AtariAge', 'Atari 7800 BB sprites'",
+        "Excellent HUD OCR: 'SUPER', 'BUBBLE BOBBLE', 'HELP!', 'Hurry up! Hurry up!', 'EXTEND', 'NICE 1P! NICE 2P! 10PTS!!', 'HAPPY END!!', 'ROUND', 'CLEAR', '0123456789'",
+        "Correctly identifies 'ROUND' (not SOUND)",
+        "Detailed layout description with two columns and bottom section"
+      ],
+      "weaknesses": [
+        "WRONG: Calls the game an 'Atari 7800 game' — Bubble Bobble is a 1986 Taito arcade game; Atari 7800 is only mentioned because the sprites were derived from Pac-Man Red's Atari 7800 BB sprites",
+        "HALLUCINATION: Uses 'Bobbie' as a character name — explicitly flagged hallucination (should be Bob)",
+        "Says 'Bob & Bobbie: Two main playable characters — green-skinned, wearing purple hats and tails' — incorrect; Bub is green, Bob is blue/purple, no purple hats/tails",
+        "Mentions 'Swords/sparkles' — swords not in image",
+        "Misses ghost enemies",
+        "Says title font is 'green-and-yellow gradient' — wrong; letters are RED on YELLOW cloud",
+        "Calls enemies 'Gorgon or Dragon' — invented names"
+      ],
+      "hallucinations_detected": [
+        "'Bobbie' (explicitly flagged hallucination — should be Bob)",
+        "'Atari 7800 game' (it's an arcade game; Atari 7800 was only inspiration)",
+        "'Gorgon or Dragon' enemy names",
+        "Title color scheme as 'green-and-yellow gradient'"
+      ],
+      "summary": "Excellent OCR/credit reproduction but undermined by the flagged 'Bobbie' hallucination, misclassification as an Atari 7800 game, and incorrect title colors."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "run_id": "q8-think-1",
+      "failure_mode": "truncated",
+      "deterministic_score": 2.0,
+      "judge_score": 1.0,
+      "judge_rubric": {
+        "accuracy": 1.0,
+        "completeness": 1.0,
+        "hallucination": 1.0,
+        "ocr": 1.0,
+        "instruction_following": 1.0
+      },
+      "strengths": [],
+      "weaknesses": [
+        "Empty response — truncated/failed generation. No content to evaluate."
+      ],
+      "hallucinations_detected": [],
+      "summary": "Empty output (truncated). Fails all criteria by default."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "run_id": "q8-nothink-2",
+      "failure_mode": "normal",
+      "deterministic_score": 7.722222222222222,
+      "judge_score": 6.0,
+      "judge_rubric": {
+        "accuracy": 6.0,
+        "completeness": 7.5,
+        "hallucination": 4.5,
+        "ocr": 7.0,
+        "instruction_following": 6.5
+      },
+      "strengths": [
+        "Recognizes 'BUBBLE BOBBLE', 'SUPER', 'HELP!', 'Hurry up!! Hurry up!!', 'EXTEND', 'NICE 1P! NICE 2P!', '10PTS!!', 'HAPPY END!', 'ROUND → CLEAR ← ROUND', '0123456789'",
+        "Identifies Bub and Bob as the two main characters with different expressions",
+        "Recognizes ghost enemies ('Purple ghosts with angry faces') — this matches GT (ghosts ARE present)",
+        "Mentions apples, watermelons, cakes, candies, gems, musical notes, stars",
+        "Mentions 'HELP!' speech bubbles and lightning bolts",
+        "Uses 'ROUND' correctly (not SOUND)"
+      ],
+      "weaknesses": [
+        "MAJOR OCR error: reads 'Taito' as 'Taiko' in credit line",
+        "MAJOR OCR error: reads 'Pac-Man Red' as 'Pac-Man Man Red' (doubled 'Man')",
+        "Calls characters 'Bubs & Bob' — 'Bubs' is a minor misread (correct: 'Bub')",
+        "Invents enemies: 'Red crab-like creatures', 'Brown bear-like enemies' — not in GT; enemies are Beluga/Bonze/Invader/Monsta/Pulpul/Hidegons, not crabs/bears",
+        "Says 'a green dragon enemy (different from protagonists)' — green dragon is the protagonist Bub, not an enemy",
+        "Misses specific named items (mushroom, banana, ice cream, cupcake)",
+        "Does not specify the title color scheme (red letters on yellow cloud with pink borders)",
+        "Lists 'Magic wands, swords, and shields' as power-ups — not in image"
+      ],
+      "hallucinations_detected": [
+        "'Taiko' instead of 'Taito'",
+        "'Pac-Man Man Red' doubled 'Man'",
+        "Red crab-like enemies, brown bear-like enemies (invented)",
+        "Green dragon as a separate enemy (it's the protagonist)",
+        "Magic wands, swords, shields"
+      ],
+      "summary": "Recognizes ghost enemies (matching GT) and has decent HUD OCR, but misreads 'Taito' as 'Taiko' and 'Pac-Man Red' as 'Pac-Man Man Red', invents crab/bear enemies, and lists fictional weapons."
+    }
+  ],
+  "ranking": [
+    {"model": "gemma4-e4b-Q8|think", "judge_score": 7.0},
+    {"model": "gemma4-12b-Q8|think", "judge_score": 7.5},
+    {"model": "qwen3-vl-4b-Q8|think", "judge_score": 7.0},
+    {"model": "qwen3.5-9b-Q8|nothink", "judge_score": 6.0},
+    {"model": "qwen3.5-4b-Q8|nothink", "judge_score": 6.0},
+    {"model": "qwen3-vl-8b-Q8|think", "judge_score": 5.0},
+    {"model": "glm-4.6v-flash-9b-Q8|think", "judge_score": 3.5},
+    {"model": "qwen3.5-4b-Q8|think", "judge_score": 1.0}
+  ],
+  "aggregate_findings": {
+    "best_ocr": "gemma4-e4b-Q8|think and qwen3.5-4b-Q8|nothink produced the most verbatim-correct credit and HUD text",
+    "worst_ocr": "glm-4.6v-flash-9b-Q8|think misread title as 'BUBBLE GOBBLE' and 'ROUND' as 'Sound' (flagged hallucination)",
+    "common_hallucinations": [
+      "Weapons (swords, wands, staffs, cannons, lasers, shields) invented by 5 of 7 responding models",
+      "'Taito' misread as 'Taiko' by qwen3-vl-8b and qwen3.5-9b",
+      "'125scratch' misread as '12Scratch' by glm-4.6v-flash-9b",
+      "'Bobbie' hallucination produced by qwen3.5-4b|nothink (flagged)",
+      "Green protagonist dragons misclassified as enemies/bosses by glm-4.6v-flash-9b, qwen3-vl-8b, and qwen3.5-9b"
+    ],
+    "title_color_correctness": "NONE of the 7 responding models correctly described the title as RED letters on YELLOW cloud-shaped background with PINK borders — most defaulted to 'green/yellow' or unspecified",
+    "ghost_enemy_detection": "Only qwen3.5-9b-Q8|nothink correctly mentioned ghost enemies (matching GT)",
+    "truncation": "qwen3.5-4b-Q8|think produced empty output (truncated/failed generation)"
+  }
+}

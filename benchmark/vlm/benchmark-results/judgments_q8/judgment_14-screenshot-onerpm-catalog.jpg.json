@@ -1,0 +1,92 @@
+{
+  "image": "14-screenshot-onerpm-catalog.jpg",
+  "judged_at": "2026-06-21",
+  "verifier": "claude-opus-vlm-judge",
+  "key_facts": {
+    "url": "dashboard.onerpm.com",
+    "user": "Frederic",
+    "account": "Neurological Waves Science",
+    "visible_titles": ["Winding Down", "Silk and Steel", "Waikiki", "TENDIDO CERO SENTIDO", "A Sky Remembered", "Cumbia del Barrio", "Presque Louis", "Gaelic Cradle Song", "Endless Ocean", "Numb", "Where the Sea Remembers", "Spring's First Light", "Flight of the Phoenix", "London", "Something's Wrong"],
+    "hard_thumbnail_titles": ["Secreto del Sur", "Sol Sol", "Ocean Flute", "Spirits of the Wind", "Timeless Whispers"],
+    "status_tags": {"Distributed": 17, "Incomplete": 1, "Approved": 2},
+    "incomplete_album": "Something's Wrong",
+    "approved_albums": ["Secreto del Sur", "Sol Sol"],
+    "highlighted_album": "Presque Louis (yellow rectangle)"
+  },
+  "judgments": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "score": 7.5,
+      "accuracy": "Got most visible titles correctly (Winding Down, Silk and Steel, Waikiki, Tendido Cero Sentido, A Sky Remembered, Cumbia del Barrio, Presque Louis, Gaelic Cradle Song, Endless Ocean, Numb, Where the Sea Remembers, Spring's First Light, Flight of the Phoenix, London). Correctly identified Presque Louis highlighted with yellow box. Correctly identified most Distributed status tags. Response was truncated at 'Somet...' before listing the 5 hard thumbnail titles or Something's Wrong.",
+      "errors": ["Truncated before covering all 20 albums", "Did not attempt the 5 hard thumbnail titles"],
+      "hallucinations": "None detected - no fabricated titles."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "score": 5.5,
+      "accuracy": "Got visible titles mostly right but made errors. Misspelled 'Waikiiki' (extra 'i'). Listed 'Something's Wrong' but no row-by-row enumeration. Status tags identified generally (DISTRIBUTED, APPROVED, INCOMPLETE).",
+      "errors": ["Claimed '24 visible square album covers arranged in a 4x6 grid' - WRONG, should be 20 covers in 4x5 grid", "Misspelled Waikiiki", "Did not identify yellow highlight on Presque Louis", "Said 'Presque Louis... appears to be the currently selected or highlighted item' - vague"],
+      "hallucinations": "None severe, but inaccurate grid count is a structural error."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "score": 9.0,
+      "accuracy": "BEST on hard titles. Correctly identified ALL 5 hard thumbnail titles: 'Secreto del Sol' (close to Secreto del Sur - 1-letter error), 'SOL Sol', 'Ocean Flute', 'Spirits of the Wind', 'Timeless Whispers'. Got all visible titles right. Correctly identified Presque Louis with yellow border. Correctly attributed Approved status to Secreto del Sol and SOL Sol (bottom row), and Incomplete to Something's Wrong.",
+      "errors": ["Misspelled 'Secreto del Sol' instead of 'Secreto del Sur'", "Misspelled 'Celtic Cradle Song' instead of 'Gaelic Cradle Song'"],
+      "hallucinations": "None - all titles verifiable from image."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "score": 8.0,
+      "accuracy": "Got all visible titles AND all 5 hard thumbnail titles correctly: 'Secreto del Sur', 'SOL Sol', 'OCEAN FLUTE', 'SPIRITS OF THE WIND', 'TIMELESS WHISPERS'. Correctly identified Something's Wrong with INCOMPLETE status. Got the artist attributions right (La Sonora Volcánica feat. cutut for Tendido Cero Sentido).",
+      "errors": ["Claimed 'grid of 12 album covers' and '4x3 grid' - WRONG, should be 20 covers in 4x5 grid", "Did not mention Presque Louis yellow highlight"],
+      "hallucinations": "None - titles all verifiable from image."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "score": 6.5,
+      "accuracy": "Got visible titles mostly right through Row 3. Correctly identified Presque Louis highlighted with yellow border and described cover art (two stone pillars). Got Something's Wrong INCOMPLETE status right. Truncated mid-Row-3 ('Where the Sea Remembers... Cover: A person standing').",
+      "errors": ["Misspelled 'Gaelsic Cradle Song' instead of 'Gaelic Cradle Song'", "Truncated before reaching the 5 hard thumbnail titles", "Did not list them at all"],
+      "hallucinations": "None detected."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "score": 7.0,
+      "accuracy": "Got layout right: 'grid format (5 columns x 4 rows = 20 items)'. Correctly identified Presque Louis highlighted with yellow border. Got visible titles right through Tendido Cero Sentido and A Sky Remembered. Truncated mid-table after 'A Sky Remembered'. Status tags correctly enumerated.",
+      "errors": ["Truncated early, missing most of the album grid", "Did not cover the 5 hard thumbnail titles", "Missed specific tags for individual albums"],
+      "hallucinations": "None severe."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "score": 7.5,
+      "accuracy": "Excellent cover art descriptions paired with correct titles for visible albums. Got 'Gaelic Cradle Song' spelled correctly. Correctly identified Presque Louis with yellow rectangular border. Got 'TENDIDO CERO SENTIDO' correct. Truncated before Row 3 completes (cut off after 'Endless Ocean').",
+      "errors": ["Truncated before covering rows 3-4", "Did not cover the 5 hard thumbnail titles or Something's Wrong"],
+      "hallucinations": "None - all listed content verifiable."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "score": 8.0,
+      "accuracy": "Got visible titles through Row 3 with detailed cover descriptions. Correctly identified Presque Louis highlighted with yellow border. Got 'Gaelic Cradle Song' correct. Got artist attributions right. Truncated mid-Row-3 ('3. **').",
+      "errors": ["Truncated before completing Row 3 and Row 4", "Did not cover the 5 hard thumbnail titles"],
+      "hallucinations": "None - all verifiable."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|think",
+      "score": 8.5,
+      "accuracy": "Strong coverage. Got all visible titles in Rows 1-3 correctly. Got 'Gaelic Cradle Song' correct. Got first 3 of the 5 hard thumbnail titles: 'Secreto del Sur' (APPROVED), 'Sol Sol' (APPROVED), 'Ocean Flute' - then truncated. Correctly identified Presque Louis highlighted and Something's Wrong INCOMPLETE. Best cover-art descriptions.",
+      "errors": ["Truncated before completing the 5 hard thumbnail titles (got 3 of 5)", "Missed Spirits of the Wind and Timeless Whispers"],
+      "hallucinations": "None - all verifiable."
+    }
+  ],
+  "ranking": [
+    {"model": "glm-4.6v-flash-9b-Q8|think", "score": 9.0, "reason": "Only model to capture all 5 hard thumbnail titles (with minor misspellings)"},
+    {"model": "qwen3.5-9b-Q8|think", "score": 8.5, "reason": "Excellent coverage including 3 of 5 hard titles before truncation"},
+    {"model": "qwen3-vl-4b-Q8|think", "score": 8.0, "reason": "Got all 5 hard titles but wrong grid dimensions (12 instead of 20)"},
+    {"model": "qwen3.5-9b-Q8|nothink", "score": 8.0, "reason": "Strong coverage through Row 3, correct details"},
+    {"model": "gemma4-12b-Q8|think", "score": 7.5, "reason": "Mostly accurate but truncated before hard titles"},
+    {"model": "qwen3.5-4b-Q8|think", "score": 7.5, "reason": "Excellent cover-art detail but truncated mid-Row-2"},
+    {"model": "qwen3.5-4b-Q8|nothink", "score": 7.0, "reason": "Correct layout but truncated early"},
+    {"model": "qwen3-vl-8b-Q8|think", "score": 6.5, "reason": "Truncated before hard titles, misspelled Gaelic"},
+    {"model": "gemma4-e4b-Q8|think", "score": 5.5, "reason": "Wrong grid count (24/4x6), missed key details"}
+  ]
+}

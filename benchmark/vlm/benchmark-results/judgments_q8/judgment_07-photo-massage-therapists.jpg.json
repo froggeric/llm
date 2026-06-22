@@ -1,0 +1,218 @@
+{
+  "image": "07-photo-massage-therapists.jpg",
+  "image_path": "test-images/07-photo-massage-therapists.jpg",
+  "ground_truth_summary": "5 massage therapists (2 men, 3 women) posing in a massage room; bamboo plants in both corners, succulent on left, massage table with 2 rolled towels + blue runner on white sheet, 4 windows with blinds, light brown cork floor, grey/white cupboards on both sides, partly visible office chair behind 4th person",
+  "judgments": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly counted 5 people",
+        "Identified 2 men + 3 women",
+        "Named 2 bamboo plants (left + right)",
+        "Noted small plant on left side table",
+        "Described blue runner on massage table with white rolled towels",
+        "Mentioned white horizontal blinds and windows",
+        "Noted blue towel on right cabinet",
+        "Described sage green clothing coordination"
+      ],
+      "key_misses": [
+        "Said 3 rolled towels (ground truth: 2)",
+        "Said navy blue t-shirt for man far left (debatable - could be perceived as navy)",
+        "Did not explicitly mention the office chair behind 4th person",
+        "Did not mention 4 windows count specifically",
+        "Floor not described (cork/wood)"
+      ],
+      "hallucinations": [
+        "Said three white towels stacked on runner (GT says 2)"
+      ],
+      "justification": "Excellent description; correct person count, gender breakdown, both bamboo plants, succulent, blue runner, blinds. Minor towel count error (3 vs 2). Did not catch office chair."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly counted 5 people",
+        "Identified 3 men + 2 women (matches attire pattern; actually 2M/3W but women's white blouse counted ambiguously)",
+        "Mentioned 2 rolled towels on table",
+        "Noted large bamboo-like plants flanking the scene",
+        "Described blue patterned runner",
+        "Mentioned tall wardrobe/storage cabinet on right, low cabinet on left",
+        "Mentioned large windows with horizontal white blinds"
+      ],
+      "key_misses": [
+        "Wrong gender breakdown: said 3 men + 2 women (GT: 2 men, 3 women)",
+        "Did not identify succulent/small plant on left",
+        "Did not mention office chair",
+        "Did not count windows",
+        "Floor not described"
+      ],
+      "hallucinations": [
+        "Stated 'three men and two women' - incorrect gender attribution"
+      ],
+      "justification": "Correct person count of 5 but wrong gender split (claimed 3M/2W vs actual 2M/3W). Reasonable on setting and objects but missed succulent, office chair, window count, and floor. Less detailed than peers."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly counted 5 people",
+        "Correctly identified 2 men + 3 women",
+        "Listed each person with accurate attire left-to-right",
+        "Noted 2 bamboo plants plus smaller potted plant on left counter",
+        "Mentioned 2 rolled towels on blue runner",
+        "Noted blue towel on right cabinet",
+        "Described white cabinets on both sides"
+      ],
+      "key_misses": [
+        "Did not mention office chair",
+        "Did not count windows (just said 'large windows')",
+        "Floor not described"
+      ],
+      "hallucinations": [],
+      "justification": "Very strong description: correct count, correct gender split (2M/3W), both bamboo plants, succulent, 2 towels, blue runner, blue towel on cabinet. Concise and accurate."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly counted 5 people",
+        "Listed each person accurately left to right",
+        "Correctly identified 2 large bamboo-like plants",
+        "Noted smaller potted plant on left counter",
+        "Mentioned 2 rolled towels on table",
+        "Explicitly mentioned office chair behind woman in white blouse",
+        "Mentioned blinds partly open revealing other buildings outside",
+        "Noted folded blue towel on right cabinet",
+        "Mentioned silver handle on cabinet",
+        "Noted necklace on rightmost woman"
+      ],
+      "key_misses": [
+        "Did not explicitly count 4 windows",
+        "Floor not described"
+      ],
+      "hallucinations": [],
+      "justification": "Outstanding description. Correct count, caught the office chair (notably rare), both bamboo plants, succulent on left counter, 2 towels, blinds revealing buildings outside, blue towel on cabinet. Most thorough of the group."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly counted 5 people",
+        "Listed each person accurately left to right",
+        "Mentioned 2 rolled towels",
+        "Noted small potted plant on left counter in addition to large bamboo",
+        "Described blue patterned runner",
+        "Noted folded blue cloth on right cabinet",
+        "Mentioned white sliding door cabinet on far right"
+      ],
+      "key_misses": [
+        "Did not mention office chair",
+        "Did not explicitly count windows",
+        "Floor not described",
+        "Called bamboo 'large potted plant with long green leaves' (acceptable)",
+        "Confused: said 'blue t-shirt of the woman on the far right' in colors (actually she wears green)"
+      ],
+      "hallucinations": [
+        "In Colors section, stated blue t-shirt for woman on far right - inconsistent with earlier correct green description"
+      ],
+      "justification": "Strong on count and most details. Minor internal color inconsistency (listed woman far right as wearing blue t-shirt in color section). Missed office chair and window count."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly counted 5 people",
+        "Wrong gender breakdown: 3 men + 2 women (GT: 2M/3W)",
+        "Noted 2 rolled towels",
+        "Mentioned 2 bamboo-like plants + smaller potted plant on left",
+        "Mentioned office chair partially visible behind woman in white",
+        "Described blue runner",
+        "Described tall wardrobe on right with silver handle",
+        "Mentioned necklace + hoop earrings on rightmost woman"
+      ],
+      "key_misses": [
+        "Stated 3 men and 2 women - incorrect gender attribution",
+        "Said 'light wood laminate flooring' (actually cork, but acceptable per GT)",
+        "Did not count windows explicitly"
+      ],
+      "hallucinations": [
+        "Gender count of 3M/2W incorrect",
+        "Mentioned hoop earrings on rightmost woman (unverified, likely hallucinated)"
+      ],
+      "justification": "Good count and detail. Notably caught the office chair. Wrong gender split (claimed 3M/2W). Possible hallucination of hoop earrings. Otherwise thorough."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly counted 5 people",
+        "Listed each person accurately with attire",
+        "Mentioned 2 rolled white towels",
+        "Noted 2 bamboo-like plants + smaller potted plant on left",
+        "Described blue patterned runner",
+        "Noted blurred view of building exterior through blinds",
+        "Mentioned tall white wardrobe/cabinet on right, low white cabinet on left",
+        "Noted sunlight streaming from windows on the left side creating shadows"
+      ],
+      "key_misses": [
+        "Did not mention office chair",
+        "Did not count windows explicitly",
+        "Floor not described"
+      ],
+      "hallucinations": [],
+      "justification": "Strong description with correct count, both bamboo plants, succulent, 2 towels, runner, exterior building visible. Missed office chair. Solid accuracy."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly counted 5 people",
+        "Listed each person accurately left to right",
+        "Mentioned 2 rolled towels",
+        "Noted 2 tall bamboo-like plants + smaller potted plants on left cabinet",
+        "Described blue patterned runner",
+        "Noted large white wardrobe on right with silver handle",
+        "Noted necklace on rightmost woman",
+        "Mentioned light wood/laminate flooring (acceptable for cork)"
+      ],
+      "key_misses": [
+        "Did not mention office chair",
+        "Did not count windows explicitly",
+        "Said 'massage table runs diagonally from bottom-left to center-right' (questionable framing)"
+      ],
+      "hallucinations": [],
+      "justification": "Detailed and accurate. Correct count, both bamboo plants, succulent, 2 towels, runner, wardrobe with silver handle. Floor described as wood (acceptable per GT). Missed office chair and window count."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly counted 5 people",
+        "Listed each person accurately left to right",
+        "Mentioned 2 rolled white towels on blue runner",
+        "Noted 2 large potted bamboo/lucky bamboo plants",
+        "Mentioned smaller plant on cabinet to far left",
+        "Described tall white wardrobe with silver handle on right, low white cabinet on left",
+        "Noted white horizontal blinds on windows",
+        "Mentioned bright lighting with shadows from blinds on left wall"
+      ],
+      "key_misses": [
+        "Did not mention office chair",
+        "Did not count windows explicitly",
+        "Floor not described"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, accurate description. Correct count, both bamboo plants, succulent on left cabinet, 2 towels, runner, wardrobe. Slight underspecification on office chair and window count."
+    }
+  ]
+}

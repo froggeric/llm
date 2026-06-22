@@ -1,0 +1,279 @@
+{
+  "image": "08-poster-class-schedule.jpg",
+  "judgments": [
+    {
+      "model": "gemma4-12b|think",
+      "run_id": "3",
+      "holistic_score": 7,
+      "failure_mode": "minor_ocr_timing_errors",
+      "key_hits": [
+        "Correctly identifies VIC Health Club and weekly schedule",
+        "Captures all 11 classes with correct categories and most subtitles",
+        "Correctly notes URL vichealth.club, QR code, legend colors"
+      ],
+      "key_misses": [
+        "Misspells 'Shaolin IGONG' (dropped Q) on Monday",
+        "Wrong end times: OSTEOPOROSIS '13:10-14:10' (should be 14:00), Tue TAIJI '13:10-14:10'",
+        "Wed/Thu YOGA listed as '13:30-14:00' (should be 13:00-14:00) — three time errors"
+      ],
+      "hallucinations": [
+        "OSTEOPOROSIS icon described as 'person with a walking stick' (actually standing from squat)"
+      ],
+      "justification": "Good structural coverage of all 11 classes but multiple timing OCR errors and one dropped letter in QIGONG indicate weak text precision."
+    },
+    {
+      "model": "gemma4-26b-a4b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct day, time, color category, and subtitles",
+        "Correct legend (blue/orange/green = Yoga/Shaolin/Fitness)",
+        "Correct URL and QR code",
+        "Recognizes faint lotus flower background"
+      ],
+      "key_misses": [
+        "Logo described as 'hands or wings' holding heart — slightly vague"
+      ],
+      "hallucinations": [],
+      "justification": "Comprehensive and highly accurate transcription with only minor descriptive imprecision on the logo."
+    },
+    {
+      "model": "gemma4-31b|think",
+      "run_id": "2",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Perfect verbatim transcription of all 11 classes including times, names, subtitles",
+        "Correct legend and color coding",
+        "Correct URL and footer",
+        "Correctly identifies logo as 'hands cradling heart in laurel wreath'",
+        "Calls out icon set accurately"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Best-in-class verbatim transcription; every class, time, and detail matches ground truth exactly."
+    },
+    {
+      "model": "gemma4-e4b|think",
+      "run_id": "1",
+      "holistic_score": 8,
+      "failure_mode": "minor_ocr_truncation",
+      "key_hits": [
+        "All 11 classes with correct times, categories, subtitles",
+        "Correct legend and URL"
+      ],
+      "key_misses": [
+        "Truncates 'OSTEOPOROS' (missing final letters)",
+        "Claims registration URL 'appears twice' — only once in footer"
+      ],
+      "hallucinations": [
+        "'Appears twice' for the register URL is inaccurate"
+      ],
+      "justification": "Strong schedule accuracy but OCR truncation of OSTEOPOROSIS and false claim of duplicated URL text cost points."
+    },
+    {
+      "model": "glm-4.6v-flash-9b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct times, colors, subtitles",
+        "Accurate legend and footer URL",
+        "Detailed and well-structured icon descriptions per activity"
+      ],
+      "key_misses": [
+        "Slightly terse on logo description"
+      ],
+      "hallucinations": [],
+      "justification": "Highly accurate and well-organized schedule transcription with strong icon/visual fidelity."
+    },
+    {
+      "model": "qwen3-vl-4b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct times, colors, and subtitles",
+        "Correct legend, footer URL, QR code",
+        "Describes background lotus/brushstroke decoration"
+      ],
+      "key_misses": [
+        "Describes activity pills as 'ovals' containing 'black silhouette' — actually white icon on white disc; minor visual imprecision"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent accuracy for a 4B model — every class transcribed correctly with minimal descriptive looseness."
+    },
+    {
+      "model": "qwen3-vl-8b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct times, colors, subtitles",
+        "Correct logo description (hands cupping heart in laurel wreath)",
+        "Correct legend, URL, QR code"
+      ],
+      "key_misses": [
+        "Calls activity blocks 'bars' instead of pills — minor shape description"
+      ],
+      "hallucinations": [],
+      "justification": "Very accurate full-schedule transcription; only minor shape wording differs from ground truth."
+    },
+    {
+      "model": "qwen3.5-4b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct times, colors, subtitles",
+        "Correctly notes Monday/Tuesday overlap of class times",
+        "Correct URL, QR code, legend"
+      ],
+      "key_misses": [
+        "Response truncated mid-final-sentence ('sch...')"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent accuracy; only loses a point for the truncated summary section. The actual data is fully correct."
+    },
+    {
+      "model": "qwen3.5-4b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct times, colors, subtitles",
+        "Correct legend, URL, QR code",
+        "Accurate background decoration description"
+      ],
+      "key_misses": [
+        "OSTEOPOROSIS icon described as 'lifting weights' (actually person rising from squat)"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, accurate full transcription with only a minor icon-detail inaccuracy."
+    },
+    {
+      "model": "qwen3.5-9b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 8,
+      "failure_mode": "minor_hallucination",
+      "key_hits": [
+        "All 11 classes with correct times, colors, subtitles",
+        "Correct legend, URL, logo description",
+        "Notes Monday/Tuesday overlaps"
+      ],
+      "key_misses": [
+        "Response truncated at end mid-sentence"
+      ],
+      "hallucinations": [
+        "Claims QR code has 'a globe icon embedded in its center' — not present in image"
+      ],
+      "justification": "Schedule data is fully accurate but introduces an ungrounded 'globe icon in QR' detail and is truncated."
+    },
+    {
+      "model": "qwen3.5-9b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct times, colors, subtitles",
+        "Correct legend, URL, QR code, logo description"
+      ],
+      "key_misses": [
+        "OSTEOPOROSIS icon described as 'lifting weights'"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and complete transcription; minor icon-description imprecision only."
+    },
+    {
+      "model": "qwen3.6-27b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 8,
+      "failure_mode": "minor_hallucination",
+      "key_hits": [
+        "All 11 classes with correct times, colors, subtitles",
+        "Correct legend, URL, logo",
+        "Notes Monday/Tuesday overlaps"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Claims QR code has 'a small globe icon embedded in its center' — not in image"
+      ],
+      "justification": "Schedule data is perfect but the QR globe-icon hallucination costs a point."
+    },
+    {
+      "model": "qwen3.6-27b|think",
+      "run_id": "2",
+      "holistic_score": 8,
+      "failure_mode": "minor_hallucination",
+      "key_hits": [
+        "All 11 classes with correct times, colors, subtitles",
+        "Correct legend, URL, logo",
+        "Accurate background decoration description"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Claims QR code has 'a small globe icon in the center' — not in image"
+      ],
+      "justification": "Schedule data fully correct but QR globe-icon hallucination is repeated across this model family."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 8,
+      "failure_mode": "minor_hallucination",
+      "key_hits": [
+        "All 11 classes with correct times, colors, subtitles",
+        "Correct legend, URL, logo",
+        "Notes Monday/Tuesday overlaps",
+        "Notes consistent icon reuse within categories"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Claims QR code has 'a globe icon in center' — not in image"
+      ],
+      "justification": "Excellent schedule accuracy but repeats the QR-globe hallucination seen in the qwen3.6 family."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|think",
+      "run_id": "2",
+      "holistic_score": 8,
+      "failure_mode": "minor_hallucination",
+      "key_hits": [
+        "All 11 classes with correct times, colors, subtitles",
+        "Correct legend, URL, logo description",
+        "Detailed icon descriptions per activity"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Claims QR code has 'a small globe icon in its center' — not in image"
+      ],
+      "justification": "Schedule data is perfect but the persistent QR-globe hallucination caps the score at 8."
+    }
+  ],
+  "ranking": [
+    "gemma4-31b|think (10) - perfect verbatim transcription",
+    "gemma4-26b-a4b|think (9) - all correct, minor logo wording",
+    "glm-4.6v-flash-9b|think (9) - all correct, well-structured",
+    "qwen3-vl-4b|think (9) - all correct for a small model",
+    "qwen3-vl-8b|think (9) - all correct",
+    "qwen3.5-4b|nothink (9) - all correct, truncated summary",
+    "qwen3.5-4b|think (9) - all correct",
+    "qwen3.5-9b|think (9) - all correct",
+    "qwen3.5-9b|nothink (8) - all correct + QR globe hallucination",
+    "qwen3.6-27b|nothink (8) - all correct + QR globe hallucination",
+    "qwen3.6-27b|think (8) - all correct + QR globe hallucination",
+    "qwen3.6-35b-a3b|nothink (8) - all correct + QR globe hallucination",
+    "qwen3.6-35b-a3b|think (8) - all correct + QR globe hallucination",
+    "gemma4-e4b|think (8) - OSTEOPOROS truncation + duplicate-URL claim",
+    "gemma4-12b|think (7) - timing OCR errors and QIGONG letter drop"
+  ],
+  "notes": [
+    "Most models handled this dense text-heavy schedule very well — 14 of 15 captured all 11 classes with correct color categories.",
+    "Ground-truth-specified KEY FACTS list (yoga, shaolin, fitness, qigong, taiji, calisthenics) all appeared correctly in nearly all responses.",
+    "A recurring hallucination across the entire qwen3.6 family (both think and nothink) is a fabricated 'globe icon in the center of the QR code' — this is consistent but ungrounded.",
+    "Only gemma4-12b|think had meaningful data errors: wrong end times on 3 classes and 'IGONG' missing the Q.",
+    "gemma4-31b|think was the clear winner with perfect verbatim transcription including correct logo and icons.",
+    "The OSTEOPOROSIS icon (person standing from a squat) was consistently mislabeled as 'lifting weights' or 'walking stick' across multiple models — a minor icon-recognition weakness."
+  ]
+}

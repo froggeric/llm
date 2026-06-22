@@ -1,0 +1,404 @@
+{
+  "image": "09-poster-artnight.jpg",
+  "image_path": "test-images/09-poster-artnight.jpg",
+  "ground_truth_summary": "Artnight poster for acrylic painting event. Fiery red/orange horse over dark blue swirly background, 3 stylized trees on right (suspended in air). Top-left: VIC Health Club (hands+heart in laurel) and VIC Art Club (woman statue + inverted statue in laurel). Title lines: PAINT YOUR MASTERPIECE / ARTNIGHT / TUESDAY 14 APRIL | 17:00 | THE VIC. Bottom-right QR code with 'Scan to register' / 'vichealth.club'.",
+  "judgments": [
+    {
+      "model_variant": "gemma4-12b|think",
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identified ARTNIGHT title, PAINT YOUR MASTERPIECE tagline, event date/time/location",
+        "Identified VIC Health Club logo with hands/heart",
+        "Identified fiery red/orange horse against dark blue swirling background",
+        "Mentioned stylized trees with orange/yellow foliage on right",
+        "Correctly placed QR code and registration text at bottom-right",
+        "Noted impasto/post-impressionist Van Gogh style"
+      ],
+      "key_misses": [
+        "Misread VIC Art Club logo as 'VIC AC CLUB' instead of 'VIC Art Club'",
+        "Described right logo as 'three stylized human figures' instead of statues",
+        "Described bottom as 'solid black' background (ground truth says it's part of painting)",
+        "Did not mention trees being suspended in air"
+      ],
+      "hallucinations": [
+        "Claimed logo text reads 'VIC AC CLUB' (incorrect transcription)",
+        "Claimed bottom section has 'solid black background' — actually the painting continues"
+      ],
+      "justification": "Got the main event text and most visual elements right, but misread the Art Club logo text and described the bottom section as solid black rather than painted. Logo iconography for Art Club is wrong (figures vs statues)."
+    },
+    {
+      "model_variant": "gemma4-26b-a4b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly read both VIC Health Club and VIC Art Club logos",
+        "Accurate event text: PAINT YOUR MASTERPIECE / ARTNIGHT / TUESDAY 14 APRIL | 17:00 | THE VIC",
+        "Correctly identified QR caption 'Scan to register' / 'vichealth.club'",
+        "Described horse in profile, warm red/orange tones, impasto brushstrokes",
+        "Described swirling cool background (navy/teal/turquoise)",
+        "Mentioned thin spindly trees with orange foliage on right",
+        "Explicitly noted impasto/painterly style"
+      ],
+      "key_misses": [
+        "Did not describe VIC Art Club logo as containing statues",
+        "Said trees 'rise from the bottom' rather than being suspended in air",
+        "Did not explicitly state there is no solid footer (described bottom as containing footer text)"
+      ],
+      "hallucinations": [],
+      "justification": "Comprehensive and accurate description. All verbatim text correct, visual elements well-described. Logo iconography is generic but acceptable. Best-in-class text accuracy."
+    },
+    {
+      "model_variant": "gemma4-31b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All verbatim text correct: VIC Health Club, VIC Art Club, PAINT YOUR MASTERPIECE, ARTNIGHT, TUESDAY 14 APRIL | 17:00 | THE VIC, Scan to register, vichealth.club",
+        "Identified VIC Health Club logo as 'hands holding a heart'",
+        "Identified VIC Art Club logo as containing 'figure of a person next to artist's easel'",
+        "Described swirling Van Gogh-like background",
+        "Noted impasto/post-impressionist style"
+      ],
+      "key_misses": [
+        "Described Art Club logo as 'easel' rather than statues (creative but inaccurate)",
+        "Mentioned 'small thin tree or shrub' (singular) instead of 3 trees",
+        "Described footer as 'very dark navy blue, almost black' solid section"
+      ],
+      "hallucinations": [
+        "Art Club logo description (easel) is fabricated — actually statues"
+      ],
+      "justification": "Excellent verbatim text accuracy. Creative but incorrect logo interpretation for Art Club. Treats footer as solid color block."
+    },
+    {
+      "model_variant": "gemma4-e4b|think",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All verbatim text correct: VIC Health Club, VIC Art Club, PAINT YOUR MASTERPIECE, ARTNIGHT, TUESDAY 14 APRIL | 17:00 | THE VIC, Scan to register, vichealth.club",
+        "Identified horse in warm reds/oranges",
+        "Described swirling dark background",
+        "Mentioned tall thin trees with orange/red foliage on right"
+      ],
+      "key_misses": [
+        "Logo iconography vague ('silhouettes of people, one with heart')",
+        "Did not identify statues in Art Club logo",
+        "Described 'dark moody nighttime' background and 'stylized water or dense foliage'",
+        "Trees not described as suspended in air"
+      ],
+      "hallucinations": [],
+      "justification": "Solid text accuracy and reasonable visual description, but logo iconography is generic. No major hallucinations."
+    },
+    {
+      "model_variant": "glm-4.6v-flash-9b|think",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All verbatim text correct: VIC Health Club, VIC Art Club, PAINT YOUR MASTERPIECE, ARTNIGHT, TUESDAY 14 APRIL | 17:00 | THE VIC, Scan to register, vichealth.club",
+        "Identified VIC Health Club logo with heart/hands",
+        "Described horse in reds/oranges with flowing mane",
+        "Mentioned orange-leafed trees on right",
+        "Mentioned swirling dark teal/blue background"
+      ],
+      "key_misses": [
+        "Described VIC Art Club logo as 'two silhouetted figures' instead of statues",
+        "Said 'two figures within VIC Art Club logo'",
+        "Did not mention trees suspended in air"
+      ],
+      "hallucinations": [
+        "Logo iconography (two silhouetted figures in Art Club logo) is incorrect"
+      ],
+      "justification": "Excellent text accuracy. Good visual description but Art Club logo iconography is wrong (figures vs statues)."
+    },
+    {
+      "model_variant": "qwen3-vl-4b|think",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All verbatim text correct: VIC Health Club, VIC Art Club, PAINT YOUR MASTERPIECE, ARTNIGHT, TUESDAY 14 APRIL | 17:00 | THE VIC, Scan to register, vichealth.club",
+        "Identified VIC Health Club logo (heart held by hands in laurel)",
+        "Described horse in vibrant red-orange with flowing mane",
+        "Mentioned trees with orange/red leaves on right",
+        "Noted impressionistic style with thick brushstrokes"
+      ],
+      "key_misses": [
+        "Described Art Club logo as 'two silhouettes of people' instead of statues",
+        "Did not mention trees suspended in air",
+        "Did not explicitly describe bottom as continuous painting"
+      ],
+      "hallucinations": [],
+      "justification": "Strong text accuracy and visual description. Logo iconography partially wrong (silhouettes vs statues) but minor."
+    },
+    {
+      "model_variant": "qwen3-vl-8b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All verbatim text correct",
+        "VIC Health Club logo: heart held by two hands in laurel wreath — accurate",
+        "Horse in vibrant reds and oranges, flowing mane/tail",
+        "Trees with orange/red leaves on right",
+        "Swirling background of blues/teals"
+      ],
+      "key_misses": [
+        "Described VIC Art Club logo as 'two silhouettes of people standing side-by-side' instead of statues",
+        "Said text 'VIC Art Club' is written above the graphic (actually below)",
+        "Described bottom as 'solid dark blue background'"
+      ],
+      "hallucinations": [
+        "Logo iconography for Art Club (people silhouettes) incorrect"
+      ],
+      "justification": "Excellent text and color/visual description. Art Club logo iconography wrong. Treats footer as solid dark blue."
+    },
+    {
+      "model_variant": "qwen3.5-4b|nothink",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All verbatim text correct",
+        "VIC Health Club logo: heart held by hands in laurel wreath",
+        "Described horse in reds/oranges with flowing mane",
+        "Noted Van Gogh-like swirling brushstrokes",
+        "Mentioned tall slender trees with orange-red foliage on right"
+      ],
+      "key_misses": [
+        "Described VIC Art Club logo as 'two stylized human silhouettes (male and female) inside a rectangular frame' — wrong iconography and wrong container",
+        "Did not mention trees suspended in air"
+      ],
+      "hallucinations": [
+        "Art Club logo described as 'rectangular frame' with male/female silhouettes — incorrect"
+      ],
+      "justification": "Good text and color description. Art Club logo iconography significantly off (rectangular frame with male/female silhouettes vs statues in laurel wreath)."
+    },
+    {
+      "model_variant": "qwen3.5-4b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All verbatim text correct",
+        "VIC Health Club logo: hands holding heart in laurel",
+        "Horse in reds/oranges/amber with flowing mane",
+        "Mentioned thin vertical trees with orange/rust leaves on right",
+        "Noted swirling background and impasto oil-painting style"
+      ],
+      "key_misses": [
+        "Described Art Club logo as 'silhouettes of a man and a woman' instead of statues",
+        "Described bottom as 'solid dark blue footer'",
+        "Trees not described as suspended in air"
+      ],
+      "hallucinations": [
+        "Art Club logo description (man and woman silhouettes) incorrect"
+      ],
+      "justification": "Excellent text accuracy and rich description. Art Club logo iconography wrong but otherwise strong."
+    },
+    {
+      "model_variant": "qwen3.5-9b|nothink",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All verbatim text correct",
+        "VIC Health Club logo: heart held by hands in laurel wreath",
+        "Described horse in fiery reds/oranges/yellows with flowing mane",
+        "Mentioned autumnal trees with orange-red foliage on right",
+        "Noted swirling wave-like background patterns",
+        "Accurate description of typography colors and hierarchy"
+      ],
+      "key_misses": [
+        "Described VIC Art Club logo as 'two silhouetted figures within laurel wreath' instead of statues",
+        "Described bottom section as 'dark teal background'",
+        "Did not mention trees suspended in air",
+        "Speculated image may be 'AI-generated' (out of scope but minor)"
+      ],
+      "hallucinations": [
+        "Said image is 'likely AI-generated or digitally painted' — speculation beyond evidence"
+      ],
+      "justification": "Comprehensive description with accurate text and color details. Art Club logo wrong (silhouettes vs statues). Minor speculation about AI origin."
+    },
+    {
+      "model_variant": "qwen3.5-9b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All verbatim text correct, including ordering and typography colors",
+        "VIC Health Club logo: heart shape formed by two hands",
+        "Described horse in reds/oranges/yellows with flowing mane/tail",
+        "Mentioned thin spindly trees with orange/brown foliage on right",
+        "Noted impasto oil-painting style and swirling background"
+      ],
+      "key_misses": [
+        "Described VIC Art Club logo as 'silhouettes of two figures standing side-by-side' instead of statues",
+        "Described bottom as 'solid dark blue footer'",
+        "Did not mention trees suspended in air"
+      ],
+      "hallucinations": [
+        "Art Club logo description (two figure silhouettes) incorrect"
+      ],
+      "justification": "Excellent text accuracy with detailed typography analysis. Art Club logo iconography wrong. Solid overall description."
+    },
+    {
+      "model_variant": "qwen3.6-27b|nothink",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All verbatim text correct",
+        "VIC Health Club logo: hands cupping heart in laurel",
+        "Described horse in reds/oranges/yellows with flowing mane",
+        "Mentioned tall slender trees with orange foliage on right",
+        "Noted swirling background and impasto Van Gogh style"
+      ],
+      "key_misses": [
+        "Described VIC Art Club logo as 'silhouettes of two people standing side-by-side' instead of statues",
+        "Said 'Top Center Logo: VIC Art Club' (logos are side-by-side at top-left, not center)",
+        "Described bottom as 'solid dark blue banner'",
+        "Trees not described as suspended in air"
+      ],
+      "hallucinations": [
+        "Art Club logo description (silhouettes of two people) incorrect",
+        "Said Art Club logo is at 'Top Center' — actually top-left, side-by-side with Health Club"
+      ],
+      "justification": "Good text and visual description. Logo positioning (Top Center) and Art Club iconography both wrong."
+    },
+    {
+      "model_variant": "qwen3.6-27b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All verbatim text correct",
+        "VIC Health Club logo: heart shape formed by two hands",
+        "Described horse in reds/oranges/golds with flowing mane, galloping pose",
+        "Mentioned thin trees with orange foliage on right",
+        "Noted swirling Van Gogh 'Starry Night' background",
+        "Noted impasto oil painting style"
+      ],
+      "key_misses": [
+        "Described VIC Art Club logo as 'silhouettes of two figures (man and woman)' instead of statues",
+        "Said 'VIC Art Club' text is above the logo (actually below)",
+        "Described bottom as 'solid dark blue background'"
+      ],
+      "hallucinations": [
+        "Art Club logo description (man and woman silhouettes) incorrect"
+      ],
+      "justification": "Strong text and visual description. Art Club logo iconography wrong. Minor position errors on text placement."
+    },
+    {
+      "model_variant": "qwen3.6-35b-a3b|nothink",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All verbatim text correct",
+        "VIC Health Club logo: hands cradling heart in laurel",
+        "Described horse in fiery reds/oranges with flowing mane",
+        "Mentioned slender trees with autumnal orange leaves on right",
+        "Noted swirling abstract patterns in deep blues/teals"
+      ],
+      "key_misses": [
+        "Described VIC Art Club logo as 'two silhouetted figures standing before a doorway' instead of statues",
+        "Trees not described as suspended in air",
+        "Speculated about image being AI-generated"
+      ],
+      "hallucinations": [
+        "Art Club logo described as 'figures before a doorway' — incorrect",
+        "Said image 'may be digitally generated or AI-assisted' — speculation"
+      ],
+      "justification": "Good text accuracy. Art Club logo iconography significantly off (doorway). Speculates about AI generation."
+    },
+    {
+      "model_variant": "qwen3.6-35b-a3b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All verbatim text correct",
+        "VIC Health Club logo: white heart held by two hands in laurel wreath",
+        "Described horse in vivid reds/oranges with flowing mane/tail, impressionistic style",
+        "Mentioned thin spindly trees with orange/brown leaves on right",
+        "Noted swirling teal/blue/green background"
+      ],
+      "key_misses": [
+        "Described VIC Art Club logo as 'silhouettes of two people standing inside a laurel wreath' instead of statues",
+        "Said 'VIC Art Club' text is above the logo (actually below)",
+        "Described bottom as 'solid dark blue block'"
+      ],
+      "hallucinations": [
+        "Art Club logo description (silhouettes of two people) incorrect"
+      ],
+      "justification": "Strong text and visual description. Art Club logo iconography wrong. Minor text placement error."
+    }
+  ],
+  "ranking": [
+    {
+      "model_variant": "gemma4-26b-a4b|think",
+      "holistic_score": 8,
+      "rationale": "Most comprehensive and accurate. Perfect verbatim text, rich visual description, no significant hallucinations."
+    },
+    {
+      "model_variant": "gemma4-31b|think",
+      "holistic_score": 8,
+      "rationale": "Excellent verbatim text accuracy; creative but wrong easel interpretation for Art Club logo."
+    },
+    {
+      "model_variant": "qwen3-vl-8b|think",
+      "holistic_score": 8,
+      "rationale": "Excellent text and visual description; only minor logo iconography error."
+    },
+    {
+      "model_variant": "qwen3.5-4b|think",
+      "holistic_score": 8,
+      "rationale": "Excellent verbatim text, rich description; Art Club logo wrong."
+    },
+    {
+      "model_variant": "qwen3.5-9b|nothink",
+      "holistic_score": 8,
+      "rationale": "Strong description with typography detail; minor AI-generation speculation."
+    },
+    {
+      "model_variant": "qwen3.5-9b|think",
+      "holistic_score": 8,
+      "rationale": "Excellent text accuracy with typography colors; Art Club logo wrong."
+    },
+    {
+      "model_variant": "qwen3.6-27b|think",
+      "holistic_score": 8,
+      "rationale": "Strong description; Art Club logo iconography wrong."
+    },
+    {
+      "model_variant": "qwen3.6-35b-a3b|think",
+      "holistic_score": 8,
+      "rationale": "Strong text and visual; Art Club logo iconography wrong."
+    },
+    {
+      "model_variant": "qwen3-vl-4b|think",
+      "holistic_score": 7,
+      "rationale": "Solid text accuracy; logo iconography partially wrong."
+    },
+    {
+      "model_variant": "gemma4-e4b|think",
+      "holistic_score": 7,
+      "rationale": "Solid text and visuals; logo iconography generic."
+    },
+    {
+      "model_variant": "glm-4.6v-flash-9b|think",
+      "holistic_score": 7,
+      "rationale": "Excellent text accuracy; Art Club logo iconography wrong."
+    },
+    {
+      "model_variant": "qwen3.5-4b|nothink",
+      "holistic_score": 7,
+      "rationale": "Good text/visuals; Art Club logo significantly wrong (rectangular frame)."
+    },
+    {
+      "model_variant": "qwen3.6-27b|nothink",
+      "holistic_score": 7,
+      "rationale": "Good description; logo positioning (Top Center) and iconography both wrong."
+    },
+    {
+      "model_variant": "qwen3.6-35b-a3b|nothink",
+      "holistic_score": 7,
+      "rationale": "Good text accuracy; Art Club logo wrong (doorway), AI speculation."
+    },
+    {
+      "model_variant": "gemma4-12b|think",
+      "holistic_score": 6,
+      "rationale": "Weakest text accuracy ('VIC AC CLUB'), wrong iconography, claims solid black bottom."
+    }
+  ],
+  "notes": "All 15 models successfully identified the dominant visual elements (fiery horse, swirling Van Gogh-like background, stylized trees on right) and got the verbatim text mostly correct. The most universal failure mode was the VIC Art Club logo iconography: ground truth describes statues (a woman statue next to an inverted statue), but every model described human silhouettes/figures instead. No model described the trees as 'suspended in air' — most assumed they rise from the ground. Most models also treated the bottom section as a 'solid dark blue/black footer', whereas the ground truth describes the entire poster area as the photograph of a painting. Only gemma4-12b significantly mangled the text ('VIC AC CLUB' instead of 'VIC Art Club'). The |think vs |nothink distinction for qwen3.5-9b shows minimal difference (both score 8); qwen3.6-27b|think slightly outperforms its nothink counterpart due to better positioning. Larger models (gemma4-26b-a4b, gemma4-31b, qwen3.6-27b, qwen3.6-35b-a3b) performed comparably to mid-tier models, suggesting this poster is well within capability of all tested models."
+}

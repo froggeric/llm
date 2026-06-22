@@ -1,0 +1,175 @@
+{
+  "image": "07-photo-massage-therapists.jpg",
+  "image_path": "test-images/07-photo-massage-therapists.jpg",
+  "ground_truth_summary": "Five massage therapists (2 men, 3 women) posing in a massage room. Two bamboo plants (left and right corners), a succulent on the left low cupboard, blue runner with 2 rolled towels on the massage table, a folded blue towel on the right low cupboard, 4 windows with opened blinds, light brown cork floor (acceptable as wooden).",
+  "judgments": [
+    {
+      "model": "gemma4-12b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["count=5 (3 women, 2 men)", "2 bamboo plants left+right", "succulent on left windowsill", "2 rolled towels", "blue runner", "white long-sleeve on woman 4", "sage green uniforms"],
+      "key_misses": ["mentions radiator (not in ground truth)", "does not mention office chair or blue towel on right cupboard"],
+      "hallucinations": ["white radiator on bottom left — not corroborated"],
+      "justification": "Correct count of 5 with accurate left-to-right breakdown and good scene detail. Minor unverifiable radiator mention."
+    },
+    {
+      "model": "gemma4-26b-a4b|think",
+      "run_id": "2",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["count=5 (2 men, 3 women)", "2 bamboo plants", "blue towel on right cabinet", "white long-sleeve blouse on woman 2", "2 rolled towels", "blue runner", "tall grey/silver sliding cabinet on right", "windows with blinds"],
+      "key_misses": ["does not mention succulent or office chair explicitly"],
+      "hallucinations": [],
+      "justification": "Excellent description. Correct count, accurate identification of the tall grey cabinet and blue folded towel on the right cupboard, matching ground truth well."
+    },
+    {
+      "model": "gemma4-31b|think",
+      "run_id": "2",
+      "holistic_score": 8,
+      "failure_mode": "minor_counting_error",
+      "key_hits": ["count=5 people", "2 bamboo plants", "small potted plant on left", "white long-sleeve blouse", "2 rolled towels (but says 3)", "blue runner", "white sliding-door wardrobe on right"],
+      "key_misses": [],
+      "hallucinations": ["claims THREE rolled white towels on table — ground truth is 2"],
+      "justification": "People count correct at 5, but towel count overstated as 3. Otherwise strong description."
+    },
+    {
+      "model": "gemma4-e4b|think",
+      "run_id": "2",
+      "holistic_score": 3,
+      "failure_mode": "object_count_hallucination",
+      "key_hits": ["identifies spa/wellness setting", "massage table with blue runner", "2 rolled towels"],
+      "key_misses": ["missed succulent, blue towel on right cupboard"],
+      "hallucinations": ["CLAIMS 6 ADULTS (3 men, 3 women) — ground truth is 5 (2 men, 3 women). This is a major count error.", "mis-identifies man on far left as having gray hair (he has dark hair)"],
+      "justification": "Major count error: claims 6 people with 3 men, when there are 5 (2 men, 3 women). This is the critical failure for this image."
+    },
+    {
+      "model": "glm-4.6v-flash-9b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["count=5 (2 men, 3 women)", "2 bamboo plants", "small plant on left cabinet", "office chair behind 4th person", "blue towel/item on right cabinet", "2 rolled towels", "blue runner", "white long-sleeve shirt on woman 4"],
+      "key_misses": [],
+      "hallucinations": ["claims 5th woman wears light PINK pants — ground truth says beige; minor color error"],
+      "justification": "Excellent detail including office chair, succulent, blue item on right cabinet. Correct count of 5. Minor color call (pink vs beige)."
+    },
+    {
+      "model": "qwen3-vl-4b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["count=5 (2 men, 3 women)", "2 bamboo plants", "2 rolled towels", "blue runner", "white button-up on woman 4", "black office chair behind center woman", "blue towel/cloth on right cabinet"],
+      "key_misses": [],
+      "hallucinations": ["white cylindrical candle/container on left counter — plausible but unverified; 'blue runner and rolled towels' double-states blue"],
+      "justification": "Correct count of 5, accurate detail on office chair, bamboo plants, and blue towel on right cabinet. Very strong description."
+    },
+    {
+      "model": "qwen3-vl-8b|think",
+      "run_id": "3",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": ["count=5 (2 men, 3 women)", "2 bamboo-like plants", "2 rolled towels", "blue runner", "white button-up on woman 4", "tall white sliding-door cabinet on right"],
+      "key_misses": ["does not mention office chair, succulent, or blue towel on right cupboard"],
+      "hallucinations": [],
+      "justification": "Correct count of 5 and good scene capture, but less detail than peers on smaller verified items."
+    },
+    {
+      "model": "qwen3.5-4b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["count=5 (2 men, 3 women)", "2 bamboo plants", "succulents and candles on left cabinet", "blue towel on right tall cabinet (says folded blue towel on right tall cabinet)", "black office chair behind woman in white", "2 rolled towels", "blue runner", "white button-up blouse on woman 4"],
+      "key_misses": [],
+      "hallucinations": ["'candles' on left cabinet — not in ground truth (minor)"],
+      "justification": "Excellent detail including succulents, office chair, and blue folded towel. Correct count of 5. Minor candles mention."
+    },
+    {
+      "model": "qwen3.5-4b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["count=5 (2 men, 3 women)", "2 bamboo plants", "white long-sleeve blouse sleeves rolled up on woman 4", "2 rolled towels", "blue runner", "windows with buildings visible through"],
+      "key_misses": ["does not mention succulent, office chair, or blue towel on right cupboard"],
+      "hallucinations": [],
+      "justification": "Correct count of 5 and good attention to detail (sleeves rolled, buildings through blinds). Slightly less complete on smaller items."
+    },
+    {
+      "model": "qwen3.5-9b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["count=5 (2 men, 3 women)", "2 bamboo plants", "2 rolled towels", "blue runner", "black office chair behind woman in white", "white button-down on woman 4", "4 large windows with blinds"],
+      "key_misses": [],
+      "hallucinations": ["'large white cabinet or wardrobe on the far right' — partially accurate (there are 2 right cupboards)"],
+      "justification": "Correct count of 5 and explicitly notes 4 windows matching ground truth. Good office chair mention."
+    },
+    {
+      "model": "qwen3.5-9b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["count=5 (2 men, 3 women)", "2 bamboo plants", "small white pot on left counter (succulent)", "folded blue cloth on right counter", "2 rolled towels", "blue runner", "white button-down on woman 4", "tall white wardrobe on far right"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Comprehensive and accurate. Correct count of 5, mentions succulent, blue folded towel on right counter, and tall wardrobe."
+    },
+    {
+      "model": "qwen3.6-27b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["count=5 (2 men, 3 women)", "2 bamboo plants", "small succulent on left cabinet", "blue folded towel on right cabinet", "2 rolled towels", "blue runner", "white button-up on woman 4", "black office chair behind central figures", "4 windows"],
+      "key_misses": [],
+      "hallucinations": ["'short beard' on man 1 — ground truth doesn't note; 'purple beads' necklace on woman 5 — unverified"],
+      "justification": "Correct count of 5 and very detailed: succulent, blue towel on right cabinet, office chair, 4 windows. Minor unverifiable beard/necklace details."
+    },
+    {
+      "model": "qwen3.6-27b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["count=5 (2 men, 3 women)", "2 bamboo plants", "smaller potted plant on counter left", "2 rolled towels", "blue runner", "white button-down on woman 4", "tall white wardrobe on far right"],
+      "key_misses": ["does not mention office chair or blue towel on right cupboard"],
+      "hallucinations": [],
+      "justification": "Correct count of 5 with accurate breakdown. Mentions small potted plant on left counter. Solid description."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["count=5 (2 men, 3 women)", "2 bamboo plants", "succulents on left cabinet", "2 rolled towels", "blue runner", "white button-up on woman 4", "tall white wardrobe with sliding doors on right"],
+      "key_misses": ["does not mention blue towel on right cupboard or office chair"],
+      "hallucinations": [],
+      "justification": "Correct count of 5 and well-organized detail. Notes succulents on left cabinet and sliding-door wardrobe."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|think",
+      "run_id": "2",
+      "holistic_score": 3,
+      "failure_mode": "object_count_hallucination",
+      "key_hits": ["identifies setting", "2 bamboo plants", "2 rolled towels", "blue runner", "white button-up on woman 4", "tall white wardrobe on right"],
+      "key_misses": ["missed succulent"],
+      "hallucinations": ["CLAIMS 5 adults but mislabels as 'three men and two women' — ground truth is 2 men, 3 women. However, the per-person list (item 1 man, item 2 woman, item 3 man, item 4 woman, item 5 woman) actually correctly shows 2 men, 3 women, so the count is correct but the summary text contradicts the list. The list itself is correct count=5."],
+      "justification": "Borderline: total count is 5 (correct), and the per-person enumeration lists 2 men + 3 women correctly, but the overview text says 'three men and two women' which is a labeling error. Since the enumerated count of people is correct at 5, this is a minor labeling inconsistency rather than a true count error. Score reduced for the contradictory gender summary but not penalized as a hard count failure."
+    }
+  ],
+  "ranking": [
+    "gemma4-26b-a4b|think",
+    "qwen3.5-9b|think",
+    "qwen3-vl-4b|think",
+    "qwen3.6-27b|nothink",
+    "qwen3.5-4b|nothink",
+    "glm-4.6v-flash-9b|think",
+    "qwen3.5-9b|nothink",
+    "gemma4-12b|think",
+    "qwen3.5-4b|think",
+    "qwen3.6-27b|think",
+    "qwen3.6-35b-a3b|nothink",
+    "qwen3-vl-8b|think",
+    "gemma4-31b|think",
+    "qwen3.6-35b-a3b|think",
+    "gemma4-e4b|think"
+  ],
+  "notes": "KEY DISTINCTION: gemma4-e4b|think claims 6 people (3 men, 3 women) — a hard count failure (score 3). qwen3.6-35b-a3b|think has a confusing summary line saying 'three men and two women' but its enumerated list correctly shows 2 men + 3 women = 5 total; since total headcount is correct (5), this is a labeling inconsistency rather than a true count error, but score reduced to 3 for the misleading summary. gemma4-31b|think overstated towel count as 3 (correct is 2). All other 12 models correctly counted 5 people. Image verified independently via vision analysis: 5 people (2 men, 3 women), 2 bamboo plants, succulent on left, blue folded towel on right low cupboard, blue runner with 2 rolled towels, 4 windows with blinds."
+}

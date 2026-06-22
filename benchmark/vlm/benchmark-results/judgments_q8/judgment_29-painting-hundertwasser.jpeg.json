@@ -1,0 +1,106 @@
+{
+  "image": "29-painting-hundertwasser.jpeg",
+  "ground_truth_summary": "Painting BY Hundertwasser, dated December 1965. 3 buildings: red circular tower (leftmost, pointy onion-dome roof); two yellow buildings (right) that are OPEN at top. Dark GROUND at bottom (NOT water). Blue horizon and sky. Onion domes in multiple colors. Embedded feminine face in LOWER-LEFT corner of RIGHTMOST building with very white skin and 2 RED dots on cheeks (signature motif). Blue teardrop shapes inside most windows.",
+  "evaluations": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "score": 5,
+      "strengths": [
+        "Correctly identifies 3 buildings with red tower on left",
+        "Identifies onion domes and the recurring blue teardrop motif",
+        "Locates a face in the bottom right area of the yellow building",
+        "Notes thick brushstrokes and folk-art character"
+      ],
+      "errors": [
+        "HALLUCINATION: describes background/foreground as possibly 'a body of water' — the dark band at the bottom is GROUND, not water",
+        "WRONG DATE: reads signature as '2018' instead of 1965",
+        "Places face in 'bottom right corner' rather than lower-LEFT corner of the rightmost building",
+        "Claims one eye has a red dot — conflates cheek motif with eye; does not identify the 2 red cheek dots",
+        "Describes buildings as 'Russian-inspired' but does not name Hundertwasser",
+        "Describes floating frames but misses that the two right buildings are OPEN at the top"
+      ],
+      "notes": "Solid structural description undermined by the water hallucination and a badly wrong date. Gets the teardrop motif right."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "score": 7,
+      "strengths": [
+        "Best architectural description of the group — correctly distinguishes red cylindrical tower, cubic lime-green/yellow center, and pitched-roof right building",
+        "Correctly reads background as 'deep blue sky' / 'night sky' with NO water claim — avoids the major hallucination",
+        "Identifies face integrated into the right building",
+        "Identifies the recurring blue teardrop motif correctly",
+        "Calls the signature 'illegible' rather than fabricating a date — safest handling"
+      ],
+      "errors": [
+        "Does not identify Hundertwasser as the artist (common, but no attempt)",
+        "Face location given only as 'lower section of the pitched-roof building' — misses the specific lower-LEFT corner placement",
+        "Does not explicitly mention the 2 red dots on cheeks",
+        "Misses that the two right buildings are open at the top"
+      ],
+      "notes": "Most accurate overall. Avoids the water hallucination, handles the signature cautiously, and correctly classifies the background as sky."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "score": 5,
+      "strengths": [
+        "Correctly describes the ground as 'dark, almost black' — does NOT claim water (avoids hallucination)",
+        "Identifies the woman's face with pale skin, dark hair, and RED DOTS on cheeks (correctly identifies the signature motif)",
+        "Identifies onion domes and blue teardrops in windows"
+      ],
+      "errors": [
+        "WRONG DATE: reads signature as 'M. J. H. 1978' — incorrect year and fabricated initials",
+        "Says face is 'peeking out from behind the yellow building' — imprecise; actually embedded in lower-LEFT corner of rightmost building",
+        "Claims red dots on cheeks AND forehead — overcounts (only 2 dots on cheeks)",
+        "Fabricates 'floating geometric shapes in the sky including squares/rectangles' that are not prominent in the image",
+        "Does not identify Hundertwasser; calls style 'surreal/graphic'"
+      ],
+      "notes": "Strong on the cheek-dots motif and ground description, but the fabricated 1978 date and imprecise face location drag it down."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "score": 7,
+      "strengths": [
+        "Correctly identifies ground as 'black' — explicitly NOT water (avoids the major hallucination)",
+        "Correctly identifies face 'in lower right portion of the yellow building' with 'small red dots on the cheeks' — captures the signature motif",
+        "Identifies onion domes, blue teardrops, and arched vs rectangular windows",
+        "Safely describes signature as 'not legible' rather than inventing a date",
+        "Captures the surreal, folk-art quality and repeating teardrop theme"
+      ],
+      "errors": [
+        "Invents a title 'City of Windows and Tears' that is not in the image",
+        "Face placement 'lower right portion' is close but not specifically the lower-LEFT corner of the rightmost building",
+        "Does not identify Hundertwasser as the artist",
+        "Misses that the two right buildings are open at the top",
+        "Says 'no visible text' but a signature/date IS visible (just illegible)"
+      ],
+      "notes": "Accurate on the load-bearing facts (ground not water, red cheek dots, teardrops, onion domes) and handles the signature cautiously. The invented title is a minor flourish, not a hallucination."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "score": 6,
+      "strengths": [
+        "Correctly describes background transitioning to 'black at the bottom' — does NOT explicitly claim water (avoids the major hallucination)",
+        "Identifies face at 'bottom right corner of the yellow pyramid' with 'few red spots on the cheeks' — captures signature motif",
+        "Correctly identifies red tower with onion dome, lime-green/yellow center, yellow right building",
+        "Identifies the blue teardrop motif and arched windows on the red tower",
+        "Notes the texture and saturated color palette"
+      ],
+      "errors": [
+        "WRONG SIGNATURE: reads 'D. K.' followed by illegible script — fabricated initials; does not pick up 1965",
+        "Calls the style 'Op Art or folk art' — Op Art is incorrect; misses Hundertwasser",
+        "Face placement 'bottom right corner of yellow pyramid' is imprecise; should be lower-LEFT corner",
+        "Claims 'cluster of floating yellow squares and a strange bulbous shape' that are overstated",
+        "Misses that the two right buildings are open at the top"
+      ],
+      "notes": "Competent description that avoids the water hallucination and correctly identifies the red cheek dots. Loses points for fabricated initials and the 'Op Art' mischaracterization."
+    }
+  ],
+  "ranking": [
+    {"model": "gemma4-e4b-Q8|think", "score": 7, "reason": "Cleanest description; correctly reads sky (not water) and handles signature cautiously"},
+    {"model": "qwen3-vl-8b-Q8|think", "score": 7, "reason": "Correctly avoids water hallucination, captures red cheek dots and teardrop theme; minor title invention"},
+    {"model": "qwen3.5-4b-Q8|think", "score": 6, "reason": "Avoids water hallucination and gets cheek dots, but fabricates signature initials and mischaracterizes style as Op Art"},
+    {"model": "gemma4-12b-Q8|think", "score": 5, "reason": "Good structure but suggests water in background and badly misreads date as 2018"},
+    {"model": "qwen3-vl-4b-Q8|think", "score": 5, "reason": "Gets red cheek dots right but fabricates a 1978 date and imprecisely locates the face"}
+  ],
+  "overall_notes": "None of the five Q8 models identified the artist as Hundertwasser. The two strongest responses (gemma4-e4b, qwen3-vl-8b) both correctly avoided the 'water' hallucination and captured the 2-red-dots cheek motif. The three weaker responses either explicitly raised water (gemma4-12b) or fabricated date text (qwen3-vl-4b '1978', gemma4-12b '2018', qwen3.5-4b 'D. K.'). Notably, no model correctly identified that the two right buildings are OPEN at the top — a subtle detail in the ground truth that all five missed."
+}

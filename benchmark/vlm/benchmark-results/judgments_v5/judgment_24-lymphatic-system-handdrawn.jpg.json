@@ -1,0 +1,319 @@
+{
+  "image": "24-lymphatic-system-handdrawn.jpg",
+  "judgments": {
+    "gemma4-12b|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title 'Human Lymphatic System' verbatim",
+        "All 6 organ labels correct (Tonsils, Thymus, Spleen, Lymph Vessels, Lymph Nodes, Bone Marrow)",
+        "Color coding all correct (pink tonsils, orange thymus, purple spleen, green vessels/nodes, yellow bone marrow)",
+        "All 4 functions verbatim",
+        "Lined notebook paper with red margin noted",
+        "Bone marrow as single femur in leg"
+      ],
+      "key_misses": [
+        "Says body outline is black; ground truth is gray pencil",
+        "Does not mention overlapping sketchy lines or erasure marks",
+        "Does not mention two grey smudges"
+      ],
+      "hallucinations": [
+        "Calls body outline 'black' repeatedly (minor color error)",
+        "Says arrows are 'thin black lines' (they are blue ink)"
+      ],
+      "justification": "Very thorough and accurate description with all labels, colors, and functions verbatim. Main weakness is misidentifying the gray pencil body outline as black and missing the smudges."
+    },
+    "gemma4-26b-a4b|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title verbatim",
+        "All 6 labels correct",
+        "All colors correct",
+        "All 4 functions verbatim",
+        "Bone marrow as femur in leg",
+        "Lined notebook paper noted"
+      ],
+      "key_misses": [
+        "Says figure outline is 'black-ink' rather than gray pencil",
+        "Misses the two grey smudges",
+        "Misses overlapping sketchy/erasure lines"
+      ],
+      "hallucinations": [
+        "States outline/text/arrows are black (text is blue ink, outline is gray pencil)"
+      ],
+      "justification": "Comprehensive, well-structured description covering all labels, colors, and functions. Same minor color-instrument error as the smaller gemma variant."
+    },
+    "gemma4-31b|think": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title verbatim",
+        "All 6 labels correct",
+        "Most colors correct",
+        "All 4 functions verbatim",
+        "Bone marrow as femur in leg"
+      ],
+      "key_misses": [
+        "Thymus described as 'orange-yellow' (should be just orange)",
+        "Tonsils described as 'pinkish-red' (just pink)",
+        "Body outline described as 'thin black line' (gray pencil)",
+        "Misses smudges and sketchy overlapping lines"
+      ],
+      "hallucinations": [
+        "Color shifts: thymus orange-yellow, tonsils pinkish-red"
+      ],
+      "justification": "Good coverage of labels and functions but introduces small color drift and again misidentifies the gray pencil outline as black."
+    },
+    "gemma4-e4b|think": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title verbatim",
+        "All 6 labels correct",
+        "All 4 functions verbatim",
+        "Color coding mostly correct",
+        "Educational/hand-drawn context noted"
+      ],
+      "key_misses": [
+        "Thymus color listed as 'Orange/yellowish' rather than orange",
+        "Tonsils listed as 'Pink/reddish'",
+        "Does not specify body outline is gray pencil",
+        "Misses smudges"
+      ],
+      "hallucinations": [
+        "Color drift on thymus and tonsils",
+        "Says outline/text 'primarily black or dark gray' rather than gray pencil"
+      ],
+      "justification": "Solid coverage of labels and functions, but less specific than larger gemma variants and includes slight color drift."
+    },
+    "glm-4.6v-flash-9b|think": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title verbatim",
+        "All 6 labels correct with arrow directions",
+        "All colors exactly correct (gray outline, green, orange, purple, yellow, pink)",
+        "All 4 functions verbatim",
+        "Correctly identifies gray body outline",
+        "Correctly identifies blue ink text",
+        "Lined notebook paper with red margin noted",
+        "Bone marrow as femur in leg"
+      ],
+      "key_misses": [
+        "Does not explicitly mention two grey smudges",
+        "Does not mention overlapping sketchy lines"
+      ],
+      "hallucinations": [],
+      "justification": "Most accurate response: correctly identifies gray body outline, blue ink text, exact colors, all labels and functions verbatim. Only minor detail missing is smudges."
+    },
+    "qwen3-vl-4b|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title verbatim",
+        "All 6 labels correct",
+        "All colors correct",
+        "All 4 functions verbatim",
+        "Correctly identifies gray pencil figure",
+        "Correctly notes dark blue ink labels",
+        "Bone marrow as femur in leg"
+      ],
+      "key_misses": [
+        "Does not mention smudges",
+        "Does not mention overlapping sketchy lines"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent description for a 4B model, correctly identifying gray pencil outline and blue ink labels. All labels, colors, and functions verbatim."
+    },
+    "qwen3-vl-8b|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title verbatim",
+        "All 6 labels correct",
+        "Most colors correct",
+        "All 4 functions verbatim",
+        "Bone marrow as yellow bone in leg",
+        "Hand-drawn with pencil noted"
+      ],
+      "key_misses": [
+        "Tonsils described as 'pinkish-purple' (just pink)",
+        "Does not specify gray pencil vs black ink",
+        "Misses smudges"
+      ],
+      "hallucinations": [
+        "Tonsils color shift to pinkish-purple"
+      ],
+      "justification": "Strong, well-structured description with all key elements. Minor color drift on tonsils."
+    },
+    "qwen3.5-4b|nothink": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title verbatim",
+        "All 6 labels correct",
+        "All colors correct",
+        "All 4 functions verbatim",
+        "Bone marrow as femur in leg",
+        "Notes minor smudge near right hip",
+        "Gray/black outline noted"
+      ],
+      "key_misses": [
+        "Only mentions one smudge (ground truth has two)",
+        "Uses extensive emoji headers (formatting noise)"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and detailed, one of the few to mention a smudge. However, verbose formatting with emojis and claims of hip smudge that may not match ground truth location. Response appears truncated mid-sentence at end ('idea')."
+    },
+    "qwen3.5-4b|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title verbatim",
+        "All 6 labels correct",
+        "All colors correct including gray pencil outline",
+        "All 4 functions verbatim",
+        "Bone marrow as femur in leg",
+        "Correctly identifies gray body outline",
+        "Notes blue ink vs grey outline distinction"
+      ],
+      "key_misses": [
+        "Does not mention smudges",
+        "Describes thymus as 'shield-shaped' rather than butterfly"
+      ],
+      "hallucinations": [
+        "Thymus described as 'shield-shaped' (most others say butterfly)"
+      ],
+      "justification": "Strong, accurate description with gray pencil outline correctly identified. All labels, colors, and functions captured."
+    },
+    "qwen3.5-9b|nothink": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title verbatim",
+        "All 6 labels correct with arrow directions",
+        "All colors correct",
+        "All 4 functions verbatim",
+        "Bone marrow as femur in thigh",
+        "Correctly notes gray pencil outline",
+        "Mentions smudges near right hip and lower leg"
+      ],
+      "key_misses": [
+        "Smudge location (hip/leg) does not exactly match ground truth (right hand and right foot)"
+      ],
+      "hallucinations": [
+        "Smudge locations may be slightly off"
+      ],
+      "justification": "Excellent and detailed; one of the few to mention smudges/eraser marks. All key elements captured verbatim with accurate colors."
+    },
+    "qwen3.5-9b|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title verbatim",
+        "All 6 labels correct",
+        "All colors correct",
+        "All 4 functions verbatim",
+        "Bone marrow as femur in right leg",
+        "Notes body outline drawn in pencil"
+      ],
+      "key_misses": [
+        "Does not mention smudges",
+        "Does not specify gray color of outline"
+      ],
+      "hallucinations": [],
+      "justification": "Comprehensive and well-organized with all labels, colors, and functions. Notes pencil outline but does not specify gray."
+    },
+    "qwen3.6-27b|nothink": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title verbatim (with underline note)",
+        "All 6 labels correct with arrow directions",
+        "All colors exactly correct including gray pencil outline",
+        "All 4 functions verbatim with bullet style noted",
+        "Bone marrow as femur in right leg",
+        "Notes blue ink text and gray/pencil body outline",
+        "Mentions smudges near lower right side"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Outstanding description: accurate colors, gray pencil outline, blue ink text, all labels and functions verbatim, mentions smudges. Most comprehensive and accurate response."
+    },
+    "qwen3.6-27b|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title verbatim",
+        "All 6 labels correct with side grouping",
+        "All colors correct",
+        "All 4 functions verbatim",
+        "Bone marrow as femur in right leg",
+        "Notes blue ink text"
+      ],
+      "key_misses": [
+        "Does not explicitly specify gray pencil (just 'pencil outline')",
+        "Does not mention smudges"
+      ],
+      "hallucinations": [],
+      "justification": "Very strong description with all key elements. Slightly less specific than its nothink counterpart on materials."
+    },
+    "qwen3.6-35b-a3b|nothink": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title verbatim",
+        "All 6 labels correct with arrow directions",
+        "All colors exactly correct including gray pencil outline",
+        "All 4 functions verbatim",
+        "Bone marrow as femur in thigh",
+        "Notes lined notebook paper with red margin",
+        "Notes light gray/black pencil outline"
+      ],
+      "key_misses": [
+        "Does not explicitly mention two grey smudges"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent comprehensive description with accurate colors, materials, all labels and functions. Top-tier accuracy."
+    },
+    "qwen3.6-35b-a3b|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title verbatim",
+        "All 6 labels correct",
+        "All colors correct",
+        "All 4 functions verbatim",
+        "Bone marrow as femur in leg",
+        "Notes graphite pencil outline"
+      ],
+      "key_misses": [
+        "Bone marrow noted as 'right leg (viewer's left)' inconsistent with rest",
+        "Does not mention smudges"
+      ],
+      "hallucinations": [
+        "Says 'right leg (viewer's left)' which is contradictory"
+      ],
+      "justification": "Strong detailed description; minor directional confusion on bone marrow location. All other elements accurate."
+    }
+  },
+  "ranking": [
+    "qwen3.6-27b|nothink",
+    "glm-4.6v-flash-9b|think",
+    "qwen3.6-35b-a3b|nothink",
+    "qwen3.6-27b|think",
+    "qwen3.5-4b|think",
+    "gemma4-12b|think",
+    "gemma4-26b-a4b|think",
+    "qwen3-vl-4b|think",
+    "qwen3.5-9b|nothink",
+    "qwen3.5-9b|think",
+    "qwen3-vl-8b|think",
+    "qwen3.6-35b-a3b|think",
+    "qwen3.5-4b|nothink",
+    "gemma4-31b|think",
+    "gemma4-e4b|think"
+  ],
+  "notes": "Most models performed very well on this hand-drawn diagram with clear labels. The qwen3.6 family and glm-4.6v-flash-9b led by correctly identifying the gray pencil body outline, blue ink text, and exact color coding. The most common error was misidentifying the gray pencil outline as black ink (gemma variants, some qwen3.5). Almost all models missed the two specific grey smudges mentioned in ground truth; qwen3.5-9b|nothink and qwen3.6-27b|nothink were the only ones to attempt smudge descriptions. qwen3.5-4b|nothink appeared to be truncated mid-sentence at the end ('idea')."
+}

@@ -1,0 +1,312 @@
+{
+  "image": "03_error_trace.png",
+  "image_path": "test-images/03_error_trace.png",
+  "ground_truth_summary": "Python traceback: `psycopg2.OperationalError` - connection to server at \"db.internal\" (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user \"app\". Secondary ConnectionError during handling. Stack: /Users/alice/app/main.py line 42 (db = connect(DB_URL)) and /Users/alice/app/db.py line 18 (raise ConnectionError). Exit code 1.",
+  "judgments": [
+    {
+      "model": "gemma4-12b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError (correct)",
+        "db.internal + 10.0.0.5 + port 5432",
+        "password authentication failed for user \"app\"",
+        "main.py line 42, db.py line 18",
+        "ConnectionError secondary",
+        "exit code 1",
+        "verbatim transcript accurate"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Flawless verbatim transcription with correct error class, all connection params, file paths, line numbers, and exit code. Clear structured explanation."
+    },
+    {
+      "model": "gemma4-26b-a4b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError",
+        "db.internal, 10.0.0.5, port 5432",
+        "password auth failed user \"app\"",
+        "main.py:42, db.py:18",
+        "ConnectionError",
+        "exit code 1",
+        "macOS/alice inferred correctly"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Perfect transcription and accurate analysis. No errors."
+    },
+    {
+      "model": "gemma4-31b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError",
+        "db.internal (10.0.0.5), port 5432",
+        "password auth failed user \"app\"",
+        "main.py line 42, db.py line 18",
+        "ConnectionError",
+        "exit code 1",
+        "PostgreSQL identification"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Accurate transcription with correct error type, all connection details, and file references."
+    },
+    {
+      "model": "gemma4-e4b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError",
+        "db.internal (10.0.0.5), port 5432",
+        "FATAL: password auth failed user \"app\"",
+        "main.py line 42, db.py line 18",
+        "ConnectionError",
+        "exit code 1"
+      ],
+      "key_misses": [
+        "Collapses some line breaks (minor formatting only)"
+      ],
+      "hallucinations": [],
+      "justification": "All factual content correct. Minor whitespace formatting compression does not affect accuracy."
+    },
+    {
+      "model": "glm-4.6v-flash-9b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError",
+        "db.internal (10.0.0.5) port 5432",
+        "password auth failed user \"app\"",
+        "main.py:42, db.py:18",
+        "ConnectionError",
+        "exit code 1",
+        "PostgreSQL via psycopg2"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Perfect verbatim transcription and accurate structured analysis. Excellent for a 9B model."
+    },
+    {
+      "model": "qwen3-vl-4b|think",
+      "holistic_score": 7,
+      "failure_mode": "hallucination",
+      "key_hits": [
+        "psycopg2.OperationalError",
+        "db.internal (10.0.0.5), port 5432",
+        "password auth failed user \"app\"",
+        "main.py line 42",
+        "db.py line 18",
+        "ConnectionError",
+        "exit code 1"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "File path hallucinated as /Users/alice/app/db/db.py (extra /db segment); actual path is /Users/alice/app/db.py"
+      ],
+      "justification": "Otherwise accurate, but the second file path is hallucinated with an erroneous additional /db directory segment, which is a meaningful factual error in a stack trace."
+    },
+    {
+      "model": "qwen3-vl-8b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError",
+        "db.internal (10.0.0.5), port 5432",
+        "password auth failed user \"app\"",
+        "main.py:42, db.py:18",
+        "ConnectionError",
+        "exit code 1"
+      ],
+      "key_misses": [
+        "Minor: collapses multi-line error into single line (formatting only)"
+      ],
+      "hallucinations": [],
+      "justification": "All factual content correct. Slight line-break compression in transcript does not affect substance."
+    },
+    {
+      "model": "qwen3.5-4b|nothink",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError",
+        "db.internal (10.0.0.5), port 5432",
+        "password auth failed user \"app\"",
+        "main.py:42, db.py:18",
+        "ConnectionError",
+        "exit code 1",
+        "well-structured extraction"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Clean, accurate, well-organized transcription with no factual errors."
+    },
+    {
+      "model": "qwen3.5-4b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError",
+        "db.internal (10.0.0.5), port 5432",
+        "password auth failed user \"app\"",
+        "main.py:42, db.py:18",
+        "ConnectionError",
+        "exit code 1",
+        "correctly notes macOS via /Users/alice"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Accurate verbatim transcription with sound analysis and correct technical interpretation."
+    },
+    {
+      "model": "qwen3.5-9b|nothink",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError",
+        "db.internal (10.0.0.5), port 5432",
+        "password auth failed user \"app\"",
+        "main.py:42, db.py:18",
+        "ConnectionError",
+        "exit code 1",
+        "insightful notes on internal network and exception chaining"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Perfect transcription plus rich, accurate contextual analysis. One of the most thorough responses."
+    },
+    {
+      "model": "qwen3.5-9b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError",
+        "db.internal (10.0.0.5), port 5432",
+        "password auth failed user \"app\"",
+        "main.py:42, db.py:18",
+        "ConnectionError",
+        "exit code 1",
+        "correctly identifies PostgreSQL via psycopg2 and port 5432"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Accurate transcription with clear, well-organized analysis. All key facts correct."
+    },
+    {
+      "model": "qwen3.6-27b|nothink",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError",
+        "db.internal (10.0.0.5), port 5432",
+        "password auth failed user \"app\"",
+        "main.py:42, db.py:18",
+        "ConnectionError",
+        "exit code 1",
+        "correctly identifies PostgreSQL adapter"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Flawless transcription with accurate structured analysis and correct technical interpretation."
+    },
+    {
+      "model": "qwen3.6-27b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError",
+        "db.internal (10.0.0.5), port 5432",
+        "password auth failed user \"app\"",
+        "main.py:42, db.py:18",
+        "ConnectionError",
+        "exit code 1",
+        "PostgreSQL adapter identification"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Accurate verbatim transcription with comprehensive and correct analysis."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|nothink",
+      "holistic_score": 4,
+      "failure_mode": "hallucination",
+      "key_hits": [
+        "db.internal (10.0.0.5), port 5432",
+        "password auth failed user \"app\"",
+        "main.py:42, db.py:18",
+        "ConnectionError",
+        "exit code 1"
+      ],
+      "key_misses": [
+        "Failed to transcribe the literal 'psycopg2' error class"
+      ],
+      "hallucinations": [
+        "SEVERE: Transcribes error class as 'psycopg.OperationalError' instead of 'psycopg2.OperationalError'. Drops the '2' from the library name. Then hedges with 'psycopg (likely psycopg2 or psycopg3)' which still does not match the verbatim text."
+      ],
+      "justification": "Despite otherwise good analysis, the core library name is misread as 'psycopg' instead of the literal 'psycopg2' shown in the image. This is exactly the kind of severe hallucination flagged in the task brief. Significantly penalized."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|think",
+      "holistic_score": 4,
+      "failure_mode": "hallucination",
+      "key_hits": [
+        "db.internal (10.0.0.5), port 5432",
+        "password auth failed user \"app\"",
+        "main.py:42, db.py:18",
+        "ConnectionError",
+        "exit code 1",
+        "main.py:42 and db.py:18 paths correct"
+      ],
+      "key_misses": [
+        "Failed to transcribe the literal 'psycopg2' error class"
+      ],
+      "hallucinations": [
+        "SEVERE: Transcribes error class as 'psycopg.OperationalError' instead of 'psycopg2.OperationalError'. Drops the '2'. Then in prose refers to 'psycopg library' / 'psycopg.OperationalError' repeatedly instead of psycopg2."
+      ],
+      "justification": "Same severe hallucination as its nothink counterpart: misreads psycopg2 as psycopg. Both |think and |nothink variants of qwen3.6-35b-a3b fail on this critical token, confirming a systematic model weakness rather than a sampling artifact."
+    }
+  ],
+  "ranking": [
+    {
+      "tier": "perfect (10)",
+      "models": [
+        "gemma4-12b|think",
+        "gemma4-26b-a4b|think",
+        "gemma4-31b|think",
+        "gemma4-e4b|think",
+        "glm-4.6v-flash-9b|think",
+        "qwen3-vl-8b|think",
+        "qwen3.5-4b|nothink",
+        "qwen3.5-4b|think",
+        "qwen3.5-9b|nothink",
+        "qwen3.5-9b|think",
+        "qwen3.6-27b|nothink",
+        "qwen3.6-27b|think"
+      ]
+    },
+    {
+      "tier": "minor path hallucination (7)",
+      "models": [
+        "qwen3-vl-4b|think"
+      ]
+    },
+    {
+      "tier": "severe library-name hallucination (4)",
+      "models": [
+        "qwen3.6-35b-a3b|nothink",
+        "qwen3.6-35b-a3b|think"
+      ]
+    }
+  ],
+  "notes": [
+    "Image is a clear, high-contrast terminal screenshot with monospaced text - an easy OCR task for competent VLMs.",
+    "12 of 15 model variants produced perfect or near-perfect transcriptions of the traceback, including the literal 'psycopg2.OperationalError' string.",
+    "qwen3.6-35b-a3b is a clear outlier: BOTH |think and |nothink configurations hallucinate 'psycopg.OperationalError' (dropping the '2'). This is systematic within this model, not stochastic. Per the task brief, this is treated as a SEVERE hallucination and heavily penalized.",
+    "qwen3-vl-4b|think is the only other model with a factual error: it invents an extra '/db' path segment in the second stack frame (/Users/alice/app/db/db.py vs the correct /Users/alice/app/db.py).",
+    "Interestingly, the SMALLER Qwen models (qwen3.5-4b, qwen3.5-9b, qwen3.6-27b) all read psycopg2 correctly, while only the largest Qwen (qwen3.6-35b-a3b) fails - suggesting the 35b MoE has a tokenization or priors issue with the 'psycopg2' token.",
+    "All models correctly identified host db.internal, IP 10.0.0.5, port 5432, user 'app', password authentication failure, file paths, line numbers, and exit code 1 - these secondary facts are robust.",
+    "Color descriptions vary slightly (some call exit-code line green, others don't mention it) but the image clearly shows red error text; this is descriptive variance, not a factual error."
+  ]
+}

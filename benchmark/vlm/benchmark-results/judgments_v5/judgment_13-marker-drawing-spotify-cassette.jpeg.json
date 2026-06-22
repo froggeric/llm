@@ -1,0 +1,334 @@
+{
+  "image": "13-marker-drawing-spotify-cassette.jpeg",
+  "judgments": [
+    {
+      "model": "gemma4-12b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Cassette tape correctly identified",
+        "Magnetic tape spilling/unspooling correctly described",
+        "Green/teal color wash noted",
+        "French text 'MUSIQUE À VOLONTÉ' captured verbatim with correct accents",
+        "Hand-drawn ink/watercolor style identified",
+        "Arrow pointing to cassette mentioned"
+      ],
+      "key_misses": [
+        "Describes medium as 'watercolor or diluted acrylic' rather than markers (close but slightly off)",
+        "Does not mention Spotify theme"
+      ],
+      "hallucinations": [
+        "Says tape is 'tilted slightly to the left' - actually appears tilted but minor detail"
+      ],
+      "justification": "Excellent detailed description with perfect French OCR including both accents. Strong on composition, color, and style. Slight medium misidentification (watercolor vs markers) and missing Spotify reference keep it from a 10."
+    },
+    {
+      "model": "gemma4-26b-a4b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Cassette tape with reels, window, ridges correctly identified",
+        "Magnetic tape flowing/swirling described",
+        "Green palette (lime to forest green) accurately noted",
+        "French text 'MUSIQUE' and 'À VOLONTÉ' captured verbatim",
+        "Arrow from text to cassette noted",
+        "Correctly states no people in image",
+        "Ink-and-watercolor style appropriately described",
+        "Provides translation 'Music at will/Unlimited music'"
+      ],
+      "key_misses": [
+        "Does not explicitly mention Spotify theme/Spotify logo",
+        "Slightly hedged medium ('watercolor or alcohol-based markers')"
+      ],
+      "hallucinations": [],
+      "justification": "Very thorough, well-structured description with verbatim French text and translation. Correctly identified the artistic style and palette. Missing Spotify reference is the only notable gap."
+    },
+    {
+      "model": "gemma4-31b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "French text 'MUSIQUE À VOLONTÉ' captured with correct accents",
+        "Arrow pointing to cassette mentioned",
+        "Cassette with clear shell, spools, magnetic tape described",
+        "Tape spilling in swirling/looping ribbons captured",
+        "Green palette (lime to forest) accurately described",
+        "Three-quarter perspective noted",
+        "Hand-drawn illustration style identified"
+      ],
+      "key_misses": [
+        "No Spotify reference",
+        "Medium described as 'ink and marker' (actually closer to truth)"
+      ],
+      "hallucinations": [
+        "Grey plastic casing shading noted - may be minor over-interpretation"
+      ],
+      "justification": "Excellent detailed description with perfect French OCR. Correctly captured the swirling tape dynamic and color palette. Well-organized sections. Missing Spotify theme is the main gap."
+    },
+    {
+      "model": "gemma4-e4b|think",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "French text 'MUSIQUE À VOLONTÉ' captured verbatim",
+        "Arrow mentioned pointing to sound waves",
+        "Cassette/retro aesthetic noted",
+        "Green color palette described",
+        "Translation of French phrase provided"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Describes object as 'cassette tape player or deck' rather than a cassette tape itself - significant error",
+        "Says sound waves flow 'downward and to the right' - imprecise",
+        "Mentions 'control buttons' on player which are not present"
+      ],
+      "justification": "Significant error: identifies object as cassette player/deck rather than cassette tape. Otherwise captures text correctly and describes style well. The object misidentification is a critical visual error."
+    },
+    {
+      "model": "glm-4.6v-flash-9b|think",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Audio cassette with reels, central window described",
+        "Unspooled tape with green/blue-green watercolor washes noted",
+        "Arrow pointing toward cassette mentioned",
+        "Hand-drawn watercolor/ink style identified",
+        "Provides French translation"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Text rendered as 'MUSIQUE,' (with comma) and 'À VOLONTE' (missing acute accent on É) - OCR errors",
+        "Mentions 'control buttons/indicators' on cassette front which aren't present"
+      ],
+      "justification": "Solid description but with OCR errors: adds a comma after MUSIQUE and omits the acute accent on É (VOLONTE vs VOLONTÉ). Minor hallucination about control buttons. Translation and overall composition description are good."
+    },
+    {
+      "model": "qwen3-vl-4b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Cassette tape with transparent casing, spools, magnetic tape correctly identified",
+        "French text 'MUSIQUE À VOLONTÉ' captured verbatim with correct accents",
+        "Arrow from text to cassette noted",
+        "Green palette (lime to teal) accurately described",
+        "Translation 'Music on Demand/Music at Will' provided",
+        "Markers/watercolors medium suggested",
+        "Three-quarter view noted"
+      ],
+      "key_misses": [
+        "No Spotify reference"
+      ],
+      "hallucinations": [
+        "Mentions 'control buttons and the small rectangular window for the tape to be inserted into a player' - slight over-interpretation of cassette details"
+      ],
+      "justification": "Strong description with perfect French OCR including accents. Good capture of color, layout, and composition. Minor over-detailing of cassette mechanics but otherwise excellent for a 4B model."
+    },
+    {
+      "model": "qwen3-vl-8b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Cassette tape with transparent shell, spools correctly identified",
+        "Spooling tape as flowing ribbon with green/teal washes described",
+        "French text 'MUSIQUE À VOLONTÉ' captured verbatim with accents",
+        "Curved arrow noted",
+        "Recognizes Spotify logo integration - coiled tape resembles Spotify concentric lines",
+        "Translation 'Music on Demand' provided",
+        "Symbolic interpretation of streaming concept"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Says cassette has 'green label area' colored neon green - may overstate",
+        "Says text is 'direct reference to the Spotify logo and service' - somewhat interpretive"
+      ],
+      "justification": "Excellent description that uniquely identifies the Spotify logo visual motif in the coiled tape. Perfect French OCR. Good insight into the analog-to-digital streaming metaphor. Some interpretive claims about Spotify reference but well-reasoned."
+    },
+    {
+      "model": "qwen3.5-4b|nothink",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Cassette tape with spools, window, latch mechanism described",
+        "Unspooling tape with serpentine shape and green/teal washes captured",
+        "French text 'MUSIQUE À VOLONTÉ' captured verbatim with accents",
+        "Arrow from text to cassette noted",
+        "Translation 'music at will' provided",
+        "No people correctly stated"
+      ],
+      "key_misses": [
+        "No Spotify reference"
+      ],
+      "hallucinations": [
+        "Mentions 'Buttons and switches along the front edge (likely for play, stop, rewind, fast-forward)' - these are not visible in the drawing",
+        "Mentions 'latch mechanism on the side' - not visible"
+      ],
+      "justification": "Detailed description with perfect French OCR including both accents. Strong on color, layout, and style. Some hallucinated cassette details (control buttons, latch) that aren't visible. Otherwise excellent."
+    },
+    {
+      "model": "qwen3.5-4b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "French text 'MUSIQUE À VOLONTÉ' captured verbatim with correct accents",
+        "Arrow from text to cassette noted",
+        "Standard 80mm audio cassette tape identified",
+        "Magnetic tape as flowing ribbon/snake described",
+        "Translation 'Music at will/Music on demand' provided",
+        "Green/teal color palette accurately described",
+        "Translucent plastic casing effect noted"
+      ],
+      "key_misses": [
+        "No Spotify reference"
+      ],
+      "hallucinations": [
+        "Describes tape as resembling 'a ribbon, a snake, or perhaps a wave of sound' - interpretive"
+      ],
+      "justification": "Excellent description with perfect French OCR. Good artistic interpretation of the flowing tape as organic form. Captures style, color, and composition effectively. Missing Spotify theme."
+    },
+    {
+      "model": "qwen3.5-9b|nothink",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "French text 'MUSIQUE À VOLONTÉ' captured verbatim with correct accents",
+        "Arrow from text to cassette noted",
+        "Cassette with spools, window, label strip described",
+        "Magnetic tape flowing/streaming with abstract waveforms captured",
+        "Green palette (lime to forest) accurately described",
+        "Translucent gray plastic casing noted",
+        "Symbolism of music flowing/reinforcing 'music at will' theme"
+      ],
+      "key_misses": [
+        "No explicit Spotify reference"
+      ],
+      "hallucinations": [
+        "Mentions 'Control buttons and switches along the bottom edge (play, stop, rewind, fast-forward, etc.)' - not visible in drawing",
+        "Mentions 'green label strip running horizontally across the top half' - somewhat overstated"
+      ],
+      "justification": "Very detailed description with perfect French OCR. Excellent artistic and symbolic interpretation. Some hallucinated control buttons on cassette. Strong capture of color and composition."
+    },
+    {
+      "model": "qwen3.5-9b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "French text 'MUSIQUE À VOLONTÉ' captured verbatim with correct accents",
+        "Arrow pointing down and left noted",
+        "Cassette with transparent casing, reels, lime green label described",
+        "Unspooling tape as serpentine ribbon captured",
+        "Abstract form at bottom (hand/waves interpretation) noted",
+        "Green/teal palette accurately described",
+        "Diagonal composition analysis"
+      ],
+      "key_misses": [
+        "No explicit Spotify reference"
+      ],
+      "hallucinations": [
+        "Interprets bottom abstract form as 'stylized hand with fingers pointing to the right' - creative but speculative",
+        "Mentions 'shutter mechanism' and 'small holes for the player' - over-detailed"
+      ],
+      "justification": "Excellent description with perfect French OCR. Creative interpretation of bottom abstract shape (though 'hand' is speculative). Good color and composition analysis. Strong overall."
+    },
+    {
+      "model": "qwen3.6-27b|nothink",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Cassette tape with transparent casing, reels, magnetic tape correctly identified",
+        "French text 'MUSIQUE À VOLONTÉ' captured verbatim with correct accents",
+        "Arrow from text to cassette noted",
+        "EXCELLENT: Recognizes Spotify logo integration explicitly - 'three curved, parallel lines resembling sound waves'",
+        "Notes transition from analog cassette to digital Spotify logo",
+        "Green palette (lime, emerald, teal) accurately described",
+        "Translation 'Music at will/Music on demand - nod to streaming services like Spotify' provided"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Slightly interpretive about 'continuity between analog and digital music eras' but well-reasoned"
+      ],
+      "justification": "Outstanding description that uniquely captures both the perfect French OCR AND the Spotify logo visual integration. Excellent symbolic and cultural interpretation. Best at articulating the conceptual metaphor of the artwork. Only minor interpretive flourishes."
+    },
+    {
+      "model": "qwen3.6-27b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "French text 'MUSIQUE' and 'À VOLONTÉ' captured verbatim with correct accents",
+        "Arrow pointing down and to the left noted",
+        "Cassette tape with clear shell, green label strip, internal reels described",
+        "EXCELLENT: Explicitly identifies Spotify logo transformation - 'three curved sound wave bars'",
+        "Notes tape flowing into Spotify logo with green circle",
+        "Visual metaphor of analog-to-digital transition articulated",
+        "Green/black/grey-blue palette accurately described",
+        "Provides translation"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Suggests 'alcohol markers or ink' as medium - reasonable interpretation"
+      ],
+      "justification": "Outstanding description that perfectly captures both the verbatim French text AND the Spotify logo transformation - the two most distinctive features. Excellent color, composition, and metaphor analysis. Tied for best in the set."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|nothink",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "French text 'MUSIQUE À VOLONTÉ' captured verbatim with correct accents",
+        "Arrow pointing downward and to the left noted",
+        "Cassette tape with translucent shell, reels, mechanical features described",
+        "Abstract sound/music waves emanating from cassette captured",
+        "Green/teal/lime palette accurately described",
+        "S-curve/swirling vortex shape of waves noted",
+        "Provides translation 'music at will / music on demand'"
+      ],
+      "key_misses": [
+        "Does not explicitly identify Spotify logo/theme"
+      ],
+      "hallucinations": [
+        "Mentions 'small rectangular cutouts and circular holes' representing mechanical features - somewhat over-detailed",
+        "Mentions 'erase head window' - speculative technical detail"
+      ],
+      "justification": "Very detailed description with perfect French OCR. Excellent artistic interpretation of the abstract sound waves. Some over-detailed technical claims about cassette features. Missing Spotify reference is the main gap."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "French text 'MUSIQUE À VOLONTÉ' captured verbatim with correct accents",
+        "Arrow pointing down and to the left noted",
+        "Cassette tape with translucent greyish-blue shell, reels described",
+        "Unspooled tape as flowing/looping ribbon captured",
+        "Neon lime green highlight/glow effect noted",
+        "Black/green/grey-blue palette accurately described",
+        "Provides translation 'Music at will/Unlimited music'"
+      ],
+      "key_misses": [
+        "Does not explicitly identify Spotify logo/theme"
+      ],
+      "hallucinations": [
+        "Mentions 'rectangular cutouts and screws' on bottom edge - over-detailed",
+        "Describes tape transforming into 'stylized sound wave or flowing ribbon' - somewhat interpretive"
+      ],
+      "justification": "Excellent description with perfect French OCR. Strong capture of the neon/glow effect and color palette. Some over-detailed technical claims about cassette construction. Missing Spotify reference is the main gap."
+    }
+  ],
+  "ranking": [
+    "qwen3.6-27b|think",
+    "qwen3.6-27b|nothink",
+    "qwen3-vl-8b|think",
+    "gemma4-26b-a4b|think",
+    "gemma4-31b|think",
+    "gemma4-12b|think",
+    "qwen3-vl-4b|think",
+    "qwen3.5-4b|think",
+    "qwen3.5-4b|nothink",
+    "qwen3.5-9b|nothink",
+    "qwen3.5-9b|think",
+    "qwen3.6-35b-a3b|nothink",
+    "qwen3.6-35b-a3b|think",
+    "gemma4-e4b|think",
+    "glm-4.6v-flash-9b|think"
+  ],
+  "notes": "This image has two distinctive 'rare-capture' features that distinguish top performers: (1) accurate French OCR with both diacritics (grave on À, acute on É), and (2) recognition that the swirling tape forms the Spotify logo - a key conceptual element given the 'Spotify-themed' ground truth. Only the two qwen3.6-27b variants (think and nothink) and qwen3-vl-8b captured both. The glm-4.6v-flash-9b struggled with OCR (missing accent on É, added comma). The gemma4-e4b had the most serious error - misidentifying the cassette tape as a cassette tape player/deck. Most models hallucinated cassette 'control buttons'/'switches' that are not visible in this marker drawing of just the cassette itself. Scores cluster high (9-10) because most models captured the dominant cassette+French text+green palette features correctly, with the top performers distinguished by catching the Spotify logo transformation."
+}

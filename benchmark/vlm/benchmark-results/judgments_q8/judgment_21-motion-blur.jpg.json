@@ -1,0 +1,297 @@
+{
+  "image": "21-motion-blur.jpg",
+  "judge": "claude-vlm-judge",
+  "ground_truth_summary": "Long-exposure Hong Kong night street. Dah Sing Bank 大新銀行 visible on BOTH sides of street (red-and-white branding). DVFX currency exchange on left. White cylindrical bus stop kiosk with bus info board above (white/green, contains green bus + tram symbols inside white circle; text not legible). Tram tracks in foreground, yellow pedestrian crossing, red pedestrian lights on both sides. Vehicle light trails streak horizontally. People inside bank on right visible through window. Hallucinating 'MTR', 'HSBC', or 'DBS' = SEVERE.",
+  "evaluations": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "run_id": "q8-1",
+      "failure_mode": "normal",
+      "content_excerpt": "...\"大華銀行\" and \"Bank of China\"... \"DBS\" (on a blue sign), \"CITI\" (on a small sign), and \"HSBC\" (partially visible)...",
+      "long_exposure_correct": true,
+      "tram_tracks_correct": true,
+      "bus_stop_described": true,
+      "dah_sing_identified": false,
+      "dah_sing_both_sides": false,
+      "dvfx_identified": false,
+      "severe_hallucinations": [
+        "HALLUCINATES '大華銀行' (UOB) — actual is 大新銀行 (Dah Sing)",
+        "HALLUCINATES 'Bank of China' — not visible",
+        "HALLUCINATES 'DBS' — not visible (SEVERE per task)",
+        "HALLUCINATES 'HSBC' — not visible (SEVERE per task)",
+        "HALLUCINATES 'CITI' — not visible"
+      ],
+      "other_errors": [
+        "Claims 'bicycle parked against railing on far left' — speculative, not confirmed",
+        "Says 'flat-roofed canopy' for bus stop — actually cylindrical",
+        "Misses DVFX currency exchange on left entirely"
+      ],
+      "score": 3,
+      "score_rationale": "CATASTROPHIC bank-signage failure. Invents five different banks (大華銀行/UOB, Bank of China, DBS, CITI, HSBC) — none of which are present. Two of these (DBS, HSBC) are explicitly flagged as SEVERE hallucinations per the task definition. The actual 大新銀行 (Dah Sing Bank) is never mentioned. Gets the photographic technique, tram tracks, and basic scene structure right, but the entire signage layer is fabricated. Single worst signage hallucination of the 8.",
+      "strengths": [
+        "Correctly identifies long-exposure technique",
+        "Notes tram tracks and yellow road markings",
+        "Mentions light trails and motion blur"
+      ],
+      "weaknesses": [
+        "FIVE fabricated bank names (DBS, HSBC both SEVERE)",
+        "Misses actual Dah Sing Bank signage entirely",
+        "Misses DVFX on left",
+        "Wrong bus stop shape (flat-roofed vs cylindrical)"
+      ]
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "run_id": "q8-1",
+      "failure_mode": "normal",
+      "content_excerpt": "...a prominent red and white sign features the characters: 大新銀行 (Daxin Bank)... other smaller, less legible signs... including some English text (e.g., \"DVF\" or similar abbreviations on the left)... A small sign near the center sidewalk appears to have some Chinese characters, but they are too blurred to transcribe accurately.",
+      "long_exposure_correct": true,
+      "tram_tracks_correct": true,
+      "bus_stop_described": true,
+      "dah_sing_identified": true,
+      "dah_sing_both_sides": false,
+      "dvfx_identified": true,
+      "severe_hallucinations": [],
+      "other_errors": [
+        "Does not note Dah Sing appears on both sides (only mentions right side)",
+        "Calls bus stop a 'small white modern utility or information kiosk' — doesn't mention cylindrical shape or green bus info board above",
+        "Says 'DVF' — close to DVFX (minor under-read)"
+      ],
+      "score": 8,
+      "score_rationale": "Strong, careful response. Correctly identifies 大新銀行 (Daxin Bank) on the right AND notes DVF/DVFX on the left — the two key signage facts. Importantly, when faced with the illegible bus stop sign, the model HONESTLY admits 'too blurred to transcribe accurately' rather than inventing MTR or route numbers. No severe hallucinations. Captures long exposure, tram tracks, white kiosk, motion-blurred pedestrians, and the split cool/warm tone palette. Only minor weakness: misses that Dah Sing appears on BOTH sides and doesn't describe the green bus info board with bus/tram symbols.",
+      "strengths": [
+        "Correctly reads 大新銀行 on right",
+        "Notes DVFX on left (key second signage)",
+        "HONEST about illegible bus stop sign (no MTR hallucination)",
+        "Captures split cool/warm color palette",
+        "Correct long-exposure + tram tracks"
+      ],
+      "weaknesses": [
+        "Misses Dah Sing on both sides",
+        "Doesn't mention green bus info board with bus/tram symbols",
+        "Doesn't note cylindrical bus stop shape"
+      ]
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "run_id": "q8-1",
+      "failure_mode": "normal",
+      "content_excerpt": "...\"大新銀行\" (on the right-side purple awning, repeated)... \"DMFX\" (on a left-side sign)... \"8\" (on a green bus stop sign at the center)... Red pedestrian signal (red hand icon on traffic light)... Escalator: Visible on the right side, leading to a building entrance. Bicycles: Parked along the left sidewalk near a fence.",
+      "long_exposure_correct": true,
+      "tram_tracks_correct": true,
+      "bus_stop_described": true,
+      "dah_sing_identified": true,
+      "dah_sing_both_sides": false,
+      "dvfx_identified": true,
+      "severe_hallucinations": [],
+      "other_errors": [
+        "Reads 'DMFX' instead of DVFX (minor)",
+        "Says '8' on green bus stop sign — ground truth says text not legible, but route number plausible",
+        "Claims 'purple awning' for Dah Sing — actual is red-and-white branding",
+        "Claims 'escalator on right leading to building entrance' — not in ground truth, speculative",
+        "Says 'repeated' for 大新銀行 on right — could be conflating with the both-sides pattern"
+      ],
+      "score": 8,
+      "score_rationale": "Very strong response with the highest deterministic score (10.0). Correctly identifies 大新銀行 on the right and DVFX (as 'DMFX', close) on the left. Provides rich detail about tram tracks, bus stop shelter with green sign, red pedestrian signal, fence, and bicycles — most of which aligns with ground truth. No severe hallucinations (no MTR/HSBC/DBS). Minor speculative details (escalator, purple awning) but the load-bearing signage is correct. Loses points for the purple-awning color error and not explicitly noting Dah Sing on both sides.",
+      "strengths": [
+        "Correctly reads 大新銀行 on right",
+        "Identifies DVFX (as DMFX) on left",
+        "Rich detail: tram tracks, bus stop shelter, green sign, red signal, fence, bicycles",
+        "Notes 'repeated' 大新銀行 (hints at both-sides pattern)",
+        "Correctly identifies red pedestrian signal",
+        "Highest deterministic score of all 8 models"
+      ],
+      "weaknesses": [
+        "Calls Dah Sing 'purple awning' (actually red-and-white)",
+        "Reads '8' on bus stop sign (GT says not legible)",
+        "Speculative 'escalator' detail",
+        "Misses cylindrical bus stop shape"
+      ]
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "run_id": "q8-2",
+      "failure_mode": "truncated",
+      "content_excerpt": "...\"DVPX\" are visible on a sign above a storefront... \"大新銀行\" (Dàxīn Yínháng, meaning \"Da Xian Bank\") are prominently displayed on a red sign, along with the English text \"Dai Xian Bank\"... A small, green sign with a white \"P\" symbol is visible, indicating a parking area... The word \"BET\" is visible in vertical lettering on a building.",
+      "long_exposure_correct": true,
+      "tram_tracks_correct": true,
+      "bus_stop_described": true,
+      "dah_sing_identified": true,
+      "dah_sing_both_sides": false,
+      "dvfx_identified": true,
+      "severe_hallucinations": [],
+      "other_errors": [
+        "HALLUCINATES 'green P parking sign' — not in ground truth",
+        "HALLUCINATES 'BET' in vertical lettering on a building — not in ground truth",
+        "Translates 大新 as 'Da Xian' (phonetically close, should be Dah Sing)",
+        "English text 'Dai Xian Bank' — actual is 'Dah Sing Bank'",
+        "Output truncated mid-sentence ('typical of a b...')",
+        "Misses Dah Sing on both sides"
+      ],
+      "score": 6,
+      "score_rationale": "Mixed response. Gets the two key signages correct (DVFX as 'DVPX' on left, 大新銀行 on right) but invents two additional signs that aren't present (green 'P' parking, vertical 'BET' on building). Output is truncated mid-sentence. No severe (MTR/HSBC/DBS) hallucinations. The phonetic misspelling 'Da Xian/Dai Xian' for Dah Sing is a reasonable approximation given Chinese-to-English ambiguity. Loses significant points for the two fabricated signs and truncation.",
+      "strengths": [
+        "Correctly identifies DVFX (as DVPX) on left",
+        "Correctly identifies 大新銀行 on right",
+        "Captures long exposure, tram tracks, white cylindrical structure"
+      ],
+      "weaknesses": [
+        "Hallucinates 'green P parking sign'",
+        "Hallucinates vertical 'BET' on building",
+        "Phonetic misspelling of Dah Sing",
+        "Output truncated",
+        "Misses Dah Sing on both sides"
+      ]
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "run_id": "q8-2",
+      "failure_mode": "truncated",
+      "content_excerpt": "...a sign for \"DWF\" is visible above a storefront... a prominent sign for \"大新銀行\" (Tai Sun Bank) is displayed in large Chinese characters, with the English text \"Tai Sun Bank\" below it. A smaller sign above the bank reads \"大新銀行\" (Tai Sun Bank) again... A small green sign with a white \"P\" (for parking) is visible in the distance...",
+      "long_exposure_correct": true,
+      "tram_tracks_correct": true,
+      "bus_stop_described": true,
+      "dah_sing_identified": true,
+      "dah_sing_both_sides": false,
+      "dvfx_identified": true,
+      "severe_hallucinations": [],
+      "other_errors": [
+        "HALLUCINATES green 'P' parking sign — not in ground truth",
+        "Translates 大新 as 'Tai Sun' — actual is Dah Sing (Tai Sun is a different bank)",
+        "English text 'Tai Sun Bank' — actual is 'Dah Sing Bank'",
+        "Misses DVFX spelling (reads only 'DWF')",
+        "Output truncated mid-sentence",
+        "Says 'A smaller sign above the bank reads 大新銀行 again' — possibly conflating with both-sides pattern"
+      ],
+      "score": 6,
+      "score_rationale": "Decent core identification (DVFX partial on left, 大新銀行 on right) but introduces errors. Translates 大新 as 'Tai Sun Bank' — Tai Sun is actually a different (Malaysian) bank, so this is a translation miss. Hallucinates a green 'P' parking sign (shared error with qwen3-vl-4b). Output truncated. The note about 'smaller sign above the bank reads 大新銀行 again' is interesting — could be picking up on the both-sides repetition. No severe hallucinations.",
+      "strengths": [
+        "Identifies DVFX (partial, as DWF) on left",
+        "Identifies 大新銀行 on right",
+        "Notes possible repetition of 大新銀行",
+        "Captures light trails, tram tracks, white cylindrical structure"
+      ],
+      "weaknesses": [
+        "Wrong translation 'Tai Sun Bank' (should be Dah Sing Bank)",
+        "Hallucinates green P parking sign",
+        "Output truncated",
+        "Misses Dah Sing on both sides explicitly"
+      ]
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "run_id": "q8-nothink-3",
+      "failure_mode": "normal",
+      "content_excerpt": "...\"DWPX\"... \"大新銀行\" (Tung Wah Bank)... \"MTR\" — partially visible on a green sign near the center, indicating a subway station entrance... \"行人燈號\" (Pedestrian Signal) — written vertically on a traffic light pole on the right...",
+      "long_exposure_correct": true,
+      "tram_tracks_correct": true,
+      "bus_stop_described": true,
+      "dah_sing_identified": true,
+      "dah_sing_both_sides": false,
+      "dvfx_identified": true,
+      "severe_hallucinations": [
+        "HALLUCINATES 'MTR' on green sign near center — actual green/white sign shows bus + tram symbols, NOT MTR (SEVERE per task)"
+      ],
+      "other_errors": [
+        "Translates 大新 as 'Tung Wah Bank' — WRONG (Tung Wah is a different entity)",
+        "HALLUCINATES '行人燈號' (Pedestrian Signal) vertical text on traffic light pole — not in ground truth",
+        "HALLUCINATES 'WORLD' on small sign — not in ground truth",
+        "HALLUCINATES '8' on vertical signboard in distance — not confirmed",
+        "Misses Dah Sing on both sides"
+      ],
+      "score": 4,
+      "score_rationale": "Poor response with SEVERE hallucination. While it correctly identifies DVFX (as DWPX) and 大新銀行 on the right, it FABRICATES 'MTR' on the central green sign — exactly the kind of severe hallucination flagged in the task. It also invents 'Tung Wah Bank' as the translation (Tung Wah ≠ Dah Sing), '行人燈號' vertical text, 'WORLD' sign, and '8' signboard. Multiple layers of fabricated content beyond the verified ground truth.",
+      "strengths": [
+        "Identifies DVFX (as DWPX) on left",
+        "Identifies 大新銀行 on right",
+        "Captures long exposure and motion blur technique"
+      ],
+      "weaknesses": [
+        "SEVERE: hallucinates 'MTR' on green sign",
+        "Wrong translation 'Tung Wah Bank'",
+        "Hallucinates '行人燈號' vertical text",
+        "Hallucinates 'WORLD' sign",
+        "Misses Dah Sing on both sides"
+      ]
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "run_id": "q8-think-1",
+      "failure_mode": "normal",
+      "content_excerpt": "...A blue sign reads \"DWFX\"... a prominent red and white sign features Chinese characters \"大新銀行\" and the English text \"Dai Sing Bank\". Below that, a smaller sign reads \"WORLD\"... A green traffic sign with a white circle contains the text \"MTR\"... A red pedestrian signal is visible on the far right.",
+      "long_exposure_correct": true,
+      "tram_tracks_correct": true,
+      "bus_stop_described": true,
+      "dah_sing_identified": true,
+      "dah_sing_both_sides": false,
+      "dvfx_identified": true,
+      "severe_hallucinations": [
+        "HALLUCINATES 'MTR' text inside the white circle on green sign — actual white circle contains bus + tram symbols, NOT MTR text (SEVERE per task)"
+      ],
+      "other_errors": [
+        "HALLUCINATES 'WORLD' sign below Dah Sing — not in ground truth",
+        "Correctly notes 'DWFX' on left (very close to DVFX)",
+        "English text 'Dai Sing Bank' — phonetically very close to actual 'Dah Sing Bank' (best English approximation)",
+        "Misses Dah Sing on both sides",
+        "Mentions tactile paving in foreground — speculative but plausible"
+      ],
+      "score": 5,
+      "score_rationale": "Mixed response with SEVERE hallucination. Strong positives: best English rendering of 大新銀行 as 'Dai Sing Bank' (closest phonetic match across all 8 models), correctly identifies DVFX as 'DWFX', describes red-and-white branding correctly. But FABRICATES 'MTR' text inside the green sign's white circle — the actual circle contains bus + tram symbols, not text. Also invents 'WORLD' sign. The MTR hallucination is exactly the severe failure mode flagged by the task.",
+      "strengths": [
+        "Best English rendering: 'Dai Sing Bank' (closest to Dah Sing)",
+        "Correctly identifies DVFX (as DWFX) on left",
+        "Notes red-and-white branding correctly",
+        "Notes tactile paving (plausible)"
+      ],
+      "weaknesses": [
+        "SEVERE: hallucinates 'MTR' in green sign's white circle",
+        "Hallucinates 'WORLD' sign",
+        "Misses Dah Sing on both sides"
+      ]
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "run_id": "q8-nothink-3",
+      "failure_mode": "normal",
+      "content_excerpt": "...\"DWPX\"... \"大新銀行\" (Da Xin Bank) and its English logo \"Dai Xin\"... A small green sign above the central tram stop shelter: \"MTR\" (with a circular logo containing a stylized \"M\")... Faintly visible on some building facades and signs: Chinese characters (e.g., \"公共運輸交匯處\" — Public Transport Interchange)...",
+      "long_exposure_correct": true,
+      "tram_tracks_correct": true,
+      "bus_stop_described": true,
+      "dah_sing_identified": true,
+      "dah_sing_both_sides": false,
+      "dvfx_identified": true,
+      "severe_hallucinations": [
+        "HALLUCINATES 'MTR' with circular logo containing stylized 'M' on green sign — actual green/white sign shows bus + tram symbols, NOT MTR logo (SEVERE per task)"
+      ],
+      "other_errors": [
+        "HALLUCINATES '公共運輸交匯處' (Public Transport Interchange) Chinese characters — not in ground truth",
+        "English text 'Dai Xin' — close to Dah Sing but uses Xin instead of Sing",
+        "Misses Dah Sing on both sides",
+        "Mentions double-decker tram infrastructure — plausibly correct for HK"
+      ],
+      "score": 5,
+      "score_rationale": "Mixed response with SEVERE hallucination. Correctly identifies DVFX (as DWPX) and 大新銀行 + 'Dai Xin' on right. But FABRICATES 'MTR' with a 'circular logo containing a stylized M' on the central green sign — this is doubly wrong: the actual sign has bus + tram symbols inside a white circle, not an MTR logo. Also invents '公共運輸交匯處' text that isn't in the scene. Despite good scene description (double-decker trams, long-exposure technique, urban density), the MTR hallucination is severe.",
+      "strengths": [
+        "Identifies DVFX (as DWPX) on left",
+        "Identifies 大新銀行 + 'Dai Xin' on right",
+        "Notes double-decker tram infrastructure (correct for HK)",
+        "Good scene description and atmosphere"
+      ],
+      "weaknesses": [
+        "SEVERE: hallucinates 'MTR' with stylized M logo on green sign",
+        "Hallucinates '公共運輸交匯處' text",
+        "Misses Dah Sing on both sides"
+      ]
+    }
+  ],
+  "ranking": [
+    {"model": "gemma4-e4b-Q8|think", "score": 8, "notes": "Correct 大新銀行 + DVFX, honest about illegible sign, no severe hallucinations"},
+    {"model": "glm-4.6v-flash-9b-Q8|think", "score": 8, "notes": "Correct signage both sides, rich detail, minor speculative extras"},
+    {"model": "qwen3-vl-8b-Q8|think", "score": 6, "notes": "Core signage right but 'Tai Sun' mistranslation + P parking hallucination + truncated"},
+    {"model": "qwen3-vl-4b-Q8|think", "score": 6, "notes": "Core signage right but BET + P parking hallucinations + truncated"},
+    {"model": "qwen3.5-4b-Q8|think", "score": 5, "notes": "Best 'Dai Sing Bank' rendering but SEVERE MTR hallucination in green sign"},
+    {"model": "qwen3.5-9b-Q8|nothink", "score": 5, "notes": "Good scene desc but SEVERE MTR + stylized M logo hallucination"},
+    {"model": "qwen3.5-4b-Q8|nothink", "score": 4, "notes": "SEVERE MTR hallucination + wrong 'Tung Wah Bank' + multiple fabrications"},
+    {"model": "gemma4-12b-Q8|think", "score": 3, "notes": "FIVE fabricated banks (DBS, HSBC, UOB, BOC, CITI) — misses Dah Sing entirely"}
+  ]
+}

@@ -1,0 +1,337 @@
+{
+  "image": "19-watercolour-painting-surfers-fuerteventura.png",
+  "judgments": [
+    {
+      "model": "gemma4-12b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies two people (seated observer + surfer)",
+        "Short brown hair for observer",
+        "Dark long-sleeve wetsuit (described as dark grey/black)",
+        "Surfer riding toward the right",
+        "Lavender/purple mountains",
+        "Watercolor medium identified",
+        "Volcanic-style dark jagged rocks"
+      ],
+      "key_misses": [
+        "Wetsuit color described as generic dark rather than blue-purple",
+        "Board direction not explicitly stated as right (only surfer riding right)"
+      ],
+      "hallucinations": [],
+      "justification": "Solid two-person description with brown hair and watercolor style. Misses the blue-purple wetsuit hue specificity."
+    },
+    {
+      "model": "gemma4-26b-a4b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Two people identified (observer + surfer)",
+        "Observer wearing dark blue or deep purple long-sleeve wetsuit (matches blue-purple)",
+        "Lavender/light purple mountains",
+        "Watercolor medium identified",
+        "White surfboard",
+        "Dark jagged textured rocks"
+      ],
+      "key_misses": [
+        "Hair color not explicitly stated",
+        "Board direction not specified"
+      ],
+      "hallucinations": [],
+      "justification": "Strong description that notably captures the blue-purple wetsuit color. Misses hair color and explicit board direction."
+    },
+    {
+      "model": "gemma4-31b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Two figures (seated observer + surfer)",
+        "Dark navy blue or purple long-sleeve wetsuit for observer",
+        "Lavender/violet mountains",
+        "Watercolor medium identified",
+        "Volcanic-style dark jagged rocks",
+        "White surfboard"
+      ],
+      "key_misses": [
+        "Hair color not stated",
+        "Board direction not specified",
+        "Says surfer inside the tube/curl which is slightly inaccurate"
+      ],
+      "hallucinations": [
+        "Says surfer is 'inside the tube of the wave' - slightly overstated"
+      ],
+      "justification": "Good two-person description with correct wetsuit hue. Minor overstatement on tube position. Misses hair color."
+    },
+    {
+      "model": "gemma4-e4b|think",
+      "holistic_score": 7,
+      "failure_mode": "partial",
+      "key_hits": [
+        "Two figures identified (foreground figure + midground surfer)",
+        "Dark blue or deep purple top for observer",
+        "Large hazy mountain in background",
+        "Dark textured rocks foreground",
+        "Watercolor aesthetic"
+      ],
+      "key_misses": [
+        "Hair color not stated",
+        "Mountains described as singular rather than range; less specific about purple hue",
+        "Board direction not specified",
+        "Less detail on watercolor technique"
+      ],
+      "hallucinations": [],
+      "justification": "Correctly identifies two figures but less detailed than larger Gemma variants. Misses hair and board direction."
+    },
+    {
+      "model": "glm-4.6v-flash-9b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Two people identified (seated individual + surfer)",
+        "Short brown hair explicitly stated",
+        "Dark purple or dark blue wetsuit for observer",
+        "Purple-hued mountains in background",
+        "Light-colored (white) surfboard",
+        "Volcanic dark gray textured rocks"
+      ],
+      "key_misses": [
+        "Board direction not specified"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent concise description hitting brown hair, blue-purple wetsuit, purple mountains, and two-person count. Only misses explicit board direction."
+    },
+    {
+      "model": "qwen3-vl-4b|think",
+      "holistic_score": 7,
+      "failure_mode": "partial",
+      "key_hits": [
+        "Two people (surfer + observer)",
+        "Observer seen from back with dark long-sleeve wetsuit",
+        "Purple/blue mountains",
+        "Watercolor medium",
+        "White surfboard",
+        "Dark jagged rocks"
+      ],
+      "key_misses": [
+        "Hair color not stated",
+        "Wetsuit described as dark blue/black, not purple-blue",
+        "Board direction not specified",
+        "Initially says 'lone surfer' before contradicting with observer"
+      ],
+      "hallucinations": [
+        "Internal contradiction: calls surfer 'lone' but then describes observer"
+      ],
+      "justification": "Captures two people and watercolor style but has internal contradiction about 'lone surfer' and misses hair color."
+    },
+    {
+      "model": "qwen3-vl-8b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Explicitly states 'two surfers' and 'two people depicted'",
+        "Short brown hair for observer",
+        "Dark wetsuit for both figures",
+        "Lavender/purple mountains",
+        "Watercolor painting",
+        "White surfboard",
+        "Dark textured rocks",
+        "Surreal swirling sky"
+      ],
+      "key_misses": [
+        "Wetsuit described as dark blue/black, not explicitly blue-purple",
+        "Board direction not explicitly stated"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent two-person identification with explicit count, brown hair, and watercolor style. Strong across most criteria."
+    },
+    {
+      "model": "qwen3.5-4b|nothink",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Explicitly identifies two individuals (surfer + observer)",
+        "Dark wetsuit/long-sleeve top for observer",
+        "Purple mountains in background",
+        "White surfboard",
+        "Watercolor style",
+        "Dark jagged rocks",
+        "Surreal psychedelic sky"
+      ],
+      "key_misses": [
+        "Hair color not stated",
+        "Wetsuit color generic dark, not blue-purple",
+        "Board direction not specified",
+        "Speculates observers are 'young adults or teenagers' - unverifiable"
+      ],
+      "hallucinations": [
+        "Claims both figures are 'young adults or teenagers based on proportions' - cannot verify"
+      ],
+      "justification": "Correct two-person count with good style description. Adds unverifiable age speculation."
+    },
+    {
+      "model": "qwen3.5-4b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Two people (observer + surfer)",
+        "Observer seen from back, dark wetsuit",
+        "Standing surfer on white surfboard",
+        "Soft purples/lavenders mountains",
+        "Watercolor painting",
+        "Dark charcoal rocks"
+      ],
+      "key_misses": [
+        "Hair color not stated",
+        "Wetsuit color generic dark, not blue-purple",
+        "Board direction not specified"
+      ],
+      "hallucinations": [],
+      "justification": "Clean two-person description with watercolor style and purple mountains. Misses hair color and wetsuit hue specifics."
+    },
+    {
+      "model": "qwen3.5-9b|nothink",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Two people (seated observer + surfer)",
+        "Short brown hair explicitly stated for observer",
+        "Dark long-sleeve wetsuit",
+        "Purple-hued mountains background",
+        "Watercolor aesthetic",
+        "White surfboard",
+        "Dark jagged rocks"
+      ],
+      "key_misses": [
+        "Wetsuit described as dark, not explicitly blue-purple",
+        "Board direction not specified"
+      ],
+      "hallucinations": [],
+      "justification": "Strong description with explicit brown hair, two-person count, and watercolor style. Well-organized and accurate."
+    },
+    {
+      "model": "qwen3.5-9b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Two human figures explicitly stated",
+        "Short brown hair for foreground figure",
+        "Dark long-sleeve wetsuit appearing purple or dark blue",
+        "Lavender/purple mountains",
+        "Watercolor style",
+        "White surfboard",
+        "Dark jagged volcanic rocks"
+      ],
+      "key_misses": [
+        "Board direction not explicitly stated"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent description with two-person count, brown hair, purple/dark blue wetsuit hue, and purple mountains. Most details accurate."
+    },
+    {
+      "model": "qwen3.6-27b|nothink",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Explicitly identifies two human figures",
+        "Short light brown hair for observer",
+        "Solid purple top for observer (matches blue-purple wetsuit)",
+        "Lavender-purple mountains",
+        "Watercolor technique",
+        "White surfboard",
+        "Dark volcanic rocks"
+      ],
+      "key_misses": [
+        "Describes purple top rather than wetsuit",
+        "Board direction not specified",
+        "Suggests 'night or twilight' setting which is debatable"
+      ],
+      "hallucinations": [
+        "Describes scene as 'at night or twilight' - not strongly supported",
+        "Calls garment 'purple shirt' instead of wetsuit"
+      ],
+      "justification": "Strong two-person description with brown hair and purple garment. Adds twilight interpretation and calls wetsuit a 'shirt'."
+    },
+    {
+      "model": "qwen3.6-27b|think",
+      "holistic_score": 7,
+      "failure_mode": "partial",
+      "key_hits": [
+        "Two people (foreground figure + surfer)",
+        "Dark long-sleeve wetsuit/shirt",
+        "Hazy purple mountains",
+        "Watercolor painting",
+        "White surfboard",
+        "Dark volcanic rocks"
+      ],
+      "key_misses": [
+        "Hair color not stated",
+        "Wetsuit color generic dark, not blue-purple",
+        "Board direction not specified"
+      ],
+      "hallucinations": [],
+      "justification": "Correctly identifies two people and watercolor style but less detailed than nothink variant. Misses hair color."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|nothink",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Two figures identified (observer + surfer)",
+        "Short brown hair for observer",
+        "Dark long-sleeve wetsuit (navy/black)",
+        "Purple-hued mountain silhouettes",
+        "Watercolor style",
+        "White surfboard",
+        "Dark jagged rocks"
+      ],
+      "key_misses": [
+        "Wetsuit color generic dark navy/black, not blue-purple",
+        "Board direction not specified",
+        "Says surfer wears 'shorty or sleeveless top' - speculative"
+      ],
+      "hallucinations": [
+        "Claims surfer wears shorty or sleeveless top - cannot verify at distance"
+      ],
+      "justification": "Good two-person description with brown hair and purple mountains. Adds speculative detail about surfer's wetsuit type."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Two people (spectator + surfer)",
+        "Short brown hair explicitly stated",
+        "Dark long-sleeve wetsuit for spectator",
+        "Soft purple mountains background",
+        "Watercolor medium",
+        "White surfboard",
+        "Dark jagged volcanic rocks"
+      ],
+      "key_misses": [
+        "Wetsuit color generic dark, not blue-purple",
+        "Board direction not explicitly stated (says surfer on right side of frame)",
+        "Doesn't explicitly state two - says 'spectator' and 'surfer'"
+      ],
+      "hallucinations": [],
+      "justification": "Strong description with explicit brown hair and watercolor technique. Two figures clearly identified though not numbered."
+    }
+  ],
+  "ranking": [
+    "qwen3-vl-8b|think",
+    "qwen3.5-9b|think",
+    "qwen3.5-9b|nothink",
+    "qwen3.6-27b|nothink",
+    "glm-4.6v-flash-9b|think",
+    "qwen3.6-35b-a3b|think",
+    "gemma4-26b-a4b|think",
+    "gemma4-12b|think",
+    "gemma4-31b|think",
+    "qwen3.5-4b|nothink",
+    "qwen3.5-4b|think",
+    "qwen3.6-35b-a3b|nothink",
+    "gemma4-e4b|think",
+    "qwen3.6-27b|think",
+    "qwen3-vl-4b|think"
+  ],
+  "notes": "All 15 models correctly identified two people in the image - no surfer-count failures on this image. The strongest differentiators were: (1) explicitly stating brown hair for the foreground observer (glm-4.6v-flash-9b, qwen3-vl-8b, qwen3.5-9b both variants, qwen3.6-27b nothink, qwen3.6-35b-a3b both variants), (2) recognizing the blue-purple wetsuit hue (gemma4-26b-a4b, gemma4-31b, glm-4.6v-flash-9b, qwen3.6-27b nothink). No model explicitly stated the surfboard points to the right. Several models added minor hallucinations: qwen3-vl-4b had an internal contradiction ('lone surfer' vs observer), qwen3.5-4b nothink speculated about age, qwen3.6-27b nothink claimed twilight setting and mislabeled wetsuit as shirt, qwen3.6-35b-a3b nothink speculated about sleeveless top. Smaller models (gemma4-e4b, qwen3-vl-4b) and qwen3.6-27b think were less detailed overall. The image was well-handled across the board, suggesting surf scene with observer is a relatively easy motif."
+}

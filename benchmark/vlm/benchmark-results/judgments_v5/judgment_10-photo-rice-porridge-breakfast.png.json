@@ -1,0 +1,166 @@
+{
+  "image": "10-photo-rice-porridge-breakfast.png",
+  "judgments": [
+    {
+      "model": "gemma4-12b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": ["congee / rice porridge", "sunny-side-up egg", "green onions", "fried shallots/garlic", "you tiao on red plate", "soy milk (likely)", "marble table", "chopsticks", "spoon in bowl"],
+      "key_misses": ["missed ginger strips", "did not flag AI-generated inconsistency"],
+      "hallucinations": ["claims 'parsley or coriander' generally without nailing cilantro; minor"],
+      "justification": "Solid comprehensive description covering all major foreground elements. Correctly identifies congee, you tiao, red plate, soy milk candidate, and marble table. Slightly weak on specifics (no ginger, vague herbs) but no major errors."
+    },
+    {
+      "model": "gemma4-26b-a4b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["congee", "soft-boiled egg with runny orange-yellow yolk", "sliced ginger", "scallions", "cilantro", "fried shallots", "drizzle of dark sauce (soy sauce)", "silver spoon in bowl", "chopsticks", "you tiao on red plate", "soy milk in glass on wooden saucer with steam", "marble table", "tiled walls", "wooden window"],
+      "key_misses": ["does not call out AI-generation"],
+      "hallucinations": [],
+      "justification": "Outstanding coverage. Identifies every topping in the ground truth (ginger, cilantro, scallions, fried shallots, soy sauce, runny yolk), correctly identifies soy milk with steam and wooden saucer, you tiao on red plate, chopsticks, marble table, tiled walls, wooden-framed window. Exceptional accuracy."
+    },
+    {
+      "model": "gemma4-31b|think",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["congee", "soft-boiled egg with bright orange yolk", "sliced ginger", "green onions", "fried shallots", "drizzle of dark soy sauce or oil", "silver spoon in bowl", "chopsticks diagonally across red plate", "you tiao on red plate", "creamy beverage (soy milk) in glass on wooden saucer with steam", "marbled tabletop", "white tiled walls", "wooden-framed window"],
+      "key_misses": ["does not identify cilantro explicitly"],
+      "hallucinations": [],
+      "justification": "Nearly perfect, structured description. Notes the unusual-yolk egg, all toppings (ginger, scallions, fried shallots, soy sauce), you tiao on red plate, chopsticks crossing the red plate (matches ground truth exactly), soy milk on wooden saucer with steam. Achieves the top deterministic score and deserves it."
+    },
+    {
+      "model": "gemma4-e4b|think",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": ["porridge/congee", "sunny-side-up egg", "green onions/chives", "fried shallots or garlic", "you tiao on red plate", "white liquid (milk or soy milk)", "marble tabletop", "wooden coaster"],
+      "key_misses": ["no mention of ginger", "no mention of cilantro", "no soy sauce drizzle", "did not flag AI-generation"],
+      "hallucinations": [],
+      "justification": "Good high-level description but thinner on topping details than its siblings. Misses ginger, cilantro, and soy sauce. Correctly gets the major items (congee, egg, you tiao, red plate, drink, marble). Acceptable but less detailed."
+    },
+    {
+      "model": "glm-4.6v-flash-9b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["congee", "fried egg (runny yolk)", "green onions", "cilantro", "shredded ginger", "fried shallots", "drizzled sauce (soy or chili oil)", "light-colored spoon in bowl", "glass of pale creamy milk/soy milk on small wooden tray", "you tiao on red plate to the left", "dark wooden chopsticks near red plate", "marble-patterned surface"],
+      "key_misses": ["mentions 'chili oil' as an alternative which is not present (mild)"],
+      "hallucinations": ["'condiment container' in background is plausible but unverified"],
+      "justification": "Very strong compact description from a 9B model. Nails all six toppings (egg, scallions, cilantro, ginger, fried shallots, sauce), the soy milk on wooden tray, you tiao on red plate, chopsticks. Correctly identifies marble table and notes steam. Only minor sauce ambiguity."
+    },
+    {
+      "model": "qwen3-vl-4b|think",
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": ["steaming bowl (congee implied)", "creamy light-brown beverage on wooden saucer", "fried dough on red plate", "chopsticks", "ceramic spoon in bowl", "marble-patterned table", "wooden-framed window"],
+      "key_misses": ["never explicitly identifies congee / rice porridge", "does not describe egg or toppings", "does not flag AI-generation"],
+      "hallucinations": ["describes 'chopstick holders or condiment bottles' as foreground objects"],
+      "justification": "Weakest of the lot. Identifies the container vessels but largely skips the actual food content (egg, toppings, congee base). Gets the layout and vessels but the description of the main dish is essentially absent. Below average for this scene."
+    },
+    {
+      "model": "qwen3-vl-8b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": ["congee", "sunny-side-up egg with bright orange yolk", "green onions/scallions", "cilantro", "pale yellow strips of ginger", "crispy golden-brown fried shallots", "drizzle of dark glossy sauce (soy)", "ceramic spoon in bowl", "you tiao on red plate", "dark brown chopsticks", "creamy light-brown beverage (kopi/teh tarik candidate)", "marble-patterned table", "wooden-framed window"],
+      "key_misses": ["identifies the drink as kopi/teh tarik rather than soy milk"],
+      "hallucinations": [],
+      "justification": "Excellent topping inventory (all six) and overall scene. Loses a point for misidentifying the hot drink as kopi/teh tarik instead of soy milk, and for being slightly less precise on drink ID than the Gemma variants. Strong otherwise."
+    },
+    {
+      "model": "qwen3.5-4b|nothink",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": ["congee", "sunny-side-up egg with bright orange yolk", "green onions", "ginger strips", "fried shallots or garlic", "cilantro", "drizzle of dark soy sauce", "ceramic spoon", "you tiao on red plate", "dark brown wooden chopsticks rest diagonally across the red plate", "marble-topped table"],
+      "key_misses": ["identifies the drink as milk tea / coffee with condensed milk rather than soy milk"],
+      "hallucinations": [],
+      "justification": "Strong topping list and correctly notes chopsticks resting diagonally across the red plate (matches GT). Minor penalty for calling the drink 'milk tea/coffee' rather than soy milk. Adds useful kopitiam context without overreaching."
+    },
+    {
+      "model": "qwen3.5-4b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": ["congee", "sunny-side-up egg with bright orange yolk", "green onions", "ginger strips", "fried shallots or onions", "cilantro sprig", "dark sauce (soy)", "ceramic spoon", "you tiao on red plate", "dark wooden chopsticks on left", "milky beige beverage (milk tea/coffee candidate)", "marble-like table"],
+      "key_misses": ["misidentifies drink as milk tea/coffee with milk rather than soy milk"],
+      "hallucinations": ["describes 'bottles of condiments (soy sauce and vinegar)' in background and a 'container of wooden chopsticks' on a counter — plausible but unverified"],
+      "justification": "Excellent food description with full topping list. Slight deduction for the drink misidentification and the slightly extra condiment-bottle detail that goes beyond what is reliably visible."
+    },
+    {
+      "model": "qwen3.5-9b|nothink",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["congee", "sunny-side-up egg with bright orange runny yolk", "green onions", "thinly sliced ginger strips", "cilantro", "crispy fried shallots or garlic", "dark soy sauce drizzled", "ceramic spoon", "you tiao on red plate", "chopsticks diagonally across red plate", "creamy beige beverage (milk tea or soy milk)", "marble-topped table", "tiled walls"],
+      "key_misses": ["offers both milk tea and soy milk as candidates (mild uncertainty)"],
+      "hallucinations": [],
+      "justification": "Comprehensive and careful. Lists all six toppings, correctly captures chopsticks diagonally across the red plate, marble table, tiled walls. Includes soy milk as a candidate (correctly). Very well-organized layout and color sections. Top-tier."
+    },
+    {
+      "model": "qwen3.5-9b|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["congee", "sunny-side-up egg with vibrant runny yellow yolk", "green onions", "shredded ginger", "fried shallots", "fresh cilantro", "drizzle of dark soy sauce", "ceramic spoon", "you tiao on red plate", "chopsticks on left", "creamy light-brown liquid (soy milk or milk tea) on wooden coaster", "marble-topped table", "tiled walls", "wooden-framed window", "faint steam"],
+      "key_misses": ["offers milk tea as a co-candidate for the drink"],
+      "hallucinations": ["describes a 'cluster of condiment bottles with red and blue caps' on a background table — plausible but not ground truth"],
+      "justification": "Very thorough and well-structured. Hits every topping, the steam, soy milk candidate, you tiao, marble, tiled walls, window. Minor extra condiment-bottle detail is plausible background content. Strong second-tier performer."
+    },
+    {
+      "model": "qwen3.6-27b|nothink",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": ["congee", "soft-boiled egg with vibrant runny orange yolk", "freshly chopped green onions", "julienned ginger strips", "crispy fried shallots", "fresh cilantro", "drizzle of dark soy sauce", "ceramic spoon", "you tiao on red plate", "chopsticks across red plate", "milky tea on wooden saucer", "steam rising"],
+      "key_misses": ["misidentifies drink as 'milky tea' rather than soy milk"],
+      "hallucinations": [],
+      "justification": "Strong topping list and scene framing. Loses a point for confidently calling the drink 'milky tea' rather than the more likely soy milk, and for omitting marble/tile mentions in the main body. Solid overall."
+    },
+    {
+      "model": "qwen3.6-27b|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": ["congee", "soft-boiled egg (sunny-side up)", "green onions", "shredded ginger", "fried shallots", "cilantro", "drizzle of dark soy sauce or seasoning oil", "ceramic spoon", "you tiao on red plate", "dark wooden chopsticks near red plate", "creamy beige beverage (milk tea) on small wooden coaster", "white and grey marble-patterned table", "tiled walls", "wooden-framed window"],
+      "key_misses": ["misidentifies drink as milk tea rather than soy milk"],
+      "hallucinations": ["'small bottles (likely chili sauce or soy sauce)' on distant table — plausible but unverified"],
+      "justification": "Well-structured with all six toppings. Includes marble pattern, tiled walls, and window. Loses a point for committing to 'milk tea' for the drink and for the speculative condiment bottles. Otherwise a clean, accurate description."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|nothink",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": ["congee", "sunny-side-up egg with bright orange yolk", "chopped green onions", "shredded ginger", "fried shallots or garlic bits", "fresh cilantro", "drizzle of dark soy sauce", "ceramic spoon", "you tiao on red plate", "chopsticks diagonally across red plate", "marbled surface table"],
+      "key_misses": ["identifies drink as 'milk tea (teh)' rather than soy milk"],
+      "hallucinations": ["'condiment bottles (red and blue caps)' and 'wooden stirrers or chopsticks' on second table — plausible but unverified"],
+      "justification": "Detailed topping inventory and correct layout (chopsticks across red plate, marble table). Loses points for committing to milk tea/teh for the drink and for the speculative condiment details. Good but not elite."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|think",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": ["congee", "you tiao on red plate", "chopsticks across the plate and table", "creamy white liquid (soy milk or coffee with milk)", "steam from drink", "fried shallots", "cilantro", "chopped green onions", "shredded pale yellow ginger", "drizzle of dark soy sauce", "ceramic spoon", "marble-like surface", "tiled walls", "wooden-framed window"],
+      "key_misses": [],
+      "hallucinations": ["MAJOR: describes the egg as 'a raw, bright orange egg yolk sitting in the center' — this is wrong; the egg is sunny-side-up / soft-boiled with set white and runny yolk, NOT a raw loose yolk"],
+      "justification": "Has all the right ingredients but a notable error: calls the egg a 'raw, bright orange egg yolk sitting in the center', which misrepresents the dish (it is a sunny-side-up / soft-boiled egg with intact white). Also hedges the drink between soy milk and coffee-with-milk. Detailed but with one clear factual mistake that drags the score down."
+    }
+  ],
+  "ranking": [
+    {"model": "gemma4-26b-a4b|think", "score": 10},
+    {"model": "gemma4-31b|think", "score": 10},
+    {"model": "qwen3.5-9b|nothink", "score": 9},
+    {"model": "qwen3.5-9b|think", "score": 9},
+    {"model": "glm-4.6v-flash-9b|think", "score": 9},
+    {"model": "gemma4-12b|think", "score": 8},
+    {"model": "qwen3-vl-8b|think", "score": 8},
+    {"model": "qwen3.5-4b|nothink", "score": 8},
+    {"model": "qwen3.5-4b|think", "score": 8},
+    {"model": "qwen3.6-27b|nothink", "score": 8},
+    {"model": "qwen3.6-27b|think", "score": 8},
+    {"model": "qwen3.6-35b-a3b|nothink", "score": 8},
+    {"model": "gemma4-e4b|think", "score": 7},
+    {"model": "qwen3.6-35b-a3b|think", "score": 7},
+    {"model": "qwen3-vl-4b|think", "score": 6}
+  ],
+  "notes": [
+    "This image is a single-shot breakfast scene with one center bowl and three side items; no spatial/clocking or text-reading complexity. The discriminator between models is the completeness and accuracy of the congee-topping inventory (egg, scallions, ginger, fried shallots, cilantro, soy sauce), the drink ID (soy milk vs. milk tea/coffee), and the chopstick placement across the red plate.",
+    "Gemma4 26b and 31b are clearly the strongest: both identify all six toppings, the soy milk, the you tiao, the chopstick placement, the marble table, tiled walls and window. 26b is the most complete (adds cilantro that 31b omits); 31b is the most precise on chopstick placement.",
+    "The Qwen3.5/3.6 family is consistently strong on toppings but almost uniformly defaults to 'milk tea' or 'teh' for the drink — a systematic cultural prior. The Qwen3.5-9b variants hedge to include soy milk, which is why they score higher.",
+    "The Qwen3.6-35b-a3b|think entry is the only model that makes a clear factual error about the dish, calling the egg a 'raw egg yolk' rather than sunny-side-up; this is the main differentiator that lowers its score below its siblings.",
+    "qwen3-vl-4b|think is the only response that fails to name congee and largely omits the actual food content; it ranks last.",
+    "All models correctly report 'no visible text', which matches ground truth. No model flagged the image as possibly AI-generated, which the ground truth speculatively notes (this is acceptable since the AI-generation call is itself uncertain).",
+    "Image analyzer MCP returned 429 rate-limit during this evaluation; judgment was produced from the ground-truth block, the photo context, and the response texts, all of which are rich enough for confident scoring."
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "image": "11-collage-therapist-photo.jpg",
+  "ground_truth_summary": "Side-by-side diptych of the SAME massage therapist in both photos. Left: posing on a massage chair. Right: sitting on a massage table surrounded by Thai bamboo stick massage accessories.",
+  "judgments": [
+    {
+      "model": "gemma4-12b|think",
+      "holistic_score": 4,
+      "failure_mode": "hallucination",
+      "key_hits": ["two side-by-side photos", "same man in both", "treatment table setting", "wooden tools on right"],
+      "key_misses": ["misidentifies massage chair as treatment table", "calls bamboo tools 'foam roller' and 'wooden rollers'", "does not identify as massage therapist context"],
+      "hallucinations": ["grey foam roller held in lap (left)", "blue patterned runner", "metal-framed rolling stool"],
+      "justification": "Correctly identifies diptych and same subject, but fabricates a 'foam roller' on the left and mischaracterizes both seating surfaces. No Thai/bamboo/massage-therapist context."
+    },
+    {
+      "model": "gemma4-26b-a4b|think",
+      "holistic_score": 5,
+      "failure_mode": "minor_hallucination",
+      "key_hits": ["diptych, same man", "massage table mentioned", "wooden cylindrical massage tools on right", "clinical/therapeutic setting"],
+      "key_misses": ["left: calls it a 'green-cushioned stool' not a massage chair", "does not name bamboo sticks or Thai context"],
+      "hallucinations": ["blue athletic shoes with white soles and laces", "blue bottle on cabinet"],
+      "justification": "Reasonable recognition of tools as wooden massage rollers but invents blue sneakers. Left seating identified as stool rather than massage chair. Solid but imperfect."
+    },
+    {
+      "model": "gemma4-31b|think",
+      "holistic_score": 4,
+      "failure_mode": "hallucination",
+      "key_hits": ["diptych, same man", "green shirt, black trousers", "wooden rollers on table", "blue patterned cloth"],
+      "key_misses": ["calls left seating 'treatment table with green padded top' (wrong)", "no bamboo/Thai context"],
+      "hallucinations": ["blue athletic sneakers with white soles and laces", "wooden rolling pin in right hand"],
+      "justification": "Invents blue sneakers and calls wooden massage tools 'rolling pins'. Misidentifies left seating as a treatment table. Misses key Thai bamboo context."
+    },
+    {
+      "model": "gemma4-e4b|think",
+      "holistic_score": 5,
+      "failure_mode": "minor_hallucination",
+      "key_hits": ["diptych, same bald man", "green t-shirt", "massage table on right", "wooden therapy sticks"],
+      "key_misses": ["left is described as 'therapy chair' (closer to truth than others, but still off)", "no Thai/bamboo identification"],
+      "hallucinations": ["rolled-up brown/tan towel on lap (left)", "four wooden sticks (two longer, two shorter)"],
+      "justification": "Better than other Gemma variants - identifies left as a chair not table. But fabricates lap towel and invents specific stick counts. No Thai massage context."
+    },
+    {
+      "model": "glm-4.6v-flash-9b|think",
+      "holistic_score": 6,
+      "failure_mode": "minor_hallucination",
+      "key_hits": ["diptych, same bald man", "left: seated on portable massage chair", "right: seated on massage table", "wooden massage tools/rollers/sticks", "green shirt, dark pants", "blue patterned sheet"],
+      "key_misses": ["does not name Thai context or bamboo specifically"],
+      "hallucinations": ["blue athletic shoes with white laces", "stack of rolled towels orange/green/black"],
+      "justification": "One of the better recognitions - explicitly names 'portable massage chair' on left and 'massage table' on right, and identifies the wooden tools as massage tools. Minor shoe hallucination. Lacks Thai/bamboo specificity."
+    },
+    {
+      "model": "qwen3-vl-4b|think",
+      "holistic_score": 8,
+      "failure_mode": "minor_hallucination",
+      "key_hits": ["diptych, same bald man", "green wheeled stool/therapy chair on left", "massage table on right", "wooden massage tools (likely bamboo)", "rolled-up plaid towel", "ID/lanyard implied", "blue patterned blanket"],
+      "key_misses": ["calls left a 'green wheeled stool' rather than massage chair"],
+      "hallucinations": ["bright blue shoes with white laces", "black bag on whiteboard"],
+      "justification": "Excellent recognition. Explicitly mentions tools 'likely bamboo', correctly describes both surfaces, captures colorful rolled towel. Minor shoe hallucination. Top-tier response."
+    },
+    {
+      "model": "qwen3-vl-8b|think",
+      "holistic_score": 5,
+      "failure_mode": "hallucination",
+      "key_hits": ["diptych, same bald man", "massage table on right", "wooden massage rollers", "white lanyard/badge"],
+      "key_misses": ["calls left a 'therapy chair' with 'black strap or harness' across chest", "no bamboo/Thai context"],
+      "hallucinations": ["black strap or harness across chest and shoulder", "bright blue and white sneakers", "padded headrest covered in grey fabric"],
+      "justification": "Invents a 'black strap or harness' on the man's chest which is a notable hallucination. Calls tools 'wooden massage rollers' rather than bamboo sticks. Below average."
+    },
+    {
+      "model": "qwen3.5-4b|nothink",
+      "holistic_score": 8,
+      "failure_mode": "minor_hallucination",
+      "key_hits": ["diptych, same man", "specialized adjustable chair with wheels on left", "massage table on right", "wooden massage tools (likely bamboo)", "colorful rolled towels", "professional therapeutic setting", "white ID badge implied via logo"],
+      "key_misses": ["calls left chair 'for therapeutic positioning' rather than massage chair specifically"],
+      "hallucinations": ["black device mounted near shoulder (massage/stimulation apparatus)", "blue athletic sneakers with white laces"],
+      "justification": "Strong response. Mentions bamboo as likely material for tools, identifies both seating surfaces well, captures towel stack. Hallucinates a 'black device near shoulder' which is actually just the chair's headrest support. Top tier."
+    },
+    {
+      "model": "qwen3.5-4b|think",
+      "holistic_score": 8,
+      "failure_mode": "minor_hallucination",
+      "key_hits": ["diptych, same bald man", "wheeled massage chair/therapy stool on left", "massage table on right", "wooden massage tools likely bamboo rollers/sticks", "rolled-up towel red/green/black stripes", "white ID badge/lanyard"],
+      "key_misses": ["left described as 'stool' not specifically massage chair"],
+      "hallucinations": ["bright blue sneakers with white laces"],
+      "justification": "Excellent identification. Mentions 'bamboo rollers or sticks', captures the colorful striped towel and badge. Only minor shoe hallucination. Top-tier."
+    },
+    {
+      "model": "qwen3.5-9b|nothink",
+      "holistic_score": 4,
+      "failure_mode": "hallucination",
+      "key_hits": ["diptych, same bald man", "massage table on right", "wooden massage tools"],
+      "key_misses": ["left described as 'stool with brown patterned cloth' - misses chair nature", "no bamboo/Thai context", "tools vaguely described"],
+      "hallucinations": ["black bag on cabinet"],
+      "justification": "Vague description. Misses the massage chair nature on the left, treats tools generically. Adds little detail beyond the basics."
+    },
+    {
+      "model": "qwen3.5-9b|think",
+      "holistic_score": 6,
+      "failure_mode": "minor_hallucination",
+      "key_hits": ["diptych, same man", "specialized medical/therapy chair on left", "massage table on right", "wooden massage sticks/percussion tools", "white ID badge", "bolsters/rolled towels"],
+      "key_misses": ["does not name Thai context or bamboo"],
+      "hallucinations": ["blue sneakers with white laces", "chair described as tilt-in-space wheelchair"],
+      "justification": "Good detail and identifies tools as percussion/myofascial release. Speculates wheelchair which is wrong. Solid but with hallucinations."
+    },
+    {
+      "model": "qwen3.6-27b|nothink",
+      "holistic_score": 5,
+      "failure_mode": "hallucination",
+      "key_hits": ["diptych, same bald man", "green cushioned stool with wheels on left", "massage table on right", "wooden massage rollers", "colorful striped towel", "small white logo on shirt"],
+      "key_misses": ["left called 'stool' rather than massage chair", "no bamboo/Thai identification"],
+      "hallucinations": ["bright blue sneakers with white laces and soles", "gray socks", "thin white cable across floor", "snake plant"],
+      "justification": "Detailed but hallucinates sneakers, socks, cable. Misses Thai bamboo context. Tools called generic massage rollers. Mediocre."
+    },
+    {
+      "model": "qwen3.6-27b|think",
+      "holistic_score": 7,
+      "failure_mode": "minor_hallucination",
+      "key_hits": ["diptych, same bald man", "reclining therapy chair / specialized massage table with wheels on left", "massage table on right", "wooden cylindrical massage rollers/sticks", "colorful striped towel", "white logo on shirt"],
+      "key_misses": ["does not name Thai or bamboo specifically"],
+      "hallucinations": ["bright blue sneakers with white laces"],
+      "justification": "Above average. Describes left as reclining therapy chair, captures tools and towel well. Minor shoe hallucination. Lacks bamboo/Thai identification."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|nothink",
+      "holistic_score": 7,
+      "failure_mode": "minor_hallucination",
+      "key_hits": ["diptych, same man", "portable massage chair with wheels on left", "massage table on right", "wooden tools possibly gua sha/percussion", "colorful rolled towel", "blue/white patterned towel on wall", "ID badge implies practitioner"],
+      "key_misses": ["does not name Thai context or bamboo specifically"],
+      "hallucinations": ["blue athletic shoes with white laces", "gray socks", "electrical cord on floor"],
+      "justification": "Strong identification of portable massage chair on left. Mentions alternative therapies like gua sha. Recognizes practitioner role. Minor shoe/sock hallucinations."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|think",
+      "holistic_score": 8,
+      "failure_mode": "minor_hallucination",
+      "key_hits": ["diptych, same bald man", "portable green massage chair on left", "massage table on right", "wooden cylindrical tools / massage rollers", "rolled-up blanket green/red/orange stripes", "small white logo on shirt", "blue patterned sheet"],
+      "key_misses": ["does not specifically identify Thai bamboo stick massage context"],
+      "hallucinations": ["bright blue sneakers with white laces"],
+      "justification": "Excellent recognition. Explicitly calls left a 'portable green massage chair', captures tools, striped blanket, and shirt logo accurately. Only minor shoe hallucination. Top-tier."
+    }
+  ],
+  "ranking": [
+    "qwen3-vl-4b|think",
+    "qwen3.5-4b|think",
+    "qwen3.5-4b|nothink",
+    "qwen3.6-35b-a3b|think",
+    "qwen3.6-35b-a3b|nothink",
+    "qwen3.6-27b|think",
+    "glm-4.6v-flash-9b|think",
+    "qwen3.5-9b|think",
+    "gemma4-e4b|think",
+    "qwen3-vl-8b|think",
+    "qwen3.6-27b|nothink",
+    "gemma4-26b-a4b|think",
+    "qwen3.5-9b|nothink",
+    "gemma4-31b|think",
+    "gemma4-12b|think"
+  ],
+  "notes": "No model explicitly identified the 'Thai bamboo stick massage' context, though qwen3-vl-4b|think and qwen3.5-4b|think came closest by mentioning 'bamboo' as a likely material. The most reliable discriminator was correctly identifying the LEFT surface as a portable massage chair (not a stool, table, or wheelchair) - best done by glm-4.6v-flash-9b|think, qwen3.6-35b-a3b|think, and qwen3.6-35b-a3b|nothink. Almost every model hallucinated 'blue sneakers with white laces' that the subject does not appear to be wearing. Gemma variants tended to fabricate foam rollers and rolling pins; qwen3-vl-8b|think uniquely invented a 'black strap or harness' across the chest. The 'same person in both photos' identification was universally correct."
+}

@@ -1,0 +1,433 @@
+{
+  "image": "22-spritesheet-bubble-bobble.png",
+  "judgments": {
+    "gemma4-12b|think": {
+      "holistic_score": 1,
+      "failure_mode": "truncated",
+      "key_hits": ["BUBBLE BOBBLE title", "EXTEND", "HAPPY", "CLEAR", "0123456789", "Super"],
+      "key_misses": ["Credit attribution completely wrong (D2Sereno fabrication)", "No Taito mention", "No Pac-Man Red mention", "No ROUND", "No HELP!!", "No Hurry up!!", "No NICE 1P/2P", "No Atari 7800 mention"],
+      "hallucinations": [
+        "SEVERE: Fabricated 'D2Sereno' as creator instead of '125scratch' (explicit hallucination per task criteria)",
+        "SEVERE: Fabricated 'Happy Well' text repeated in left column",
+        "Fabricated 'LIFE!1' through 'LIFE!6' text",
+        "Fabricated 'GAME', 'START', 'PLAY', 'SCORE' as separate UI text",
+        "Fabricated entire ArtLibrary / '[name]' narrative",
+        "Catastrophic repetition loop filling entire second half of response"
+      ],
+      "justification": "Catastrophic failure across the board. Explicitly flags 'D2Sereno' as the creator (a known fabrication per task spec), invents 'Happy Well' and 'LIFE!' sprites that don't exist, then collapses into a degenerate repetition loop that fills the entire output. The credit hallucination alone is disqualifying; the repetition loop makes it worse."
+    },
+    "gemma4-26b-a4b|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct credit: 'Sprites made by 125scratch, please give credit if used. Bubble Bobble belongs to Taito. Credit goes to Pac-Man Red on AtariAge for his Atari 7800 BB sprites, which I used in many cases.' (with minor 'AtarAge' typo)",
+        "BUBBLE BOBBLE title",
+        "Super",
+        "HELP!!",
+        "Hurry up!!",
+        "EXTEND",
+        "NICE 1P!, NICE 2P!",
+        "10PTS, 10PTS!!",
+        "ROUND",
+        "CLEAR",
+        "0123456789",
+        "Bub and Bob green dinosaur characters",
+        "8-bit/16-bit pixel art",
+        "Taito and Pac-Man Red attribution",
+        "Two main column layout",
+        "Lightning bolts"
+      ],
+      "key_misses": ["Minor typo 'AtarAge' instead of 'AtariAge'", "Says HAPPY without END"],
+      "hallucinations": [
+        "Minor: 'AtarAge' OCR typo in credit",
+        "Says title 'pink/purple font with yellow outline' — letters are RED on yellow background per GT, but model saw pink/purple (color perception error)",
+        "Lists 'yellow/gold lightning bolt shapes' and 'large red heart' / 'purple star' as content — plausible items"
+      ],
+      "justification": "Excellent comprehensive response: full credit text verbatim, all key HUD elements captured, clean structural layout. Loses a point for the title color error (sees pink/purple instead of red) and a minor credit typo. Otherwise extremely thorough."
+    },
+    "gemma4-31b|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct credit verbatim: 'Sprites made by 125scratch, please give credit if used. Bubble Bobble belongs to Taito. Credit goes to Pac-Man Red on AtariAge for his Atari 7800 BB sprites, which I used in many cases.'",
+        "BUBBLE BOBBLE title",
+        "Super",
+        "HELP!!",
+        "Hurry up!!",
+        "EXTEND",
+        "NICE 1P!, NICE 2P!",
+        "10PTS!!",
+        "HAPPY (says HAPPY)",
+        "ROUND",
+        "CLEAR",
+        "0123456789",
+        "Bub and Bob green dinosaur characters",
+        "Multiple character poses (standing, walking, jumping)",
+        "Items grid: grapes, cherries, melons, strawberries",
+        "Taito and Pac-Man Red attribution",
+        "Atari 7800 platform",
+        "8-bit/16-bit style"
+      ],
+      "key_misses": ["Minor typo '125cratch' instead of '125scratch' in verbatim section (but correct elsewhere)", "Says 'KNOW' as UI text — likely misread"],
+      "hallucinations": [
+        "Says title letters are 'peach/pink color' — INCORRECT per GT corrections (letters are RED); this is a flagged color error",
+        "Says blue creature with crown/hat and green dinosaur with crown — possible misread of player 2 (Bob is blue/purple)",
+        "Lists gems/hearts/keys/candy/bells — some plausible items in the grid"
+      ],
+      "justification": "Very thorough response with correct credit and Atari 7800 platform identified. Loses a point for the peach/pink title color error (GT explicitly corrects this: red letters). Otherwise strong structural and textual accuracy."
+    },
+    "gemma4-e4b|think": {
+      "holistic_score": 6,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "BUBBLE BOBBLE title",
+        "Super",
+        "HELP!!",
+        "Hurry up!! Hurry up!!",
+        "EXTEND",
+        "NICE! 1P! NICE! 2P! 10PTS!",
+        "CLEAR",
+        "Bub and Bob main characters",
+        "Pixel art 8-bit/16-bit style",
+        "Mentions Taito, 125scratch, Pac-Man Red in credit (with errors)"
+      ],
+      "key_misses": ["No ROUND", "No HAPPY END!", "No 0123456789 digits", "Lightning bolts mentioned generically"],
+      "hallucinations": [
+        "Credit: 'Sprites made by 125scratch, please give it credit usd' — garbled OCR ('credit usd' for 'credit if used')",
+        "Credit: 'Atari 8000' instead of 'Atari 7800' — wrong platform (GT corrects: 7800)",
+        "Credit: 'PacMan Red' (missing hyphen)",
+        "Response truncates mid-sentence at end"
+      ],
+      "justification": "Captures the overall structure and major text but with multiple OCR errors in the credit line including the wrong Atari platform ('8000' instead of '7800'). Truncated output. Less detailed than the larger Gemma variants. Solid mid-tier performance."
+    },
+    "glm-4.6v-flash-9b|think": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "BUBBLE BOBBLE title",
+        "Super",
+        "Hurry up!! Hurry up!!",
+        "EXTEND",
+        "Nice 1P! Nice 2P! 10PTS!!",
+        "Happy END!",
+        "Round",
+        "Clear",
+        "0123456789",
+        "Taito mention in credit",
+        "Items: watermelon, heart, lightning bolts, stars, diamonds, cakes, musical notes",
+        "Green dragon-like creature"
+      ],
+      "key_misses": ["No Pac-Man Red mention", "No Atari 7800 mention", "Credit truncated: 'Sprites made by 12Scratch' (missing '5scratch')", "No HELP!! text", "Misidentifies main characters as 'green birds' and 'red bird with M'"],
+      "hallucinations": [
+        "Says title 'yellow with brown outline' — partial error (background yellow is correct, letters should be RED not brown)",
+        "Calls main characters 'green birds' and 'red bird' with 'M on forehead' — they are bubble dragons, not birds, and 'M on forehead' is fabricated",
+        "Calls the blue creature 'blue creature with M' — fabrication",
+        "Says credit 'Sprites made by 12Scratch' — missing the '5' in 125scratch",
+        "Lists 'clovers, tools (crosses, star-shaped)' — vague"
+      ],
+      "justification": "Decent overall structure and captures most UI text, but suffers from character misidentification ('green birds' instead of dragons, fabricated 'M on forehead'), a truncated creator name ('12Scratch'), and omission of Pac-Man Red and Atari 7800 from credits. Title color description is partially wrong. Mid-tier performance."
+    },
+    "qwen3-vl-4b|think": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "BUBBLE BOBBLE title",
+        "Super",
+        "HELP!!",
+        "Hurry up! Hurry up!!",
+        "EXTEND (three times)",
+        "NICE 1P! NICE 2P! 10PTS!!",
+        "HAPPY END!!",
+        "ROUND",
+        "CLEAR",
+        "0123456789",
+        "Correct credit: 'Sprites made by 12Scratch, please give credit if used. Bubble Bobble belongs to Taito. Credit goes to Pac-Man Red on AtariAge for his Atari 7800 sprites, which I used in many cases.'",
+        "Main character green dinosaur",
+        "Multiple character states (standing, jumping, attacking)",
+        "Atari 7800 platform",
+        "Taito and Pac-Man Red attribution"
+      ],
+      "key_misses": ["Says '12Scratch' instead of '125scratch' (missing 5)", "Items list is short (only watermelon, cake, ice cream, diamond, stars, heart)"],
+      "hallucinations": [
+        "Calls main character 'Bubble Bobble' as if it's a single character name (actual: Bub is the green dragon)",
+        "Says 'smaller, purple version' and 'Super version of character' — Super is text label, not character form",
+        "Says 'red, spiky enemy' and 'purple ghost-like creature' — plausible",
+        "Repetitive final paragraph (loop-like)"
+      ],
+      "justification": "Captures most major text and credit (with '12Scratch' typo missing the 5). Has clean credit and Atari 7800. Weaker on item enumeration and character identification, with mild repetition at the end. Decent for a 4B model."
+    },
+    "qwen3-vl-8b|think": {
+      "holistic_score": 2,
+      "failure_mode": "truncated",
+      "key_hits": ["Black background", "Pixel art style", "Two main vertical sections"],
+      "key_misses": ["No BUBBLE BOBBLE title", "No credit text", "No EXTEND", "No NICE 1P/2P", "No ROUND/CLEAR", "No HUD elements identified", "No items listed", "No characters named"],
+      "hallucinations": [
+        "SEVERE: Falls into massive degenerate repetition loop ('A row of small, colorful sprites, including some that resemble eyes or simple faces' repeated 33+ times with numbered rows up to 'Thirty-third Row')",
+        "Entire output is one repeating phrase",
+        "No actual content beyond the first paragraph"
+      ],
+      "justification": "Catastrophic repetition-loop failure. After a brief intro, the model enters a degenerate loop repeating the same row description 33+ times with incrementing ordinals. Provides essentially zero useful content about the actual spritesheet. One of the worst failures in the set."
+    },
+    "qwen3.5-4b|nothink": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "BUBBLE BOBBLE title",
+        "SUPER",
+        "EXTEND",
+        "NICE 1P! NICE 2P! 10PTS!!",
+        "HAPPY END!!",
+        "ROUND",
+        "CLEAR",
+        "0123456789",
+        "Credit: 125scratch, Taito, Pac-Man Red, AtariAge, Atari 7800 (all present)",
+        "8-bit style, black background"
+      ],
+      "key_misses": ["No HELP!!", "No Hurry up!!", "Items list very sparse"],
+      "hallucinations": [
+        "SEVERE: Calls player characters 'Bob & Paul' — 'Paul' is fabricated (actual: Bub and Bob)",
+        "Says game 'originally developed by Taito and released on the Atari 7800' — misleading; Bubble Bobble was arcade-original (1986), Atari 7800 is just the sprite source mentioned in credits",
+        "Says title in 'bubbly green font with white outline' — WRONG (red letters on yellow)",
+        "Lists fabricated enemies: 'red bats, fish, spiders, rocks, skulls'",
+        "Lists fabricated 'bosses': 'big green dragon and a red bat boss' — NO BOSSES EXIST (per GT corrections)",
+        "Lists fabricated items: bomb, shield, music notes",
+        "Calls characters 'Bob (green skin, purple hair) and Paul (blue skin, brown hair)' — completely fabricated physical descriptions"
+      ],
+      "justification": "Captures the major UI text and credit attribution correctly, but severely hallucinates characters ('Paul' instead of Bub/Bob), invents bosses that don't exist, fabricates enemy types, and gets the title color completely wrong. Despite good text OCR, the hallucinations drag this down significantly."
+    },
+    "qwen3.5-4b|think": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "BUBBLE BOBBLE title (initially)",
+        "SUPER",
+        "EXTEND",
+        "NICE 1P! NICE 2P! 10PTS!!",
+        "HAPPY END!!",
+        "ROUND",
+        "CLEAR",
+        "0123456789",
+        "Correct credit: 'Sprites made by 125scratch, please give credit if used. Bubble Bobble belongs to Taito. Credit goes to Pac-Man Red on AtariAge for his Atari 7800 BB sprites, which I used in many cases.'",
+        "HELP! (with single !)",
+        "Hurry up!",
+        "Items: cake slices, watermelons, stars, musical notes, gems, coins",
+        "Lightning bolt"
+      ],
+      "key_misses": ["HELP!! should have two exclamations", "Hurry up!! should have two exclamations"],
+      "hallucinations": [
+        "SEVERE: Reads title as 'BUBBLE GABLE' in visible text section (OCR error on BOBBLE)",
+        "Calls main characters 'Bob' (green dragon) and 'Bubble' (blue/purple creature) — 'Bubble' is wrong (should be Bob/Bub)",
+        "Says Bob has 'purple belly' and Bubble has 'green belly' — fabricated",
+        "Lists 'purple sword, purple staff' as items — likely misreads",
+        "Calls blue dragon 'Bubble' — should be Bob (player 2)"
+      ],
+      "justification": "Has correct credit text and most UI elements, but badly misreads the title as 'BUBBLE GABLE' (a serious OCR failure on the most prominent text in the image). Also confuses character names ('Bubble' for the blue dragon). These errors significantly undermine the response despite otherwise good text capture."
+    },
+    "qwen3.5-9b|nothink": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "BUBBLE BOBBLE title",
+        "SUPER",
+        "EXTEND (multiple times)",
+        "HELP!",
+        "Hurry up!! Hurry up!!",
+        "NICE 1P! NICE 2P!",
+        "10PTS!!",
+        "HAPPY END!",
+        "ROUND",
+        "CLEAR",
+        "0123456789",
+        "Credit: 125scratch, Taito, Pac-Man Red, AtariAge, Atari 7800",
+        "1986 arcade release year (correct!)",
+        "Green dragon-like protagonists with multiple expressions"
+      ],
+      "key_misses": ["No specific food items enumerated in left grid"],
+      "hallucinations": [
+        "SEVERE: Massive item/enemy list fabrication in second half: lists 'sword, shield, bomb, skull, crown, flag, door, ladder, bridge, wall, floor tile, ceiling tile, cloud, star, moon, sun, flower, tree, bush, rock, cave entrance, treasure chest, keyhole, lock, padlock, chain, rope, net, trap, mine, fireball, lightning bolt, magic wand, potion' — most of these are NOT in the image",
+        "Repetition loop at the end ('power-up, bonus, secret, hidden, collectible' repeated multiple times)",
+        "Says title is 'brown bubbly letters with green cloud background' — partially wrong (yellow cloud, RED letters)",
+        "Calls enemies 'purple ghostly figures, red crab-like creatures, brown bear-like enemies, small flying insects or bats' — fabricated enemy types",
+        "Lists 'green dragon sleeping', 'red heart-shaped enemy', 'watermelon slice', 'cake with candles', 'trophy cup' as enemies — category confusion"
+      ],
+      "justification": "Strong text OCR including the correct 1986 release year, but completely derails in the object listing section with a massive list of fabricated enemies and items (sword, shield, ladder, bridge, wall, door, etc. — none of which are in the spritesheet). Falls into a repetition loop at the end. The hallucination volume is severe despite good text capture."
+    },
+    "qwen3.5-9b|think": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "BUBBLE BOBBLE title",
+        "SUPER",
+        "HELP!!",
+        "Hurry up!! Hurry up!!",
+        "EXTEND (multiple)",
+        "NICE 1P! NICE 2P! 10PTS!!",
+        "HAPPY END!",
+        "ROUND",
+        "CLEAR",
+        "0123456789",
+        "Credit: 125scratch, Taito, Pac-Man Red, AtariAge, Atari 7800 (all present)",
+        "Bub (green dragon) character with multiple expressions",
+        "Lightning bolts yellow",
+        "Items: hearts, stars, gems, watermelon, musical notes"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Says credit 'Bubble Bobble belongs to Taiko' — typo for Taito",
+        "Says 'Brown Dragon (Boby)' and 'Purple Dragon (likely a boss)' — FABRICATED: no brown dragon named Boby, no boss exists per GT",
+        "Says 'Bubbles' as protagonist name — should be Bub",
+        "Says title is 'bubbly, brown font with green outline' — partially wrong (yellow cloud bg, RED letters per GT)",
+        "Lists 'pizza, burgers' as food items — not in image",
+        "Lists 'swords, hammers, axes' as weapons — not in image",
+        "Says 'small castles, buildings' in environment — fabricated"
+      ],
+      "justification": "Good text capture and credit (with 'Taiko' typo), but hallucinates a 'Brown Dragon (Boby)' and calls the purple dragon 'likely a boss' — both explicitly wrong per GT corrections (no bosses, no Boby). Title color wrong. Food/weapon items fabricated. Solid text but notable hallucinations."
+    },
+    "qwen3.6-27b|nothink": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "BUBBLE BOBBLE title",
+        "SUPER",
+        "HELP!!",
+        "Hurry up!! Hurry up!!",
+        "EXTEND",
+        "NICE 1P! NICE 2P! 10PTS!!",
+        "HAPPY END!",
+        "ROUND",
+        "CLEAR",
+        "0123456789",
+        "Correct full credit verbatim",
+        "Bub & Bob green dragon characters with multiple poses",
+        "Taito, 125scratch, Pac-Man Red, AtariAge, Atari 7800",
+        "Multiple character states (idle, jump, attack)",
+        "8-bit pixel art style"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Says title in 'brown bubble letters with green cloud-like outlines' — partially wrong (yellow cloud background, RED letters per GT corrections)",
+        "Says 'blonde girl (TwinBee?)' next to green dragon — fabricated; no girl character, and 'TwinBee?' is from a different game entirely",
+        "Lists 'apples, bananas, oranges, grapes, watermelon, cake, ice cream cones' — some correct, some plausible",
+        "Lists 'swords, axes, hammers, bows, arrows' as weapons — fabricated (not in spritesheet)",
+        "Says 'pink pig-like enemies', 'white bird-like creatures', 'red heart-shaped enemy' — fabricated enemy types",
+        "Calls player 2 dragon 'Bub or Bob?' with uncertainty"
+      ],
+      "justification": "Strong text OCR with full verbatim credit and all major HUD elements. However, hallucinates a 'blonde girl (TwinBee?)' character (TwinBee is a different Konami game), invents weapons (swords/axes/bows) and several enemy types. Title color description is wrong (says brown letters, GT says red). Good but with notable fabrications."
+    },
+    "qwen3.6-27b|think": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "BUBBLE BOBBLE title",
+        "SUPER",
+        "HELP!!",
+        "Hurry up!! Hurry up!!",
+        "EXTEND (multiple)",
+        "NICE 1P! NICE 2P! 10PTS!!",
+        "HAPPY END!",
+        "ROUND",
+        "CLEAR",
+        "0123456789",
+        "Correct full credit verbatim with Atari 7800",
+        "Bub (green dragon) and Bob (purple dragon) — correctly identified as two distinct player characters",
+        "Multiple character frames (standing, jumping, blowing bubbles)",
+        "Taito, 125scratch, Pac-Man Red, AtariAge, Atari 7800",
+        "Lightning bolts",
+        "Items: cherries, strawberries, watermelons, hearts, stars, musical notes"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Says title 'stylized in brown and green' — partially wrong (yellow cloud bg with RED letters per GT)",
+        "Says 'smaller versions of the dragons (possibly baby forms or different game modes)' — speculative",
+        "Lists 'swords' as weapons/items — fabricated (not in spritesheet)",
+        "Lists 'small castles, buildings' as environment — fabricated",
+        "Lists 'axes, wands, spears' as weapons — fabricated",
+        "Calls Bub the green dragon and Bob the purple dragon — partially correct (Bob is blue/purple player 2)"
+      ],
+      "justification": "Strong response with all major text captured verbatim including the full credit, correct identification of Bub and Bob as two distinct player characters (no boss hallucination), and good structural description. Loses points for title color error (brown instead of red) and fabricated weapons (swords, axes, wands, spears, castles). The best of the Qwen3.6 variants on character identification."
+    },
+    "qwen3.6-35b-a3b|nothink": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "BUBBLE BOBBLE title",
+        "Super",
+        "EXTEND (multiple)",
+        "HELP!",
+        "Hurry up!! Hurry up!!",
+        "NICE 1P! NICE 2P!",
+        "10PTS!!",
+        "HAPPY END!",
+        "ROUND",
+        "CLEAR",
+        "0123456789",
+        "Credit: 125scratch, Taito, Pac-Man Red, AtariAge, Atari 7800",
+        "Bub and Bob green dragon protagonists",
+        "Cake slice, watermelon slice, musical notes",
+        "8-bit palette description"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Says title 'brown, orange, yellow, green, purple' multi-colored letters — WRONG per GT (RED letters)",
+        "Says 'created by 125scratch and shared on AtariAge' — misleading; 125scratch made the spritesheet, AtariAge is just where Pac-Man Red's sprites came from",
+        "Lists 'ghosts, bats, spiders, snakes, frogs, birds, fish' as enemies — most fabricated",
+        "Lists 'keys (gold), swords, shields' as items — fabricated",
+        "Lists 'alphabetical characters A-Z' in left column — fabricated (no alphabet grid)",
+        "Says 'RED' text color for HAPPY END — plausible",
+        "Says lightning bolts are 'for speed or attack' — speculative"
+      ],
+      "justification": "Good text capture with full credit and major HUD elements. However, fabricates an 'A-Z alphabet' grid in the left column that doesn't exist, invents enemy types (bats, spiders, snakes, frogs, birds, fish), and gets the title color wrong (multi-colored instead of red). Solid but with notable hallucinations."
+    },
+    "qwen3.6-35b-a3b|think": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "BUBBLE BOBBLE title",
+        "Super",
+        "HELP!!",
+        "Hurry up!! Hurry up!!",
+        "EXTEND",
+        "NICE 1P! NICE 2P!",
+        "10PTS!!",
+        "HAPPY END!",
+        "ROUND",
+        "CLEAR",
+        "0123456789",
+        "Correct full credit verbatim: 'Sprites made by 125Scratch, please give credit if used. Bubble Bobble belongs to Taito. Credit goes to Pac-Man Red on AtariAge for his Atari 7800 BB sprites, which I used in many cases.'",
+        "Green dragon character with multiple expressions (happy, angry, sleeping, surprised)",
+        "Taito, 125scratch, Pac-Man Red, AtariAge, Atari 7800",
+        "Food items: cake, watermelon, ice cream",
+        "Items: diamonds, musical notes, stars",
+        "Lightning bolts",
+        "Two-column layout"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Says title is 'pink and brown font' — WRONG per GT corrections (RED letters on yellow)",
+        "Calls green dragon 'Tic' and purple dragon 'Tac' — FABRICATED names (not from Bubble Bobble; sounds like Tic-Tac-Toe confusion)",
+        "Lists 'hammer, wrench' as tools — fabricated (not in spritesheet)",
+        "Lists 'purple magic wand/staff' — possible misread",
+        "Says letters in EXTEND are 'brown, yellow, green, purple' — partially correct"
+      ],
+      "justification": "Strong text capture with full verbatim credit. However, fabricates character names 'Tic' and 'Tac' for the dragons (these are not Bubble Bobble character names — actual is Bub and Bob), and gets the title color wrong (pink/brown instead of red). Lists fabricated tools (hammer, wrench). Good OCR but the character name hallucination is notable."
+    }
+  },
+  "ranking": [
+    "gemma4-26b-a4b|think",
+    "gemma4-31b|think",
+    "qwen3.6-27b|think",
+    "qwen3.6-35b-a3b|think",
+    "qwen3.6-27b|nothink",
+    "qwen3.6-35b-a3b|nothink",
+    "qwen3.5-9b|think",
+    "glm-4.6v-flash-9b|think",
+    "gemma4-e4b|think",
+    "qwen3-vl-4b|think",
+    "qwen3.5-9b|nothink",
+    "qwen3.5-4b|think",
+    "qwen3.5-4b|nothink",
+    "qwen3-vl-8b|think",
+    "gemma4-12b|think"
+  ],
+  "notes": "Gemma 4 26B and 31B (both think) are clear winners with comprehensive coverage, full verbatim credits, and minimal hallucinations. The primary error pattern across nearly ALL models is the title color: GT says RED letters on YELLOW cloud, but most models say brown/pink/peach/multi-colored — this is a systematic color perception failure on small pixelated text. Several models hallucinate bosses (qwen3.5-4b nothink, qwen3.5-9b think) despite GT explicitly noting no bosses exist. Character naming is another failure axis: 'Paul', 'Boby', 'Tic/Tac', 'Bubbles' all appear instead of Bub/Bob. Two catastrophic repetition-loop failures (qwen3-vl-8b and gemma4-12b) produce essentially zero usable content. The credit OCR is mostly accurate across models that include it, with minor typos (AtarAge, 12Scratch, Atari 8000). Surprisingly, the Atari 7800 platform is correctly identified by most models (per GT correction, NOT 800 or 2600). Scores are intentionally harsh on hallucination of bosses and character names, as these are explicitly flagged in GT corrections."
+}

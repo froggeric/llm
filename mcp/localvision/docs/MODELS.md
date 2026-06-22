@@ -30,7 +30,7 @@ The v6 benchmark tested 11 base models × multiple quants and thinking modes. Ke
 - **MoE size is misleading**: Qwen3.6 35B-A3B (3B active per token) ties much smaller dense models on quality despite being 7× larger. Not worth the footprint.
 - **Gemma 4 12B has hallucination flips** at Q4 (same image → different results across runs). Q8 fixes the variance but introduces 22% timeout rate. Excluded.
 
-For the full benchmark report, see `local-vlm-research/BENCHMARK-REPORT-v5.md` (in the parent repo).
+For the full benchmark report, see [`../../../benchmark/vlm/BENCHMARK-REPORT-v5.md`](../../../benchmark/vlm/BENCHMARK-REPORT-v5.md).
 
 ## Adding a model
 
@@ -156,4 +156,4 @@ Models in the catalog are sourced from the open-weight ecosystem. Known weakness
 - **Qwen3-VL 8B (Q8)** is the most reliable mid-tier (σ=0.33) but slightly lower quality than the 27B.
 - **Qwen3.6-27B (nothink)** is the champion but needs 24+ GB RAM for comfortable operation.
 
-For full benchmark results, see `local-vlm-research/BENCHMARK-REPORT-v5.md` (in the parent repo).
+For full benchmark results, see [`../../../benchmark/vlm/BENCHMARK-REPORT-v5.md`](../../../benchmark/vlm/BENCHMARK-REPORT-v5.md).

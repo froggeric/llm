@@ -1,0 +1,218 @@
+{
+  "image": "02_code_python.png",
+  "image_path": "test-images/02_code_python.png",
+  "ground_truth_summary": "Python FastAPI code in a dark-themed editor: imports FastAPI and BaseModel, defines a User Pydantic model with id/name/email fields, then a POST /users endpoint via @app.post decorator that calls db.add() and await db.commit().",
+  "key_facts": [
+    "from fastapi import FastAPI",
+    "from pydantic import BaseModel",
+    "class User(BaseModel)",
+    "@app.post(\"/users\") decorator",
+    "async def create_user",
+    "db.add(user)",
+    "await db.commit()",
+    "# Persist to database comment",
+    "email: str | None = None"
+  ],
+  "judgments": {
+    "gemma4-12b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Verbatim code transcription matches image exactly",
+        "Correctly identifies FastAPI + Pydantic stack",
+        "Correctly notes async/await pattern",
+        "Correctly notes Python 3.10+ union syntax",
+        "Recognizes db is undefined (placeholder)"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Claims specific syntax colors (bright pink/magenta keywords, golden yellow strings, lime green comments, cyan classes) — these are plausible inferences but unverified from the actual image"
+      ],
+      "justification": "Flawless verbatim code transcription with comprehensive structural analysis. Only minor issue is presenting inferred syntax-highlighting colors as fact rather than observation."
+    },
+    "gemma4-e4b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Verbatim code transcription matches image exactly",
+        "Correctly identifies FastAPI + Pydantic stack",
+        "Correctly identifies @app.post(\"/users\") decorator",
+        "Correctly notes async pattern",
+        "Notes db is conceptual/undefined"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Syntax color descriptions are inferred (purple/blue keywords, green/gray strings) but presented as observation"
+      ],
+      "justification": "Perfect code transcription with thorough structural breakdown of every code element. Minor color speculation but otherwise complete and accurate."
+    },
+    "glm-4.6v-flash-9b-Q8|think": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Verbatim code transcription matches image exactly",
+        "Correctly identifies User Pydantic model with id/name/email",
+        "Correctly identifies @app.post decorator",
+        "Correctly notes async db.commit()",
+        "Notes db is undefined in snippet"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Lists 'post' as appearing in blue/purple keywords — but 'post' is a method call, not a keyword",
+        "Specific color assignments (blue/purple keywords, magenta/pink class names, cyan type hints) are inferred rather than observed"
+      ],
+      "justification": "Code transcription is perfect and analysis is solid. Minor inaccuracy in classifying 'post' as a keyword, plus speculative color claims."
+    },
+    "qwen3-vl-4b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Verbatim code transcription matches image exactly",
+        "Correctly identifies FastAPI + Pydantic stack",
+        "Correctly identifies @app.post(\"/users\") POST endpoint",
+        "Correctly notes async/await pattern",
+        "Correctly notes str | None optional email field"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Claims 'str | None = None' syntax is highlighted in light green — unverified color inference"
+      ],
+      "justification": "Perfect verbatim transcription with clean structural analysis. Slight color speculation but otherwise complete and accurate."
+    },
+    "qwen3-vl-8b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Verbatim code transcription matches image exactly",
+        "Correctly identifies FastAPI + Pydantic stack",
+        "Correctly identifies @app.post decorator and /users POST endpoint",
+        "Correctly identifies db.add/db.commit as SQLAlchemy pattern",
+        "Correctly notes async pattern"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Claims 'User' is highlighted in light cyan/teal while elsewhere treating it as a class — minor inconsistency",
+        "Color descriptions are inferences presented as observation"
+      ],
+      "justification": "Perfect code transcription with comprehensive structural breakdown. Minor color inconsistencies but otherwise excellent."
+    },
+    "qwen3.5-4b-Q8|nothink": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Verbatim code transcription matches image exactly",
+        "Correctly identifies FastAPI + Pydantic stack",
+        "Correctly identifies @app.post(\"/users\") POST endpoint",
+        "Correctly identifies async/await pattern",
+        "Notes modern Python 3.10+ union syntax"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Quotes specific hex color codes (#1e1e1e, #dcdcaa, #569cd6, #4ec9b0, #4fc1ff, #ce9178, #6a9955, #d4d4d4) as if measured — these are invented/inferred from VS Code conventions, not from the actual image",
+        "Inconsistently assigns colors: claims 'User' class is green but also class names elsewhere get cyan",
+        "Treats '# Persist to database' as a string with yellow/gold color (it's a comment, listed elsewhere as green)"
+      ],
+      "justification": "Code transcription is perfect. Very detailed analysis but heavy color hallucination with invented hex codes and internal inconsistencies."
+    },
+    "qwen3.5-4b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Verbatim code transcription matches image exactly",
+        "Correctly identifies FastAPI + Pydantic stack",
+        "Correctly identifies @app.post(\"/users\") decorator",
+        "Correctly identifies async function with await",
+        "Correctly notes modern Python union syntax"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Color assignments (light purple/magenta imports, light blue attributes, teal class definition, light green comments, light yellow/green function body) are inferred and presented as fact"
+      ],
+      "justification": "Perfect code transcription with clean structural breakdown. Color descriptions are speculative but reasonable; no factual errors in code analysis."
+    },
+    "qwen3.5-9b-Q8|nothink": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Verbatim code transcription matches image exactly",
+        "Correctly identifies FastAPI + Pydantic stack",
+        "Correctly identifies @app.post(\"/users\") POST endpoint",
+        "Correctly identifies async/await pattern",
+        "Notes Python 3.10+ union syntax"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Quotes specific hex color codes (#d87098, #61afef, #98c379, #a5d6ff, #e5c07b) as if measured — invented from editor theme conventions, not the actual image",
+        "Lists 'add' and 'commit' under built-in types/functions colored blue — but they're method calls on db, not built-ins",
+        "Lists 'None' under strings colored green — None is a constant/keyword, not a string",
+        "Lists 'User' under variable names — but User is a class"
+      ],
+      "justification": "Perfect code transcription. Structural analysis is strong but the color/element classification has multiple factual errors (misclassifying methods as built-in functions, None as string, User class as variable)."
+    },
+    "qwen3.5-9b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Verbatim code transcription matches image exactly",
+        "Correctly identifies FastAPI + Pydantic stack",
+        "Correctly identifies @app.post(\"/users\") POST endpoint",
+        "Correctly identifies async/await pattern",
+        "Correctly notes db is undefined in snippet, likely SQLAlchemy"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Color assignments are inferred (purple/magenta imports, blue decorators/type hints, teal class keyword, yellow/gold variable names/types/function definitions) — but consistent with plausible dark theme",
+        "Groups 'int'/'str' under yellow/gold types AND elsewhere under type hints blue — minor inconsistency"
+      ],
+      "justification": "Perfect code transcription with thorough structural breakdown. Minor color classification inconsistencies but no factual errors in code analysis."
+    }
+  },
+  "ranking": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "score": 9,
+      "tiebreak": "Most comprehensive and accurate analysis; verbatim transcription; only minor color inferences"
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "score": 9,
+      "tiebreak": "Perfect transcription and structural breakdown; slight color speculation"
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "score": 9,
+      "tiebreak": "Perfect transcription; clean structure; minor color inference"
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "score": 9,
+      "tiebreak": "Perfect transcription; comprehensive breakdown; minor User color inconsistency"
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "score": 9,
+      "tiebreak": "Perfect transcription; clean structure; speculative colors"
+    },
+    {
+      "model": "qwen3.5-9b-Q8|think",
+      "score": 9,
+      "tiebreak": "Perfect transcription; thorough breakdown; minor color inconsistency"
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "score": 9,
+      "tiebreak": "Perfect transcription; heavy hex color hallucination and classification inconsistencies"
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "score": 8,
+      "tiebreak": "Perfect transcription; minor error classifying 'post' as keyword"
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "score": 8,
+      "tiebreak": "Perfect transcription but multiple classification errors (methods as built-ins, None as string, User as variable)"
+    }
+  ],
+  "notes": "All 9 Q8 model variants achieved perfect verbatim transcription of the Python code, correctly capturing every key fact (FastAPI import, User BaseModel class, @app.post decorator, db.add/await db.commit). The differentiators are entirely in the quality of surrounding analysis and the degree of color/syntax-highlighting hallucination. The 7 models scored 9 differ mainly in subtle color description accuracy; the 2 models scored 8 (glm-4.6v-flash-9b and qwen3.5-9b nothink) have explicit misclassifications (post-as-keyword, methods-as-builtins, None-as-string). No model failed to read the code; this image is an 'easy' OCR task for code-reading VLMs at Q8 quantization. The deterministic score (10.0 for all) accurately reflects perfect transcription; holistic scores differentiate on surrounding analysis quality. No notable difference between think/nothink variants for this image — both modes succeed equally on this simple code-reading task."
+}

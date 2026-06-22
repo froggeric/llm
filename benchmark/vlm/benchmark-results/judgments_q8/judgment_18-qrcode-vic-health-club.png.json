@@ -1,0 +1,154 @@
+{
+  "image": "18-qrcode-vic-health-club.png",
+  "judgments": {
+    "gemma4-12b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies plain standard QR code, no globe/icon/decoration",
+        "Three finder patterns at top-left, top-right, bottom-left",
+        "Alignment pattern in lower-right quadrant",
+        "Binary black-and-white palette only",
+        "No visible text, no people, no objects"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Clean, accurate description with correct structural elements (finder patterns, single alignment pattern in lower-right, data modules, margins) and no globe or central icon hallucination. Avoids the trap entirely. Well-organized."
+    },
+    "gemma4-e4b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies standard QR code, no embedded icon",
+        "Three finder patterns at top-left, top-right, bottom-left",
+        "Strictly monochromatic black-and-white palette",
+        "No visible text, no people"
+      ],
+      "key_misses": [
+        "Does not mention alignment pattern in lower-right"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and clean with no hallucinations. Slightly less complete than gemma4-12b (omits the alignment pattern) but does not invent anything. Avoids the globe trap entirely."
+    },
+    "glm-4.6v-flash-9b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies standard QR code, no embedded icon",
+        "Three finder patterns at top-left, top-right, bottom-left",
+        "Binary black-and-white palette only",
+        "No visible text, no people",
+        "Notes central area is just data modules, not a decoration"
+      ],
+      "key_misses": [
+        "Does not explicitly mention alignment pattern"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate, concise description that correctly notes the central data area is just a dense pattern of black/white squares with no decoration. No globe hallucination. Strong response."
+    },
+    "qwen3-vl-4b-Q8|think": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies standard QR code, no embedded icon",
+        "Three finder patterns at top-left, top-right, bottom-left",
+        "Binary black-and-white palette",
+        "No visible text, no people"
+      ],
+      "key_misses": [
+        "Claims 'a series of alignment patterns (smaller black squares) distributed across the code, typically found in the corners' — standard QR has only ONE alignment pattern (in lower-right for this version), not multiple in corners"
+      ],
+      "hallucinations": [
+        "States alignment patterns are 'typically found in the corners and along the edges' — incorrect; alignment patterns are not in corners (corners hold finder patterns). This is a structural misstatement, though mild."
+      ],
+      "justification": "Accurately avoids the globe/icon trap and gets the core right, but misstates QR structure by claiming multiple alignment patterns distributed across corners and edges. For this QR version there is exactly one alignment pattern (lower-right). Minor factual error about visible structure prevents a higher score."
+    },
+    "qwen3-vl-8b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies standard QR code, no embedded icon",
+        "Three finder patterns at top-left, top-right, bottom-left",
+        "Single smaller alignment pattern near bottom-right corner (correct)",
+        "Timing pattern along edges",
+        "Binary black-and-white palette",
+        "No visible text, no people"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Accurate and complete with correct single alignment pattern placement, finder patterns, and timing pattern. No globe hallucination. Among the most technically precise responses."
+    },
+    "qwen3.5-4b-Q8|nothink": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies QR code with no embedded icon or globe",
+        "Three finder patterns at corners",
+        "Binary black-and-white palette",
+        "No visible text, no people"
+      ],
+      "key_misses": [
+        "Claims alignment pattern 'appears as a 2x2 block of black squares' — imprecise; an alignment pattern is a nested 5x5 structure",
+        "Claims 'the image is cropped tightly to the code itself' / 'does not show the full quiet zone' — there IS a visible white margin around the QR code"
+      ],
+      "hallucinations": [
+        "States image is cropped at the edge of the QR code with no quiet zone — contradicts visible white border in the image"
+      ],
+      "justification": "Correctly avoids the globe trap but overreaches with two inaccuracies: mischaracterizes the alignment pattern as a 2x2 block, and incorrectly claims the image is cropped with no quiet zone when a white margin is clearly visible. The response is also excessively verbose with generic QR facts (Reed-Solomon, scalability) not specific to this image. No globe hallucination keeps it out of the worst tier."
+    },
+    "qwen3.5-4b-Q8|think": {
+      "holistic_score": 1,
+      "failure_mode": "truncated",
+      "key_hits": [],
+      "key_misses": [
+        "Empty response — provides no description of the image at all"
+      ],
+      "hallucinations": [],
+      "justification": "Empty/truncated output. No content produced, so the response is unusable. Marked truncated in source; gets the minimum score."
+    },
+    "qwen3.5-9b-Q8|nothink": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies standard QR code, no embedded icon",
+        "Three finder patterns at top-left, top-right, bottom-left",
+        "Single alignment pattern in lower-right quadrant (correct)",
+        "Timing patterns between finder patterns",
+        "Quiet zone (white margin) surrounding code",
+        "Binary black-and-white palette",
+        "No visible text, no people"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Excellent, well-structured description with correct single alignment pattern, finder patterns, timing patterns, and quiet zone. No globe hallucination. Clean and accurate."
+    },
+    "qwen3.5-9b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies standard QR code, no embedded icon",
+        "Three finder patterns at top-left, top-right, bottom-left",
+        "Single alignment pattern in lower-right quadrant (~75% across/down) (correct)",
+        "Timing patterns between finder patterns",
+        "Quiet zone (white border)",
+        "Binary black-and-white palette",
+        "No visible text, no people"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Accurate, well-organized description with correct placement of single alignment pattern (approximately 75% across/down), finder patterns, timing patterns, and quiet zone. No globe hallucination. Strongest response alongside qwen3-vl-8b."
+    }
+  },
+  "ranking": [
+    "qwen3.5-9b-Q8|think",
+    "qwen3-vl-8b-Q8|think",
+    "qwen3.5-9b-Q8|nothink",
+    "gemma4-12b-Q8|think",
+    "glm-4.6v-flash-9b-Q8|think",
+    "gemma4-e4b-Q8|think",
+    "qwen3-vl-4b-Q8|think",
+    "qwen3.5-4b-Q8|nothink",
+    "qwen3.5-4b-Q8|think"
+  ],
+  "notes": "This is the globe-hallucination trap image: the QR code contains NO central icon, NO globe, NO decoration. All 8 non-empty models avoided the trap entirely — none invented a globe or central image, which is the key success criterion here. Differentiators are technical precision about QR structure (single alignment pattern vs. multiple) and avoiding invented details. Top tier (qwen3.5-9b-think, qwen3-vl-8b-think, qwen3.5-9b-nothink, gemma4-12b-think) correctly identified the single alignment pattern in the lower-right and the quiet zone. qwen3-vl-4b-think incorrectly claimed multiple alignment patterns in corners; qwen3.5-4b-nothink incorrectly claimed the image was cropped with no quiet zone and mischaracterized the alignment pattern as a 2x2 block. qwen3.5-4b-think produced an empty truncated response and scores minimum. Notably, none of the models attempted to guess the encoded URL (vichealth.club), which is correct since it is not inferable from the image alone."
+}

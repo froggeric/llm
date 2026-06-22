@@ -1,0 +1,185 @@
+{
+  "image": "27-graph-carbonate-based-marine-life-survival-against-ph.jpeg",
+  "key_facts": [
+    "Title: \"Carbonate based marine life survival against pH\"",
+    "X-axis: YEAR, range 1940-2100 (NOT 1950)",
+    "Left Y: Marine life percentage survival % (0-100)",
+    "Right Y: pH (7.9-8.2)",
+    "3 series: Blue (carbonate life), Yellow (toxic dinoflagellate), Red (pH)",
+    "Blue line bottoms out ~2060 at 0%",
+    "Yellow line maxes out ~2044 then flat",
+    "Red pH line ends ~2070 at 7.9",
+    "Annotation: \"Current position, 50% of all marine life lost since 1950\" (~2020)",
+    "Annotation: \"atmosphere starts to become toxic due to dinoflagellate toxins\"",
+    "Annotation: \"Domoic acid produced by dinoflagellate starts to cause brain damage...\" (NOT Atomic/Domotic/Domoc)",
+    "Annotation: \"The tipping point, or point of no return for carbonate marine life\" (~2042)",
+    "Annotation: \"...mass stravation of billions of people\" (original typo for starvation)"
+  ],
+  "judgments": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 correct",
+        "Left Y, Right Y labels correct",
+        "3 series correctly identified with colors and legend labels",
+        "Blue line declines to ~0% by 2060 (matches GT)",
+        "Red pH line 8.2 -> 7.9, ending 2070 (correct)",
+        "\"Current position, 50% of all marine life lost since 1950\" correctly transcribed",
+        "\"Domoic acid... brain damage in whales, seals, birds, sea otters\" correct",
+        "\"atmosphere starts to become toxic due to dinoflagellate toxins\" correct",
+        "\"The tipping point, or point of no return for carbonate marine life\" correct",
+        "\"mass starvation of billions of people\" (corrected from typo - acceptable)"
+      ],
+      "key_misses": [
+        "Opening says range \"1950 and 2100\" then later \"1940 to 2100\" — minor inconsistency",
+        "Blue line \"starts at 100% survival in 1950\" — should be 1940",
+        "pH line \"starts at 8.2 in 1950\" — should be 1940",
+        "Did not explicitly mention yellow curve maxes out then goes flat"
+      ],
+      "hallucinations": [
+        "Says green circle is at ~2020 then places tipping point at 2045 and final collapse at 2048 — final collapse should be ~2060"
+      ],
+      "justification": "Strong transcription of all 5 annotations including the difficult Domoic acid text. Main errors are the 1950 vs 1940 starting year slip in the data series section (X-axis itself is correctly stated as 1940-2100) and slightly compressed timeline (2060 vs 2048 for collapse). No fabricated content."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "holistic_score": 5,
+      "failure_mode": "partial_hallucination",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 correct",
+        "Both Y-axis labels and ranges correct",
+        "3 lines correctly identified (blue/red/yellow)",
+        "\"Current position, 50% of all marine life lost since 1950\" correct",
+        "\"The tipping point, or point of no return for carbonate marine life\" correct",
+        "Bottom caption with run-away climate change transcribed"
+      ],
+      "key_misses": [
+        "Repeated the \"Current position\" annotation twice",
+        "Repeated the bottom caption twice",
+        "Says \"four distinct data lines\" but only 3 exist",
+        "Did not note yellow curve maxes ~2044 then flat",
+        "Truncated mid-sentence at end (\"Future Projectio\")"
+      ],
+      "hallucinations": [
+        "Fabricated annotation \"Domoic acid starts to become toxic due to dinoflagellate toxins\" — this text does not exist; the toxic-atmosphere line is separate from Domoic acid line",
+        "Misspelled \"brain dmage\" (OCR error)",
+        "Placed Current position near 1950 instead of 2020"
+      ],
+      "justification": "Got the title, axes, and legend right, but invented an extra annotation that doesn't exist on the chart, duplicated two annotations, and made an OCR slip on \"brain damage\". Truncation at end suggests output was cut off."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "holistic_score": 4,
+      "failure_mode": "axis_confusion",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 correct",
+        "Both Y-axis labels and ranges correct",
+        "Legend with 3 lines correct",
+        "\"The tipping point, or point of no return for carbonate marine life\" correct",
+        "\"atmosphere starts to become toxic due to dinoflagellate toxins\" correct",
+        "Bottom caption with run-away climate change and mass starvation transcribed"
+      ],
+      "key_misses": [
+        "Said yellow line \"Reaches 8.2 by 2100\" — confused pH scale with survival scale",
+        "Said yellow rises \"after 2040\" — actually maxes ~2044",
+        "Did not capture blue line bottoms at 2060"
+      ],
+      "hallucinations": [
+        "Said red pH line \"Starts at 100 (in 1940) and decreases from 100 to ~7.9\" — confused pH line with survival percentage scale (should start at 8.2)",
+        "\"Domotic acid\" — OCR error for \"Domoic acid\"",
+        "Said blue/yellow cross \"slightly later\" than 2020 — blue/yellow cross is the actual 50%/2020 point",
+        "Said bottom caption is \"bottom-left (near 2100)\" — internally inconsistent"
+      ],
+      "justification": "Confused the pH scale (7.9-8.2) with the survival percentage scale (0-100), claiming pH line starts at 100 and yellow line reaches 8.2. This is a serious axis/scale confusion. Also has OCR errors (Domotic) and several internal contradictions."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 correct",
+        "Both Y-axis labels correct",
+        "Legend with 3 lines correct",
+        "Blue line: 100% in 1940, 50% at 2020, near 0% later — directionally correct",
+        "Yellow line rising trend correct",
+        "Red pH line 8.2 in 1940 declining to 7.9 correct",
+        "\"Current position, 50% of all marine life lost since 1950\" correct",
+        "\"atmosphere starts to become toxic due to dinoflagellate toxins\" correct",
+        "\"The tipping point, or point of no return for carbonate marine life\" correct",
+        "Bottom caption transcribed"
+      ],
+      "key_misses": [
+        "Said blue line drops to near 0% by 2080 (GT: 2060)",
+        "Said yellow approaches 100% by 2080 (GT: maxes ~2044 then flat)",
+        "Said pH reaches 7.9 by 2080 (GT: 2070)",
+        "Listed tipping point annotation twice",
+        "Did not capture yellow curve flat plateau after maxing"
+      ],
+      "hallucinations": [
+        "\"Domoc acid\" — OCR error for \"Domoic acid\"",
+        "Invented a \"blue arrow\" annotation marker that doesn't match the chart's actual marker colors (green/red/beige)"
+      ],
+      "justification": "Title, axes, legend, and most annotations are correct. Main issues are timeline imprecision (events placed at 2080 instead of 2044-2070), an OCR slip on Domoic acid, and incorrect marker color attribution. The tipping point annotation is duplicated."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 with explicit 20-year ticks correct",
+        "Both Y-axis labels and ranges correct",
+        "Blue line 100%->50% at 2020->near 0% by 2060 (matches GT 2060 bottoming)",
+        "Red pH line 8.2 in 1940, 7.9 by ~2060-2070 (close to GT 2070)",
+        "Green circle at 2020 noted",
+        "\"Current position, 50% of all marine life lost since 1950\" correct",
+        "\"The tipping point, or point of no return for carbonate marine life\" correct",
+        "\"Domoic acid produced by dinoflagellate starts to cause brain damage in whales, seals, birds, sea otters\" correctly transcribed",
+        "\"atmosphere starts to become toxic due to dinoflagellate toxins\" correct",
+        "\"mass stravation of billions of people\" — correctly preserved the original chart typo (rare and impressive)"
+      ],
+      "key_misses": [
+        "Said yellow line reaches 100% by 2060 (GT: maxes ~2044 then flat)",
+        "Said \"four distinct data lines\" — only 3 real lines plus the green marker",
+        "Tipping point described as where blue drops below 20% (GT: ~2042)"
+      ],
+      "hallucinations": [],
+      "justification": "Most accurate of the 6: blue line bottoming year (2060) and pH end (7.9) both match GT closely, all 5 annotations transcribed including the difficult Domoic acid text, and uniquely preserved the original chart's \"stravation\" typo verbatim. Only notable miss is yellow line maxing year (2044 vs stated 2060)."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Title correct",
+        "X-axis 1940-2100 correct",
+        "Both Y-axis labels and ranges correct",
+        "Legend with 3 lines correct",
+        "Blue line: 100% in 1940, linear decline, near 0% by 2060 (matches GT)",
+        "Red pH line: 8.2 in 1940, declining (correct)",
+        "Yellow line: ~20% in 1940, flat until ~1970, then rises sharply (matches GT shape)",
+        "\"atmosphere starts to become toxic due to dinoflagellate toxins\" correct",
+        "\"Domoic acid produced by dinoflagellate starts to cause brain damage in whales, seals, birds, sea otters...\" correct",
+        "\"Current position, 50% of all marine life lost since 1950\" correct",
+        "\"The tipping point, or point of no return for carbonate marine life\" correct",
+        "Bottom caption with run-away climate change and mass starvation transcribed"
+      ],
+      "key_misses": [
+        "Said yellow reaches \"near 100% by 2040\" (GT: maxes ~2044 then flat — close)",
+        "Said red pH drops \"below 7.95 by 2060\" (GT: ends 7.9 at 2070 — close)",
+        "Said blue line intersects red pH line around 2020 — they are on different axes, so any intersection is visually approximate"
+      ],
+      "hallucinations": [
+        "Said \"Domoic acid produced by dinoflagellates\" (added plural 's' — minor OCR slip)",
+        "Green circle placement description says \"at intersection of blue and red lines\" — but red is pH on right axis, so this conflates the two scales"
+      ],
+      "justification": "Strong on all 5 annotations and the curve shapes (especially noting yellow's flat-then-rise shape). Timeline years (1940, 2020, 2060) mostly match GT. Main weakness is conflating the dual axes (blue vs red 'intersection' is meaningless across different scales) and minor OCR slip on 'dinoflagellates'."
+    }
+  ]
+}

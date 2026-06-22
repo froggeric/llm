@@ -1,0 +1,210 @@
+{
+  "image": "11-collage-therapist-photo.jpg",
+  "ground_truth": "Two side-by-side photographs of the SAME massage therapist (same person in both). Left: posing on a massage chair. Right: sitting on a massage table with accessories for Thai bamboo stick massages. Bamboo visible.",
+  "judgments": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies diptych of two side-by-side photos",
+        "correctly identifies the SAME man in both photos",
+        "correctly identifies massage chair/stool on left and treatment/massage table on right",
+        "correctly identifies wooden massage rollers in right photo",
+        "describes therapist attire (green t-shirt, black pants) consistently",
+        "identifies clinic/therapy setting"
+      ],
+      "key_misses": [
+        "does not mention bamboo or Thai bamboo stick massages",
+        "calls left a 'stool' rather than a massage chair (headrest frame visible)",
+        "does not identify the subject as a massage therapist specifically",
+        "misses Thai massage context entirely"
+      ],
+      "hallucinations": [
+        "calls brown/orange cloth a 'patterned throw blanket' over his lap when it appears draped over equipment"
+      ],
+      "justification": "Solid structural description of the diptych and correctly identifies same person and key equipment (chair vs table, rollers), but misses the Thai bamboo stick massage context entirely and labels the left seating as a stool rather than a massage chair."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies diptych with same man in both panels",
+        "correctly identifies treatment/massage table on right",
+        "correctly identifies wooden therapy rollers",
+        "identifies therapeutic/clinical environment"
+      ],
+      "key_misses": [
+        "calls left a 'rehabilitation chair' rather than a massage chair",
+        "does not mention bamboo or Thai bamboo stick massages",
+        "does not identify the subject as a massage therapist",
+        "describes self-massage rather than therapist demonstrating tools",
+        "misses Thai massage context"
+      ],
+      "hallucinations": [
+        "describes subject performing 'self-massage or stretching exercise' (he is posing/demonstrating, not self-massaging)",
+        "calls the throw a 'blanket draped over his legs'"
+      ],
+      "justification": "Gets the diptych structure and main equipment right but misinterprets activity as self-massage and entirely misses the Thai bamboo massage specialty, the therapist identity, and the bamboo material."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies same bald man in both photos",
+        "EXPLICITLY identifies bamboo rollers ('wooden massage tools (bamboo rollers)')",
+        "correctly identifies mobile massage chair (left) vs stationary massage table (right)",
+        "explicitly identifies subject as 'massage therapist or wellness professional'",
+        "correctly identifies rolled towels, blue/white towel, potted plant, water bottles",
+        "describes Thai/wellness context well"
+      ],
+      "key_misses": [
+        "does not use the exact phrase 'Thai massage' or 'Thai bamboo stick massage'",
+        "mentions wooden tools on table but does not emphasize bamboo as a material beyond parenthetical"
+      ],
+      "hallucinations": [
+        "minor: describes left image man with blue sneakers in description but right image without restating consistent attire"
+      ],
+      "justification": "Best response of the group — only one to explicitly identify the bamboo rollers and name the subject as a massage therapist. Accurately captures the chair-vs-table contrast and most contextual details. Just falls short of naming Thai massage specifically."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies diptych with same man in both panels",
+        "correctly identifies wheeled stool/chair on left and massage table on right",
+        "correctly identifies wooden massage tools/rollers in right panel",
+        "describes therapist attire (green t-shirt) consistently",
+        "identifies clinical/massage setting"
+      ],
+      "key_misses": [
+        "does not mention bamboo or Thai bamboo stick massages",
+        "does not specifically identify subject as a massage therapist",
+        "calls left a 'wheeled stool' rather than recognizing it as a massage chair",
+        "misses Thai massage context entirely"
+      ],
+      "hallucinations": [
+        "describes a 'whiteboard' on the left wall (likely a white cabinet/door, not a whiteboard)",
+        "calls rolled towel 'plaid pattern' (described elsewhere as stripes)"
+      ],
+      "justification": "Strong structural description with correct identification of same person and key equipment, but treats the left seat as a stool rather than massage chair and entirely misses the bamboo/Thai massage specialty."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies side-by-side composite of same man",
+        "correctly identifies specialized wheeled chair on left and massage table on right",
+        "correctly identifies wooden massage rollers",
+        "notes ID badge in right image",
+        "identifies therapeutic/wellness setting"
+      ],
+      "key_misses": [
+        "does not mention bamboo or Thai bamboo stick massages",
+        "does not explicitly identify subject as a massage therapist",
+        "misses Thai massage context entirely"
+      ],
+      "hallucinations": [
+        "calls brown/orange cloth 'cushion draped over the back of the chair' (it is draped over equipment/frame)"
+      ],
+      "justification": "Accurate structural description with correct chair/table contrast and roller identification, but misses the bamboo/Thai massage specialty entirely. Does not identify subject as massage therapist."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies diptych with same man in two poses",
+        "correctly identifies wheeled therapy chair on left and massage table on right",
+        "EXPLICITLY mentions 'bamboo or wood' for the massage tools",
+        "correctly identifies wooden massage tools and rolled towel",
+        "describes therapist/instructor demonstrating tools"
+      ],
+      "key_misses": [
+        "does not use the exact phrase 'Thai massage' or 'Thai bamboo stick massage'",
+        "does not explicitly identify subject as a massage therapist (says 'instructor or therapist')",
+        "calls left a 'rolling office-style chair' rather than recognizing massage chair"
+      ],
+      "hallucinations": [
+        "describes 'radiator under the window' (not clearly a radiator)",
+        "calls the rolled towel 'striped' and mentions red/green/black"
+      ],
+      "justification": "Notable for being one of two responses that explicitly mentions 'bamboo or wood' for the massage tools. Strong structural accuracy on chair/table/rollers, though misses Thai massage naming and the precise massage chair identification."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies diptych with same man",
+        "correctly identifies therapy chair on left and massage table on right",
+        "correctly identifies wooden massage tools (Gua Sha / deep tissue)",
+        "identifies therapy/massage room"
+      ],
+      "key_misses": [
+        "does not mention bamboo specifically (says Gua Sha / deep tissue)",
+        "does not use the phrase 'Thai massage'",
+        "does not identify subject as a massage therapist",
+        "describes left pose as 'looking back over his left shoulder' (he is facing forward)",
+        "misses Thai massage context"
+      ],
+      "hallucinations": [
+        "says man has a 'light beard' (he is bald/clean-shaven in ground truth imagery)",
+        "describes left pose as 'looking back over his left shoulder' (he faces forward)",
+        "misidentifies wooden tools as 'Gua Sha' tools (ground truth is bamboo stick massage)"
+      ],
+      "justification": "Gets the diptych structure and key equipment but introduces multiple hallucinations (light beard, looking over shoulder, Gua Sha) and entirely misses the bamboo/Thai massage context."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies two panels with same man",
+        "correctly identifies adjustable medical/therapy chair on left and massage table on right",
+        "correctly identifies wooden massage tools",
+        "notes ID badge consistent across panels",
+        "identifies clinical/wellness setting"
+      ],
+      "key_misses": [
+        "does not mention bamboo or Thai bamboo stick massages",
+        "calls tools 'percussion rollers or reflexology sticks' rather than bamboo",
+        "does not explicitly identify subject as a massage therapist",
+        "misses Thai massage context entirely"
+      ],
+      "hallucinations": [
+        "describes headrest covered with 'disposable plastic cover' (it appears to be a fabric cover)",
+        "calls tools 'percussion rollers or reflexology sticks' (incorrect tool type)"
+      ],
+      "justification": "Accurate structural description but introduces several speculative hallucinations (disposable plastic cover, percussion/reflexology sticks) and entirely misses the bamboo/Thai massage specialty."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|think",
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies diptych with same man",
+        "correctly identifies specialized medical/therapy chair on left and massage table/therapy bed on right",
+        "correctly identifies wooden massage sticks/percussion tools",
+        "describes ID badge in right image",
+        "identifies medical/therapy clinic"
+      ],
+      "key_misses": [
+        "does not mention bamboo or Thai bamboo stick massages",
+        "calls tools 'percussion tools' (incorrect)",
+        "does not explicitly identify subject as a massage therapist",
+        "misses Thai massage context entirely"
+      ],
+      "hallucinations": [
+        "describes 'ID badge around his neck' on left with lanyard (badge appears in right image only)",
+        "calls wooden tools 'percussion sticks' (ground truth is bamboo massage sticks)",
+        "describes 'logo on green shirt as medical symbol' (not verified)"
+      ],
+      "justification": "Solid structural accuracy on diptych and main equipment but introduces several hallucinations (lanyard/badge in wrong panel, percussion tool mischaracterization) and entirely misses the bamboo/Thai massage specialty."
+    }
+  ]
+}

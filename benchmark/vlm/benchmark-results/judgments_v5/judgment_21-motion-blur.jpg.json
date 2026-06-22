@@ -1,0 +1,297 @@
+{
+  "image": "21-motion-blur.jpg",
+  "judgments": {
+    "gemma4-12b|think": {
+      "holistic_score": 3,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies long-exposure technique with light trails",
+        "Notes tram tracks and pedestrians blurred by long exposure"
+      ],
+      "key_misses": [
+        "Hallucinates 'MTR' signage repeatedly (not present)",
+        "Hallucinates 'EXIT' text",
+        "Misses Dah Sing Bank signage entirely",
+        "Describes the white cylindrical bus stop as a 'tram stop shelter'"
+      ],
+      "hallucinations": [
+        "Invents 'MTR' signage on multiple signs both sides",
+        "Invents 'EXIT' signs near ground level"
+      ],
+      "justification": "Solid structural description but heavily undermined by confident invention of MTR and EXIT signage that does not appear in the image."
+    },
+    "gemma4-26b-a4b|think": {
+      "holistic_score": 0,
+      "failure_mode": "truncated",
+      "key_hits": [],
+      "key_misses": [
+        "Empty output - no content at all"
+      ],
+      "hallucinations": [],
+      "justification": "Empty/truncated response produces nothing usable for the judge."
+    },
+    "gemma4-31b|think": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies long-exposure light trails and one-point perspective",
+        "Notes tram tracks, yellow tactile paving, blurred pedestrians"
+      ],
+      "key_misses": [
+        "Hallucinates 'DWP', '大會堂/City Hall' signage that is not present",
+        "Misses Dah Sing Bank on both sides",
+        "Calls the white cylindrical bus stop a 'rectangular structural pillar'"
+      ],
+      "hallucinations": [
+        "Invents 'DWP' sign on left",
+        "Invents '大會堂' and 'City Hall' signs on right"
+      ],
+      "justification": "Reasonable structural/compositional description, but fabricates the signage text wholesale instead of identifying the actual bank branding."
+    },
+    "gemma4-e4b|think": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies long-exposure light trails and urban canyon composition",
+        "Notes yellow crosswalk markings and motion-blurred pedestrians"
+      ],
+      "key_misses": [
+        "Hallucinates Chinese characters '永 華 寶' on right-side sign",
+        "Misses Dah Sing Bank and DVFX signage",
+        "Describes bus stop as a 'utility pole' rather than cylindrical shelter"
+      ],
+      "hallucinations": [
+        "Invents Chinese characters 永華寶 on a right-side sign"
+      ],
+      "justification": "Good general composition analysis but fabricates specific Chinese signage characters that are not present."
+    },
+    "glm-4.6v-flash-9b|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly reads '大新銀行' on the right side sign",
+        "Identifies white cylindrical bus/tram stop shelter in center",
+        "Notes tram tracks, yellow crosswalk, red pedestrian signal, light trails"
+      ],
+      "key_misses": [
+        "Misreads 'DVFX' as 'DMFX' on left sign",
+        "Does not explicitly note Dah Sing Bank appears on BOTH sides",
+        "Mentions bicycles which are not clearly visible"
+      ],
+      "hallucinations": [],
+      "justification": "Best reading of the actual signage (大新銀行), correctly describes nearly every key element with only minor OCR error on DVFX."
+    },
+    "qwen3-vl-4b|think": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly reads '大新銀行' (Daxin Bank) on the right sign",
+        "Identifies tram tracks, light trails, long-exposure technique, white pillar/bus stop"
+      ],
+      "key_misses": [
+        "Misreads DVFX as 'DVPX'",
+        "Hallucinates 'WORLD' text on storefront",
+        "Hallucinates a 'P' parking sign above the pillar",
+        "Does not note bank on both sides"
+      ],
+      "hallucinations": [
+        "Invents 'WORLD' storefront text",
+        "Invents 'P' parking sign"
+      ],
+      "justification": "Captures the key bank OCR but fabricates additional signage (WORLD, P) and garbles DVFX."
+    },
+    "qwen3-vl-8b|think": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly reads '大新銀行' (Dah Sing Bank) with English 'Dah Sing' on right",
+        "Notes tram tracks, white cylindrical tram stop shelter, light trails, long-exposure",
+        "Identifies Hong Kong as likely location"
+      ],
+      "key_misses": [
+        "Misreads DVFX as 'DWP'",
+        "Hallucinates website 'www.dahsing.com.hk'",
+        "Hallucinates 'telephone booth' on left",
+        "Does not note bank appears on both sides"
+      ],
+      "hallucinations": [
+        "Invents 'www.dahsing.com.hk' website text",
+        "Invents telephone booth"
+      ],
+      "justification": "Strong overall description with correct Dah Sing Bank OCR; minor hallucinations on website URL and phone booth."
+    },
+    "qwen3.5-4b|nothink": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly reads '大新銀行' on right with English 'Da Shing Bank'",
+        "Identifies tram tracks, white bus stop canopy, red pedestrian signal, light trails, Hong Kong",
+        "Notes cool/warm color split"
+      ],
+      "key_misses": [
+        "Misreads DVFX as 'DWPX' (repeated)",
+        "Hallucinates 'BUS STOP' green circular sign text and 'WORLD' text",
+        "Does not note bank on both sides"
+      ],
+      "hallucinations": [
+        "Invents 'BUS STOP' text on green sign (it's actually bus/tram symbols, not text)",
+        "Invents 'WORLD' text"
+      ],
+      "justification": "Good capture of bank OCR and most elements; specific fabricated BUS STOP/WORLD text lowers the score."
+    },
+    "qwen3.5-4b|think": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Identifies long-exposure technique, tram tracks, light trails, bus stop shelter, red pedestrian signal",
+        "Notes cool/warm color split and Hong Kong context"
+      ],
+      "key_misses": [
+        "Hallucinates 'DWFX' on left and 'DWFX' logo next to 大新銀行",
+        "Hallucinates 'Tung Kee Bank' as the bank name",
+        "Hallucinates 'WORLD' text on window",
+        "Misses that Dah Sing Bank is on both sides"
+      ],
+      "hallucinations": [
+        "Translates 大新銀行 as 'Tung Kee Bank' (incorrect)",
+        "Invents DWFX as logo next to bank sign",
+        "Invents 'WORLD' window text"
+      ],
+      "justification": "Captures structure well but mistranslates the bank name and invents DWFX/WORLD text that is not present."
+    },
+    "qwen3.5-9b|nothink": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly reads '大新銀行' on right side",
+        "Identifies tram tracks, white tram stop shelter, red pedestrian signal, light trails, long exposure",
+        "Notes cool/warm color split, Hong Kong context"
+      ],
+      "key_misses": [
+        "Mistranslates 大新銀行 as 'Tai Hing Bank'",
+        "Misreads DVFX as 'DVPK'",
+        "Hallucinates an escalator inside the right building",
+        "Does not note bank on both sides"
+      ],
+      "hallucinations": [
+        "Translates 大新銀行 as 'Tai Hing Bank' (incorrect)",
+        "Invents an escalator inside the building"
+      ],
+      "justification": "Good OCR of the Chinese bank name but provides an incorrect English transliteration and invents an escalator."
+    },
+    "qwen3.5-9b|think": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly reads '大新銀行' (Dah Sing Bank) on right",
+        "Identifies tram tracks, white shelter, red pedestrian signal, light trails, long exposure, Hong Kong"
+      ],
+      "key_misses": [
+        "Hallucinates HSBC red hexagon logo on purple storefront",
+        "Misreads DVFX as 'DWPX'",
+        "Hallucinates an escalator on the right side",
+        "Does not note bank on both sides"
+      ],
+      "hallucinations": [
+        "Invents HSBC logo with red hexagon (not present; the bank is Dah Sing)",
+        "Invents an escalator"
+      ],
+      "justification": "Correctly reads Dah Sing Bank but then contradicts itself by inventing an HSBC logo, plus fabricates an escalator."
+    },
+    "qwen3.6-27b|nothink": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly reads '大新銀行' (Da Xin Bank) on right purple signage",
+        "Identifies tram tracks, white cylindrical bus stop/kiosk, red pedestrian signal, light trails, Hong Kong",
+        "Notes cool/warm color split and tactile paving"
+      ],
+      "key_misses": [
+        "Hallucinates 'DBS' next to 大新銀行",
+        "Hallucinates 'CITIC' on a left-side sign",
+        "Misreads DVFX as 'DVPK'",
+        "Does not note bank on both sides"
+      ],
+      "hallucinations": [
+        "Invents DBS branding next to the bank sign",
+        "Invents CITIC sign on the left"
+      ],
+      "justification": "Solid structural description and correct bank OCR, but invents DBS and CITIC branding that are not present."
+    },
+    "qwen3.6-27b|think": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Identifies tram tracks, white cylindrical bus stop, red pedestrian signal, light trails, long exposure, Hong Kong",
+        "Notes one-point perspective and cool/warm color split"
+      ],
+      "key_misses": [
+        "Hallucinates 'Bank of East Asia' as the bank name",
+        "Misreads DVFX as 'DMPK'",
+        "Does not correctly identify the bank despite seeing 大新銀行 characters",
+        "Misses that bank is on both sides"
+      ],
+      "hallucinations": [
+        "Invents 'Bank of East Asia' branding"
+      ],
+      "justification": "Sees the 大新銀行 characters but confidently attributes them to Bank of East Asia, a significant bank-identity hallucination."
+    },
+    "qwen3.6-35b-a3b|nothink": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly reads '大新銀行' (Da Xin Bank) on the right red sign",
+        "Correctly notes 'DVFX' and 'Currency Exchange' on the left",
+        "Identifies tram tracks, white cylindrical structure, red pedestrian signals, light trails, Hong Kong",
+        "Notes cool/warm color split"
+      ],
+      "key_misses": [
+        "Hallucinates 'DSB' English text next to the bank",
+        "Hallucinates 'BUS STOP' / 'NO. 102' text on a blue sign",
+        "Does not note bank appears on both sides"
+      ],
+      "hallucinations": [
+        "Invents 'DSB' English text",
+        "Invents 'BUS STOP' and 'NO. 102' text on a blue sign"
+      ],
+      "justification": "Best overall OCR (gets both DVFX and 大新銀行) plus strong composition; minor fabricated English text keeps it just below the top."
+    },
+    "qwen3.6-35b-a3b|think": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly reads '大新銀行' on right sign and notes 'Currency Exchange' under left sign",
+        "Identifies tram tracks, white cylindrical structure, red traffic/pedestrian signals, light trails, Hong Kong",
+        "Notes people visible inside the right-side bank through the window",
+        "Notes cool/warm color split"
+      ],
+      "key_misses": [
+        "Hallucinates 'D&S Bank' as the bank name and 'D&S' subtitle",
+        "Misreads DVFX as 'DWF'",
+        "Does not note bank appears on both sides"
+      ],
+      "hallucinations": [
+        "Invents 'D&S Bank' branding"
+      ],
+      "justification": "Excellent structural description and uniquely notes people inside the bank, but invents D&S Bank branding for the actual Dah Sing Bank."
+    }
+  },
+  "ranking": [
+    "glm-4.6v-flash-9b|think",
+    "qwen3.6-35b-a3b|nothink",
+    "qwen3-vl-8b|think",
+    "qwen3.5-4b|nothink",
+    "qwen3.6-35b-a3b|think",
+    "qwen3.6-27b|nothink",
+    "qwen3.5-9b|nothink",
+    "qwen3.5-4b|think",
+    "qwen3-vl-4b|think",
+    "qwen3.5-9b|think",
+    "qwen3.6-27b|think",
+    "gemma4-e4b|think",
+    "gemma4-31b|think",
+    "gemma4-12b|think",
+    "gemma4-26b-a4b|think"
+  ],
+  "notes": "glm-4.6v-flash-9b is the clear winner - the only model that reads 大新銀行 cleanly without inventing a different bank brand. Most Qwen3.x variants correctly OCR the Chinese characters but then hallucinate an English bank brand (HSBC, DBS, CITIC, Bank of East Asia, D&S, Tung Kee, Tai Hing, DSB) - a consistent failure pattern. DVFX is consistently misread across all models (DWP, DWPX, DVPK, DMPK, DWF, DMFX, DWFX). The Gemma models struggled most, with gemma4-26b-a4b producing empty output and gemma4-12b hallucinating MTR/EXIT. Notably, NO model captured that Dah Sing Bank appears on BOTH sides of the street."
+}

@@ -1,0 +1,204 @@
+{
+  "image": "03_error_trace.png",
+  "image_path": "test-images/03_error_trace.png",
+  "ground_truth_summary": "Python traceback: $ python app.py -> psycopg2.OperationalError (password auth failed for user 'app') at db.internal (10.0.0.5):5432, then ConnectionError during handling, exit code 1. Stack: main.py:42 (db = connect(DB_URL)) and db.py:18 (raise ConnectionError).",
+  "critical_tokens": {
+    "library": "psycopg2 (NOT psycopg)",
+    "exception_primary": "psycopg2.OperationalError",
+    "exception_secondary": "ConnectionError",
+    "auth_message": "password authentication failed for user \"app\"",
+    "host": "db.internal",
+    "ip": "10.0.0.5",
+    "port": "5432",
+    "main_file": "/Users/alice/app/main.py",
+    "main_line": "42",
+    "db_file": "/Users/alice/app/db.py",
+    "db_line": "18",
+    "command": "$ python app.py",
+    "exit_code": "[Process exited with code 1]"
+  },
+  "judgments": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "run_id": "q8-2",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError (correct, with the 2)",
+        "host db.internal and IP 10.0.0.5, port 5432",
+        "password authentication failed for user \"app\"",
+        "main.py:42 and db.py:18 with exact code lines",
+        "ConnectionError during handling",
+        "exit code 1"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Verbatim transcription block is perfect, including the critical 'psycopg2' spelling. All key facts, paths, line numbers, IP, port, and exit code are exactly right. Color and structure commentary is accurate."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "run_id": "q8-2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError (correct)",
+        "host db.internal (10.0.0.5) port 5432",
+        "password authentication failed for user \"app\"",
+        "main.py line 42 and db.py line 18",
+        "exit code 1"
+      ],
+      "key_misses": [
+        "verbatim block omits the 'During handling of the above exception, another exception occurred:' separator phrasing (compressed)"
+      ],
+      "hallucinations": [],
+      "justification": "All critical tokens correct including psycopg2 spelling. Slight condensation of the 'During handling' separator in the verbatim block, but no factual errors. Strong OCR with correct library name."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "run_id": "q8-2",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError (correct, with the 2)",
+        "$ python app.py",
+        "main.py line 42, db.py line 18 with exact code",
+        "db.internal (10.0.0.5), port 5432",
+        "password authentication failed for user \"app\"",
+        "ConnectionError secondary exception",
+        "[Process exited with code 1]"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Verbatim transcription line-by-line is essentially perfect. The critical psycopg2 spelling is preserved exactly. All structural elements (colors, indentation, nested exception) captured. Excellent for a 9B flash model at Q8."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "run_id": "q8-2",
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError (correct)",
+        "$ python app.py, main.py:42, db.py:18",
+        "db.internal (10.0.0.5), port 5432",
+        "password authentication failed for user \"app\"",
+        "ConnectionError nested",
+        "exit code 1"
+      ],
+      "key_misses": [
+        "claims final exit code line is 'red' text when it is actually green"
+      ],
+      "hallucinations": [],
+      "justification": "All textual tokens including psycopg2 spelling are correct. Minor color mislabel (says exit code in red, but elsewhere acknowledges exit code separately) does not affect factual content of the error. Strong transcription."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "run_id": "q8-2",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError (correct, with the 2)",
+        "$ python app.py",
+        "main.py line 42 db = connect(DB_URL)",
+        "db.py line 18 raise ConnectionError(f\"Failed to connect: {e}\")",
+        "db.internal (10.0.0.5), port 5432",
+        "password authentication failed for user \"app\"",
+        "ConnectionError during handling",
+        "[Process exited with code 1]"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Verbatim block is complete and exact, including the critical psycopg2 spelling. All paths, line numbers, host/IP/port, and exit code correct. Color commentary accurate (red errors, green exit)."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "run_id": "q8-nothink-1",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError (correct, with the 2)",
+        "$ python app.py",
+        "main.py line 42, db.py line 18 exact code",
+        "db.internal (10.0.0.5), port 5432",
+        "password authentication failed for user \"app\"",
+        "ConnectionError nested during handling",
+        "[Process exited with code 1]"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Verbatim block is complete and exact with correct psycopg2 spelling. All structural facts (files, lines, IP, port, nested exception, exit code) are accurate. Excellent nothink output."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "run_id": "q8-think-2",
+      "holistic_score": 4,
+      "failure_mode": "hallucination",
+      "key_hits": [
+        "$ python app.py",
+        "main.py line 42, db.py line 18",
+        "db.internal (10.0.0.5), port 5432",
+        "password authentication failed for user \"app\"",
+        "exit code 1"
+      ],
+      "key_misses": [
+        "library name spelled 'psycopg' (missing the '2') in both the verbatim block AND throughout the analysis"
+      ],
+      "hallucinations": [
+        "psycopg.OperationalError — hallucinated library name; the image clearly says psycopg2. This is the exact severe hallucination flagged in the task."
+      ],
+      "justification": "This is the severe hallucination case: the model wrote 'psycopg.OperationalError' (missing the '2') in the verbatim transcription AND propagated that error through its analysis. The 'think' mode led it to substitute the modern psycopg (3) package name for the actual psycopg2 in the image. Other facts are correct, but this is a load-bearing OCR error on the most critical token."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "run_id": "q8-nothink-2",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError (correct, with the 2)",
+        "$ python app.py",
+        "main.py line 42, db.py line 18 exact code",
+        "db.internal (10.0.0.5), port 5432",
+        "password authentication failed for user \"app\"",
+        "ConnectionError nested during handling",
+        "[Process exited with code 1]"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Verbatim transcription is exact with correct psycopg2 spelling. All facts (paths, lines, IP, port, nested exception, exit code) correct. Nothink mode produced clean, accurate output with no library-name confusion."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|think",
+      "run_id": "q8-think-2",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "psycopg2.OperationalError (correct, with the 2)",
+        "$ python app.py",
+        "main.py line 42 db = connect(DB_URL)",
+        "db.py line 18 raise ConnectionError",
+        "db.internal (10.0.0.5), port 5432",
+        "password authentication failed for user \"app\"",
+        "ConnectionError nested",
+        "[Process exited with code 1]"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Verbatim block exact with correct psycopg2 spelling. All paths, line numbers, IP, port, nested exception, and exit code accurate. Notably, the 9B think variant avoided the psycopg->psycopg hallucination that afflicted the 4B think variant, suggesting the larger model resisted the substitution."
+    }
+  ],
+  "summary": {
+    "scores": {
+      "gemma4-12b-Q8|think": 10,
+      "gemma4-e4b-Q8|think": 9,
+      "glm-4.6v-flash-9b-Q8|think": 10,
+      "qwen3-vl-4b-Q8|think": 9,
+      "qwen3-vl-8b-Q8|think": 10,
+      "qwen3.5-4b-Q8|nothink": 10,
+      "qwen3.5-4b-Q8|think": 4,
+      "qwen3.5-9b-Q8|nothink": 10,
+      "qwen3.5-9b-Q8|think": 10
+    },
+    "mean_score": 8.89,
+    "severe_hallucination_models": ["qwen3.5-4b-Q8|think"],
+    "note": "8 of 9 Q8 variants correctly preserved the critical 'psycopg2' spelling. Only qwen3.5-4b-Q8|think hallucinated 'psycopg' (missing the 2), the exact failure mode flagged as severe. Notably the 4B nothink variant was perfect while the 4B think variant failed — suggesting thinking mode triggered the package-name substitution on the smaller model. The 9B think variant resisted this trap."
+  }
+}

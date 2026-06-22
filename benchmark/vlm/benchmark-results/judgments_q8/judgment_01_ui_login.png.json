@@ -1,0 +1,185 @@
+{
+  "image": "01_ui_login.png",
+  "judgments": {
+    "gemma4-12b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header 'Sign in to Acme' verbatim",
+        "Email 'user@example.com' verbatim",
+        "Error 'Invalid credentials. Please try again.' verbatim",
+        "Checkbox 'Keep me signed in' verbatim",
+        "'Forgot your password?' link verbatim",
+        "Correctly identifies three colored dots (orange/yellow/green)",
+        "Blue 'Sign In' button with white text",
+        "Red error box with pale red background"
+      ],
+      "key_misses": [
+        "Describes traffic lights as a 'logo' rather than macOS window controls",
+        "Says 'orange' instead of 'yellow' (minor)"
+      ],
+      "hallucinations": [],
+      "justification": "Comprehensive, well-organized description with all key text verbatim and accurate color/layout. Minor labeling imprecision on traffic lights (calls them logo, says orange instead of yellow) but no factual errors about image content."
+    },
+    "gemma4-e4b-Q8|think": {
+      "holistic_score": 4,
+      "failure_mode": "hallucination",
+      "key_hits": [
+        "Header 'Sign in to Acme' verbatim",
+        "Email 'user@example.com' verbatim",
+        "Error message text verbatim",
+        "Checkbox label verbatim",
+        "'Forgot your password?' text verbatim",
+        "Recognizes colored dots (red, orange, green)"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Claims error message 'Invalid credentials. Please try again.' appears twice - it appears only once",
+        "Claims 'Forgot your password?' link appears twice - it appears only once",
+        "Claims two instances of the forgot-password link with one 'near the top (implied by the layout)' - no such link exists near top"
+      ],
+      "justification": "Hallucination of duplicate elements is a serious failure. The model invents that both the error message and the forgot-password link appear twice when each appears exactly once. This is the worst failure mode per judging criteria. All actual OCR text is correct, but the invented duplicates are unacceptable."
+    },
+    "glm-4.6v-flash-9b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header 'Sign in to Acme' verbatim",
+        "Email 'user@example.com' verbatim",
+        "Password masked with dots",
+        "Checkbox 'Keep me signed in' verbatim",
+        "Notes checkbox is unchecked (matches ground truth)",
+        "Error 'Invalid credentials. Please try again.' verbatim",
+        "Blue 'Sign In' button with white text",
+        "'Forgot your password?' link verbatim",
+        "Correct red/yellow/green dot colors"
+      ],
+      "key_misses": [
+        "Suggests dots 'likely represent a logo or status indicator' rather than macOS traffic lights"
+      ],
+      "hallucinations": [],
+      "justification": "Excellent, thorough description with all key text verbatim, correct recognition that checkbox is unchecked, and accurate layout/colors. Speculative guess about dot meaning is a minor weakness but not a factual error. One of the strongest responses."
+    },
+    "qwen3-vl-4b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header 'Sign in to Acme' verbatim",
+        "Email 'user@example.com' verbatim",
+        "Checkbox 'Keep me signed in' verbatim",
+        "Error 'Invalid credentials. Please try again.' verbatim",
+        "'Sign In' button verbatim",
+        "'Forgot your password?' link verbatim",
+        "Correctly identifies red/yellow/green circular buttons as macOS window controls",
+        "Notes checkbox is unchecked"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Accurate, well-structured description with all key text verbatim and correct identification of macOS window controls. Clean and concise with no hallucinations. Strong response from the smallest Qwen model."
+    },
+    "qwen3-vl-8b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header 'Sign in to Acme' verbatim",
+        "Email field with 'user@example.com' placeholder verbatim",
+        "Password field with masked dots",
+        "Checkbox 'Keep me signed in' verbatim",
+        "Error 'Invalid credentials. Please try again.' verbatim",
+        "Blue 'Sign In' button with white text",
+        "'Forgot your password?' link verbatim",
+        "Correctly identifies red/yellow/green as macOS window controls (close, minimize, maximize)"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Clean, well-organized description with all key text verbatim and correct macOS window control identification. Light pink background on error box accurately noted. No hallucinations, no errors."
+    },
+    "qwen3.5-4b-Q8|nothink": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header 'Sign in to Acme' verbatim",
+        "Email 'user@example.com' verbatim",
+        "Password masked with 12 dots",
+        "Checkbox 'Keep me signed in' verbatim, notes unchecked",
+        "Error 'Invalid credentials. Please try again.' verbatim",
+        "Blue 'Sign In' button verbatim",
+        "'Forgot your password?' link verbatim",
+        "Correctly identifies red/yellow/green macOS traffic lights (close, minimize, maximize)"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Specific hex color codes (#f5f5f5, #007bff, #dc3545, #f8d7da) are guesses not present in image metadata - minor overreach"
+      ],
+      "justification": "Comprehensive, accurate description with all text verbatim and excellent macOS recognition. Specific hex codes are unverifiable guesses but not factual errors about visible content. Strong response from nothink variant."
+    },
+    "qwen3.5-4b-Q8|think": {
+      "holistic_score": 6,
+      "failure_mode": "hallucination",
+      "key_hits": [
+        "Header 'Sign in to Acme' verbatim",
+        "Email 'user@example.com' verbatim",
+        "Password masked with dots",
+        "Checkbox 'Keep me signed in' verbatim, unchecked",
+        "Error 'Invalid credentials. Please try again.' verbatim",
+        "'Sign In' button verbatim",
+        "'Forgot your password?' link verbatim",
+        "Correctly identifies red/yellow/green macOS traffic lights"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Claims the interface uses 'monospaced, typewriter-style font' and 'resembling Courier New' with 'retro or terminal-like appearance' - the image uses a standard sans-serif font, not monospace"
+      ],
+      "justification": "All OCR text is accurate, but the repeated insistence on a monospaced/typewriter/Courier font is a clear hallucination. The login form uses a standard sans-serif font. This mischaracterization of typography is a factual error about visible image content, warranting the hallucination flag."
+    },
+    "qwen3.5-9b-Q8|nothink": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header 'Sign in to Acme' verbatim",
+        "Email 'user@example.com' verbatim",
+        "Password masked with dots",
+        "Checkbox 'Keep me signed in' verbatim, notes unchecked",
+        "Error 'Invalid credentials. Please try again.' verbatim",
+        "'Sign In' button verbatim",
+        "'Forgot your password?' link verbatim",
+        "Correctly identifies red/yellow/green macOS window controls"
+      ],
+      "key_misses": [],
+      "hallucinations": [
+        "Specific hex color codes (#f5f5f5, #007bff, #ff4d4d, #fff0f0) are unverifiable guesses - minor overreach"
+      ],
+      "justification": "Excellent, accurate description with all text verbatim and proper macOS recognition. Hex codes are guesses but do not constitute factual errors about visible content. Among the best responses."
+    },
+    "qwen3.5-9b-Q8|think": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header 'Sign in to Acme' verbatim",
+        "Email 'user@example.com' verbatim",
+        "Password masked with dots",
+        "Checkbox 'Keep me signed in' verbatim",
+        "Error 'Invalid credentials. Please try again.' verbatim",
+        "'Sign In' button verbatim",
+        "'Forgot your password?' link verbatim",
+        "Correctly identifies red/yellow/green macOS window controls",
+        "Correctly identifies 'Acme' as fictional company used in business examples"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Accurate, well-structured description with all key text verbatim, correct macOS identification, and perceptive note about Acme being a fictional/boilerplate company. No hallucinations. Strong response."
+    }
+  },
+  "ranking": [
+    "glm-4.6v-flash-9b-Q8|think",
+    "qwen3-vl-8b-Q8|think",
+    "qwen3-vl-4b-Q8|think",
+    "qwen3.5-9b-Q8|think",
+    "qwen3.5-9b-Q8|nothink",
+    "qwen3.5-4b-Q8|nothink",
+    "gemma4-12b-Q8|think",
+    "qwen3.5-4b-Q8|think",
+    "gemma4-e4b-Q8|think"
+  ],
+  "notes": "This login form is a relatively simple UI mockup with clear, legible text, so most models OCR'd all key strings correctly. The differentiator is hallucination: gemma4-e4b-Q8|think invented that the error message and forgot-password link each appear twice (worst failure), while qwen3.5-4b-Q8|think hallucinated a monospaced/typewriter font. The seven top-ranked models produced clean, accurate descriptions. Hex color codes offered by qwen3.5-4b-nothink and qwen3.5-9b-nothink are unverifiable but treated as minor overreach rather than hallucination since they don't misrepresent visible content. Six models correctly identified the macOS traffic-light window controls; gemma4-12b called them a 'logo' and glm-4.6v-flash-9b speculated they were a 'logo or status indicator' (both acceptable but less precise)."
+}

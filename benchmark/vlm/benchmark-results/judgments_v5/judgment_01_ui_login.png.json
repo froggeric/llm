@@ -1,0 +1,180 @@
+{
+  "image": "01_ui_login.png",
+  "image_path": "test-images/01_ui_login.png",
+  "judgments": [
+    {
+      "model": "gemma4-12b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "minor_color_error",
+      "key_hits": ["Sign in to Acme", "user@example.com", "Keep me signed in", "Invalid credentials. Please try again.", "Sign In", "Forgot your password?", "password masked as dots", "unchecked checkbox", "red error box", "blue button"],
+      "key_misses": [],
+      "hallucinations": ["describes middle traffic-light button as orange (image shows yellow)"],
+      "justification": "All required text and structural elements captured correctly and verbatim. Only flaw is calling the middle window control 'orange' rather than yellow; minor color mislabeling. Otherwise a complete and accurate description."
+    },
+    {
+      "model": "gemma4-26b-a4b|think",
+      "run_id": "2",
+      "holistic_score": 6,
+      "failure_mode": "background_hallucination",
+      "key_hits": ["Sign in to Acme", "user@example.com", "Keep me signed in", "Invalid credentials. Please try again.", "Sign In", "Forgot your password?", "password masked as dots", "unchecked checkbox"],
+      "key_misses": [],
+      "hallucinations": ["claims the overall background is 'a solid, very dark gray or black background' (image is light gray)", "claims 'monospaced font for all text' (not established by ground truth)"],
+      "justification": "Text transcription is perfect and all UI elements are correctly identified, but the model badly misreads the page background as dark/black when it is in fact light gray. This is a significant perceptual hallucination that undercuts the description."
+    },
+    {
+      "model": "gemma4-31b|think",
+      "run_id": "2",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["Sign in to Acme", "user@example.com", "Keep me signed in", "Invalid credentials. Please try again.", "Sign In", "Forgot your password?", "password masked as dots", "unchecked checkbox", "yellow middle button (correctly identified as yellow)", "macOS traffic lights", "red error box with pale pink/red background", "blue button"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Excellent, complete description. All key text verbatim, checkbox correctly noted as empty, password as dots, traffic-light colors correctly identified as red/yellow/green, error box described accurately with pale-red background. Layout, colors, and notable features all correct."
+    },
+    {
+      "model": "gemma4-e4b|think",
+      "run_id": "2",
+      "holistic_score": 4,
+      "failure_mode": "hallucination_duplication",
+      "key_hits": ["Sign in to Acme", "user@example.com", "Keep me signed in", "Invalid credentials. Please try again.", "Sign In", "Forgot your password?", "password masked as dots"],
+      "key_misses": [],
+      "hallucinations": ["claims 'Two distinct error messages are visible, both contained within colored boxes' (only one error box exists)", "claims 'Two instances of a Forgot your password? link are present, one near the top and one near the bottom' (only one link exists)", "describes middle traffic-light dot as orange (image shows yellow)"],
+      "justification": "Text is transcribed correctly but the model fabricates duplicate UI elements (two error boxes, two 'Forgot your password?' links) that do not exist in the image. This is a serious hallucination that materially misrepresents the layout."
+    },
+    {
+      "model": "glm-4.6v-flash-9b|think",
+      "run_id": "2",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["Sign in to Acme", "Email", "user@example.com", "Password", "Keep me signed in", "Invalid credentials. Please try again.", "Sign In", "Forgot your password?", "password hidden", "unchecked checkbox", "red border error box", "blue button with white text", "blue link"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Clean, well-structured description. All required text verbatim, all key UI elements correctly identified including unchecked checkbox, red-bordered error box, blue button with white text, and blue 'Forgot your password?' link. No errors or fabrications."
+    },
+    {
+      "model": "qwen3-vl-4b|think",
+      "run_id": "2",
+      "holistic_score": 8,
+      "failure_mode": "masking_style_hallucination",
+      "key_hits": ["Sign in to Acme", "user@example.com", "Keep me signed in", "Invalid credentials. Please try again.", "Sign In", "Forgot your password?", "unchecked checkbox", "macOS traffic lights", "red error box"],
+      "key_misses": [],
+      "hallucinations": ["claims password field value is '********' (10 asterisks) — image shows dots, not asterisks"],
+      "justification": "Captures all text and structural elements correctly, but incorrectly represents the password masking as asterisks instead of dots. Ground truth explicitly states 'masked with dots'. A specific perceptual detail hallucination."
+    },
+    {
+      "model": "qwen3-vl-8b|think",
+      "run_id": "2",
+      "holistic_score": 8,
+      "failure_mode": "masking_style_hallucination",
+      "key_hits": ["Sign in to Acme", "Email", "user@example.com", "Password", "Keep me signed in", "Invalid credentials. Please try again.", "Sign In", "Forgot your password?", "macOS traffic lights", "unchecked checkbox implied", "red-bordered error box with light pink background"],
+      "key_misses": [],
+      "hallucinations": ["claims password field is 'filled with asterisks (\"********\")' — image uses dots, not asterisks"],
+      "justification": "Accurate text and structure, correctly describes error box background as light pink and button colors. Only issue is misrepresenting password masking as asterisks rather than dots."
+    },
+    {
+      "model": "qwen3.5-4b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["Sign in to Acme", "Email", "user@example.com", "Password", "Keep me signed in", "Invalid credentials. Please try again.", "Sign In", "Forgot your password?", "password masked as dots (12 dots)", "unchecked checkbox", "macOS traffic lights (red/yellow/green correct)", "red error box with light red fill", "blue button"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Comprehensive and accurate. Every key fact captured verbatim, including correct dot masking, yellow (not orange) middle button, unchecked checkbox, light-red error background, and full structural breakdown. Among the most detailed and accurate responses."
+    },
+    {
+      "model": "qwen3.5-4b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "minor_color_error",
+      "key_hits": ["Sign in to Acme", "Email", "user@example.com", "Password", "Keep me signed in", "Invalid credentials. Please try again.", "Sign In", "Forgot your password?", "password masked as dots", "unchecked checkbox", "macOS traffic lights", "red error box with pale pink/red background", "blue button and link"],
+      "key_misses": [],
+      "hallucinations": ["describes middle window control as yellow then in 'Colors' section lists window controls as 'Red, Yellow, and Green' which is correct, but inconsistent emphasis elsewhere could confuse"],
+      "justification": "Very strong description; all key text verbatim, checkbox correctly empty, password correctly dots, error background correctly pale red/pink. Tiny deduction only for slightly convoluted color commentary; substantively correct."
+    },
+    {
+      "model": "qwen3.5-9b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 8,
+      "failure_mode": "masking_style_hallucination",
+      "key_hits": ["Sign in to Acme", "Email", "user@example.com", "Password", "Keep me signed in", "Invalid credentials. Please try again.", "Sign In", "Forgot your password?", "unchecked checkbox", "macOS traffic lights (red/yellow/green correct)", "red error box with pale red fill", "blue button"],
+      "key_misses": [],
+      "hallucinations": ["claims password field is '********' (nine asterisks) — image uses dots, not asterisks"],
+      "justification": "Excellent coverage of text, colors, and layout with correct yellow middle button and accurate error-box description. Only flaw: password is rendered as asterisks rather than the actual dots."
+    },
+    {
+      "model": "qwen3.5-9b|think",
+      "run_id": "2",
+      "holistic_score": 9,
+      "failure_mode": "minor_color_error",
+      "key_hits": ["Sign in to Acme", "Email", "user@example.com", "Password", "Keep me signed in", "Invalid credentials. Please try again.", "Sign In", "Forgot your password?", "password masked as dots (ten dots)", "unchecked checkbox", "macOS traffic lights", "red error box with pale pink background", "blue button and link"],
+      "key_misses": [],
+      "hallucinations": ["says middle traffic-light button is yellow in one place but elsewhere lists 'Yellow/Green' as colors, which is correct; no real hallucination"],
+      "justification": "Thorough and accurate description with all text verbatim, dots correctly identified, checkbox correctly empty, error background correctly pale red/pink. Essentially correct on all key facts."
+    },
+    {
+      "model": "qwen3.6-27b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["Sign in to Acme", "Email", "user@example.com", "Password", "Keep me signed in", "Invalid credentials. Please try again.", "Sign In", "Forgot your password?", "password masked as dots (12 dots)", "unchecked checkbox", "macOS traffic lights (red/yellow/green with hex codes)", "red error box with pale pink background", "blue button with white text"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Excellent, exhaustive description. All required text verbatim, all colors correct including the yellow middle button (with correct hex #febc2e), password correctly as dots, checkbox correctly unchecked, error background correctly pale red. Top-tier response."
+    },
+    {
+      "model": "qwen3.6-27b|think",
+      "run_id": "2",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["Sign in to Acme", "Email", "user@example.com", "Password", "Keep me signed in", "Invalid credentials. Please try again.", "Sign In", "Forgot your password?", "password masked as dots", "unchecked checkbox", "macOS traffic lights (red/yellow/green)", "red error box with pale pink background", "blue button"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Comprehensive and accurate. All text verbatim, password as dots, checkbox empty, traffic-light colors correct (red/yellow/green), error box background correctly pale red. Correctly notes monospaced font which matches the mockup aesthetic. Excellent."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|nothink",
+      "run_id": "nothink-2",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["Sign in to Acme", "Email", "user@example.com", "Password", "Keep me signed in", "Invalid credentials. Please try again.", "Sign In", "Forgot your password?", "password masked as dots (12 dots)", "unchecked checkbox", "macOS traffic lights (red/yellow/green)", "red error box with pale pink background", "blue button with white text"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Outstanding description. Every key fact correct: text verbatim, password as dots, checkbox unchecked, error background pale pink/red, button blue with white text, traffic lights red/yellow/green. No errors or fabrications."
+    },
+    {
+      "model": "qwen3.6-35b-a3b|think",
+      "run_id": "2",
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["Sign in to Acme", "Email", "user@example.com", "Password", "Keep me signed in", "Invalid credentials. Please try again.", "Sign In", "Forgot your password?", "password masked as dots", "unchecked checkbox", "macOS traffic lights (red/yellow/green)", "red error box with pale pink background", "blue button"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Complete and accurate. All required text verbatim, all UI elements correctly identified, password as dots, checkbox unchecked, error background pale red/pink, traffic lights red/yellow/green. Correctly describes layout and color palette."
+    }
+  ],
+  "ranking": [
+    {"model": "gemma4-31b|think", "holistic_score": 10},
+    {"model": "glm-4.6v-flash-9b|think", "holistic_score": 10},
+    {"model": "qwen3.5-4b|nothink", "holistic_score": 10},
+    {"model": "qwen3.6-27b|nothink", "holistic_score": 10},
+    {"model": "qwen3.6-27b|think", "holistic_score": 10},
+    {"model": "qwen3.6-35b-a3b|nothink", "holistic_score": 10},
+    {"model": "qwen3.6-35b-a3b|think", "holistic_score": 10},
+    {"model": "gemma4-12b|think", "holistic_score": 9},
+    {"model": "qwen3.5-4b|think", "holistic_score": 9},
+    {"model": "qwen3.5-9b|think", "holistic_score": 9},
+    {"model": "qwen3-vl-4b|think", "holistic_score": 8},
+    {"model": "qwen3-vl-8b|think", "holistic_score": 8},
+    {"model": "qwen3.5-9b|nothink", "holistic_score": 8},
+    {"model": "gemma4-26b-a4b|think", "holistic_score": 6},
+    {"model": "gemma4-e4b|think", "holistic_score": 4}
+  ],
+  "notes": [
+    "This is a relatively easy UI text-extraction task and most models (8 of 15) scored a perfect 10 by transcribing all visible text verbatim and correctly describing the unchecked checkbox, dot-masked password, red error box, and blue button.",
+    "The three most common failure modes were: (a) mislabeling the middle macOS traffic-light button as 'orange' instead of yellow (gemma4-12b, gemma4-e4b); (b) representing the password as asterisks '********' instead of dots (qwen3-vl-4b, qwen3-vl-8b, qwen3.5-9b|nothink); and (c) outright fabrication of duplicate elements (gemma4-e4b invented a second error box and a second 'Forgot your password?' link).",
+    "The two most severe failures were both Gemma models: gemma4-e4b|think hallucinated duplicated UI elements (score 4) and gemma4-26b-a4b|think claimed the page background was dark/black when it is light gray (score 6). Both retained correct text transcription, so the failures are purely perceptual/structural.",
+    "No model failed to extract any required text string — every response included 'Sign in to Acme', 'user@example.com', 'Keep me signed in', 'Invalid credentials. Please try again.', 'Sign In', and 'Forgot your password?' verbatim.",
+    "The Qwen3.6 family (27b and 35b-a3b, both think and nothink) produced the most consistently detailed and accurate responses, frequently including correct hex color codes for the traffic-light buttons."
+  ]
+}

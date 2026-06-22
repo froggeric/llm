@@ -1,0 +1,100 @@
+{
+  "image": "26-graph-ocean-acidification-hawaii.jpg",
+  "image_path": "test-images/26-graph-ocean-acidification-hawaii.jpg",
+  "judged_at": "2026-06-21",
+  "ground_truth_summary": "Multi-series line chart 'Ocean acidification' (1958-2018). Dual y-axis: left CO₂ (275-425 ppm), right pH (8.03-8.33). Three series: Atmospheric CO₂ (red, Mauna Loa, starts 1958 ~315->~415 ppm), Ocean pCO₂ (green, ALOHA, starts ~1990 ~325->~380 ppm), Ocean pH (blue, ALOHA, starts ~1990 ~8.12->~8.06, downward acidification trend). Inset Hawaiian Islands map marks Mauna Loa (red triangle) and ALOHA (red dot). No printed source citation.",
+  "judgments": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "run_id": "q8-1",
+      "score": 9.4,
+      "accuracy": 9.5,
+      "completeness": 9.5,
+      "hallucination": 9.5,
+      "reasoning": "Excellent, faithful description. Correctly identifies title, dual y-axis ranges (CO₂ 275-425, pH 8.03-8.33), x-axis 1958-2018 with correct tick spacing, all three series with correct colors and station names. Correctly notes atmospheric CO₂ starts at 1958 ~315 ppm reaching >410 ppm by 2018, and that ocean pCO₂ and pH begin ~1990 with jagged seasonal fluctuations. Inset map correctly identified with both stations and their markers. Minor: spelling 'Kahula' likely a transcription of Kauai, but otherwise verbatim-quality OCR. No hallucination.",
+      "errors": [
+        "Minor OCR slip: 'Kahula' instead of 'Kauai' (also drops one island name but otherwise map description accurate)"
+      ]
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "run_id": "q8-2",
+      "score": 6.8,
+      "accuracy": 6.5,
+      "completeness": 8.5,
+      "hallucination": 5.5,
+      "reasoning": "Title duplicated (claimed 'Ocean acidification' appears as both main title and subtitle — false, only one title). Axis ranges correct. Claims ocean pCO₂ 'begins around 1994' (off by ~4 years; GT says ~1990). Claims ocean pH 'begins around 8.13' and shows clear steady downward trend — broadly correct. Says 'two small inset maps' (actually one). Mentions 'significant acceleration particularly after the mid-1990s' as a notable feature which is somewhat interpretive but not directly supported. Good coverage of layout and series but several small hallucinations/inaccuracies on details.",
+      "errors": [
+        "Hallucinates duplicated title (claims subtitle also reads 'Ocean acidification')",
+        "Claims 'two small inset maps' (only one inset map exists)",
+        "Ocean pCO₂ start year ~1994 vs GT ~1990 (off by ~4 years)"
+      ]
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "run_id": "q8-2",
+      "score": 8.4,
+      "accuracy": 8.5,
+      "completeness": 9.0,
+      "hallucination": 7.5,
+      "reasoning": "Strong description. Correct title, axes (X 1958-2018 with right ticks; left 275-425; right 8.03-8.33). Atmospheric CO₂ 315->422 ppm (slight overshoot, GT ~415). Ocean pH 'from ~8.10 in the early 1990s to ~8.05-8.08 by 2018' matches GT (~8.12->~8.06). Inset map content well-described with both stations and their markers. Minor issues: lists 'Kauai, Honolulu, Kahului, Kilauea, Hilo' — 'Kilauea' is not a city/island label on this map (likely confusion); correctly says atmospheric CO₂ starts 1958 but doesn't explicitly note ocean series start ~1990. Map description places Station ALOHA 'near Kauai' which is correct.",
+      "errors": [
+        "Lists 'Kilauea' as a map label — likely a hallucination (no such label on this map; Kilauea is a volcano, not a city label here)",
+        "Atmospheric CO₂ 2018 value ~422 ppm slightly above GT ~415 ppm",
+        "Doesn't explicitly note that ocean series begin ~1990 (implied via 'early 1990s' for pH only)"
+      ]
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "run_id": "q8-2",
+      "score": 6.0,
+      "accuracy": 5.5,
+      "completeness": 8.5,
+      "hallucination": 4.0,
+      "reasoning": "Comprehensive coverage but multiple significant errors. Correctly identifies title, axes (CO₂ 275-425 implicit, pH 8.03-8.33), 1958-2018 span. Lists many map labels including 'Honomoku' and 'Kailua' which are likely hallucinations (not standard Hawaiian city/island labels on this map). Claims atmospheric CO₂ rises from ~320 ppm in 1958 to over 420 ppm (GT: ~315 to ~415). Major hallucination: 'The graph uses a logarithmic scale for the pH axis' — this is FALSE; the pH axis is linear (8.03 to 8.33 in 0.05 increments). Places Station ALOHA 'on the island of Oahu' — incorrect, ALOHA is an open-ocean station northwest of Oahu, not on it. Despite these errors, the overall structural description of the three series is correct.",
+      "errors": [
+        "HALLUCINATION: Claims pH axis uses a 'logarithmic scale' — it is linear",
+        "Places 'Station ALOHA' on the island of Oahu — incorrect, it is an open-ocean station",
+        "Likely fabricated map labels 'Honomoku' and possibly 'Kailua'",
+        "CO₂ values slightly off (320->420+ ppm vs GT 315->415)"
+      ]
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "run_id": "q8-2",
+      "score": 5.5,
+      "accuracy": 4.5,
+      "completeness": 8.5,
+      "hallucination": 2.5,
+      "reasoning": "Good structural coverage but serious factual errors. Correctly captures title, axes ranges, all three series colors and station names. However: Claims 'four distinct data series' but only describes three (numerical error). Claims Ocean pCO₂ starts in 1958 at 320 µatm — WRONG, ocean pCO₂ only begins ~1990 at Station ALOHA (no pCO₂ data exists 1958-1989). Claims Ocean pH 'decline from approximately 8.20 in 1958' — WRONG, ocean pH data also only begins ~1990; claiming a 1958 pH of 8.20 is fabricated. Inset description is mostly correct. The 1958 start for ocean series is a substantial hallucination since ALOHA station HOT program began 1988.",
+      "errors": [
+        "HALLUCINATION: Claims ocean pCO₂ measured at ALOHA starts in 1958 at ~320 µatm — data only begins ~1990",
+        "HALLUCINATION: Claims ocean pH measured at ALOHA starts in 1958 at ~8.20 — data only begins ~1990",
+        "States 'four distinct data series' but only three exist (counting error)",
+        "Units 'µatm' for pCO₂ not visible on chart (interpretation rather than OCR)"
+      ]
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "run_id": "q8-nothink-2",
+      "score": 7.0,
+      "accuracy": 7.0,
+      "completeness": 9.0,
+      "hallucination": 6.0,
+      "reasoning": "Very thorough multi-section description. Correctly captures title, axes ranges (CO₂ 275-425, pH 8.03-8.33), 1958-2018 span, three series with correct colors and station labels. Correctly notes ocean pCO₂ and pH 'start around 1994' (close to GT ~1990, slight 4-year error) and atmospheric CO₂ starts ~1958. Inset map description accurate. Adds extended 'scientific context' commentary about ocean acidification mechanism which is reasonable interpretation. Minor issues: calls pH line 'cyan (light blue)' when it's just blue, calls pCO₂ line 'light green' (acceptable). The explanatory scientific context is informative but goes beyond strict image description. The claim that 'Ocean pH data only begins in 1994' is mostly correct in timing.",
+      "errors": [
+        "Ocean series start year ~1994 vs GT ~1990 (off by ~4 years)",
+        "Adds extended scientific context not strictly derivable from the chart (interpretive but plausible)",
+        "Color naming 'cyan'/'light green' slightly imprecise vs actual solid blue/green"
+      ]
+    }
+  ],
+  "ranking": [
+    {"model": "gemma4-12b-Q8|think", "score": 9.4},
+    {"model": "glm-4.6v-flash-9b-Q8|think", "score": 8.4},
+    {"model": "qwen3.5-4b-Q8|nothink", "score": 7.0},
+    {"model": "gemma4-e4b-Q8|think", "score": 6.8},
+    {"model": "qwen3-vl-4b-Q8|think", "score": 6.0},
+    {"model": "qwen3-vl-8b-Q8|think", "score": 5.5}
+  ]
+}

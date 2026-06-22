@@ -18,3 +18,7 @@ Repository structure
 ## MCP servers
 
 - mcp/localvision/ — a Go MCP server that wraps a local `llama.cpp` subprocess to give text-only coding LLMs (Claude Code, Codex CLI, etc.) vision capabilities. Runs entirely on-device; PolyForm Noncommercial license. See [mcp/localvision/README.md](./mcp/localvision/README.md).
+
+## Benchmarks
+
+- benchmark/vlm/ — open-weights VLM benchmark (30 images × 15 variants × 3 runs at Q4_K_M, plus Q8_0 comparison) used to pick the `localvision` catalog. See [benchmark/vlm/BENCHMARK-REPORT-v5.md](./benchmark/vlm/BENCHMARK-REPORT-v5.md) for the authoritative report and recommendations.

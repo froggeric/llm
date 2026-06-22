@@ -1,0 +1,105 @@
+{
+  "image": "16-album-cover-lofi.jpg",
+  "judged_at": "2026-06-21",
+  "ground_truth_summary": "Lo-fi album cover titled 'Songs to Stare at the Ceiling To'. Window + ceiling visible. Phrase appears ONCE.",
+  "evaluations": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "run_id": "q8-2",
+      "judgment": "excellent",
+      "score": 9,
+      "text_count_correct": true,
+      "key_elements_seen": ["text-once", "window", "streetlamp", "film-grain", "cosmic-ceiling", "no-people"],
+      "errors": [],
+      "notes": "Correctly identifies text appears ONCE. Excellent detection of windows, streetlamp, film grain/dust, nebula-like ceiling. Notes surreal/lo-fi aesthetic accurately. No hallucinations."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "run_id": "q8-2",
+      "judgment": "text-hallucination",
+      "score": 4,
+      "text_count_correct": false,
+      "key_elements_seen": ["window", "streetlamp", "film-grain", "cosmic-sky"],
+      "errors": ["claims text appears TWICE - real hallucination (only appears once)"],
+      "notes": "Text count hallucination - explicitly states 'The text appears twice, centered near the bottom'. Otherwise describes scene accurately, but the repetition claim is a verifiable false statement about the image."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "run_id": "q8-3",
+      "judgment": "good",
+      "score": 8,
+      "text_count_correct": true,
+      "key_elements_seen": ["text-once", "windows", "streetlight", "starry-texture", "aurora-gradient", "no-people"],
+      "errors": ["minor: describes 'stars' which are more like dust/speckle"],
+      "notes": "Correct single text instance. Solid description of building/windows/streetlight. Describes night sky gradient and retro scratches accurately. Minor inflation of 'stars' interpretation."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "run_id": "q8-2",
+      "judgment": "excellent",
+      "score": 9,
+      "text_count_correct": true,
+      "key_elements_seen": ["text-once", "ceiling-low-angle", "windows", "streetlamp", "aurora-glow", "film-grain"],
+      "errors": [],
+      "notes": "Correct text once. Strong interpretation of low-angle ceiling perspective (matches title's theme well). Identifies windows, streetlamp, aurora-like glow, film grain. Thoughtful mood analysis."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "run_id": "q8-2",
+      "judgment": "excellent",
+      "score": 9,
+      "text_count_correct": true,
+      "key_elements_seen": ["text-once", "building-facade", "windows", "streetlamp", "raindrops", "starry-sky", "film-grain"],
+      "errors": ["minor: interprets glass raindrops/condensation (plausible but not verifiable)"],
+      "notes": "Correct single text instance. Rich detailed description including weathered windows, star-speckled sky, dramatic color gradient. Correctly identifies as album cover. Strong analysis."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "run_id": "q8-nothink-2",
+      "judgment": "good",
+      "score": 8,
+      "text_count_correct": true,
+      "key_elements_seen": ["text-once", "ceiling", "windows", "streetlamp", "tree-branches", "film-grain"],
+      "errors": ["minor: claims bare tree branches visible (uncertain)"],
+      "notes": "Correct text once. Very thorough description. Slightly speculative about tree branches/raindrops outside windows, but within reasonable interpretation. Excellent mood/thematic analysis."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "run_id": "q8-think-2",
+      "judgment": "excellent",
+      "score": 9,
+      "text_count_correct": true,
+      "key_elements_seen": ["text-once", "ceiling-galaxy", "window-frame", "street-lamp", "tree-branches", "film-grain"],
+      "errors": ["minor: mentions faint silhouettes of tree branches (plausible)"],
+      "notes": "Correct single text instance. Excellent description of digitally-altered ceiling resembling galaxy/nebula. Identifies window frame, street lamp, color gradients accurately. Strong film grain / vintage aesthetic recognition."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "run_id": "q8-nothink-2",
+      "judgment": "good",
+      "score": 8,
+      "text_count_correct": true,
+      "key_elements_seen": ["text-once", "window-frame", "streetlamp-reflection", "ceiling-surface", "foreground-silhouette"],
+      "errors": ["speculative: claims bed frame/headboard/person's shoulder silhouette - inferred not verifiable"],
+      "notes": "Correct text once. Rich atmospheric description. Some inferences about foreground silhouette being bed/headboard/shoulder are speculative but plausible for low-angle lying-down perspective. Strong thematic reading."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|think",
+      "run_id": "q8-think-2",
+      "judgment": "excellent",
+      "score": 9,
+      "text_count_correct": true,
+      "key_elements_seen": ["text-once", "window-frame", "street-lamp", "ceiling-nebula", "foreground-shape", "film-grain"],
+      "errors": ["minor: describes window as 'reddish-brown painted' / 'double-hung' (specific style claims, plausible)"],
+      "notes": "Correct single text instance. Strong description of diagonal composition, wooden window frame, street lamp. Correctly notes ceiling resembles night sky/nebula. Good identification of film grain texture and lo-fi aesthetic."
+    }
+  ],
+  "summary": {
+    "total_models": 9,
+    "correct_text_count": 8,
+    "hallucinated_text_count": 1,
+    "failure_mode": "gemma4-e4b-Q8|think hallucinated the text appearing twice when it appears only once",
+    "best_performers": ["gemma4-12b-Q8|think", "qwen3-vl-4b-Q8|think", "qwen3-vl-8b-Q8|think", "qwen3.5-4b-Q8|think", "qwen3.5-9b-Q8|think"],
+    "weakest_performer": "gemma4-e4b-Q8|think (text repetition hallucination)"
+  }
+}

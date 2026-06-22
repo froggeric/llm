@@ -1,0 +1,275 @@
+{
+  "image": "23-animation.jpg",
+  "image_path": "test-images/23-animation.jpg",
+  "ground_truth_summary": "2x3 grid of 6 numbered animation frames showing a bright blue cartoon cat (pink inner ears, white muzzle, black nose) in a SINGLE RUN CYCLE (looping stride), NOT 6 distinct actions. Solid light blue background with simple flat shadow under each cat. Numbers 1-2-3 top row, 4-5-6 bottom row. The discriminator: models inventing 6 different unrelated actions (sitting, lying, sploot, etc.) are WRONG; models recognizing the looping run cycle are CORRECT.",
+  "judgments": [
+    {
+      "model": "gemma4-12b-Q8|think",
+      "run_id": "q8-1",
+      "failure_mode": "normal",
+      "deterministic_score": 4.761904761904762,
+      "judge_score": 4.5,
+      "judge_rubric": {
+        "accuracy": 4.5,
+        "completeness": 7.5,
+        "hallucination": 2.5,
+        "ocr": 9.0,
+        "instruction_following": 8.0
+      },
+      "strengths": [
+        "Excellent layout and grid description (2x3, numbers 1-6 placement correct)",
+        "Good character description (blue fur, peach inner ears, white muzzle, black nose/eye)",
+        "Correctly identifies shadows under each cat",
+        "Correctly notes pale blue background and dark blue numbers"
+      ],
+      "weaknesses": [
+        "WRONG on the central discriminator: invents 6 DIFFERENT actions — running, landing, standing, crouching, sitting, 'sploot' lying flat — instead of recognizing the looping run cycle",
+        "The 'sploot' pose is a confabulation not visible in the frames",
+        "Frame-by-frame descriptions are fabricated rather than depicting a stride cycle"
+      ],
+      "hallucinations_detected": [
+        "Invents 'sploot' pose with paws tucked under chin (not in image)",
+        "Treats each frame as a distinct unrelated action rather than stride phases",
+        "Says cat is sitting on haunches in frame 5 — not accurate for a run cycle frame"
+      ],
+      "summary": "Strong on layout, color and OCR but fails the key discriminator — fabricates 6 distinct actions instead of recognizing the looping run cycle."
+    },
+    {
+      "model": "gemma4-e4b-Q8|think",
+      "run_id": "q8-1",
+      "failure_mode": "normal",
+      "deterministic_score": 1.9047619047619047,
+      "judge_score": 4.0,
+      "judge_rubric": {
+        "accuracy": 4.0,
+        "completeness": 6.0,
+        "hallucination": 2.5,
+        "ocr": 7.5,
+        "instruction_following": 6.5
+      },
+      "strengths": [
+        "Correctly identifies 2x3 grid layout with numbers 1-6",
+        "Reasonable character description (cerulean blue body, pink inner ears)",
+        "Identifies pale blue background",
+        "Recognizes the cartoonish flat style"
+      ],
+      "weaknesses": [
+        "WRONG on the central discriminator: groups frames as '1&2 running', '3 walking', '4&5 sitting/crouching', '6 lying down' — fails to recognize the run cycle loop",
+        "Calls the cat 'kittens' (plural) instead of a single character in different poses",
+        "Frame grouping (1&2 running together, 4&5 sitting together) suggests separate actions, not a continuous stride",
+        "Says 'large expressive eyes' — eyes are actually small black dots"
+      ],
+      "hallucinations_detected": [
+        "Invents 'walking/stalking' as a separate action from running",
+        "Groups frames as distinct actions (running/walking/sitting/lying) instead of stride phases",
+        "'Large expressive eyes' — eyes are simple dots"
+      ],
+      "summary": "Gets layout and basic character design right, but misses the looping run cycle concept entirely, grouping frames into separate action categories."
+    },
+    {
+      "model": "glm-4.6v-flash-9b-Q8|think",
+      "run_id": "q8-1",
+      "failure_mode": "normal",
+      "deterministic_score": 6.190476190476191,
+      "judge_score": 8.5,
+      "judge_rubric": {
+        "accuracy": 8.5,
+        "completeness": 8.0,
+        "hallucination": 8.5,
+        "ocr": 8.5,
+        "instruction_following": 8.5
+      },
+      "strengths": [
+        "BEST CORRECT interpretation: explicitly says 'sequential running motion (animation frames)' and 'progression from mid-stride through various stages to final running pose'",
+        "Recognizes it shows 'the order of the running sequence, emphasizing the animation flow'",
+        "Correctly notes light blue background and subtle blue shadows beneath each cat",
+        "Good character description: bright blue fur, pink inner ears, white muzzle, dark eyes",
+        "Clean layout description with top row 1-2-3 and bottom row 4-5-6"
+      ],
+      "weaknesses": [
+        "Frame-by-frame breakdown is less detailed than some competitors",
+        "Says 'final running pose (6)' — interpretation, but consistent with run cycle"
+      ],
+      "hallucinations_detected": [],
+      "summary": "Best-in-class: explicitly identifies the sequential running animation and animation flow rather than inventing separate actions. Clean, accurate, no confabulations."
+    },
+    {
+      "model": "qwen3-vl-4b-Q8|think",
+      "run_id": "q8-2",
+      "failure_mode": "normal",
+      "deterministic_score": 4.761904761904762,
+      "judge_score": 5.5,
+      "judge_rubric": {
+        "accuracy": 5.5,
+        "completeness": 8.5,
+        "hallucination": 4.0,
+        "ocr": 8.5,
+        "instruction_following": 8.0
+      },
+      "strengths": [
+        "Very detailed layout description (2x3 grid, frame spacing)",
+        "Good character design details (chibi-style, blue body, pink ears, white muzzle, black nose, dot eyes, thin tail)",
+        "Correctly identifies pale sky blue background",
+        "Detailed color palette section"
+      ],
+      "weaknesses": [
+        "PARTIALLY CORRECT: recognizes 'animation cycle' and 'running or leaping' overall, but the per-frame breakdown drifts into distinct actions",
+        "Says frame 4 is 'crouching or sitting, tail curled up' and frame 5 is 'preparatory stance' — interprets as different actions rather than stride phases",
+        "Says frame 6 is 'similar to frame 1, but with a different angle or phase' — vague"
+      ],
+      "hallucinations_detected": [
+        "Per-frame action descriptions drift toward distinct actions (crouching/sitting, preparatory stance)",
+        "Frame 3 'landing, all four paws on the ground' — interpretation, not necessarily accurate"
+      ],
+      "summary": "Strong on layout, color, and character description; recognizes 'animation cycle' framing but per-frame descriptions drift toward separate actions rather than a clean run cycle."
+    },
+    {
+      "model": "qwen3-vl-8b-Q8|think",
+      "run_id": "q8-1",
+      "failure_mode": "normal",
+      "deterministic_score": 9.047619047619047,
+      "judge_score": 9.0,
+      "judge_rubric": {
+        "accuracy": 9.0,
+        "completeness": 9.0,
+        "hallucination": 9.0,
+        "ocr": 8.5,
+        "instruction_following": 9.0
+      },
+      "strengths": [
+        "BEST OVERALL: explicitly states 'The sequence appears to depict a running animation cycle, showing the cat in different phases of a stride'",
+        "Correctly notes 'Frame 6: similar to Frame 1, suggesting the cycle repeats' — perfectly captures the looping run cycle concept",
+        "Frame descriptions are coherent stride phases (forward-leaning, push-off, upright, crouch, low crouch, repeat)",
+        "Clean layout (2x3 grid), accurate character design (pink inner ears, white muzzle, black nose/eye)",
+        "Correctly identifies solid light blue background and soft shadow beneath each cat",
+        "Recognizes minimalist/cute cartoon style"
+      ],
+      "weaknesses": [
+        "Frame 4 'crouched, preparing to leap' slightly over-interprets, but still consistent with run cycle"
+      ],
+      "hallucinations_detected": [],
+      "summary": "Top performer: explicitly identifies the running animation cycle and stride phases, correctly notes that frame 6 mirrors frame 1 indicating the loop. No confabulations."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|nothink",
+      "run_id": "q8-nothink-1",
+      "failure_mode": "normal",
+      "deterministic_score": 5.7142857142857135,
+      "judge_score": 3.5,
+      "judge_rubric": {
+        "accuracy": 3.5,
+        "completeness": 8.0,
+        "hallucination": 2.0,
+        "ocr": 8.0,
+        "instruction_following": 7.5
+      },
+      "strengths": [
+        "Correct 2x3 grid layout with numbered labels 1-6",
+        "Reasonable character description (medium-blue body, pink inner ears, white muzzle, black eyes/nose)",
+        "Good detail on layout, colors, and stylistic notes",
+        "Recognizes minimalist/kawaii design"
+      ],
+      "weaknesses": [
+        "WRONG on the central discriminator: describes a 'jump-and-land animation loop' with frame 6 'fully seated, looking back over shoulder — possibly reacting to something behind it'",
+        "Invents 'jump-and-land' narrative that is not what the run cycle depicts",
+        "Says shadows are 'purple-blue gradient (#8A6CB3 to #6B5B9E)' — actually simple flat blue shadow",
+        "Frame 6 'turning its head back — adds a touch of personality or narrative, suggesting curiosity or surprise' is confabulation",
+        "Says cat is 'fully seated' in frame 5 and 6 — not consistent with a run cycle"
+      ],
+      "hallucinations_detected": [
+        "Invents 'jump-and-land' narrative with curiosity/surprise emotional tone",
+        "'Fully seated' in frames 5-6 (run cycle frames do not show sitting)",
+        "'Looking back over shoulder' in frame 6 — not visible in the image",
+        "Shadow described as 'purple-blue gradient (#8A6CB3 to #6B5B9E)' — wrong color, simple flat blue",
+        "Frame 6 'fully seated, looking back over shoulder' — confabulation"
+      ],
+      "summary": "Detailed but heavily confabulated: invents a jump-and-land narrative with emotional coloring, gets shadow colors wrong, and fabricates seated poses with backward glances."
+    },
+    {
+      "model": "qwen3.5-4b-Q8|think",
+      "run_id": "q8-think-1",
+      "failure_mode": "normal",
+      "deterministic_score": 3.8095238095238093,
+      "judge_score": 4.0,
+      "judge_rubric": {
+        "accuracy": 4.0,
+        "completeness": 7.0,
+        "hallucination": 3.0,
+        "ocr": 7.5,
+        "instruction_following": 7.0
+      },
+      "strengths": [
+        "Correct 2x3 grid layout with numbers 1-6 placement",
+        "Notes the cat's orientation remains consistent (facing right) throughout",
+        "Reasonable character description (medium blue, pink inner ears, white muzzle, small black eyes)",
+        "Identifies minimalist/vector-like style"
+      ],
+      "weaknesses": [
+        "WRONG on the central discriminator: explicitly argues 'rather than a continuous circular run' — directly contradicts ground truth",
+        "Invents alternating movement/stationary poses: jumping, running, walking, sitting, standing, jumping",
+        "Frame 4 'rear end facing somewhat towards viewer' and frame 5 'squatting position' — fabricated poses not in the run cycle",
+        "Argues against the run cycle interpretation that is actually correct"
+      ],
+      "hallucinations_detected": [
+        "Explicitly claims 'rather than a continuous circular run' — contradicts GT",
+        "Invents alternating stationary poses (sitting, squatting) within the run cycle",
+        "Frame 4 'rear end facing viewer' — not visible in the frames"
+      ],
+      "summary": "Actively argues against the correct interpretation (says it's NOT a continuous run), invents alternating movement/stationary poses — directly fails the key discriminator."
+    },
+    {
+      "model": "qwen3.5-9b-Q8|nothink",
+      "run_id": "q8-nothink-3",
+      "failure_mode": "normal",
+      "deterministic_score": 5.7142857142857135,
+      "judge_score": 6.0,
+      "judge_rubric": {
+        "accuracy": 6.0,
+        "completeness": 8.5,
+        "hallucination": 4.5,
+        "ocr": 7.5,
+        "instruction_following": 8.0
+      },
+      "strengths": [
+        "Correctly identifies it as 'animation cycle or pose reference sheet'",
+        "Says 'walking or running motion sequence' for the animation cycle suggestion",
+        "Detailed layout description (2x3 grid, evenly spaced)",
+        "Reasonable character description and color palette"
+      ],
+      "weaknesses": [
+        "Frame-by-frame breakdown drifts into separate actions: frame 4 'crouched or sitting', frame 5 'alert posture', frame 6 'lying down or stretching'",
+        "Calls shadows 'light gray, soft-edged' — actually simple flat blue shadow",
+        "Says background is 'almost pale lavender-blue' — actually solid light blue"
+      ],
+      "hallucinations_detected": [
+        "Frame 4 'crouched or sitting pose' — drifts from run cycle",
+        "Frame 6 'lying down or stretching, body elongated' — not consistent with run cycle frame",
+        "Shadow color 'light gray' — actually blue",
+        "Background 'almost pale lavender-blue' — actually solid light blue"
+      ],
+      "summary": "Recognizes 'animation cycle' concept overall, but the per-frame breakdown drifts into distinct actions (sitting, alert, lying down), and minor color inaccuracies on shadows and background."
+    }
+  ],
+  "ranking": [
+    {"model": "qwen3-vl-8b-Q8|think", "judge_score": 9.0},
+    {"model": "glm-4.6v-flash-9b-Q8|think", "judge_score": 8.5},
+    {"model": "qwen3-vl-4b-Q8|think", "judge_score": 5.5},
+    {"model": "qwen3.5-9b-Q8|nothink", "judge_score": 6.0},
+    {"model": "gemma4-12b-Q8|think", "judge_score": 4.5},
+    {"model": "gemma4-e4b-Q8|think", "judge_score": 4.0},
+    {"model": "qwen3.5-4b-Q8|think", "judge_score": 4.0},
+    {"model": "qwen3.5-4b-Q8|nothink", "judge_score": 3.5}
+  ],
+  "aggregate_findings": {
+    "best_run_cycle_recognition": "qwen3-vl-8b-Q8|think explicitly states 'running animation cycle' and notes frame 6 mirrors frame 1 indicating the loop",
+    "second_best": "glm-4.6v-flash-9b-Q8|think correctly identifies 'sequential running motion (animation frames)' and 'animation flow'",
+    "worst_run_cycle_recognition": "qwen3.5-4b-Q8|think explicitly argues 'rather than a continuous circular run' — directly contradicts GT",
+    "common_hallucinations": [
+      "6 of 8 models drift toward describing distinct actions (sitting, lying, sploot, jumping) rather than the run cycle",
+      "Shadow colors frequently misdescribed: 'purple-blue gradient' or 'light gray' instead of simple blue",
+      "Frame 6 often misinterpreted as seated/lying rather than a stride phase mirroring frame 1"
+    ],
+    "color_accuracies": "Most models correctly identified the pale/light blue background; main errors were on shadow color (some said gray or purple)",
+    "layout_ocr": "All 8 models correctly identified the 2x3 grid with numbers 1-6 — perfect on layout"
+  }
+}
