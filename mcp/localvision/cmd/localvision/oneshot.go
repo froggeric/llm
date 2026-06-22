@@ -141,6 +141,12 @@ func runOneShot(args []string) int {
 		fmt.Fprintf(os.Stderr, "localvision: %v\n", err)
 		return exitGeneric
 	}
+	// The one-shot exits after a single query. Shut down llama-server so it
+	// doesn't linger as an orphan consuming RAM. (The MCP `run` command keeps
+	// the process alive for the 5-min idle-timer warm window; the one-shot is
+	// fire-and-exit, so it cleans up immediately. Warm starts between one-shot
+	// calls require the daemon/HTTP API planned for Theme F.)
+	defer rt.lifecycle.Shutdown(context.Background())
 
 	registry := tools.NewRegistry()
 	tool, ok := registry.Get(toolID)
