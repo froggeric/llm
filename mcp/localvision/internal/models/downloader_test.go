@@ -151,6 +151,46 @@ func TestDownload_FullDownloadFromScratch(t *testing.T) {
 	assert.Equal(t, payload, got)
 }
 
+// TestDownload_FreeSpacePrecheckRefuses: a download is refused when the
+// destination volume reports less free space than the payload (simulated by
+// overriding the freeDiskBytes seam). Guards against filling the system drive.
+func TestDownload_FreeSpacePrecheckRefuses(t *testing.T) {
+	payload := bytesRepeat("data-", 1024) // ~5KB
+	want := hashHex(payload)
+
+	srv, _ := startTestServerHTTPS(t, payload)
+	withTestTLSClient(t, srv)
+	withPermissiveHFRegex(t)
+
+	dest := filepath.Join(t.TempDir(), "model.gguf")
+	prev := freeDiskBytes
+	t.Cleanup(func() { freeDiskBytes = prev })
+	freeDiskBytes = func(string) (int64, error) { return 100, nil } // < ~5KB payload
+
+	err := downloadImpl(context.Background(), srv.URL+"/x.gguf", dest, want, nil)
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "insufficient free space")
+
+	_, statErr := os.Stat(dest)
+	assert.True(t, os.IsNotExist(statErr), "nothing should be written on refusal")
+}
+
+func TestHumanBytes(t *testing.T) {
+	cases := []struct {
+		in   int64
+		want string
+	}{
+		{0, "0 B"},
+		{512, "512 B"},
+		{2048, "2.0 KiB"},
+		{5 * 1024 * 1024, "5.0 MiB"},
+		{17 * 1024 * 1024 * 1024, "17.0 GiB"},
+	}
+	for _, c := range cases {
+		assert.Equal(t, c.want, humanBytes(c.in), "input %d", c.in)
+	}
+}
+
 func TestDownload_HTTPSchemeRejected(t *testing.T) {
 	dest := filepath.Join(t.TempDir(), "x.gguf")
 	err := downloadImpl(context.Background(),

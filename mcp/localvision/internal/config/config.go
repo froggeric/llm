@@ -146,6 +146,28 @@ func Load(path string) (*Config, error) {
 	return c, nil
 }
 
+// ApplyDirOverrides applies optional cache_dir / models_dir / bin_dir overrides
+// (e.g. from CLI flags), re-deriving subordinates and expanding paths. Empty
+// strings leave the existing value. Overriding cache_dir re-derives models_dir
+// and bin_dir beneath it (unless explicitly overridden too), so a single
+// --cache-dir redirects all storage — useful for keeping multi-GB models off
+// the system drive.
+func (c *Config) ApplyDirOverrides(cacheDir, modelsDir, binDir string) {
+	if cacheDir != "" {
+		c.CacheDir = expandPath(cacheDir)
+	}
+	if modelsDir != "" {
+		c.ModelsDir = expandPath(modelsDir)
+	} else if cacheDir != "" {
+		c.ModelsDir = filepath.Join(c.CacheDir, DefaultModelsSubdir)
+	}
+	if binDir != "" {
+		c.BinDir = expandPath(binDir)
+	} else if cacheDir != "" {
+		c.BinDir = filepath.Join(c.CacheDir, DefaultBinSubdir)
+	}
+}
+
 // DefaultPath returns the canonical config file location for the current
 // user: $XDG_CONFIG_HOME/localvision/config.toml if XDG_CONFIG_HOME is
 // set, otherwise ~/.localvision/config.toml.

@@ -14,6 +14,8 @@ import (
 	"regexp"
 	"strings"
 	"time"
+
+	"golang.org/x/sys/unix"
 )
 
 // ErrSchemaIncompatible is returned by Load when the catalog file declares
@@ -308,6 +310,21 @@ func streamDownload(ctx context.Context, url, tmpPath string, resumeFrom int64, 
 		return 0, 0, fmt.Errorf("unexpected status %d for %s", resp.StatusCode, url)
 	}
 
+	// Free-space precheck: refuse a download that would overflow the destination
+	// volume. The default models dir lives on the system drive and a single
+	// model can be many GB; this prevents silently filling the disk. Best
+	// effort — skipped when the size is unknown (chunked / no Content-Length).
+	// Uses the response's own Content-Length (the bytes still to write), so no
+	// extra HEAD request is needed.
+	if resp.ContentLength > 0 {
+		if free, derr := freeDiskBytes(filepath.Dir(tmpPath)); derr == nil && free < resp.ContentLength {
+			return 0, contentLength, fmt.Errorf(
+				"insufficient free space: need ~%s for this download, only %s free on its volume — "+
+					"redirect storage with --models-dir (or config models_dir) to a larger disk",
+				humanBytes(resp.ContentLength), humanBytes(free))
+		}
+	}
+
 	// Open tmpPath for write (truncate) or append.
 	flag := os.O_CREATE | os.O_WRONLY | os.O_TRUNC
 	if appending && resumeFrom > 0 {
@@ -364,6 +381,41 @@ func streamDownload(ctx context.Context, url, tmpPath string, resumeFrom int64, 
 	}
 	flush()
 	return written, contentLength, nil
+}
+
+// freeDiskBytes returns the free byte count available to unprivileged users on
+// the filesystem holding path (darwin/linux via Statfs). It is a package-level
+// variable so tests can simulate a nearly-full volume.
+var freeDiskBytes = func(path string) (int64, error) {
+	var stat unix.Statfs_t
+	if err := unix.Statfs(path, &stat); err != nil {
+		return 0, err
+	}
+	return int64(stat.Bavail) * int64(stat.Bsize), nil
+}
+
+// humanBytes renders a byte count as a short human-readable string.
+func humanBytes(b int64) string {
+	const unit = 1024
+	if b < unit {
+		return fmt.Sprintf("%d B", b)
+	}
+	div, exp := int64(unit), 0
+	for n := b / unit; n >= unit; n /= unit {
+		div *= unit
+		exp++
+	}
+	return fmt.Sprintf("%.1f %ciB", float64(b)/float64(div), "KMGTPE"[exp])
+}
+
+// DiskFreeHuman returns a short human-readable description of the free space on
+// the filesystem holding dir (e.g. "1.2 TiB free"), or "(unknown)".
+func DiskFreeHuman(dir string) string {
+	free, err := freeDiskBytes(dir)
+	if err != nil {
+		return "(unknown)"
+	}
+	return humanBytes(free) + " free"
 }
 
 // hashBytes returns the hex SHA256 of b. Used by tests and the
