@@ -12,15 +12,30 @@ package tools
 // tool catalog and one of the two servers must be disabled. v0.2 may add a
 // configurable prefix.
 const (
-	idReadImage        = "read_image"
-	idExtractText      = "extract_text"
-	idExtractCode      = "extract_code"
-	idExtractTable     = "extract_table"
-	idDescribeUI       = "describe_ui"
-	idDescribeDiagram  = "describe_diagram"
-	idDescribeChart    = "describe_chart"
-	idDiagnoseError    = "diagnose_error"
-	idCompareImages    = "compare_images"
+	idReadImage       = "read_image"
+	idExtractText     = "extract_text"
+	idExtractCode     = "extract_code"
+	idExtractTable    = "extract_table"
+	idDescribeUI      = "describe_ui"
+	idDescribeDiagram = "describe_diagram"
+	idDescribeChart   = "describe_chart"
+	idDiagnoseError   = "diagnose_error"
+	idCompareImages   = "compare_images"
+)
+
+// Exported tool-ID aliases for callers outside this package (e.g. the CLI
+// --type → tool map). The lowercase consts above remain the canonical IDs
+// returned by each tool's ID() method.
+const (
+	ToolReadImage      = idReadImage
+	ToolExtractText    = idExtractText
+	ToolExtractCode    = idExtractCode
+	ToolExtractTable   = idExtractTable
+	ToolDescribeUI     = idDescribeUI
+	ToolDescribeDiagram = idDescribeDiagram
+	ToolDescribeChart  = idDescribeChart
+	ToolDiagnoseError  = idDiagnoseError
+	ToolCompareImages  = idCompareImages
 )
 
 // latencyHint is appended to every tool's Description() so the calling LLM

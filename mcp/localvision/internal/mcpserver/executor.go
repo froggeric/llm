@@ -37,6 +37,11 @@ type CatalogExecutor struct {
 	lifecycle *llama.LifecycleManager
 	hardware  models.HardwareInfo
 	logger    *slog.Logger
+	// overrideModel, when non-empty, forces a specific model ID instead of the
+	// catalog's per-tool selection. Used by the CLI (--model / config
+	// default_model). The MCP server path leaves it empty so the richer
+	// per-tool selection applies.
+	overrideModel string
 }
 
 // NewCatalogExecutor builds an executor wired to the given catalog and
@@ -55,6 +60,11 @@ func NewCatalogExecutor(catalog *models.Catalog, lifecycle *llama.LifecycleManag
 		logger:    logger,
 	}
 }
+
+// SetOverrideModel forces a specific model ID for subsequent Run calls instead
+// of the catalog's per-tool selection. The ID must exist in the catalog; Run
+// warns (but does not fail) if it may not fit the hardware. Empty clears it.
+func (e *CatalogExecutor) SetOverrideModel(id string) { e.overrideModel = id }
 
 // Run implements tools.Executor. It:
 //  1. Picks the right model for the tool via catalog.ModelFor(toolID, hw)
@@ -76,13 +86,22 @@ func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPro
 		return "", fmt.Errorf("executor: lifecycle manager is nil; first-run setup required")
 	}
 
-	// Step 1: pick the model. Returns ErrNoFittingModel if hardware can't
-	// fit anything; we surface that as a structured MCP error.
-	modelID, err := e.catalog.ModelFor(toolID, e.hardware)
-	if err != nil {
-		return "", fmt.Errorf("selecting model for tool %q: %w", toolID, err)
+	// Step 1: pick the model. An explicit override (--model / config
+	// default_model) wins; otherwise use the catalog's per-tool selection.
+	modelID := e.overrideModel
+	if modelID == "" {
+		var err error
+		modelID, err = e.catalog.ModelFor(toolID, e.hardware)
+		if err != nil {
+			return "", fmt.Errorf("selecting model for tool %q: %w", toolID, err)
+		}
+	} else if _, ok := e.catalog.Models[modelID]; !ok {
+		return "", fmt.Errorf("override model %q is not in the catalog", modelID)
+	} else if !e.catalog.Fits(modelID, e.hardware) {
+		e.logger.Warn("override model may not fit the detected hardware; proceeding anyway",
+			"model_id", modelID)
 	}
-	e.logger.Debug("selected model for tool", "tool_id", toolID, "model_id", modelID)
+	e.logger.Debug("selected model for tool", "tool_id", toolID, "model_id", modelID, "override", e.overrideModel != "")
 
 	// Step 2: load (or reuse) the model. Acquire blocks on an internal
 	// mutex so concurrent tool calls don't race on the subprocess.

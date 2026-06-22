@@ -292,6 +292,18 @@ func (c *Catalog) ModelFor(tool string, hw HardwareInfo) (string, error) {
 	return selectModelFor(c, tool, hw, defaultSelectionSafetyMarginGB)
 }
 
+// Fits reports whether the named model plausibly fits the detected hardware
+// (using the default safety margin). Returns false if the model is unknown.
+// Used by callers that want to sanity-check an explicit model choice (e.g. the
+// CLI --model override).
+func (c *Catalog) Fits(id string, hw HardwareInfo) bool {
+	m, ok := c.Models[id]
+	if !ok {
+		return false
+	}
+	return fitsModel(m, hw, defaultSelectionSafetyMarginGB)
+}
+
 // Downloader handles resumable HTTPS downloads of model files with SHA256
 // verification. Track D implements.
 type Downloader struct {

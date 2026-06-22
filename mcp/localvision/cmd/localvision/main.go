@@ -62,9 +62,11 @@ func run(args []string) int {
 	case "doctor":
 		return doctorSubcommand(args[1:])
 	default:
-		fmt.Fprintf(os.Stderr, "unknown subcommand: %s\n", args[0])
-		printHelp(os.Stderr)
-		return exitBadArgs
+		// Not a known subcommand: treat the arg list as a one-shot image query
+		// (positional image(s) + flags like --type). Supports `localvision img.png`
+		// and `localvision img.png --type ocr`. (No-args still runs the MCP server
+		// for now; the TUI setup lands in Phase 4.)
+		return runOneShot(args)
 	}
 }
 
@@ -96,43 +98,17 @@ func runSubcommand(args []string) int {
 		return exitUnsetConfig
 	}
 
-	hw, err := models.DetectHardware()
+	rt, err := bootstrap(cfg, logger)
 	if err != nil {
-		// Hardware detection failures are non-fatal: we fall through with
-		// an empty HardwareInfo and the catalog's DefaultModel returns
-		// ErrNoFittingModel on first tool call.
-		logger.Warn("hardware detection failed; falling back to empty hardware info", "error", err)
-	}
-
-	catalog, err := models.Load("")
-	if err != nil {
-		logger.Error("failed to load catalog", "error", err)
-		return exitGeneric
-	}
-	if err := catalog.Validate(); err != nil {
-		logger.Error("catalog validation failed", "error", err)
-		// Don't bail out hard: tools/list still works with an unvalidated
-		// catalog; tools/call surfaces a clear error if a model is needed.
-	}
-
-	lm, err := llama.NewWithOptions(llama.Options{
-		Catalog:           catalog,
-		CacheDir:          cfg.CacheDir,
-		IdleTimeout:       cfg.IdleTimeout,
-		StartupTimeout:    cfg.StartupTimeout,
-		Logger:            logger,
-		BinarySHA256:      cfg.LLAMAServerPinnedSHA256,
-	})
-	if err != nil {
-		logger.Error("failed to construct lifecycle manager", "error", err)
+		fmt.Fprintf(os.Stderr, "localvision: %v\n", err)
 		return exitGeneric
 	}
 
 	srv, err := mcpserver.NewServer(mcpserver.Dependencies{
-		Logger:    logger,
-		Lifecycle: lm,
-		Catalog:   catalog,
-		Hardware:  hw,
+		Logger:    rt.logger,
+		Lifecycle: rt.lifecycle,
+		Catalog:   rt.catalog,
+		Hardware:  rt.hw,
 	})
 	if err != nil {
 		logger.Error("failed to construct MCP server", "error", err)
@@ -157,9 +133,9 @@ func runSubcommand(args []string) int {
 	}()
 
 	logger.Info("starting MCP server on stdio",
-		"hardware_total_memory_gb", hw.TotalMemoryGB,
-		"hardware_tier", hw.Tier,
-		"hardware_backend", hw.Backend,
+		"hardware_total_memory_gb", rt.hw.TotalMemoryGB,
+		"hardware_tier", rt.hw.Tier,
+		"hardware_backend", rt.hw.Backend,
 		"cache_dir", cfg.CacheDir,
 	)
 	if err := srv.Run(ctx); err != nil && !errors.Is(err, context.Canceled) {
