@@ -377,21 +377,29 @@ func TestExtractTarGzRejectsSymlink(t *testing.T) {
 	assert.Contains(t, err.Error(), "link entry")
 }
 
-// TestValidateBinaryPathInside: validateBinaryPath accepts paths inside
-// the bin dir, rejects paths outside.
-func TestValidateBinaryPathInside(t *testing.T) {
+// TestValidateBinaryPathAbsolute: validateBinaryPath accepts any absolute
+// path (since v0.2, a $PATH-discovered binary like /opt/homebrew/bin/llama-server
+// lives outside ~/.localvision/bin and must be allowed) and rejects relative paths.
+func TestValidateBinaryPathAbsolute(t *testing.T) {
 	dir := t.TempDir()
-	inside := filepath.Join(dir, "llama-server")
-	outside := filepath.Join(filepath.Dir(dir), "evil")
 
-	got, err := validateBinaryPath(inside, dir)
+	// Absolute path outside the cache dir — the $PATH-binary case.
+	got, err := validateBinaryPath("/opt/homebrew/bin/llama-server", dir)
+	require.NoError(t, err)
+	assert.Equal(t, "/opt/homebrew/bin/llama-server", got)
+
+	// A cache-dir path still works.
+	inside := filepath.Join(dir, "llama-server")
+	got, err = validateBinaryPath(inside, dir)
 	require.NoError(t, err)
 	assert.Equal(t, inside, got)
 
-	_, err = validateBinaryPath(outside, dir)
-	require.Error(t, err)
+	// Paths are cleaned.
+	got, err = validateBinaryPath("/opt//homebrew/./bin/llama-server", dir)
+	require.NoError(t, err)
+	assert.Equal(t, "/opt/homebrew/bin/llama-server", got)
 
-	// Relative paths rejected.
+	// Relative paths are rejected.
 	_, err = validateBinaryPath("llama-server", dir)
 	require.Error(t, err)
 }
