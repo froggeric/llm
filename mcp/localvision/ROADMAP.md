@@ -18,25 +18,18 @@ item isn't in this file, it isn't planned.
 
 ## Where we are now
 
-`v0.1.0` shipped 2026-06-18 (Apple Silicon MVP, old 3-model catalog). On `main`
-today, **unreleased**:
+**v0.2.0 shipped 2026-06-22** — the v6 benchmark catalog, safe `llama-server`
+acquisition (PATH-first + pinned official download), benchmark-faithful
+sampling/launch params, and the first GitHub Release + Homebrew formula.
 
-- The catalog was refreshed to the **v0.2.0** set — winners of the v6 benchmark
-  (30 images × 3 runs × 24 variants): `qwen3-vl-8b` (Q8_0), `qwen3.5-4b`
-  (nothink), `qwen3.6-27b` (nothink).
-- `chat_template_kwargs` plumbing (`enable_thinking=false`) and **WEBP** support
-  were added.
-- The directory was renamed `local-vision-mcp` → `localvision`.
-- The v6 benchmark was checked into the monorepo at `benchmark/vlm/`.
+What **works** now: 9 MCP tools; hardware tier detection on Apple Silicon;
+spawn-on-demand subprocess lifecycle with keep-warm + crash recovery; SHA256
+verification on every model load; HEIC conversion; Claude Code plugin manifest
++ skill; installs via **Homebrew**, `curl|sh`, and `go install`.
 
-What **works** today: 9 MCP tools, hardware tier detection on Apple Silicon,
-spawn-on-demand subprocess lifecycle with keep-warm + crash recovery, SHA256
-verification on every model load, HEIC conversion, Claude Code plugin manifest
-+ skill, `go install` / `curl|sh` install.
-
-What's **not** working yet: CI is red (see A1), no release has ever been cut,
-the `llama-server` binary is downloaded at runtime without an integrity pin,
-and the binary is MCP-only (no shell/CLI usage).
+What's **next** (still MCP-only, Apple Silicon only): a standalone shell CLI
+(Theme C), cross-platform Linux/Windows + GPU backends (Theme D), and the
+hardening tail (Theme E).
 
 ---
 

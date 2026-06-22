@@ -8,9 +8,9 @@ It runs entirely on your machine. There is no telemetry, no outbound HTTP
 except to `huggingface.co/froggeric/` for the initial model download, and
 the `llama-server` subprocess binds to `127.0.0.1` only.
 
-> **Status:** v0.1.0 shipped (Apple Silicon MVP). `main` carries the unreleased
-> v0.2 catalog refresh — not yet tagged. Apple Silicon only; Linux and Windows
-> are planned (see [`ROADMAP.md`](./ROADMAP.md), Theme D).
+> **Status:** **v0.2.0 released** (2026-06-22) — green CI, safe `llama-server`
+> acquisition, and the first GitHub Release + Homebrew formula. Apple Silicon
+> (darwin/arm64) only; the next milestone is the standalone CLI (Theme C).
 
 ---
 

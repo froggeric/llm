@@ -19,8 +19,9 @@ Release + Homebrew formula ship. See [`ROADMAP.md`](./ROADMAP.md) Themes A/B + C
 
 ### Added
 
-- **First GitHub Release + Homebrew formula** (B1/B2): `brew tap
-  froggeric/homebrew-tap && brew install localvision`. darwin/arm64 only.
+- **First GitHub Release + Homebrew formula** (B1/B2):
+  `brew tap froggeric/homebrew-tap && brew trust froggeric/tap && brew install localvision`.
+  darwin/arm64 only.
 - `chat_template_kwargs` catalog field, carrying `enable_thinking=false` for the
   hybrid-thinking models (Qwen3.5/3.6) — "thinking mode hurts vision" was a key
   v6 finding.
@@ -54,6 +55,11 @@ Release + Homebrew formula ship. See [`ROADMAP.md`](./ROADMAP.md) Themes A/B + C
   v6 benchmark).
 - **Server key unified** to `localvision` everywhere (`plugin/plugin.json`,
   `docs/INSTALL.md`).
+- **Release tooling**: goreleaser OSS can't parse Go subdirectory-module tags,
+  so the release workflow normalizes `mcp/localvision/vX.Y.Z` to a local bare
+  `vX.Y.Z` for goreleaser (the subdir tag stays on the remote for `go install`),
+  and `.goreleaser.yaml` uses `gomod.proxy: false`. (`--snapshot` had masked
+  this — v0.1.0 was never released through goreleaser.)
 
 ### Fixed
 
