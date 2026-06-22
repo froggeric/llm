@@ -11,6 +11,17 @@ Tags for this subdirectory follow the Go module convention
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-06-22
+
+### Fixed
+
+- **`$PATH`-discovered `llama-server` now spawns** (v0.2.0 regression): the
+  recommended setup (`brew install llama.cpp` so `llama-server` is on `$PATH`)
+  discovered the binary but `validateBinaryPath` rejected it at spawn as
+  "outside bin cache dir", so every tool call (MCP and CLI) failed. Path
+  validation now accepts any absolute path (discovery-trusted, never
+  config-controlled); relative paths are still rejected.
+
 ## [0.2.0] - 2026-06-22
 
 Foundation & first real distribution. The v6 benchmark catalog refresh lands,
@@ -134,5 +145,6 @@ First usable release. macOS Apple Silicon only (Linux/Windows stubbed for v0.2).
   GGUF source and it ranked last in our 7-model benchmark.
 
 [Unreleased]: https://github.com/froggeric/llm/compare/HEAD
+[v0.2.1]: https://github.com/froggeric/llm/releases/tag/v0.2.1
 [v0.2.0]: https://github.com/froggeric/llm/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/froggeric/llm/releases/tag/mcp%2Flocalvision%2Fv0.1.0
