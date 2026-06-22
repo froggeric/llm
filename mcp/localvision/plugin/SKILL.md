@@ -53,7 +53,7 @@ All tools accept these input shapes (pick whichever is easiest for the caller):
 
 **Budget 30–60 seconds per call.** Each call:
 
-1. Picks a model based on the tool + your hardware (default catalog has 3 models, scoped to constrained/mainstream/high_end tiers).
+1. Picks a model based on your hardware (the catalog has 3 models across constrained and mainstream tiers).
 2. Loads the model into a `llama-server` subprocess (cold start: 5–10 s; subsequent calls on the same model: 0.1–0.5 s).
 3. Runs one inference and returns text.
 
@@ -68,13 +68,13 @@ The subprocess stays resident for 5 minutes after the last call (configurable vi
 
 ## Quality caveats
 
-Local VLMs are good but not frontier-class. In a 7-model benchmark (Qwen3-VL 4B/8B, Qwen3.6 35B-A3B, Gemma 4 12B/26B-A4B/E4B, GLM-4.6V-Flash 9B, InternVL3.5 8B), every model got at least one basic-facts test wrong on a 20-image suite. Cross-check critical extractions.
+Local VLMs are good but not frontier-class. In our v6 benchmark (11 base models × Q4/Q8 × think/nothink, 30 images, 3 runs), every model got at least one basic-facts test wrong. Cross-check critical extractions.
 
 If accuracy is paramount (medical, legal, security-relevant), say so to the user and suggest routing those images through Claude's native vision or another frontier model.
 
 ## After invoking
 
-- **Cite the source.** Tell the user: "Analyzed locally with Qwen3-VL 8B" (or whichever model the catalog picked for that tool on this hardware).
+- **Cite the source.** Tell the user which model was used — e.g. "Analyzed locally with Qwen3.6-27B" or "Qwen3-VL 8B" — whichever the catalog picked for this hardware.
 - **Don't pretend you saw the image.** You didn't — you got a description. If the user asks follow-up questions you can't answer from the description, call the tool again with the new question.
 - **Surface uncertainty.** If the tool's output mentions ambiguity ("I see 5 or 6 people", "the text appears to say X"), pass that uncertainty on to the user. Don't collapse it to a confident answer.
 

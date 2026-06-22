@@ -6,13 +6,13 @@ Start with `localvision doctor` — it prints hardware, catalog validation, mode
 
 ### 1. `catalog failed validation: gguf_sha256 is missing or placeholder`
 
-You're running v0.1.0-dev before the Phase 3 lead committed real SHA256 hashes for the model files. The catalog loads but no model can be used.
+A model entry in the catalog (usually one you added via an overlay in `~/.localvision/catalog.d/`) is missing its `gguf_sha256`. The catalog loads but that model can't be used until the hash is present. (Built-in models ship with their hashes.)
 
-**Fix**: wait for v0.1.0 release (SHA256s computed then), or compute them yourself:
+**Fix**: compute the hash and add it to your overlay:
 
 ```bash
 # Download the model file
-curl -L "https://huggingface.co/froggeric/Qwen3-VL-8B-GGUF/resolve/main/qwen3-vl-8b-q4_k_m.gguf" -o /tmp/model.gguf
+curl -L "https://huggingface.co/froggeric/Qwen3-VL-8B-Instruct-GGUF/resolve/main/Qwen3-VL-8B-Instruct-Q8_0.gguf" -o /tmp/model.gguf
 
 # Compute the hash
 shasum -a 256 /tmp/model.gguf
@@ -27,7 +27,7 @@ EOF
 
 ### 2. `no model in the catalog fits the detected hardware`
 
-Your Mac has less unified memory than the smallest model in the catalog requires (`min_vram_gb = 5` for Qwen3-VL 4B).
+Your Mac has less unified memory than the smallest model in the catalog requires (`min_vram_gb = 3` for Qwen3.5 4B).
 
 **Fix**: either upgrade your Mac, or add a smaller model via a catalog overlay (e.g. Qwen3-VL 0.5B if you can find one). Or use a cloud vision MCP instead.
 

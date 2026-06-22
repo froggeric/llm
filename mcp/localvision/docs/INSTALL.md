@@ -52,7 +52,7 @@ Add the plugin via Claude Code's plugin config:
 ```json
 {
   "mcpServers": {
-    "local-vision": {
+    "localvision": {
       "command": "localvision",
       "args": ["run"]
     }
@@ -60,7 +60,7 @@ Add the plugin via Claude Code's plugin config:
 }
 ```
 
-Restart Claude Code. Verify with `/mcp` — `local-vision` should show 9 tools (`compare_images`, `describe_chart`, `describe_diagram`, `describe_ui`, `diagnose_error`, `extract_code`, `extract_table`, `extract_text`, `read_image`).
+Restart Claude Code. Verify with `/mcp` — `localvision` should show 9 tools (`compare_images`, `describe_chart`, `describe_diagram`, `describe_ui`, `diagnose_error`, `extract_code`, `extract_table`, `extract_text`, `read_image`).
 
 ## Configure other MCP clients (Cursor, Cline, etc.)
 

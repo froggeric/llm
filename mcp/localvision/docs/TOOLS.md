@@ -6,22 +6,21 @@
 
 | Tool | Input | Output | Default model | Expected latency |
 |---|---|---|---|---|
-| `read_image` | 1 image, optional question | Prose description | Qwen3-VL 8B (mainstream) / 4B (constrained) | 30–60 s |
-| `extract_text` | 1 image | Verbatim OCR text | Qwen3-VL 8B / 4B | 30–60 s |
-| `extract_code` | 1 image | Fenced code block with language | Qwen3-VL 8B / 4B | 30–60 s |
-| `extract_table` | 1 image | Markdown tables | Gemma 4 26B-A4B (high_end) / Qwen3-VL 8B | 30–70 s |
-| `describe_ui` | 1 image | Layout + components + errors | Qwen3-VL 8B / 4B | 30–60 s |
-| `describe_diagram` | 1 image | Diagram type + components + connections | Gemma 4 26B-A4B / Qwen3-VL 8B | 30–70 s |
-| `describe_chart` | 1 image | Chart type + axes + series + trends | Gemma 4 26B-A4B / Qwen3-VL 8B | 30–70 s |
-| `diagnose_error` | 1 image | Error type + root cause + file:line | Qwen3-VL 8B / 4B | 30–60 s |
-| `compare_images` | 2 images | Bullet list of differences | Gemma 4 26B-A4B / Qwen3-VL 8B | 40–80 s |
+| `read_image` | 1 image, optional question | Prose description | qwen3.6-27b (mainstream) / qwen3-vl-8b (constrained) | 30–60 s |
+| `extract_text` | 1 image | Verbatim OCR text | qwen3.6-27b / qwen3-vl-8b | 30–60 s |
+| `extract_code` | 1 image | Fenced code block with language | qwen3.6-27b / qwen3-vl-8b | 30–60 s |
+| `extract_table` | 1 image | Markdown tables | qwen3.6-27b / qwen3-vl-8b | 30–70 s |
+| `describe_ui` | 1 image | Layout + components + errors | qwen3.6-27b / qwen3-vl-8b | 30–60 s |
+| `describe_diagram` | 1 image | Diagram type + components + connections | qwen3.6-27b / qwen3-vl-8b | 30–70 s |
+| `describe_chart` | 1 image | Chart type + axes + series + trends | qwen3.6-27b / qwen3-vl-8b | 30–70 s |
+| `diagnose_error` | 1 image | Error type + root cause + file:line | qwen3.6-27b / qwen3-vl-8b | 30–60 s |
+| `compare_images` | 2 images | Bullet list of differences | qwen3.6-27b / qwen3-vl-8b | 40–80 s |
 
-"Default model" depends on detected hardware tier:
-- **constrained** (≤16 GB unified memory): Qwen3-VL 4B.
-- **mainstream** (16–48 GB): Qwen3-VL 8B.
-- **high_end** (>48 GB): Gemma 4 26B-A4B for chart/diagram/table/compare; Qwen3-VL 8B for OCR/Code/UI/Error.
+"Default model" depends on detected hardware tier (see [MODELS.md](./MODELS.md)):
+- **constrained** (≤16 GB unified memory): `qwen3-vl-8b` (Q8_0), preferred for all tools. On 4–8 GB Macs where it does not fit, falls back to `qwen3.5-4b` (nothink).
+- **mainstream** (16+ GB): `qwen3.6-27b` (nothink), preferred for all tools; also used on 48+ GB Macs (no larger model justified by the v6 study).
 
-Override per-tool via the catalog's `preferred_for` field, or globally via `default_model` in `~/.localvision/config.toml`.
+Override per-tool via the catalog's `preferred_for` field, or globally via `default_model` in `~/.localvision/config.toml` (a CLI `--model` override is planned — see [ROADMAP.md](../ROADMAP.md), item C5).
 
 ## Input format
 
@@ -144,13 +143,13 @@ Max output: 1500 tokens.
 
 ## Known model behaviors
 
-From the benchmark ([`../../../benchmark/vlm/SUMMARY.md`](../../../benchmark/vlm/SUMMARY.md)):
+From the v6 benchmark ([`../../../benchmark/vlm/SUMMARY.md`](../../../benchmark/vlm/SUMMARY.md)):
 
-- **Qwen3-VL 8B**: best OCR + fine detail. Verbose (1400–2200 tokens). Correct on the headcount test in our 7-model suite.
-- **Qwen3-VL 4B**: same family as 8B, slightly less precise on busy images. Fastest in the suite (61 tok/s).
-- **Gemma 4 26B-A4B (MoE)**: best on dense screenshots, produces clean Markdown tables unprompted. 26B params on disk, 4B active.
+- **Qwen3.6-27B (nothink)**: benchmark champion — 79.6/100, σ=0.24, 0 failures across 90 cells. Best quality, stability, and reliability. Needs 24+ GB for comfortable operation.
+- **Qwen3-VL 8B (Q8_0)**: the only 100%-reliable Q8 model (0 timeouts, σ=0.33). Slightly lower peak quality than the 27B, but rock-solid on constrained Macs. Verbose (1400–2200 tokens).
+- **Qwen3.5-4B (nothink)**: best quality-per-GB (75.5/100 at ~3 GB) and the only option on 4–8 GB Macs. Higher run-to-run variance (σ=0.48) on hard images.
 
-InternVL3.5 8B was considered but dropped from v0.1 — it ranked last in our benchmark and there's no clean upstream GGUF.
+Models dropped after the v6 benchmark — Gemma 4 12B (Q4 hallucination flips / Q8 22% timeouts), Qwen3.6 35B-A3B (MoE size misleading), Qwen3-VL 4B, and InternVL3.5 8B — are documented in [MODELS.md](./MODELS.md).
 
 ## Tool name collisions
 

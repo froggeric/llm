@@ -8,8 +8,9 @@ It runs entirely on your machine. There is no telemetry, no outbound HTTP
 except to `huggingface.co/froggeric/` for the initial model download, and
 the `llama-server` subprocess binds to `127.0.0.1` only.
 
-> **Status:** v0.1 is MVP — Apple Silicon (darwin/arm64) only. Linux and
-> Windows support is stubbed and will land in v0.2.
+> **Status:** v0.1.0 shipped (Apple Silicon MVP). `main` carries the unreleased
+> v0.2 catalog refresh — not yet tagged. Apple Silicon only; Linux and Windows
+> are planned (see [`ROADMAP.md`](./ROADMAP.md), Theme D).
 
 ---
 
@@ -78,7 +79,7 @@ On the first `localvision run`, the binary will:
 1. Download a pinned `llama-server` build (≈ 80 MB) to
    `~/.localvision/bin/` and verify its SHA256.
 2. Download the smallest model that fits your hardware from
-   `huggingface.co/froggeric/` (the v0.1 smallest is Qwen3-VL 4B, ~5 GB).
+   `huggingface.co/froggeric/` (the v0.2 smallest is Qwen3.5 4B, ~3 GB).
 3. Surface install progress to the MCP client (`tools/list` still works
    while this happens; tools are marked unavailable).
 
@@ -179,6 +180,16 @@ ollama stop                 # or: pkill -TERM ollama
 This is documented as a known limitation; v0.2 may add automatic
 coordination via Ollama's API.
 
+## Roadmap
+
+The near-term plan: green CI and a real pinned release (GitHub Releases +
+Homebrew), then a standalone shell CLI — `localvision describe img.png` with
+`--type`, `--format`, `--output`, and `--model` — then cross-platform
+(Linux/Windows + GPU backends), then hardening. Beyond that: a localhost HTTP
+API and OpenAI-compatible endpoint, richer tools (video, PDF, UI→code), and
+far-future research ideas. Every item, its effort, and its target version is in
+[`ROADMAP.md`](./ROADMAP.md) (themes A–H).
+
 ## Project layout
 
 ```
@@ -187,6 +198,7 @@ mcp/localvision/
 ├── ARCHITECTURE.md                 # high-level overview
 ├── README.md                       # this file
 ├── CHANGELOG.md                    # per-subdirectory changelog
+├── ROADMAP.md                      # forward plan, themes, target versions
 ├── COMMERCIAL-LICENSING.md
 ├── THIRD_PARTY_LICENSES.md
 ├── cmd/localvision/main.go    # entry point

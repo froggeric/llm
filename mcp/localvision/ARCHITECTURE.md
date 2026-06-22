@@ -4,8 +4,11 @@ A Go-based MCP server that wraps a local `llama.cpp` subprocess to provide
 vision-language model tools to text-only coding LLMs (Claude Code, Codex CLI,
 etc.).
 
-**Status:** Phase 0 (contract). Interface stubs are committed; 5 subagent
-tracks are about to be dispatched concurrently to fill in implementations.
+**Status:** v0.1.0 shipped; `main` carries the unreleased v0.2 catalog refresh.
+All interface contracts are implemented — the 9 tools, the `llama.cpp`
+lifecycle, the model catalog, and hardware detection are live. For the forward
+plan see [`ROADMAP.md`](./ROADMAP.md); for shipped state see
+[`CHANGELOG.md`](./CHANGELOG.md).
 
 ## Where you are
 
@@ -26,7 +29,7 @@ github.com/froggeric/llm/mcp/localvision
 ```
 mcp/localvision/
 ├── go.mod, go.sum, LICENSE, .gitignore
-├── cmd/localvision/main.go    # entry point (stub; Phase 2 fills in)
+├── cmd/localvision/main.go    # entry point: run (MCP server), doctor, version
 ├── internal/
 │   ├── version/                    # build-time metadata
 │   ├── mcpserver/                  # MCP protocol glue (uses go-sdk)
@@ -36,7 +39,7 @@ mcp/localvision/
 │   ├── config/                     # user config
 │   └── logging/                    # slog setup
 ├── plugin/                         # Claude Code plugin manifest + SKILL.md
-├── scripts/                        # build-llama-cpp.sh, release.sh
+├── scripts/                        # build-llama-cpp.sh, install.sh, release.sh
 ├── docs/                           # INSTALL, TOOLS, MODELS, etc.
 └── dist/                           # release artifacts (gitignored)
 ```
@@ -58,13 +61,11 @@ go test ./...
 ## License
 
 [PolyForm Noncommercial 1.0.0](./LICENSE). Source-available; commercial use
-requires a separate license. See `COMMERCIAL-LICENSING.md` (to be added by
-Track A).
+requires a separate license. See `COMMERCIAL-LICENSING.md`.
 
 ## Pre-Implementation Plan
 
-The full design + review is in `/Volumes/ssd/github/misc/localvision/`:
-- `PLAN-v2.md` — first review pass, 28 findings
-- `PLAN-v3-monorepo-deltas.md` — second pass, 13 monorepo-specific findings
-
-Read both before starting any track.
+The original design + review notes lived in `/Volumes/ssd/github/misc/localvision/`
+(`PLAN-v2.md`, `PLAN-v3-monorepo-deltas.md`). Those scratch docs sit outside
+this repo and may be stale following the rename. The current source of truth
+for intent is this file plus [`ROADMAP.md`](./ROADMAP.md).
