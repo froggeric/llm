@@ -28,7 +28,12 @@ before:
     - go mod verify
 
 gomod:
-  proxy: true
+  # proxy: false — build from the checked-out (tagged) source tree rather than
+  # proxying by version tag. Required for a Go subdirectory module: goreleaser's
+  # tag parser can't handle path-prefixed tags (mcp/localvision/vX.Y.Z), and a
+  # bare tag mis-resolves to the monorepo root. The release workflow checks out
+  # the exact tag commit, so this stays reproducible.
+  proxy: false
   mod: mod
 
 builds:

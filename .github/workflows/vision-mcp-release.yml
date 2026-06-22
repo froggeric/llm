@@ -64,11 +64,21 @@ jobs:
           brew install goreleaser
           goreleaser --version
 
+      - name: Normalize tag to plain semver for goreleaser
+        # goreleaser OSS can't parse Go subdirectory-module tags
+        # (mcp/localvision/v0.2.0). Create a local bare semver tag for it to
+        # read and drop the subdir tag locally so it isn't picked instead. The
+        # subdir tag stays on the remote for `go install`.
+        run: |
+          SUBDIR_TAG="${GITHUB_REF_NAME}"
+          VERSION="${SUBDIR_TAG##*/}"   # mcp/localvision/v0.2.0 -> v0.2.0
+          git tag "$VERSION"
+          git tag -d "$SUBDIR_TAG"
+          echo "Goreleaser will use tag: $VERSION"
+
       - name: Run goreleaser
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Plumbed through but unused in v0.1 (.goreleaser.yaml has no
-          # brews: section). v0.2 will add a Homebrew tap.
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
         run: |
           goreleaser release --clean
