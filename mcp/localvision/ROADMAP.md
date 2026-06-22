@@ -18,18 +18,22 @@ item isn't in this file, it isn't planned.
 
 ## Where we are now
 
-**v0.2.0 shipped 2026-06-22** — the v6 benchmark catalog, safe `llama-server`
-acquisition (PATH-first + pinned official download), benchmark-faithful
-sampling/launch params, and the first GitHub Release + Homebrew formula.
+**v0.2.2 shipped** — the v6 benchmark catalog, safe `llama-server` acquisition,
+benchmark-faithful params, GitHub Release + Homebrew, disk-space safety
+(`--models-dir`, free-space precheck), and the `$PATH` llama-server spawn fix.
 
-What **works** now: 9 MCP tools; hardware tier detection on Apple Silicon;
-spawn-on-demand subprocess lifecycle with keep-warm + crash recovery; SHA256
-verification on every model load; HEIC conversion; Claude Code plugin manifest
-+ skill; installs via **Homebrew**, `curl|sh`, and `go install`.
+Theme C Phase 1 is **on `main`** (unreleased): the one-shot shell CLI works —
+`localvision img.png --type ocr --model qwen3.6-27b` — with per-phase progress
+indicators (downloading → loading → inferring, each timed), model name +
+llama.cpp build display, colored/structured output, and orphan-free cleanup.
+Phases 2–4 (`--format`, batch, TUI) remain.
 
-What's **next** (still MCP-only, Apple Silicon only): a standalone shell CLI
-(Theme C), cross-platform Linux/Windows + GPU backends (Theme D), and the
-hardening tail (Theme E).
+What **works**: 9 MCP tools (MCP `run` command); the one-shot CLI (`localvision
+img.png`); hardware tier detection; spawn-on-demand lifecycle; SHA256
+verification; HEIC; installs via **Homebrew**, `curl|sh`, `go install`.
+
+What's **next**: `--format` output (Phase 2), batch/`--output` (Phase 3), the
+TUI setup wizard (Phase 4), cross-platform (Theme D), hardening (Theme E).
 
 ---
 
@@ -139,7 +143,7 @@ The reuse is clean: `tools.Tool.BuildRequest` + `Executor.Run` +
 are already **MCP-agnostic**. A new CLI subcommand can construct the executor
 exactly as `main.go:119-130` does and skip the MCP SDK entirely.
 
-### C1. Single executable: interactive setup + one-shot queries 📋 `L` — *(idea 2)*
+### C1. Single executable: interactive setup + one-shot queries 🚧 `L` — *(Phase 1 one-shot done; TUI pending)*
 
 - **No args** → interactive setup/configuration mode (TUI or prompted): pick a
   model, set paths, detect hardware, optionally install into a harness (B4),
@@ -150,7 +154,7 @@ exactly as `main.go:119-130` does and skip the MCP SDK entirely.
 `flag`. Add a query/one-shot subcommand. This is the spine the rest of Theme C
 hangs off.
 
-### C2. `--type` query parameter with optimized prompts 📋 `S–M` — *(idea 5)*
+### C2. `--type` query parameter with optimized prompts ✅ `S–M` — *(done)*
 
 Each tool already has a task-tuned, benchmark-informed system prompt
 (`internal/tools/prompt.go`). Expose them as a `--type`/`--tool` flag on the
@@ -189,7 +193,7 @@ result leaves the process. The image normalizer already handles N images
 possible but requires threading `ChatResponse.TokensIn/Out/ElapsedMs`
 (currently dropped at `executor.go:141`) back through `Executor.Run`.
 
-### C5. Manual model override 📋 `S–M` — *(idea 10)*
+### C5. Manual model override ✅ `S–M` — *(done)*
 
 `--model <id>` per invocation, plus wiring the **currently-unused**
 `Config.DefaultModel` field (`config.go:47`) into the executor. Today

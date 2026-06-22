@@ -11,6 +11,46 @@ Tags for this subdirectory follow the Go module convention
 
 ## [Unreleased]
 
+The standalone CLI takes shape. Also includes two fixes that were backported to
+v0.2.1/v0.2.2. See [`ROADMAP.md`](./ROADMAP.md) Theme C.
+
+### Added
+
+- **One-shot shell CLI** (Theme C Phase 1, C1/C2/C5): `localvision img.png
+  --type ocr --model qwen3.6-27b`. Positional images + interspersed flags;
+  `--type` maps to the 9 tools; `--model` override + config `default_model`;
+  `--question`; `--models-dir` / `--cache-dir` to redirect storage. Existing
+  `run`/`doctor`/`version` subcommands unchanged.
+- **Per-phase CLI progress**: the one-shot shows animated phase-by-phase status
+  — ⬇ Downloading → ⚙ Loading model → ↻ Inferring — each with elapsed time.
+  Summary line includes the model name + llama.cpp build number. Interactive
+  mode is quiet (slog suppressed; `--verbose` recovers). Result rendered
+  markdown-ish in TTY; plain when piped. Errors broken into indented lines.
+- **Configurable model storage + disk-space safety** (v0.2.2 backport):
+  free-space precheck refuses a download that would overflow the volume;
+  `doctor` shows free space next to the models dir.
+
+### Fixed
+
+- **PATH-discovered `llama-server` spawn** (v0.2.1 backport): v0.2.0 rejected
+  a `$PATH` `llama-server` at spawn ("outside bin cache dir"); now accepts any
+  absolute path (discovery-trusted).
+- **One-shot orphan prevention**: each one-shot now shuts down `llama-server`
+  on exit instead of leaving it running (previously left orphans consuming RAM).
+
+## [0.2.2] - 2026-06-22
+
+### Added
+
+- **Configurable model storage + disk-space safety**: free-space precheck;
+  `--models-dir` / `--cache-dir` flags; `doctor` shows free space.
+
+## [0.2.1] - 2026-06-22
+
+### Fixed
+
+- **`$PATH`-discovered `llama-server` now spawns** (v0.2.0 regression).
+
 ## [0.2.0] - 2026-06-22
 
 Foundation & first real distribution. The v6 benchmark catalog refresh lands,
@@ -134,5 +174,7 @@ First usable release. macOS Apple Silicon only (Linux/Windows stubbed for v0.2).
   GGUF source and it ranked last in our 7-model benchmark.
 
 [Unreleased]: https://github.com/froggeric/llm/compare/HEAD
+[v0.2.2]: https://github.com/froggeric/llm/releases/tag/v0.2.2
+[v0.2.1]: https://github.com/froggeric/llm/releases/tag/v0.2.1
 [v0.2.0]: https://github.com/froggeric/llm/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/froggeric/llm/releases/tag/mcp%2Flocalvision%2Fv0.1.0
