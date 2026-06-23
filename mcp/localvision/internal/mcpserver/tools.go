@@ -10,9 +10,11 @@ import (
 	"path/filepath"
 	"strings"
 	"sync/atomic"
+	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
+	"github.com/froggeric/llm/mcp/localvision/internal/progress"
 	"github.com/froggeric/llm/mcp/localvision/internal/tools"
 )
 
@@ -172,7 +174,19 @@ func (s *Server) callTool(ctx context.Context, req *mcp.CallToolRequest, t tools
 		return res, nil
 	}
 
-	raw, _, err := s.executor.Run(ctx, t.ID(), systemPrompt, userPrompt, images, t.MaxTokens())
+	// Attach a progress sink so the model/binary downloads and inference can
+	// report progress to the client as notifications/progress — but only if the
+	// client opted in by sending a _meta.progressToken. No token ⇒ no
+	// notifications (today's behavior, byte-for-byte). The sink forwards each
+	// Update via NotifyProgress fire-and-forget with a 2 s timeout so a slow or
+	// stalled client pipe can never stall the tool call (NotifyProgress is a
+	// synchronous transport write in the SDK).
+	runCtx := ctx
+	if token := req.Params.GetProgressToken(); token != nil {
+		runCtx = progress.WithSink(ctx, &mcpProgressSink{session: req.Session, token: token})
+	}
+
+	raw, _, err := s.executor.Run(runCtx, t.ID(), systemPrompt, userPrompt, images, t.MaxTokens())
 	if err != nil {
 		logger.Warn("executor returned error", "error", err)
 		res := &mcp.CallToolResult{}
@@ -455,3 +469,41 @@ var (
 	errNoImageProvided        = errors.New("no image provided")
 	errUnsupportedImageSource = errors.New("unsupported image source")
 )
+
+// mcpProgressSink adapts a progress.Sink to the MCP notifications/progress
+// transport. Each Update is forwarded to the client via
+// ServerSession.NotifyProgress, fire-and-forget in a goroutine bounded by a 2 s
+// timeout. NotifyProgress is a SYNCHRONOUS transport write in the SDK (its
+// handler calls getConn().Notify directly), so without isolating it a slow or
+// stalled client stdin pipe could block the tool call itself. Progress is
+// best-effort: dropping an update on timeout is acceptable.
+type mcpProgressSink struct {
+	session *mcp.ServerSession
+	token   any
+}
+
+func (s *mcpProgressSink) Progress(u progress.Update) {
+	params := &mcp.ProgressNotificationParams{
+		ProgressToken: s.token,
+		Progress:      u.Current,
+		Total:         u.Total,
+		Message:       mcpProgressMessage(u),
+	}
+	go func() {
+		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+		defer cancel()
+		_ = s.session.NotifyProgress(ctx, params)
+	}()
+}
+
+// mcpProgressMessage renders a short human label for a progress Update (the
+// notifications/progress Message field).
+func mcpProgressMessage(u progress.Update) string {
+	if u.Message != "" {
+		return u.Message
+	}
+	if u.Detail != "" {
+		return u.Phase + " " + u.Detail
+	}
+	return u.Phase
+}

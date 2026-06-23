@@ -33,6 +33,7 @@ import (
 	"time"
 
 	"github.com/froggeric/llm/mcp/localvision/internal/models"
+	"github.com/froggeric/llm/mcp/localvision/internal/progress"
 )
 
 // State is the lifecycle state of the managed subprocess.
@@ -293,8 +294,12 @@ func NewWithOptions(opts Options) (*LifecycleManager, error) {
 // ctx cancellation is propagated: if the ctx is cancelled while waiting for
 // a model to load, Acquire returns ctx.Err(). Note that ctx cancellation
 // does NOT kill the underlying subprocess — only Shutdown does that.
-// Phase calls the configured PhaseHook (if any) with a phase transition.
-func (m *LifecycleManager) Phase(phase, detail string) {
+// Phase reports a lifecycle transition to the progress sink attached to ctx
+// (if any) AND to the legacy Options.PhaseHook (if any). Callers pass the
+// request ctx so a per-request sink (e.g. an MCP notifications/progress
+// reporter) receives download/load/ready transitions.
+func (m *LifecycleManager) Phase(ctx context.Context, phase, detail string) {
+	progress.Report(ctx, progress.Update{Phase: phase, Detail: detail})
 	if m.opts.PhaseHook != nil {
 		m.opts.PhaseHook(phase, detail)
 	}
@@ -471,15 +476,24 @@ func (m *LifecycleManager) loadLocked(acquireCtx, spawnCtx context.Context, mode
 			migrate(filepath.Join(m.modelsDir, filepath.Base(spec.Mmproj)), mmprojLocal, spec.MmprojSha256)
 		}
 		d := &models.Downloader{}
-		// Only show "downloading" when bytes are actually transferred (the
-		// downloader is a no-op on cache hit). The progress callback fires
-		// Phase on first invocation.
+		// Only emit the "downloading" phase transition when bytes are actually
+		// transferred (the downloader is a no-op on cache hit). Each callback
+		// also forwards byte-level progress to the ctx sink so callers can show
+		// % and MiB. The downloader already throttles to ~1 MB / 1 s.
 		dlStarted := false
-		dlProgress := func(models.Progress) {
+		dlProgress := func(p models.Progress) {
 			if !dlStarted {
 				dlStarted = true
-				m.Phase("downloading", spec.DisplayName)
+				m.Phase(acquireCtx, "downloading", spec.DisplayName)
 			}
+			progress.Report(acquireCtx, progress.Update{
+				Phase:   "downloading",
+				Detail:  spec.DisplayName,
+				Current: float64(p.Downloaded),
+				Total:   float64(p.Total),
+				Unit:    "bytes",
+				Message: "downloading " + spec.DisplayName,
+			})
 		}
 		m.logger.Info("ensuring model files present", "model", modelID, "gguf", ggufLocal)
 		if err := d.Download(acquireCtx, spec.GGUF, ggufLocal, spec.GGUFSha256, dlProgress); err != nil {
@@ -535,7 +549,7 @@ func (m *LifecycleManager) loadLocked(acquireCtx, spawnCtx context.Context, mode
 		health = m.opts.HealthHook
 	}
 
-	m.Phase("loading", spec.DisplayName)
+	m.Phase(acquireCtx, "loading", spec.DisplayName)
 
 	var result *spawnResult
 	var lastErr error
@@ -588,7 +602,7 @@ func (m *LifecycleManager) loadLocked(acquireCtx, spawnCtx context.Context, mode
 
 	m.state = StateReady
 	m.cond.Broadcast()
-	m.Phase("ready", spec.DisplayName)
+	m.Phase(acquireCtx, "ready", spec.DisplayName)
 	return nil
 }
 

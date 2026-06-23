@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/froggeric/llm/mcp/localvision/internal/mcpserver"
+	"github.com/froggeric/llm/mcp/localvision/internal/progress"
 	"github.com/froggeric/llm/mcp/localvision/internal/tools"
 	"github.com/froggeric/llm/mcp/localvision/internal/tools/format"
 )
@@ -228,6 +229,25 @@ func runOneShot(args []string) int {
 		}
 	}
 
+	// cliSink enriches the live spinner with byte/elapsed numbers during
+	// downloads and inference. The PhaseHook/phaseCallback path handles
+	// phase-only transitions and per-phase timing; this sink only acts on
+	// numeric (Unit != "") updates, so the two never double-drive the spinner.
+	// It captures sp by reference; sp is reassigned per batch unit.
+	cliSink := progress.Func(func(u progress.Update) {
+		if u.Unit == "" || sp == nil {
+			return
+		}
+		msg := phaseLabel(u.Phase)
+		if u.Detail != "" {
+			msg += " · " + u.Detail
+		}
+		if d := cliProgressDetail(u); d != "" {
+			msg += " · " + d
+		}
+		sp.setMsg(msg)
+	})
+
 	rt, err := bootstrap(cfg, logger, phaseCallback)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "localvision: %v\n", err)
@@ -262,7 +282,7 @@ func runOneShot(args []string) int {
 
 	// SIGINT/SIGTERM cancels in-flight inference so Ctrl-C during a 30-70s
 	// cold start exits promptly.
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(progress.WithSink(context.Background(), cliSink))
 	defer cancel()
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)

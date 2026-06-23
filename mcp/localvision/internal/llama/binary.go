@@ -17,6 +17,8 @@ import (
 	"runtime"
 	"strings"
 	"time"
+
+	"github.com/froggeric/llm/mcp/localvision/internal/progress"
 )
 
 // binary.go discovers or downloads the llama-server binary.
@@ -153,7 +155,27 @@ func downloadVerifyAndExtract(ctx context.Context, url, bundleDir, finalBinPath,
 		return "", fmt.Errorf("download %s: HTTP %d", url, resp.StatusCode)
 	}
 
-	// Stream into the temp archive in 64KB chunks.
+	// Stream into the temp archive in 64KB chunks, forwarding byte progress to
+	// the ctx sink (throttled to ~1 MB / 1 s, mirroring models/downloader.go) so
+	// callers can show % during the ~80 MB binary fetch. total is 0 when the
+	// server sends no Content-Length (unknown).
+	total := resp.ContentLength
+	if total < 0 {
+		total = 0
+	}
+	var written int64
+	lastTick := time.Now()
+	lastBytes := int64(0)
+	reportBytes := func() {
+		progress.Report(ctx, progress.Update{
+			Phase:   "downloading",
+			Detail:  "llama-server",
+			Current: float64(written),
+			Total:   float64(total),
+			Unit:    "bytes",
+			Message: "downloading llama-server",
+		})
+	}
 	buf := make([]byte, 64*1024)
 	for {
 		if err := ctx.Err(); err != nil {
@@ -166,6 +188,12 @@ func downloadVerifyAndExtract(ctx context.Context, url, bundleDir, finalBinPath,
 				_ = os.Remove(tmpArchive)
 				return "", fmt.Errorf("write tmp archive: %w", werr)
 			}
+			written += int64(n)
+			if now := time.Now(); written-lastBytes >= 1024*1024 || now.Sub(lastTick) >= time.Second {
+				lastBytes = written
+				lastTick = now
+				reportBytes()
+			}
 		}
 		if rerr == io.EOF {
 			break
@@ -175,6 +203,7 @@ func downloadVerifyAndExtract(ctx context.Context, url, bundleDir, finalBinPath,
 			return "", fmt.Errorf("read response body: %w", rerr)
 		}
 	}
+	reportBytes() // final flush
 	if err := f.Close(); err != nil {
 		_ = os.Remove(tmpArchive)
 		return "", fmt.Errorf("close tmp archive: %w", err)

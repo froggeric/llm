@@ -23,6 +23,7 @@ import (
 
 	"github.com/froggeric/llm/mcp/localvision/internal/llama"
 	"github.com/froggeric/llm/mcp/localvision/internal/models"
+	"github.com/froggeric/llm/mcp/localvision/internal/progress"
 	"github.com/froggeric/llm/mcp/localvision/internal/tools"
 )
 
@@ -149,9 +150,20 @@ func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPro
 		ChatTemplateKwargs: spec.ChatTemplateKwargs,
 	}
 
-	e.lifecycle.Phase("inferring", modelID)
+	e.lifecycle.Phase(ctx, "inferring", modelID)
+
+	// Inference heartbeat: a climbing elapsed progress so callers (CLI spinner,
+	// MCP notifications/progress) aren't silent during the 30-70 s generation.
+	// UX-only — accuracy is secondary (no SSE token streaming in v0.6). The
+	// budget is a rough estimate from the model's bench tok/s and the output
+	// budget, clamped so the fraction stays sensible. The Phase call above still
+	// fires once (PhaseHook records the inferring phase for the CLI summary);
+	// the heartbeat adds the live elapsed climb.
+	stopHeartbeat := progress.Heartbeat(ctx, progress.SinkFrom(ctx), "inferring", spec.DisplayName,
+		inferenceBudgetSec(maxTokens, spec.BenchToks))
 
 	resp, err := client.ChatVision(ctx, req)
+	stopHeartbeat()
 	if err != nil {
 		return "", tools.Stats{}, fmt.Errorf("inference for model %q: %w", modelID, err)
 	}
@@ -169,6 +181,30 @@ func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPro
 		ElapsedMs: resp.ElapsedMs,
 	}
 	return resp.Content, stats, nil
+}
+
+// inferenceBudgetSec returns a soft, UX-only estimate of how many seconds an
+// inference will take, used as the Total for the inference progress heartbeat.
+// It is deliberately rough (accuracy is secondary to "something is happening"):
+// maxTokens / benchToks-per-second, clamped to [5, 180] s. A non-positive
+// benchToks falls back to 60 s.
+func inferenceBudgetSec(maxTokens int, benchToks float64) float64 {
+	const (
+		floor    = 5.0
+		ceil     = 180.0
+		fallback = 60.0
+	)
+	if benchToks <= 0 {
+		return fallback
+	}
+	budget := float64(maxTokens) / benchToks
+	if budget < floor {
+		return floor
+	}
+	if budget > ceil {
+		return ceil
+	}
+	return budget
 }
 
 // Compile-time check that CatalogExecutor satisfies tools.Executor.

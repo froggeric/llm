@@ -8,6 +8,7 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/froggeric/llm/mcp/localvision/internal/progress"
 	"github.com/froggeric/llm/mcp/localvision/internal/tools"
 )
 
@@ -137,6 +138,39 @@ func printPhaseSummary(phases []phaseTime) {
 			paint(cDim, phaseLabel(p.phase)),
 			paint(cDim, fmt.Sprintf("%.1fs", p.elapsed.Seconds())))
 	}
+}
+
+// cliProgressDetail renders the numeric tail of a progress Update for the CLI
+// spinner: "% · MiB / MiB" for byte transfers, "Ns" for elapsed. Returns "" for
+// phase-only updates (the PhaseHook path renders those). Used by the one-shot's
+// progress sink to enrich the live spinner with real numbers during downloads
+// and inference.
+func cliProgressDetail(u progress.Update) string {
+	switch u.Unit {
+	case "bytes":
+		if u.Total > 0 {
+			return fmt.Sprintf("%.0f%% · %s / %s", 100*u.Current/u.Total, humanMiB(u.Current), humanMiB(u.Total))
+		}
+		return humanMiB(u.Current)
+	case "s":
+		return fmt.Sprintf("%.1fs", u.Current)
+	default:
+		return ""
+	}
+}
+
+// humanMiB renders a byte count as a short binary-unit string (e.g. "1.2 GiB").
+func humanMiB(b float64) string {
+	const unit = 1024
+	if b < unit {
+		return fmt.Sprintf("%.0f B", b)
+	}
+	div, exp := float64(unit), 0
+	for n := b / unit; n >= unit; n /= unit {
+		div *= unit
+		exp++
+	}
+	return fmt.Sprintf("%.1f %ciB", b/div, "KMGTPE"[exp])
 }
 
 // llamaVersion queries llama-server --version and returns the first

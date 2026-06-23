@@ -19,6 +19,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/froggeric/llm/mcp/localvision/internal/models"
+	"github.com/froggeric/llm/mcp/localvision/internal/progress"
 	"github.com/froggeric/llm/mcp/localvision/internal/tools"
 )
 
@@ -150,6 +151,22 @@ func (r *recordingExecutor) Run(ctx context.Context, toolID, systemPrompt, userP
 	return "default response from " + toolID, tools.Stats{}, nil
 }
 
+// progressEmittingExecutor is a recordingExecutor that also emits canned
+// progress updates via the ctx sink during Run, so tests can verify the
+// notifications/progress round-trip end to end (callTool attaches the sink →
+// executor's ctx carries it → Report → NotifyProgress → client handler).
+type progressEmittingExecutor struct {
+	recordingExecutor
+	emit []progress.Update
+}
+
+func (e *progressEmittingExecutor) Run(ctx context.Context, toolID, systemPrompt, userPrompt string, images []tools.ImageRef, maxTokens int) (string, tools.Stats, error) {
+	for _, u := range e.emit {
+		progress.Report(ctx, u)
+	}
+	return e.recordingExecutor.Run(ctx, toolID, systemPrompt, userPrompt, images, maxTokens)
+}
+
 // TestServerRegistersTenTools verifies the server's tool registration
 // count via Server.ToolCount (a sanity check that doesn't require running
 // the SDK).
@@ -223,6 +240,110 @@ func TestToolCallRoutesThroughExecutor(t *testing.T) {
 	assert.Equal(t, "extract_code", c.toolID)
 	assert.Equal(t, 1, c.images, "executor should see one image")
 	assert.Equal(t, 1024, c.maxTokens, "executor should see the tool's MaxTokens")
+}
+
+// TestCallToolSendsProgressNotifications drives a real client that sends a
+// _meta.progressToken on tools/call and asserts the server forwards progress
+// updates as notifications/progress with the matching token.
+func TestCallToolSendsProgressNotifications(t *testing.T) {
+	var mu sync.Mutex
+	var got []*mcp.ProgressNotificationParams
+	client := mcp.NewClient(&mcp.Implementation{Name: "test-client", Version: "v0.0.1"}, &mcp.ClientOptions{
+		ProgressNotificationHandler: func(_ context.Context, req *mcp.ProgressNotificationClientRequest) {
+			mu.Lock()
+			got = append(got, req.Params)
+			mu.Unlock()
+		},
+	})
+
+	exec := &progressEmittingExecutor{
+		emit: []progress.Update{
+			{Phase: "downloading", Current: 100, Total: 1000, Unit: "bytes"},
+			{Phase: "inferring", Current: 5, Total: 30, Unit: "s"},
+		},
+	}
+	srv := newTestServer(t, exec)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	t1, t2 := mcp.NewInMemoryTransports()
+	_, err := srv.mcp.Connect(ctx, t1, nil)
+	require.NoError(t, err)
+	cs, err := client.Connect(ctx, t2, nil)
+	require.NoError(t, err)
+	defer cs.Close()
+
+	params := &mcp.CallToolParams{
+		Name:      "read_image",
+		Arguments: map[string]any{"image_path": "/tmp/fake.png"},
+	}
+	params.SetProgressToken("tok-1")
+	res, err := cs.CallTool(ctx, params)
+	require.NoError(t, err)
+	require.False(t, res.IsError)
+
+	// The notifications are sent fire-and-forget; poll for them to land.
+	deadline := time.Now().Add(2 * time.Second)
+	for time.Now().Before(deadline) {
+		mu.Lock()
+		n := len(got)
+		mu.Unlock()
+		if n >= 2 {
+			break
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+
+	mu.Lock()
+	defer mu.Unlock()
+	require.Len(t, got, 2, "expected the 2 emitted progress updates to arrive as notifications")
+	assert.Equal(t, "tok-1", got[0].ProgressToken)
+	assert.Equal(t, "tok-1", got[1].ProgressToken)
+	assert.Equal(t, float64(100), got[0].Progress)
+	assert.Equal(t, float64(5), got[1].Progress)
+}
+
+// TestCallToolNoProgressTokenSendsNothing asserts that a client which does NOT
+// send a _meta.progressToken receives zero notifications, even though the
+// executor emits progress updates (today's behavior is preserved).
+func TestCallToolNoProgressTokenSendsNothing(t *testing.T) {
+	var mu sync.Mutex
+	var n atomic.Int64
+	client := mcp.NewClient(&mcp.Implementation{Name: "test-client", Version: "v0.0.1"}, &mcp.ClientOptions{
+		ProgressNotificationHandler: func(context.Context, *mcp.ProgressNotificationClientRequest) {
+			n.Add(1)
+		},
+	})
+
+	exec := &progressEmittingExecutor{
+		emit: []progress.Update{{Phase: "inferring", Current: 1, Unit: "s"}},
+	}
+	srv := newTestServer(t, exec)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	t1, t2 := mcp.NewInMemoryTransports()
+	_, err := srv.mcp.Connect(ctx, t1, nil)
+	require.NoError(t, err)
+	cs, err := client.Connect(ctx, t2, nil)
+	require.NoError(t, err)
+	defer cs.Close()
+
+	// No SetProgressToken: the server must not attach a sink.
+	res, err := cs.CallTool(ctx, &mcp.CallToolParams{
+		Name:      "read_image",
+		Arguments: map[string]any{"image_path": "/tmp/fake.png"},
+	})
+	require.NoError(t, err)
+	require.False(t, res.IsError)
+
+	// Allow time for any (erroneous) notification to arrive, then assert none.
+	time.Sleep(150 * time.Millisecond)
+	mu.Lock()
+	defer mu.Unlock()
+	assert.Equal(t, int64(0), n.Load(), "no notifications when the client sent no progress token")
 }
 
 // TestToolCallRejectsRemoteURL verifies F1.10: http(s):// URLs must be
