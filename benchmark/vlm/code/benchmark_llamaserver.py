@@ -230,7 +230,7 @@ def kill_server(proc):
 
 
 def run_one_call(port, image_path, prompt, max_tokens=16384, disable_thinking=False,
-                 call_timeout=None, watchdog_timeout=None):
+                 call_timeout=None, watchdog_timeout=None, temperature=0.1):
     """Send one image through llama-server. Returns dict with results.
 
     max_tokens default raised from 4096 to 16384: hybrid thinking models
@@ -260,7 +260,7 @@ def run_one_call(port, image_path, prompt, max_tokens=16384, disable_thinking=Fa
     payload = {
         "model": "local",
         "max_tokens": max_tokens,
-        "temperature": 0.1,
+        "temperature": temperature,
         "messages": [
             {
                 "role": "user",
@@ -431,6 +431,16 @@ def main():
     parser.add_argument("--tool-prompts", action="store_true",
                         help="Use the localvision per-tool prompt chosen by image filename prefix "
                              "(ui-test-*/ocr-test-*/extract-code-test-*); otherwise the generic describe prompt.")
+    parser.add_argument("--repeat", type=int, default=1,
+                        help="Number of back-to-back IDENTICAL calls per image in ONE warmed "
+                             "llama-server session (the multi-sampling / self-consistency "
+                             "experiment). >1 bypasses the done-skip and tags each record with "
+                             "repeat_idx. Pair with a 'repeat-*' run-id so rows stay separable.")
+    parser.add_argument("--temp", type=float, default=0.1,
+                        help="Sampling temperature sent in the request payload (overrides the "
+                             "server's --temp default). Raise above 0.1 to add decoding diversity "
+                             "so correlated outputs differ — the self-consistency lever for "
+                             "majority/union aggregation.")
     args = parser.parse_args()
 
     gguf = Path(args.gguf)
@@ -444,7 +454,12 @@ def main():
         sys.exit(1)
 
     images = list_images(pattern=args.image_pattern)
-    done = load_done_combos(run_id=args.run_id)
+    if args.repeat > 1:
+        # Multi-sampling: run every scoped image N times in one warmed session.
+        # Don't skip on prior completions; orchestrator uses a repeat-* run-id.
+        done = set()
+    else:
+        done = load_done_combos(run_id=args.run_id)
     todo = [(img,) for img in images if (args.model_name, img.name) not in done]
 
     print(f"Model: {args.model_name}  (run_id={args.run_id})")
@@ -478,45 +493,52 @@ def main():
     # Run benchmark
     try:
         with open(RAW_OUT, "a") as out:
+            n_calls = len(todo) * args.repeat
+            call_i = 0
             for idx, (img,) in enumerate(todo, 1):
-                print(f"\n>>> [{idx}/{len(todo)}] {args.model_name} × {img.name}", flush=True)
-                t0 = time.time()
                 pid, prompt = prompt_for_image(img.name, args.tool_prompts)
-                result = run_one_call(args.port, img, prompt,
-                                      max_tokens=args.max_tokens,
-                                      disable_thinking=args.disable_thinking,
-                                      call_timeout=args.call_timeout,
-                                      watchdog_timeout=args.watchdog_timeout)
-                wall = time.time() - t0
+                for rep in range(args.repeat):
+                    call_i += 1
+                    rep_tag = f" rep {rep+1}/{args.repeat}" if args.repeat > 1 else ""
+                    print(f"\n>>> [{call_i}/{n_calls}] {args.model_name} × {img.name}{rep_tag}", flush=True)
+                    result = run_one_call(args.port, img, prompt,
+                                          max_tokens=args.max_tokens,
+                                          disable_thinking=args.disable_thinking,
+                                          call_timeout=args.call_timeout,
+                                          watchdog_timeout=args.watchdog_timeout,
+                                          temperature=args.temp)
 
-                record = {
-                    "type": "result",
-                    "model": args.model_name,
-                    "image": img.name,
-                    "image_size_kb": img.stat().st_size // 1024,
-                    "max_tokens_budget": args.max_tokens,
-                    "run_id": args.run_id,
-                    "thinking_disabled": args.disable_thinking,
-                    "prompt_id": pid,
-                    **result,
-                }
+                    record = {
+                        "type": "result",
+                        "model": args.model_name,
+                        "image": img.name,
+                        "image_size_kb": img.stat().st_size // 1024,
+                        "max_tokens_budget": args.max_tokens,
+                        "run_id": args.run_id,
+                        "thinking_disabled": args.disable_thinking,
+                        "prompt_id": pid,
+                        "temperature": args.temp,
+                        **result,
+                    }
+                    if args.repeat > 1:
+                        record["repeat_idx"] = rep
 
-                if result["ok"]:
-                    ptoks = result.get("prompt_eval_count", 0)
-                    ctoks = result.get("eval_count", 0)
-                    tps = result.get("tokens_per_s", 0)
-                    trunc = result.get("truncated", False)
-                    finish = result.get("finish_reason", "")
-                    rlen = len(result.get("reasoning_content", "")) + len(result.get("thinking", ""))
-                    flag = f" [TRUNCATED finish={finish} reasoning={rlen}c]" if trunc else ""
-                    preview = result["content"][:100].replace("\n", " ")
-                    print(f"    OK  [{result['elapsed_s']:.1f}s | {tps:.1f} tok/s | "
-                          f"prompt={ptoks} out={ctoks} reasoning={rlen}c]{flag}  {preview}...")
-                else:
-                    print(f"    ERR [{result.get('elapsed_s', 0):.1f}s] {result.get('error', '')[:120]}")
+                    if result["ok"]:
+                        ptoks = result.get("prompt_eval_count", 0)
+                        ctoks = result.get("eval_count", 0)
+                        tps = result.get("tokens_per_s", 0)
+                        trunc = result.get("truncated", False)
+                        finish = result.get("finish_reason", "")
+                        rlen = len(result.get("reasoning_content", "")) + len(result.get("thinking", ""))
+                        flag = f" [TRUNCATED finish={finish} reasoning={rlen}c]" if trunc else ""
+                        preview = result["content"][:100].replace("\n", " ")
+                        print(f"    OK  [{result['elapsed_s']:.1f}s | {tps:.1f} tok/s | "
+                              f"prompt={ptoks} out={ctoks} reasoning={rlen}c]{flag}  {preview}...")
+                    else:
+                        print(f"    ERR [{result.get('elapsed_s', 0):.1f}s] {result.get('error', '')[:120]}")
 
-                out.write(json.dumps(record) + "\n")
-                out.flush()
+                    out.write(json.dumps(record) + "\n")
+                    out.flush()
     finally:
         print("\nShutting down llama-server...", end="", flush=True)
         kill_server(proc)
