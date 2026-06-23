@@ -8,6 +8,17 @@ It runs entirely on your machine. There is no telemetry, no outbound HTTP
 except to `huggingface.co/froggeric/` for the initial model download, and
 the `llama-server` subprocess binds to `127.0.0.1` only.
 
+> ⚠️ **Linux & Windows users: please report issues.** v0.4 is the first
+> cross-platform release. The maintainer develops and tests on **macOS only** —
+> there is **no real Linux or Windows GPU hardware** to validate against. GPU
+> detection (CUDA/ROCm), model selection, and the HEIC converter chain are
+> unit-tested and pass CI on Linux/Windows, but real-world behavior on actual
+> NVIDIA/AMD GPUs is **unverified**. If anything mis-detects, mis-selects a
+> model, or fails to convert an image, please open an issue with your `doctor`
+> output and `--verbose` logs:
+> **[github.com/froggeric/llm/issues](https://github.com/froggeric/llm/issues)**.
+> As a workaround, `default_model` in the config overrides any misdetection.
+
 > **Status:** **v0.4.0** — cross-platform: runs on macOS (Apple Silicon/Intel),
 > Linux, and Windows (x86_64 + arm64). One-shot CLI (`localvision img.png --type
 > ocr`), `--format`, batch (`--output-dir --meta`), a `setup` wizard, and a
