@@ -34,7 +34,7 @@ Sorted by **effective quality** = (v5 final × run-success-rate) × (1 − k·σ
 | 6 | G4-31B | Q4 | think | 74.6 | 68.5 | 0.45 | 100 | 97 | 18.1GB | Slow (~97s); not better than Q3.6-27B — skip |
 | 7 | Q3.5-4B-nothink | Q4 | nothink | 75.5 | 68.4 | 0.52 | 100 | 22 | 3.2GB | **Best small** — fast, reliable; ≤20s menu workhorse |
 | 8 | Q3VL-8B | Q4 | think | 73.1 | 68.0 | 0.41 | 100 | 28 | 5.8GB | Sweet spot — fast, low σ; won diagnose_error |
-| 9 | Q3.5-9B-nothink | Q4 | nothink | 73.1 | 67.0 | 0.48 | 100 | 32 | 6.2GB | Solid mid; think twin wins read_image + extract_table |
+| 9 | Q3.5-9B-nothink | Q4 | nothink | 73.1 | 67.0 | 0.48 | 100 | 32 | 6.2GB | Solid mid; dropped from per-tool recs (doesn't outperform Q3VL-8B-Q8) |
 | 10 | G4-26B-A4B (MoE) | Q4 | think | 72.7 | 66.7 | 0.47 | 100 | 39 | 17.1GB | MoE — outclassed |
 | 11 | GLM-9B-Q8 | Q8 | think | 73.4 | 66.6 | 0.50 | 93 | 62 | 10GB | Won extract_text (CJK OCR); slight timeout risk (93%) |
 | 12 | Q3.5-9B | Q4 | think | 72.7 | 66.6 | 0.50 | 100 | 61 | 6.2GB | Won read_image + extract_table; nothink twin slightly higher |
@@ -253,40 +253,41 @@ Where G4-31B does win: **OCR-heavy dense compositions** (spritesheet +3, banner 
 
 ## Use-case-specific recommendations
 
-**Post-refinement** (see [`REFINE-REPORT.md`](./REFINE-REPORT.md)): 7 new UI/OCR/code images tested with the actual localvision tool prompts (`describe_ui`/`extract_text`/`extract_code`) across 9 variants x 3 runs. The field is **tight** -- models cluster within 1-3 points on most tasks. No specialty swaps are needed; **two models cover every tool**:
+**Post-refinement** (see [`REFINE-REPORT.md`](./REFINE-REPORT.md)): 7 new UI/OCR/code images tested with the actual localvision tool prompts across 9 variants x 3 runs. The field is **tight** -- models cluster within 1-3 points. No specialty swaps needed; **one model covers every tool, with the 27B for hard scenes**:
 
-| Tool | Default (~30s) | Hard scenes (~70s) | Note |
+| Tool | Default (~20-30s, 8.1GB) | Hard scenes (~50-70s, 16.9GB) | Note |
 |---|---|---|---|
-| `read_image` | **Q3.5-9B-nothink** | Q3.6-27B-nothink | 27B for dense/complex scenes only |
-| `extract_text` | **Q3VL-8B-Q8** | -- | All models tie at 97-99% OCR recall |
-| `extract_code` | **Q3.5-9B-nothink** | Q3.6-27B-nothink | Q3.5-9B 99% recall; 27B gets identifier underscores |
-| `extract_table` | **Q3.5-9B-nothink** | -- | |
-| `describe_ui` | **Q3VL-8B-Q8** | -- | Refinement confirmed strong UI |
+| `read_image` | **Q3VL-8B-Q8** | Q3.6-27B-nothink | 27B for dense/complex scenes |
+| `extract_text` | **Q3VL-8B-Q8** | Q3.6-27B-nothink | All models tie at 97-99% OCR recall |
+| `extract_code` | **Q3VL-8B-Q8** | Q3.6-27B-nothink | 27B gets identifier underscores Q3VL misses |
+| `extract_table` | **Q3VL-8B-Q8** | Q3.6-27B-nothink | |
+| `describe_ui` | **Q3VL-8B-Q8** | Q3.6-27B-nothink | |
 | `describe_diagram` | **Q3VL-8B-Q8** | Q3.6-27B-nothink | |
 | `describe_chart` | **Q3VL-8B-Q8** | Q3.6-27B-nothink | |
 | `diagnose_error` | **Q3VL-8B-Q8** | -- | |
 | `image_to_prompt` | **Q3VL-8B-Q8** | -- | Weak proxy |
 | `compare_images` | -- | -- | Not evaluated (no image pairs) |
 
-**Tier summary** (margins are small; don't overthink per-tool picks):
-- **Default (covers every tool):** **Q3VL-8B-Q8** (~30s, 8.1GB) or **Q3.5-9B-nothink** (~30s, 6.2GB). Both 100% reliable, fast, within 1-3 pts on every tool.
-- **Hard scenes:** add **Q3.6-27B-nothink** (~70s, 16.9GB). Nothink only -- think mode timed out (86%).
+**Tier summary:**
+- **Default (covers every tool):** **Q3VL-8B-Q8** (~20-30s, 8.1GB). 100% reliable, strong across all tools.
+- **Hard scenes:** **Q3.6-27B-nothink** (~50-70s, 16.9GB). Quality edge on dense scenes, code identifiers, charts. Nothink only (think = 86% reliability, ruled out).
 - **Small/fast** (<=20s, <=8GB): **Q3.5-4B-nothink** (~20s, 3.2GB). Best quality-per-GB.
 
 **What the refinement changed:**
-- **GLM-9B-Q8 dropped** -- its OCR edge was CJK-signage-specific; on general OCR it ties (97-99%). CJK is negligible.
+- **GLM-9B-Q8 dropped** -- OCR edge was CJK-signage-specific; on general OCR it ties. CJK negligible.
+- **Q3.5-9B dropped** -- its nothink variant doesn't outperform Q3VL-8B-Q8 or Q3.6-27B-nothink on any tool (ranks 3rd-5th); its think variant edges on some but think is excluded for hybrids.
 - **Q3.6-27B-think ruled out** -- 3 timeouts (86%). Nothink only.
 - **Q3.5-4B-think ruled out for code** -- 65% recall (nothink is 98%).
 - **No model perfect on code** -- splits on hard identifiers (`createAujourdhui` vs `validatePlaylistKeys_`).
 - **Handwritten OCR universally hard** -- all bunch at 7-9/16 fields.
 
-**Avoid:** G4-12B-Q4 (hallucinates technical text); Q3.5-4B-think (code failure); Q3.5-9B-Q8 (62% reliability at Q8).
+**Avoid:** G4-12B-Q4 (hallucinates); Q3.5-4B-think (code failure); Q3.5-9B-Q8 (62% at Q8).
 
-**Caveats.** Single-image tools (n=1) are directional only. `compare_images` not evaluated. Latency measured on M-series, single-user.
+**Caveats.** Single-image tools (n=1) are directional only. `compare_images` not evaluated. Latency on M-series.
 
-**Medical caveat** (X-ray/MRI under `read_image`): every variant missed the rib fracture on image 28. Do **not** deploy for clinical use.
+**Medical caveat** (X-ray/MRI under `read_image`): every variant missed the rib fracture (image 28). Not for clinical use.
 
-Per-tool effective-quality scores are computable via `code/recommend_by_tasktype.py`; the refinement evidence is in [`REFINE-REPORT.md`](./REFINE-REPORT.md).
+Per-tool effective-quality scores computable via `code/recommend_by_tasktype.py`; refinement evidence in [`REFINE-REPORT.md`](./REFINE-REPORT.md).
 
 ---
 
