@@ -49,6 +49,46 @@ UNIFORM_PROMPT = (
     "Use Markdown headings to organize your answer."
 )
 
+# Per-tool prompts — verbatim from mcp/localvision/internal/tools/prompt.go
+# (the actual MCP tool prompts). With --tool-prompts, the prompt is selected per
+# image by filename prefix so a run exercises the real tool prompts.
+PROMPT_DESCRIBE_UI = (
+    "Describe this UI screenshot. List:\n"
+    "(1) Overall layout (regions, panels, navigation).\n"
+    "(2) Every visible component with its text label verbatim.\n"
+    "(3) Any feedback, status, or error messages.\n"
+    "(4) Interactive elements (buttons, inputs, links) and their state.\n"
+    "Use Markdown headings for each section. Be terse — one bullet per component."
+)
+PROMPT_EXTRACT_TEXT = (
+    "Extract ALL text from the image verbatim. Preserve formatting, indentation, "
+    "line breaks, and punctuation exactly as they appear. Output the text only — "
+    "no commentary, no Markdown, no fences. If multiple distinct text blocks are "
+    "visible, separate them with a blank line."
+)
+PROMPT_EXTRACT_CODE = (
+    "You are an expert code reader. Extract the code from the image verbatim. "
+    "Detect the programming language. Output ONLY the code in a fenced code block "
+    "(triple-backtick followed by the language name on the opening line). "
+    "Preserve all indentation exactly. No explanation before or after the fence."
+)
+# filename prefix -> (prompt_id, prompt_text)
+TOOL_PROMPTS = [
+    ("ui-test-", ("describe_ui", PROMPT_DESCRIBE_UI)),
+    ("ocr-test-", ("extract_text", PROMPT_EXTRACT_TEXT)),
+    ("extract-code-test-", ("extract_code", PROMPT_EXTRACT_CODE)),
+]
+
+
+def prompt_for_image(name, use_tool_prompts):
+    """Return (prompt_id, prompt_text) for an image; falls back to the generic describe prompt."""
+    if use_tool_prompts:
+        for prefix, pid_prompt in TOOL_PROMPTS:
+            if name.startswith(prefix):
+                return pid_prompt
+    return ("describe", UNIFORM_PROMPT)
+
+
 # Per-call timeout (seconds) for the HTTP request to llama-server.
 # 300s is enough for normal cells; dense images + thinking models can take longer
 # but we'd rather fail fast and record the timeout as data than wait 20 min.
@@ -388,6 +428,9 @@ def main():
                         help=f"Hard watchdog timeout per cell in seconds (default {WATCHDOG_TIMEOUT}). "
                              "If a cell exceeds this, the request is force-failed even if "
                              "llama-server is hung mid-inference.")
+    parser.add_argument("--tool-prompts", action="store_true",
+                        help="Use the localvision per-tool prompt chosen by image filename prefix "
+                             "(ui-test-*/ocr-test-*/extract-code-test-*); otherwise the generic describe prompt.")
     args = parser.parse_args()
 
     gguf = Path(args.gguf)
@@ -438,7 +481,8 @@ def main():
             for idx, (img,) in enumerate(todo, 1):
                 print(f"\n>>> [{idx}/{len(todo)}] {args.model_name} × {img.name}", flush=True)
                 t0 = time.time()
-                result = run_one_call(args.port, img, UNIFORM_PROMPT,
+                pid, prompt = prompt_for_image(img.name, args.tool_prompts)
+                result = run_one_call(args.port, img, prompt,
                                       max_tokens=args.max_tokens,
                                       disable_thinking=args.disable_thinking,
                                       call_timeout=args.call_timeout,
@@ -453,6 +497,7 @@ def main():
                     "max_tokens_budget": args.max_tokens,
                     "run_id": args.run_id,
                     "thinking_disabled": args.disable_thinking,
+                    "prompt_id": pid,
                     **result,
                 }
 
