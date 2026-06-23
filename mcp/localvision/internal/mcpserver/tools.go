@@ -2,13 +2,11 @@ package mcpserver
 
 import (
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"log/slog"
 	"net/url"
-	"os"
 	"path/filepath"
 	"strings"
 	"sync/atomic"
@@ -130,6 +128,12 @@ func (s *Server) callTool(ctx context.Context, req *mcp.CallToolRequest, t tools
 		res.SetError(err)
 		return res, nil
 	}
+	// Reap any temp files written for data: URIs (image_data) once the call
+	// finishes. Safe on real user paths: CleanupImageRefs only removes paths
+	// ParseImageRef registered. The temp files must survive through Run, so
+	// cleanup is deferred to the end of callTool (E6 — the v0.4 MCP path leaked
+	// one temp file per image_data call; the CLI path never did).
+	defer tools.CleanupImageRefs(images)
 
 	// Build the ToolInput: pass through anything we didn't consume.
 	extra := make(map[string]any, len(args)-len(consumed))
@@ -271,6 +275,11 @@ func normalizeImages(args map[string]any, toolID string) ([]tools.ImageRef, map[
 		for i, el := range arr {
 			ref, elConsumed, err := normalizeOneImage(el)
 			if err != nil {
+				// A later element is malformed, but earlier elements may
+				// already have created temp files (data: URIs). Reap them so
+				// a partially-valid images array doesn't leak (E6). This error
+				// returns before callTool's cleanup defer is registered.
+				tools.CleanupImageRefs(refs)
 				return nil, consumed, fmt.Errorf("images[%d]: %w", i, err)
 			}
 			refs = append(refs, ref)
@@ -380,13 +389,17 @@ func refFromString(s, sourceField string) (tools.ImageRef, error) {
 		return tools.ImageRef{}, fmt.Errorf("%w: empty %s", errInvalidImageInput, sourceField)
 	}
 
-	// data: URI → decode bytes and write to a temp file.
+	// data: URI → delegate to tools.ParseImageRef, which decodes the bytes,
+	// writes a temp file, registers it with tempRegistry (so CleanupImageRefs
+	// reaps it after inference), and redacts Source for privacy. This keeps the
+	// MCP path on the same normalization the CLI uses, instead of a private
+	// duplicate that never registered its temp files (the v0.4 leak).
 	if strings.HasPrefix(s, "data:") {
-		path, err := dataURIToTempFile(s)
+		ref, err := tools.ParseImageRef(s)
 		if err != nil {
 			return tools.ImageRef{}, fmt.Errorf("decoding data URI: %w", err)
 		}
-		return tools.ImageRef{LocalPath: path, Source: s}, nil
+		return ref, nil
 	}
 
 	// file:// URI → extract the path component.
@@ -419,95 +432,6 @@ func refFromString(s, sourceField string) (tools.ImageRef, error) {
 		return tools.ImageRef{}, fmt.Errorf("resolving path %q: %w", s, err)
 	}
 	return tools.ImageRef{LocalPath: abs, Source: s}, nil
-}
-
-// dataURIToTempFile decodes a data: URI (base64-encoded) and writes it to
-// a temp file, returning the path. The temp file is NOT deleted by this
-// function; the executor / lifecycle could clean it up after inference.
-// (MVP: leak to os.TempDir; OS reaps on macOS via the periodic cleanup.)
-//
-// We write to a temp file rather than passing bytes inline because
-// llama-server's HTTP API expects image paths (or multipart), not raw
-// bytes. This matches the F1.10 design ("data URIs are written to a
-// temp file").
-func dataURIToTempFile(dataURI string) (string, error) {
-	// data:[<mediatype>][;base64],<data>
-	comma := strings.IndexByte(dataURI, ',')
-	if comma < 0 {
-		return "", fmt.Errorf("data URI missing comma separator")
-	}
-	header := dataURI[:comma] // e.g. "data:image/png;base64"
-	payload := dataURI[comma+1:]
-
-	var decoded []byte
-	if strings.Contains(header, ";base64") || strings.HasSuffix(header, ";base64") {
-		var err error
-		decoded, err = base64Decode(payload)
-		if err != nil {
-			return "", fmt.Errorf("decoding base64: %w", err)
-		}
-	} else {
-		// URL-encoded raw data (rare). Best-effort decode.
-		decoded = []byte(payload)
-	}
-
-	// Pick a sensible extension from the media type.
-	ext := ".bin"
-	if strings.HasPrefix(header, "data:") {
-		media := strings.TrimPrefix(header, "data:")
-		media = strings.Split(media, ";")[0]
-		if e := extForMediaType(media); e != "" {
-			ext = e
-		}
-	}
-
-	f, err := os.CreateTemp("", "lvm-*"+ext)
-	if err != nil {
-		return "", fmt.Errorf("creating temp file: %w", err)
-	}
-	if _, err := f.Write(decoded); err != nil {
-		_ = f.Close()
-		_ = os.Remove(f.Name())
-		return "", fmt.Errorf("writing temp file: %w", err)
-	}
-	if err := f.Close(); err != nil {
-		_ = os.Remove(f.Name())
-		return "", fmt.Errorf("closing temp file: %w", err)
-	}
-	return f.Name(), nil
-}
-
-// extForMediaType maps a few common image media types to file extensions.
-// Unknown types fall back to ".bin" (llama-server usually sniffs from the
-// file header anyway).
-func extForMediaType(media string) string {
-	switch strings.ToLower(media) {
-	case "image/png":
-		return ".png"
-	case "image/jpeg", "image/jpg":
-		return ".jpg"
-	case "image/gif":
-		return ".gif"
-	case "image/webp":
-		return ".webp"
-	case "image/bmp":
-		return ".bmp"
-	case "":
-		return ".bin"
-	default:
-		return ".bin"
-	}
-}
-
-// base64Decode decodes a standard (non-URL-safe) base64 string. We allow
-// but do not require padding; some MCP clients strip trailing '=' for
-// compactness.
-func base64Decode(s string) ([]byte, error) {
-	// Add padding if missing; StdEncoding strictly requires it.
-	if m := len(s) % 4; m != 0 {
-		s += strings.Repeat("=", 4-m)
-	}
-	return base64.StdEncoding.DecodeString(s)
 }
 
 // isSetupError returns true if err is one of the "first-run setup needed"

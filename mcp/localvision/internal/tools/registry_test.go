@@ -27,7 +27,7 @@ func TestRegistryGet(t *testing.T) {
 		for _, id := range []string{
 			idReadImage, idExtractText, idExtractCode, idExtractTable,
 			idDescribeUI, idDescribeDiagram, idDescribeChart,
-			idDiagnoseError, idCompareImages,
+			idDiagnoseError, idImageToPrompt, idCompareImages,
 		} {
 			t.Run(id, func(t *testing.T) {
 				tool, ok := r.Get(id)
@@ -79,6 +79,7 @@ func TestRegistryAllIsSortedByID(t *testing.T) {
 		"extract_code",
 		"extract_table",
 		"extract_text",
+		"image_to_prompt",
 		"read_image",
 	}
 	assert.Equal(t, wantOrder, expected)
@@ -136,9 +137,9 @@ func TestRegistryNilSafe(t *testing.T) {
 	})
 }
 
-// TestExpectedToolCountIs9 is a sanity guard: if someone bumps the constant
+// TestExpectedToolCountIs10 is a sanity guard: if someone bumps the constant
 // without thinking, this test fails loudly and forces a conversation.
-func TestExpectedToolCountIs9(t *testing.T) {
-	assert.Equal(t, 9, ExpectedToolCount,
-		"v0.1 ships 9 tools; if this changes, update the catalog and SKILL.md too")
+func TestExpectedToolCountIs10(t *testing.T) {
+	assert.Equal(t, 10, ExpectedToolCount,
+		"v0.5 ships 10 tools; if this changes, update the catalog and SKILL.md too")
 }

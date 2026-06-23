@@ -61,7 +61,7 @@ Add the plugin via Claude Code's plugin config:
 }
 ```
 
-Restart Claude Code. Verify with `/mcp` — `localvision` should show 9 tools (`compare_images`, `describe_chart`, `describe_diagram`, `describe_ui`, `diagnose_error`, `extract_code`, `extract_table`, `extract_text`, `read_image`).
+Restart Claude Code. Verify with `/mcp` — `localvision` should show 10 tools (`compare_images`, `describe_chart`, `describe_diagram`, `describe_ui`, `diagnose_error`, `extract_code`, `extract_table`, `extract_text`, `image_to_prompt`, `read_image`).
 
 ## Configure other MCP clients (Cursor, Cline, etc.)
 

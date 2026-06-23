@@ -341,7 +341,7 @@ One-shot query:
   localvision before.png after.png --type compare
   localvision *.png --type ocr --output-dir out/ --format json --meta
 
-  --type      ocr|code|table|ui|diagram|chart|error|compare|describe
+  --type      ocr|code|table|ui|diagram|chart|error|prompt|compare|describe
   --model     override the auto-selected model (a catalog ID)
   --format    text|markdown|json|yaml|xml (default: presentational)
   --output F  write the single result to F

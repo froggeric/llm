@@ -53,6 +53,7 @@ func TestToolIDsMatchCatalogPreferredFor(t *testing.T) {
 		idDescribeChart:   true,
 		idDescribeDiagram: true,
 		idExtractTable:    true,
+		idImageToPrompt:   true,
 		idCompareImages:   true,
 	}
 	got := map[string]bool{}
@@ -124,6 +125,7 @@ func TestMaxTokensWithinExpectedBands(t *testing.T) {
 		idDescribeDiagram: 2000,
 		idDescribeChart:   1024,
 		idDiagnoseError:   800,
+		idImageToPrompt:   1024,
 		idCompareImages:   1500,
 	}
 	for _, tool := range allToolInstances {
@@ -308,6 +310,7 @@ func TestParseOutputSanity(t *testing.T) {
 		{idDescribeUI, []string{"## Layout\nA login form.", ""}},
 		{idDescribeDiagram, []string{"## Type\nER diagram", ""}},
 		{idDescribeChart, []string{"## Type\nBar chart", ""}},
+		{idImageToPrompt, []string{"## Subject\nA cat on a windowsill.\n## Tags\ncat, windowsill, sunlight, cozy", ""}},
 		{idDiagnoseError, []string{"Error: nil pointer", ""}},
 		{idCompareImages, []string{
 			"- Text label changed\n- Button moved",

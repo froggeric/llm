@@ -275,16 +275,23 @@ The long tail of known limitations, mostly small, mostly independent.
 - **E1.** Streaming `notifications/progress` for long tool calls (today each
   `tools/call` blocks 30–70 s). *(from v0.2 known-limitation)* `M`
 - **E2.** Auto-reap orphan `llama-server` subprocesses on startup (today:
-  manual via `doctor`). `S`
+  manual via `pkill -fa llama-server`; `doctor` does not yet detect them).
+  *Deferred from v0.5.0:* investigation showed no orphan-detection code exists,
+  ports are ephemeral, and there is no PID file or argv marker — so safe reaping
+  needs a marker plus a parent-liveness check (to avoid killing a different live
+  instance's subprocess) and cross-platform process enumeration. That is an `M`,
+  not an `S`, and carries automatic-kill risk, so it is re-scoped to a later
+  release rather than rushed at the zero-problem bar. `M`
 - **E3.** `doctor --compute-hashes` to populate catalog SHA256s automatically
   (today: by hand). `S`
 - **E4.** Configurable tool-name prefix to avoid MCP collisions (tool names are
   unprefixed today). `S`
 - **E5.** Automatic Ollama coordination (unified-memory contention on Apple
   Silicon; today `doctor` only warns if `:11434` is occupied). `M`
-- **E6.** Wire temp-file cleanup in the **MCP path** — the one-shot CLI already
-  calls `tools.CleanupImageRefs` (v0.3), but the MCP `callTool` path does not, so
-  data-URI temp files still leak to `os.TempDir` there. `S`
+- **E6.** ✅ **Done in v0.5.0.** The MCP `callTool` path now reuses
+  `tools.ParseImageRef` (which registers data-URI temp files for cleanup) and
+  reaps them with `tools.CleanupImageRefs` after each call — matching the
+  one-shot CLI path. The MCP path's private `dataURIToTempFile` duplicate is gone.
 - **E7.** Pin `goreleaser` to a known-good major version in the release
   workflow (today `brew install goreleaser` is unpinned) and add a `lint`
   (golangci-lint) step to CI. `S`
@@ -386,12 +393,13 @@ has 2 dedicated tools zai lacks. Two real gaps:
   bounding boxes (Qwen3-VL supports grounding) so agents can crop/click/replay. `M`
 - **G7. `compare_images` → UI regression + visual diff** — specialize the
   expected-vs-actual case and optionally emit a highlighted diff image. `S/M`
-- **G8. Image → generation prompt** (`image_to_prompt`) — produce a
-  diffusion-ready prompt (subject, style, composition, lighting, medium, artist
-  references, negative prompts) that recreates the image in SDXL/Flux/etc. The
-  inverse of `read_image`: describe → prose; this → a prompt to *reproduce*. High
-  value-per-effort (a new tool + a tuned prompt, reusing the existing framework).
-  If it proves popular, promote to a core `--type`. `S`
+- **G8. Image → generation prompt** (`image_to_prompt`) — ✅ **Done in v0.5.0.**
+  Produces a structured diffusion-ready prompt (subject, medium/style, composition
+  & camera details, lighting, color palette & mood, plus a paste-ready
+  comma-separated tag line) that recreates the image. The inverse of `read_image`:
+  describe → prose; this → a prompt to *reproduce*. Generator-agnostic; the
+  optional `question` steers it toward Midjourney/SDXL/Flux/DALL·E or a style.
+  Shipped as a core `--type prompt` / `image_to_prompt` tool. `S`
 
 **Preserve as differentiators:** `extract_code`, `extract_table`, and (proposed)
 **G8 image→prompt** — tools `zai_mcp_server` has no equivalent for. Keep them
@@ -418,17 +426,22 @@ Ambitious, far-fetched, explicitly invited for the later roadmap.
 
 ## Sequencing & priorities
 
-Themes **A–D are done** (v0.2.0–v0.4.0 shipped). The remaining work is
+Themes **A–D are done** (v0.2.0–v0.4.0 shipped); **v0.5.0 shipped** (G8
+image→generation-prompt tool + E6 MCP temp-file cleanup). The remaining work is
 reorganized into value-prioritized releases: front-load cheap high-impact items,
 build reach infrastructure next, then reliability, then new modalities. Effort
 in parentheses (`XS/S/M/L`); versions are advisory.
 
-### v0.5.0 — Breadth & polish  *(mostly XS–S; high value-per-effort)*
-New tools (reuse the tool framework) + cheap UX/hygiene wins. Cherry-pick freely;
-these are largely independent.
-- **New tools:** G8 image→generation-prompt `S` · G4 chart→CSV/JSON `S` · G5 diagram→Mermaid `S`
+### v0.5.0 — Breadth & polish  *(mostly XS–S; high value-per-effort)* — **SHIPPED**
+- ✅ **G8 image→generation-prompt** — new 10th tool (`--type prompt` / `image_to_prompt`): a structured diffusion-ready prompt to recreate an image.
+- ✅ **E6 MCP temp-file cleanup** — the MCP `callTool` path no longer leaks one `image_data` temp file per call; it reuses `tools.ParseImageRef` + `CleanupImageRefs`, matching the CLI path.
+- *Deferred:* **E2 auto-reap orphans** — re-scoped to `M` (needs a process marker + parent-liveness check; no detection exists yet). See Theme E2.
+
+The remaining cheap high-value items below were **not** all landed in v0.5.0 — they
+cherry-pick freely into a point release or v0.6:
+- **New tools:** G4 chart→CSV/JSON `S` · G5 diagram→Mermaid `S`
 - **UX wins:** F9 clipboard in/out `XS` · F12 shell completions `XS` · F11 doctor --fix `XS`
-- **Reliability/hygiene:** F3 result cache `S` · E2 auto-reap orphans `S` · E6 MCP temp-cleanup `S` · E4 tool-name prefix `S` · E3 doctor --compute-hashes `S` · E7 pin goreleaser + lint `S`
+- **Reliability/hygiene:** F3 result cache `S` · E4 tool-name prefix `S` · E3 doctor --compute-hashes `S` · E7 pin goreleaser + lint `S`
 
 ### v0.6.0 — Reach  *(M; serving-layer unlocks)*
 - **F1 localhost HTTP/REST API `M`** → unlocks F2 OpenAI-compat `M` + F16 web UI `L` — makes localvision usable from `curl`, scripts, cron, any language.
@@ -450,10 +463,11 @@ these are largely independent.
 ### v1.0+ — Far future / research: H1–H5.
 
 **The path so far:** A1→B1→B2 (distribution) ✅ → C1–C6 (CLI) ✅ → D1–D5
-(cross-platform) ✅. There is no single gate going forward. The highest-leverage
-single item is **F1 (HTTP API)** — it unlocks F2/F16 and reaches far beyond one
-MCP client — but the cheap high-value items (G8, F9, F3, G4/G5) should ride in
-v0.5 regardless of whether F1 is ready.
+(cross-platform) ✅ → **v0.5.0 (G8 image→prompt tool + E6 MCP temp cleanup)** ✅.
+There is no single gate going forward. The highest-leverage single item is
+**F1 (HTTP API)** — it unlocks F2/F16 and reaches far beyond one MCP client — but
+the remaining cheap high-value items (F9, F3, G4/G5) can ride into a point
+release or v0.6 regardless of whether F1 is ready.
 
 ## Idea index
 

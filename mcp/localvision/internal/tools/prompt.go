@@ -68,6 +68,19 @@ const promptDiagnoseError = `You are a debugging assistant. This image shows an 
 (4) One-sentence likely cause.
 Use Markdown. Be terse.`
 
+// promptImageToPrompt reverses an image into a text-to-image (diffusion)
+// prompt that could recreate it. Output is structured into five Markdown
+// sections ending with a paste-ready comma-separated tag line. Steering
+// toward a specific generator (Midjourney, SDXL, Flux, DALL·E) is done via
+// the optional question argument; the default prompt is generator-agnostic.
+const promptImageToPrompt = `You are an expert prompt engineer for text-to-image diffusion models (Midjourney, SDXL, Flux, DALL·E). Analyze the image and produce a detailed prompt that could recreate it. Report:
+(1) Subject and scene — what is depicted.
+(2) Medium and art style (e.g. photograph, 3D render, oil painting, anime, pixel art).
+(3) Composition, framing, and camera/render details (lens, angle, lighting, depth of field).
+(4) Color palette and mood.
+(5) A single comma-separated tag line ready to paste into a diffusion model, distilling the points above.
+Use Markdown headings for each section. Do not invent elements that are not visible in the image. Output only the five sections — no preamble, no closing remarks.`
+
 // promptCompareImages is the only multi-image tool. The prompt makes the
 // "focus on differences" intent explicit so the model does not produce two
 // unrelated descriptions.

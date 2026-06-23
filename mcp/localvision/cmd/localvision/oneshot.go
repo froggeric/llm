@@ -24,6 +24,7 @@ var typeToToolID = map[string]string{
 	"diagram":  tools.ToolDescribeDiagram,
 	"chart":    tools.ToolDescribeChart,
 	"error":    tools.ToolDiagnoseError,
+	"prompt":   tools.ToolImageToPrompt,
 	"compare":  tools.ToolCompareImages,
 	"describe": tools.ToolReadImage,
 	"read":     tools.ToolReadImage, // alias for describe
@@ -37,7 +38,7 @@ func resolveToolID(typeFlag string) (string, error) {
 	}
 	id, ok := typeToToolID[strings.ToLower(typeFlag)]
 	if !ok {
-		return "", fmt.Errorf("unknown --type %q (valid: ocr, code, table, ui, diagram, chart, error, compare, describe)", typeFlag)
+		return "", fmt.Errorf("unknown --type %q (valid: ocr, code, table, ui, diagram, chart, error, prompt, compare, describe)", typeFlag)
 	}
 	return id, nil
 }
@@ -115,9 +116,9 @@ func runOneShot(args []string) int {
 	cf.register(fs)
 	var typeFlag, modelFlag, questionFlag, formatFlag, outputFlag, outputDirFlag string
 	var recursiveFlag, metaFlag bool
-	fs.StringVar(&typeFlag, "type", "", "query type: ocr|code|table|ui|diagram|chart|error|compare|describe (default describe)")
+	fs.StringVar(&typeFlag, "type", "", "query type: ocr|code|table|ui|diagram|chart|error|prompt|compare|describe (default describe)")
 	fs.StringVar(&modelFlag, "model", "", "override the auto-selected model (a catalog ID)")
-	fs.StringVar(&questionFlag, "question", "", "specific question about the image (describe/read only)")
+	fs.StringVar(&questionFlag, "question", "", "specific question about the image (describe/read/prompt only)")
 	fs.StringVar(&formatFlag, "format", "", "output format: text|markdown|json|yaml|xml (default: presentational)")
 	fs.StringVar(&outputFlag, "output", "", "write the result to this file (single image only)")
 	fs.StringVar(&outputDirFlag, "output-dir", "", "write one result file per input into this directory")

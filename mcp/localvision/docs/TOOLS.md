@@ -1,6 +1,6 @@
 # Tools reference
 
-9 tools, each with a task-tuned system prompt. Pick the **most specific** tool for the job — generic `read_image` is the fallback when nothing else fits.
+10 tools, each with a task-tuned system prompt. Pick the **most specific** tool for the job — generic `read_image` is the fallback when nothing else fits.
 
 ## Quick reference
 
@@ -14,6 +14,7 @@
 | `describe_diagram` | 1 image | Diagram type + components + connections | qwen3.6-27b / qwen3-vl-8b | 30–70 s |
 | `describe_chart` | 1 image | Chart type + axes + series + trends | qwen3.6-27b / qwen3-vl-8b | 30–70 s |
 | `diagnose_error` | 1 image | Error type + root cause + file:line | qwen3.6-27b / qwen3-vl-8b | 30–60 s |
+| `image_to_prompt` | 1 image, optional question | Text-to-image generation prompt | qwen3.6-27b / qwen3-vl-8b | 30–60 s |
 | `compare_images` | 2 images | Bullet list of differences | qwen3.6-27b / qwen3-vl-8b | 40–80 s |
 
 "Default model" depends on detected hardware tier (see [MODELS.md](./MODELS.md)):
@@ -132,6 +133,16 @@ Error screenshots. Use for terminal errors, stack traces, exception dialogs.
 System prompt focus: error type (exception class), root-cause message verbatim, most relevant file:line in the stack trace, one-sentence likely cause.
 
 Max output: 800 tokens.
+
+### `image_to_prompt`
+
+Reverse-engineer an image into a text-to-image (diffusion) prompt that could recreate it. Use for Midjourney, SDXL, Flux, DALL·E, etc.
+
+System prompt focus: subject and scene, medium and art style, composition/framing/camera details, lighting, color palette and mood, ending with a single paste-ready comma-separated tag line.
+
+The optional `question` steers the output toward a target generator or style (e.g. "Midjourney v6", "SDXL", "a watercolor reinterpretation").
+
+Max output: 1024 tokens.
 
 ### `compare_images`
 

@@ -19,10 +19,11 @@ the `llama-server` subprocess binds to `127.0.0.1` only.
 > **[github.com/froggeric/llm/issues](https://github.com/froggeric/llm/issues)**.
 > As a workaround, `default_model` in the config overrides any misdetection.
 
-> **Status:** **v0.4.0** — cross-platform: runs on macOS (Apple Silicon/Intel),
+> **Status:** **v0.5.0** — cross-platform: runs on macOS (Apple Silicon/Intel),
 > Linux, and Windows (x86_64 + arm64). One-shot CLI (`localvision img.png --type
-> ocr`), `--format`, batch (`--output-dir --meta`), a `setup` wizard, and a
-> cross-platform HEIC/WEBP converter chain.
+> ocr`), `--format`, batch (`--output-dir --meta`), a `setup` wizard, a
+> cross-platform HEIC/WEBP converter chain, and 10 vision tools (including
+> `image_to_prompt` to reverse-engineer an image into a generation prompt).
 
 ---
 
@@ -39,6 +40,7 @@ MCP protocol:
 - `describe_diagram` — explain an architecture or flow diagram
 - `describe_chart` — read a chart back as data
 - `diagnose_error` — explain an error dialog or stack trace
+- `image_to_prompt` — generate a text-to-image prompt to recreate the image
 - `compare_images` — diff two images
 
 Each tool takes a local file path (preferred), a `data:` URI, or a
@@ -156,7 +158,7 @@ localvision a.png b.png --type compare     # diff two images
 localvision *.png --type ocr --output-dir out/ --format json --meta
 ```
 
-`--type` selects one of nine tools (`ocr|code|table|ui|diagram|chart|error|
+`--type` selects one of ten tools (`ocr|code|table|ui|diagram|chart|error|prompt|
 compare|describe`). Inputs may be file paths, globs, directories (`--recursive`),
 or `-` for stdin (`find . -name '*.png' | localvision - --type ocr`).
 `--model` overrides the auto-selected model; `--output`/`--output-dir` write
@@ -231,15 +233,15 @@ coordination via Ollama's API (ROADMAP Theme E5).
 
 ## Roadmap
 
-**v0.4.0** shipped cross-platform (macOS/Linux/Windows, x86_64 + arm64) on top
-of the standalone CLI (one-shot queries, `--format`, batch, `setup` wizard).
-Next, in priority order: **v0.5 breadth & polish** (new tools like
-image→generation-prompt, chart→CSV, diagram→Mermaid, plus clipboard in/out,
-result cache, and hygiene fixes), **v0.6 reach** (localhost HTTP API + streaming
-progress), **v0.7 reliability** (constrained decoding, multi-sample consensus),
-then **v0.8+ new modalities** (PDF, UI→code, video) and far-future research.
-Every item, its effort, and its target is in [`ROADMAP.md`](./ROADMAP.md)
-(themes A–H, prioritized into release tiers).
+**v0.5.0** shipped a new 10th tool (`image_to_prompt`) and fixed an MCP temp-file
+leak, on top of **v0.4.0** (cross-platform: macOS/Linux/Windows, x86_64 + arm64)
+and **v0.3.0** (the standalone CLI: one-shot queries, `--format`, batch, `setup`
+wizard). Next, in priority order: the remaining **v0.5 breadth** items (chart→CSV,
+diagram→Mermaid, clipboard in/out, result cache, hygiene fixes), **v0.6 reach**
+(localhost HTTP API + streaming progress), **v0.7 reliability** (constrained
+decoding, multi-sample consensus), then **v0.8+ new modalities** (PDF, UI→code,
+video) and far-future research. Every item, its effort, and its target is in
+[`ROADMAP.md`](./ROADMAP.md) (themes A–H, prioritized into release tiers).
 
 ## Project layout
 

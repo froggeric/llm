@@ -36,6 +36,7 @@ func allTools() []Tool {
 		extractCodeTool{},     // extract_code
 		extractTableTool{},    // extract_table
 		extractTextTool{},     // extract_text
+		imageToPromptTool{},   // image_to_prompt
 		readImageTool{},       // read_image
 	}
 }
@@ -54,11 +55,12 @@ var _ = []Tool{
 	extractCodeTool{},
 	extractTableTool{},
 	extractTextTool{},
+	imageToPromptTool{},
 	readImageTool{},
 }
 
-// ExpectedToolCount is the number of tools the registry must expose for v0.1.
+// ExpectedToolCount is the number of tools the registry must expose.
 // Tests assert that NewRegistry().All() returns exactly this many. Bumping
 // this constant requires a catalog update (preferred_for lists) and a
 // SKILL.md refresh.
-const ExpectedToolCount = 9
+const ExpectedToolCount = 10

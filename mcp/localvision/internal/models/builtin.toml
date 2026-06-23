@@ -49,6 +49,7 @@ preferred_for = [
   "describe_diagram",
   "describe_chart",
   "diagnose_error",
+  "image_to_prompt",
   "compare_images",
 ]
 hardware_tier = "constrained"
@@ -102,6 +103,7 @@ preferred_for = [
   "describe_diagram",
   "describe_chart",
   "diagnose_error",
+  "image_to_prompt",
   "compare_images",
 ]
 hardware_tier = "mainstream"

@@ -9,6 +9,42 @@ once it reaches v1.0.0. Until then, minor changes may break compatibility.
 Tags for this subdirectory follow the Go module convention
 `mcp/localvision/v<MAJOR>.<MINOR>.<PATCH>`.
 
+## [0.5.0] - 2026-06-23
+
+Breadth & polish: a new 10th tool plus a reliability fix. See
+[`ROADMAP.md`](./ROADMAP.md) (G8, E6).
+
+### Added
+
+- **`image_to_prompt` tool** (G8): reverse-engineers an image into a
+  text-to-image (diffusion) prompt that could recreate it — subject, medium/style,
+  composition and camera details, lighting, color palette, mood, plus a
+  paste-ready comma-separated tag line. Usable with Midjourney, SDXL, Flux,
+  DALL·E, etc.; the optional `question` steers it toward a specific generator or
+  style. Reach it via `localvision img.png --type prompt` or the
+  `image_to_prompt` MCP tool. Tool count is now **10**.
+
+### Fixed
+
+- **MCP `image_data` temp-file leak** (E6): the MCP server path decoded
+  `image_data` (data: URI) inputs to temp files via a private helper that never
+  registered them for cleanup, leaking one temp file per `image_data` MCP call.
+  The MCP path now reuses the canonical `tools.ParseImageRef` (which registers
+  the temp) and reaps it with `CleanupImageRefs` after each call — matching the
+  CLI one-shot path, which never leaked. A partially-malformed `images` array
+  (valid element followed by an invalid one) also no longer leaks the earlier
+  elements' temp files. ~80 lines of duplicated decode helpers removed; `Source`
+  is now redacted on the MCP path too (privacy, matching the CLI).
+
+### Deferred
+
+- **E2 (auto-reap orphan `llama-server` on startup)** moved to a later release.
+  Investigation showed no orphan-detection code exists, ports are ephemeral, and
+  there is no PID file or argv marker — so safe reaping needs a marker plus a
+  parent-liveness check (to avoid killing a different live instance's subprocess),
+  which is larger than its roadmap "S" tag and carries automatic-kill risk. The
+  manual workaround (`pkill -fa llama-server`) remains documented.
+
 ## [0.4.0] - 2026-06-23
 
 Cross-platform: localvision now builds and runs on Linux and Windows (x86_64
@@ -260,7 +296,8 @@ First usable release. macOS Apple Silicon only (Linux/Windows stubbed for v0.2).
 - `InternVL3.5 8B` was considered but dropped from v0.1 — no clean upstream
   GGUF source and it ranked last in our 7-model benchmark.
 
-[Unreleased]: https://github.com/froggeric/llm/compare/v0.4.0
+[Unreleased]: https://github.com/froggeric/llm/compare/v0.5.0
+[v0.5.0]: https://github.com/froggeric/llm/releases/tag/v0.5.0
 [v0.4.0]: https://github.com/froggeric/llm/releases/tag/v0.4.0
 [v0.3.0]: https://github.com/froggeric/llm/releases/tag/v0.3.0
 [v0.2.2]: https://github.com/froggeric/llm/releases/tag/v0.2.2

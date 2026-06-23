@@ -6,6 +6,7 @@ import (
 	"io"
 	"log/slog"
 	"os"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"sync"
@@ -516,6 +517,108 @@ func TestExecutorNilCatalogReturnsError(t *testing.T) {
 	_, _, err := exec.Run(context.Background(), "read_image", "sys", "user", nil, 100)
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "catalog is nil")
+}
+
+// pathCapturingExecutor is a tools.Executor that records the LocalPath of the
+// first image it sees, so a test can later assert on the temp file created for
+// an image_data input. Used by TestCallToolCleansUpDataURITempFile.
+type pathCapturingExecutor struct {
+	mu   sync.Mutex
+	path string
+}
+
+func (e *pathCapturingExecutor) Run(ctx context.Context, toolID, systemPrompt, userPrompt string, images []tools.ImageRef, maxTokens int) (string, tools.Stats, error) {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+	if len(images) > 0 {
+		e.path = images[0].LocalPath
+	}
+	return "ok", tools.Stats{}, nil
+}
+
+func (e *pathCapturingExecutor) capturedPath() string {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+	return e.path
+}
+
+// TestCallToolCleansUpDataURITempFile is the E6 regression test: an image_data
+// (data: URI) argument is decoded to a temp file for inference, and callTool
+// must remove that temp file once the call returns. Before E6 the MCP path
+// leaked one temp file per image_data call (its private dataURIToTempFile never
+// registered with tempRegistry).
+func TestCallToolCleansUpDataURITempFile(t *testing.T) {
+	exec := &pathCapturingExecutor{}
+	srv := newTestServer(t, exec)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	t1, t2 := mcp.NewInMemoryTransports()
+	_, err := srv.mcp.Connect(ctx, t1, nil)
+	require.NoError(t, err)
+
+	client := mcp.NewClient(&mcp.Implementation{Name: "test-client", Version: "v0.0.1"}, nil)
+	cs, err := client.Connect(ctx, t2, nil)
+	require.NoError(t, err)
+	defer cs.Close()
+
+	res, err := cs.CallTool(ctx, &mcp.CallToolParams{
+		Name:      "read_image",
+		Arguments: map[string]any{"image_data": "data:image/png;base64,iVBORw0KGgo="},
+	})
+	require.NoError(t, err)
+	require.False(t, res.IsError, "call should succeed")
+
+	tempPath := exec.capturedPath()
+	require.NotEmpty(t, tempPath, "executor should have seen the temp file path")
+	require.True(t, strings.HasSuffix(tempPath, ".png"),
+		"temp file should have .png suffix; got %q", tempPath)
+
+	// After callTool returns, the temp file must be gone (the defer reaped it).
+	_, statErr := os.Stat(tempPath)
+	assert.True(t, os.IsNotExist(statErr),
+		"temp file %q should be removed after callTool; stat err=%v", tempPath, statErr)
+}
+
+// lvmTempFiles snapshots the set of localvision temp image files currently in
+// os.TempDir. Used to assert no net leak across a normalizeImages call: the set
+// after must equal the set before. Safe under sequential test execution (this
+// package's tests do not call t.Parallel).
+func lvmTempFiles(t *testing.T) map[string]struct{} {
+	t.Helper()
+	matches, err := filepath.Glob(filepath.Join(os.TempDir(), "lvm-image-*"))
+	require.NoError(t, err)
+	set := make(map[string]struct{}, len(matches))
+	for _, m := range matches {
+		set[m] = struct{}{}
+	}
+	return set
+}
+
+// TestNormalizeImagesCleansUpOnArrayError covers the E6 edge case: when an
+// images array has a valid data: URI as element 0 but a malformed element 1,
+// normalizeImages must reap element 0's temp file rather than leak it. That
+// error path returns before callTool's cleanup defer is registered, so the
+// cleanup has to happen inside normalizeImages itself.
+func TestNormalizeImagesCleansUpOnArrayError(t *testing.T) {
+	before := lvmTempFiles(t)
+
+	// Element 0 is a valid data: URI (creates a temp file); element 1 is not a
+	// string or object, so normalizeOneImage rejects it.
+	args := map[string]any{
+		"images": []any{
+			"data:image/png;base64,iVBORw0KGgo=",
+			12345, // invalid element type
+		},
+	}
+	_, _, err := normalizeImages(args, "compare_images")
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "images[1]")
+
+	after := lvmTempFiles(t)
+	assert.Equal(t, before, after,
+		"temp file created for images[0] must be reaped on the images[1] error; no net leak")
 }
 
 // Reduce noise from the unused linter if atomic is not used directly in

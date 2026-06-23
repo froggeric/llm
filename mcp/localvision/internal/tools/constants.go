@@ -20,6 +20,7 @@ const (
 	idDescribeDiagram = "describe_diagram"
 	idDescribeChart   = "describe_chart"
 	idDiagnoseError   = "diagnose_error"
+	idImageToPrompt   = "image_to_prompt"
 	idCompareImages   = "compare_images"
 )
 
@@ -35,6 +36,7 @@ const (
 	ToolDescribeDiagram = idDescribeDiagram
 	ToolDescribeChart   = idDescribeChart
 	ToolDiagnoseError   = idDiagnoseError
+	ToolImageToPrompt   = idImageToPrompt
 	ToolCompareImages   = idCompareImages
 )
 
