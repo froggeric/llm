@@ -22,7 +22,7 @@ The deciding axis is **hallucination discipline**, not raw OCR power. Both model
 - **Pass 2:** full-read 11 decision-critical images (spatial test, counting tests, OCR wins/losses, dense-scene runaways, medical).
 - **Verification:** every headline claim below was re-checked by regex across all 3 runs — the run that's quoted is representative, not cherry-picked.
 - **Deliberately ignored:** the `judgments_v5/`, `judgments_q8/` LLM-judge outputs and the aggregate scores. Verdicts come from comparing actual answers to owner-verified ground truth.
-- **Scope (image only):** these verdicts cover static images only. Both models also support **video** natively (neither supports audio); the harness did not exercise video. See `BENCHMARK-REPORT-v5.md` § *Model specs & media support* for the full media matrix and mmproj sizes.
+- **Scope (image only):** both models natively support image and video; neither supports audio. This report evaluates static images only — video was not exercised by the harness.
 
 ---
 
@@ -101,4 +101,4 @@ The single most important property for a vision tool is **not fabricating confid
 **Caveats:**
 - The margin is meaningful but not large — roughly 5 decisive A-wins to 1 B-win among contested items, with OCR power otherwise equal.
 - *Pure-quality verdict only, as requested.* Operationally, A is the lighter/faster config (8B @ Q8, ~40 tok/s, ~12–40 s/image) versus B (9B @ Q4, ~47 tok/s, ~15–56 s/image) — a secondary consideration here, not a driver of the recommendation.
-- This head-to-head covers only these two configs. The project's overall top pick remains a different model (Q3.6-27B, no-think); see `BENCHMARK-REPORT-v5.md`.
+- This report covers only these two configs on the 30-image set.

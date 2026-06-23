@@ -1,7 +1,6 @@
 # Head-to-Head: Qwen3-VL-8B @ Q8_0 vs Qwen3.5-4B @ Q4_K_M (no-think)
 
 **Date:** 2026-06-22 · **Basis:** actual model answers in `benchmark-results/raw.jsonl`, judged against `test-images/GROUND-TRUTH.md` — **not** the v5/Q8 aggregate scores.
-Companion report: [`HEAD-TO-HEAD-qwen3vl-8b-Q8_vs_qwen3.5-9b-Q4-nothink.md`](./HEAD-TO-HEAD-qwen3vl-8b-Q8_vs_qwen3.5-9b-Q4-nothink.md) (same method, 9B challenger).
 
 | | **A — Qwen3-VL-8B (Q8_0)** | **B — Qwen3.5-4B (Q4_K_M, `--disable-thinking`)** |
 |---|---|---|
@@ -11,9 +10,9 @@ Companion report: [`HEAD-TO-HEAD-qwen3vl-8b-Q8_vs_qwen3.5-9b-Q4-nothink.md`](./H
 
 ## TL;DR
 
-**Winner on pure answer quality: A (Qwen3-VL-8B @ Q8_0)** — same verdict as the 9B comparison, by a comparable margin.
+**Winner on pure answer quality: A (Qwen3-VL-8B @ Q8_0)** — by a clear margin.
 
-A is more accurate and more disciplined. It reads the VIC logo correctly, identifies the Pope and the embedded Hundertwasser face, and stays honest about the illegible signature. B — though **notably more truthful than the 9B** (it doesn't invent "Carmen/HSBC" on the Hong Kong photo, and hedges *"no legible text"*) — still stumbles on three confident errors A avoids: it reads the logo as **"WIC Health Club"**, misattributes the Waldo scene to **"Dutch artist Dick Bruna"** (ground truth: Martin Handford), and in one run fabricates the painting signature as **"© 2015"**. B fights back on **people-counting** (it alone counts 9 on the kung-fu banner) and is more verbose, but loses on precision and scene-depth.
+A is more accurate and more disciplined. It reads the VIC logo correctly, identifies the Pope and the embedded Hundertwasser face, and stays honest about the illegible signature. B reads the Hong Kong signage cleanly (no invented signs) and hedges *"no legible text"* on the signature — yet still makes three confident errors A avoids: it reads the logo as **"WIC Health Club"**, misattributes the Waldo scene to **"Dutch artist Dick Bruna"** (ground truth: Martin Handford), and in one run fabricates the painting signature as **"© 2015"**. B fights back on **people-counting** (it alone counts 9 on the kung-fu banner) and is more verbose, but loses on precision and scene-depth.
 
 ## Method
 
@@ -22,7 +21,7 @@ A is more accurate and more disciplined. It reads the VIC logo correctly, identi
 - **Pass 2:** full-read the decision-critical images.
 - **Verification:** every headline claim re-checked by regex across **all 3 runs** — quoted runs are representative.
 - **Deliberately ignored:** the `judgments_*` LLM-judge outputs and aggregate scores. Verdicts come from actual answers vs owner-verified ground truth.
-- **Scope (image only):** these verdicts cover static images only. Both models also support **video** natively (neither supports audio); the harness did not exercise video. See `BENCHMARK-REPORT-v5.md` § *Model specs & media support* for the full media matrix and mmproj sizes.
+- **Scope (image only):** both models natively support image and video; neither supports audio. This report evaluates static images only — video was not exercised by the harness.
 
 ## Per-dimension verdict
 
@@ -35,7 +34,7 @@ A is more accurate and more disciplined. It reads the VIC logo correctly, identi
 | Spatial / relational | Consistent laterality + "concentric" on card | Mixed; slips *"spiral"* in 1/3, weak on left/right | **A (slight)** |
 | Scene / object depth | Catches the Pope, the embedded face | Misses both ("possibly monks"; no face) | **A** |
 | Detail / completeness | Concise | More verbose, structured, more surface detail | **B** |
-| Honesty about uncertainty | "not clearly legible" | Hedges *"no legible text"* — better than 9B, but still fabricates 1/3 | **A (slight)** |
+| Honesty about uncertainty | "not clearly legible" | Hedges *"no legible text"* — but still fabricates 1/3 of the time | **A (slight)** |
 | Medical imaging | Misses the rib fracture; no false finding | Misses the rib fracture; no false finding | **Tie** |
 | Failure-mode robustness | 1 token-cap runaway (spritesheet) | 1 token-cap runaway (same spritesheet) | **Tie** |
 | Run-to-run consistency | Very stable | More variable (signature 1/3 fabricated; digit-vs-word counts) | **A (slight)** |
@@ -48,14 +47,14 @@ A is more accurate and more disciplined. It reads the VIC logo correctly, identi
 
 **1. `17-logo-vic-health-club.png` — OCR accuracy.** Text is *"VIC Health Club"*.
 - **A (all 3 runs):** *"Vic Health Club"* — **correct.**
-- **B (all 3 runs):** *"WIC Health Club"* — **wrong** (a one-letter misread, milder than the 9B's total *"vivo health hub"* fabrication, but still confidently incorrect).
+- **B (all 3 runs):** *"WIC Health Club"* — **wrong** (a one-letter misread, but still confidently incorrect).
 
 **2. `30-where-is-waldo.webp` — artist attribution.** It's authentic Martin Handford; calling it **Dick Bruna is explicitly flagged as wrong** in ground truth.
 - **A:** recognizes the *"find the differences / spot the object"* genre **without naming a wrong artist.**
 - **B (all 3 runs):** *"likely inspired by the style of Dutch artist Dick Bruna"* — **confident, wrong attribution.**
 
 **3. `05-cropped-youtube-capture.png` — scene depth.** A framed **Pope photo** is GT-verified as present (identifying it is correct).
-- **A:** *"a framed photograph of Pope Francis."* Also reads 茶香四溢滿屋 and (wrongly, like everyone) calls the flag Canadian.
+- **A:** *"a framed photograph of Pope Francis."* Also reads 茶香四溢滿屋 and (incorrectly) calls the flag Canadian.
 - **B:** reads the Chinese scroll too, but on the photo only manages *"two individuals, possibly monks"* — **misses the Pope entirely**, and doesn't engage the flag.
 
 **4. `29-painting-hundertwasser.jpeg` — motifs + signature honesty.** Hallmarks: embedded human face (lower-left), blue teardrop windows, onion domes; signature is a red/pink box showing **1965**.
@@ -73,7 +72,7 @@ A is more accurate and more disciplined. It reads the VIC logo correctly, identi
 **6. `13-colour-swatch-nausicaa.jpg` — counting (both right).** 10 colours.
 - **A:** *"ten horizontal color bars."* **B:** *"10 horizontal rectangular bars."* **Both correct** (B uses the digit; a word-only search originally hid this).
 
-**7. `21-motion-blur.jpg` (Hong Kong) — OCR under blur.** Both read 大新銀行 and don't fabricate extra signs. Worth noting: **B (4B) is much cleaner here than the 9B**, which invented *"Carmen"* and *"HSBC"*. Both approximate DVFX (A: "DWF", B: "DWF").
+**7. `21-motion-blur.jpg` (Hong Kong) — OCR under blur.** Both read 大新銀行 and don't fabricate extra signs. Both approximate DVFX (A: "DWF", B: "DWF").
 
 **8. `28-xray-ribfracture-lowerright.jpg` — medical (both fail).** There is a left 10th posterior rib fracture. Both report normal anatomy with no fracture — and, to their credit, neither invents a false finding. Not a differentiator.
 
@@ -89,10 +88,9 @@ A is more accurate and more disciplined. It reads the VIC logo correctly, identi
 
 A is more accurate and more trustworthy: it read the logo, the Pope, and the embedded face, and it doesn't fabricate artist attributions or signature years. B's answers are longer and it alone got the 9-person count, but it pairs that detail with confident errors (*"WIC Health Club"*, *"Dick Bruna"*, *"© 2015"*) and shallower scene reading. For a vision tool, fewer confident falsehoods is the property that matters most.
 
-**Where B is the better pick:** if you specifically value **verbose, highly-structured descriptions** and will verify outputs downstream, B is a legitimate, competitive alternative — and it is markedly **more honest than the 9B** on dense/blurry scenes.
+**Where B is the better pick:** if you specifically value **verbose, highly-structured descriptions** and will verify outputs downstream, B is a legitimate, competitive alternative.
 
 **Caveats:**
 - The margin is real but moderate — ~5 decisive A-wins to 1 B-win among contested items, with OCR power (Latin, CJK, French) otherwise equal.
 - *Pure-quality verdict only, as requested.* Operationally this is a size mismatch: B (4B @ Q4) is ~1.7× faster (~65–72 tok/s) and far lighter than A (8B @ Q8, ~37–41 tok/s) — a secondary consideration here, not a driver of the recommendation.
-- **Cross-report note:** the 8B-VL (Q8) beats **both** Qwen3.5 nothink challengers (4B and 9B) on pure quality. Between those two, the **4B is the more honest/consistent** of the pair (less aggressive fabrication than the 9B) despite being smaller — so if a Qwen3.5 nothink model were ever preferred, the 4B is the safer choice over the 9B, though still behind the 8B-VL on accuracy.
-- The project's overall top pick remains a different model (Q3.6-27B, no-think); see `BENCHMARK-REPORT-v5.md`.
+- This report covers only these two configs on the 30-image set.

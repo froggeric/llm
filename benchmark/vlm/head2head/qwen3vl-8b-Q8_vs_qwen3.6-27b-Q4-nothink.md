@@ -1,7 +1,6 @@
 # Head-to-Head: Qwen3-VL-8B @ Q8_0 vs Qwen3.6-27B @ Q4_K_M (no-think)
 
 **Date:** 2026-06-22 · **Basis:** actual model answers in `benchmark-results/raw.jsonl`, judged against `test-images/GROUND-TRUTH.md` — **not** the v5/Q8 aggregate scores.
-Companion reports: [vs Qwen3.5-9B](./HEAD-TO-HEAD-qwen3vl-8b-Q8_vs_qwen3.5-9b-Q4-nothink.md) · [vs Qwen3.5-4B](./HEAD-TO-HEAD-qwen3vl-8b-Q8_vs_qwen3.5-4b-Q4-nothink.md) (same method).
 
 | | **A — Qwen3-VL-8B (Q8_0)** | **B — Qwen3.6-27B (Q4_K_M, `--disable-thinking`)** |
 |---|---|---|
@@ -11,20 +10,20 @@ Companion reports: [vs Qwen3.5-9B](./HEAD-TO-HEAD-qwen3vl-8b-Q8_vs_qwen3.5-9b-Q4
 
 ## TL;DR
 
-**Winner on pure answer quality: B (Qwen3.6-27B @ Q4, no-think)** — and this **vindicates the benchmark metrics**, which rank `Q3.6-27B-nothink` #1 (~79.6/100).
+**Winner on pure answer quality: B (Qwen3.6-27B @ Q4, no-think).**
 
-Unlike the 4B and 9B — both of which *lost* to the 8B-VL — the 27B genuinely beats it on the hardest probes. It is the **only model that correctly counts the manga page (11 panels)**, the **only one that stays stable on the dense spritesheet** (the 8B-VL has a 464 s token-cap runaway there), and the **only one that names the Waldo scene** ("Where's Waldo?"). It also reads the VIC logo correctly (the 4B/9B both mangled it) and matches the 8B-VL's honesty on the illegible Hundertwasser signature. The 8B-VL's only real edges are minor — slightly fuller spatial detail on the trading card and slightly more consistent Pope identification — plus, outside the quality verdict, it is ~3–4× faster.
+B beats A on the hardest probes. It correctly counts the manga page (**11 panels**, where A says 9), stays stable on the dense spritesheet (A suffers a 464 s token-cap runaway there), and names the Waldo scene (*"Where's Waldo?"* — A describes it generically without naming it). It also reads the VIC logo correctly and matches A's honesty on the illegible Hundertwasser signature. A's only real edges are minor — slightly fuller spatial detail on the trading card and slightly more consistent Pope identification — plus, outside the quality verdict, it is ~3–4× faster.
 
-**Bottom line:** on the criterion you chose (pure answer quality), the 27B wins. The quality ranking by inspection is **27B > 8B-VL > {9B, 4B}**, exactly matching the metrics. The 27B's edge concentrates on the tasks where parameters buy real capability: precise counting, dense-scene robustness, and recognition/identification.
+**Bottom line:** on pure answer quality, B wins, with its edge concentrated where extra parameters buy real capability: precise counting, dense-scene robustness, and recognition/identification.
 
 ## Method
 
 - Extracted every `content` answer for both models across all 3 runs (30 × 3 = 90 answers each).
 - **Pass 1:** read a compact fingerprint of all 180 answers for substance + variance.
-- **Pass 2:** full-read the decision-critical images (same probe set used in the 4B/9B reports).
+- **Pass 2:** full-read the decision-critical probe images.
 - **Verification:** every headline claim re-checked by regex across **all 3 runs**.
 - **Deliberately ignored:** the `judgments_*` outputs and aggregate scores. Verdicts come from actual answers vs owner-verified ground truth.
-- **Scope (image only):** these verdicts cover static images only. Both models also support **video** natively (neither supports audio); the harness did not exercise video. See `BENCHMARK-REPORT-v5.md` § *Model specs & media support* for the full media matrix and mmproj sizes.
+- **Scope (image only):** both models natively support image and video; neither supports audio. This report evaluates static images only — video was not exercised by the harness.
 
 ## Per-dimension verdict
 
@@ -48,7 +47,7 @@ Unlike the 4B and 9B — both of which *lost* to the 8B-VL — the 27B genuinely
 
 **1. `12-manga-nausicaa-colour.png` — counting.** Truth: **11 panels**.
 - **A (all 3 runs):** *"a grid of nine panels"* — **undercounts (9).**
-- **B:** *"11 panels"* (runs 1 & 3) / *"10 panels"* (run 2) — **correct in 2/3.** It's the only model in the whole series to count 11. It also reads the Japanese SFX (*"ボム — Explosion sound effect, fourth row left panel"*) and places the explosion — without the 9B's *"Link from Zelda"* hallucination.
+- **B:** *"11 panels"* (runs 1 & 3) / *"10 panels"* (run 2) — **correct in 2/3.** It also reads the Japanese SFX (*"ボム — Explosion sound effect, fourth row left panel"*) and places the explosion, and stays grounded without any franchise misidentification.
 
 **2. `22-spritesheet-bubble-bobble.png` — dense-scene robustness.**
 - **A `q8-1`:** hits the 16,384-token cap — **74,757 chars, 464 s**, a runaway (its other two runs are normal).
@@ -56,17 +55,17 @@ Unlike the 4B and 9B — both of which *lost* to the 8B-VL — the 27B genuinely
 
 **3. `30-where-is-waldo.webp` — recognition.** Truth: authentic *"Where's Waldo?"* by Martin Handford.
 - **A:** describes a *"find the differences / spot the object"* scene — **never names the property.**
-- **B (all 3 runs):** *"reminiscent of a 'Where's Waldo?' puzzle"* — **correctly identifies it** (and, unlike the 4B, does **not** misattribute it to Dick Bruna).
+- **B (all 3 runs):** *"reminiscent of a 'Where's Waldo?' puzzle"* — **correctly identifies it**, with no wrong artist attribution.
 
 **4. `19-watercolour-painting-surfers-fuerteventura.png` — spatial detail.**
 - **B:** captures the board direction (*"points to the right"* / goofy-footed) and the observer's wetsuit — a ground-truth-verified detail.
 - **A:** gets the two surfers and brown hair right but **omits board direction.** (Both models read the neon sky as "aurora" — a shared interpretation, not a differentiator.)
 
-### Ties (both correct — and notably better than the 4B/9B)
+### Ties (both correct)
 
-**5. `17-logo-vic-health-club.png`.** Both read *"VIC Health Club"* correctly. (The 4B read "WIC", the 9B "vivo health hub" — the 27B doesn't share that failure.)
+**5. `17-logo-vic-health-club.png`.** Both read *"VIC Health Club"* correctly.
 
-**6. `29-painting-hundertwasser.jpeg`.** Both capture the embedded face, blue teardrop windows, and onion domes, and both stay honest about the illegible signature. (The 4B missed the face and fabricated *"© 2015"*.)
+**6. `29-painting-hundertwasser.jpeg`.** Both capture the embedded face, blue teardrop windows, and onion domes, and both stay honest about the illegible signature.
 
 **7. `28-xray-ribfracture-lowerright.jpg` — medical (both fail).** There is a left 10th posterior rib fracture. Both report *"no obvious fractures"* / normal anatomy — and neither invents a false finding. Not a differentiator.
 
@@ -76,7 +75,7 @@ Unlike the 4B and 9B — both of which *lost* to the 8B-VL — the 27B genuinely
 
 ## Variance & failure modes
 
-- **Stability:** both are very consistent run-to-run. The one structural difference: **B has zero token-cap runaways across all 90 answers; A has one** (the spritesheet). This is the same failure that also hit the 4B and 9B on dense images — the 27B uniquely avoids it.
+- **Stability:** both are very consistent run-to-run. The one structural difference: **B has zero token-cap runaways across all 90 answers; A has one** (the spritesheet). B uniquely avoids that failure mode here.
 - **B's one inconsistency:** the banner count flips between 8 and 9 across runs (correct only 1/3). A is consistently wrong (8) there.
 - **No crashes / `ok=False`** for either model across all 180 answers.
 
@@ -84,11 +83,11 @@ Unlike the 4B and 9B — both of which *lost* to the 8B-VL — the 27B genuinely
 
 **Pick B — Qwen3.6-27B @ Q4, no-think.**
 
-On pure answer quality it is the strongest model in the series: it counts the manga panels, survives the dense spritesheet, names the Waldo scene, and matches the 8B-VL on OCR and honesty — while the 8B-VL's only counters are minor completeness details. This is the one head-to-head where the metrics champion also wins on inspection, and its advantages land exactly where extra parameters help (counting, dense scenes, recognition).
+On pure answer quality it is the stronger of the two: it counts the manga panels, survives the dense spritesheet, names the Waldo scene, and matches A on OCR and honesty — while A's only counters are minor completeness details. B's advantages land exactly where extra parameters help (counting, dense scenes, recognition).
 
-**Where A is the better pick:** if **latency or footprint matters at all**, the picture inverts in practice. A (8B @ Q8) runs ~3–4× faster (~40 vs ~16 tok/s; ~10–46 s vs ~50–120 s per image) and is "good enough" on the majority of images. You explicitly set efficiency aside for this verdict — but for the actual local vision-MCP use case, that trade-off is the real decision, and the 8B-VL is the pragmatic default unless you specifically need the 27B's edge on the hardest images.
+**Where A is the better pick:** if **latency or footprint matters at all**, the picture inverts in practice. A (8B @ Q8) runs ~3–4× faster (~40 vs ~16 tok/s; ~10–46 s vs ~50–120 s per image) and is "good enough" on the majority of images. You set efficiency aside for this verdict — but for a local deployment, that trade-off is the real decision, and A is the pragmatic default unless you specifically need B's edge on the hardest images.
 
 **Caveats:**
 - The margin is driven by a handful of hard images (panels, spritesheet, Waldo); on most of the 30, the two are close.
 - *Pure-quality verdict only, as requested.* Efficiency heavily favours A (see above).
-- **Cross-series synthesis:** by actual-answer inspection, **27B > 8B-VL > {9B, 4B}**, and between the two Qwen3.5 nothink models the 4B is the more honest. This ordering matches the benchmark metrics — lending independent support to `Q3.6-27B-nothink` as the project's top pick, while the 8B-VL is the best *efficient* alternative.
+- This report covers only these two configs on the 30-image set.
