@@ -38,7 +38,7 @@ func TestToolIDsUnique(t *testing.T) {
 	}
 }
 
-// TestToolIDsMatchCatalogPreferredFor enforces that the 9 tool IDs are
+// TestToolIDsMatchCatalogPreferredFor enforces that the tool IDs are
 // exactly the union of every model's preferred_for entries in the catalog.
 // Hardcoded list mirrors internal/models/builtin.toml. If a tool ID changes
 // in constants.go without a matching catalog change, this test fails.
@@ -46,6 +46,7 @@ func TestToolIDsMatchCatalogPreferredFor(t *testing.T) {
 	// Every ID that appears in any model's preferred_for in builtin.toml.
 	catalogExpected := map[string]bool{
 		idReadImage:       true,
+		idReadDocument:    true,
 		idExtractText:     true,
 		idExtractCode:     true,
 		idDescribeUI:      true,
@@ -118,6 +119,7 @@ func TestInputSchemaIsValidJSONSchema(t *testing.T) {
 func TestMaxTokensWithinExpectedBands(t *testing.T) {
 	expected := map[string]int{
 		idReadImage:       1500,
+		idReadDocument:    2048,
 		idExtractText:     2048,
 		idExtractCode:     4096,
 		idExtractTable:    2048,
@@ -426,6 +428,10 @@ func TestParseOutputSanity(t *testing.T) {
 		{idCompareImages, []string{
 			"- Text label changed\n- Button moved",
 			"The images are identical.",
+		}},
+		{idReadDocument, []string{
+			"## Document summary\nA 3-page quarterly sales report.\n### Page 1\nCover and headline figures.",
+			"",
 		}},
 	}
 	for _, tc := range cases {

@@ -29,6 +29,8 @@ var typeToToolID = map[string]string{
 	"compare":  tools.ToolCompareImages,
 	"describe": tools.ToolReadImage,
 	"read":     tools.ToolReadImage, // alias for describe
+	"doc":      tools.ToolReadDocument,
+	"pdf":      tools.ToolReadDocument, // alias for doc
 }
 
 // resolveToolID maps a --type value to a tool ID. Empty returns read_image
@@ -39,7 +41,7 @@ func resolveToolID(typeFlag string) (string, error) {
 	}
 	id, ok := typeToToolID[strings.ToLower(typeFlag)]
 	if !ok {
-		return "", fmt.Errorf("unknown --type %q (valid: ocr, code, table, ui, diagram, chart, error, prompt, compare, describe)", typeFlag)
+		return "", fmt.Errorf("unknown --type %q (valid: ocr, code, table, ui, diagram, chart, error, prompt, compare, doc, describe)", typeFlag)
 	}
 	return id, nil
 }
@@ -117,7 +119,7 @@ func runOneShot(args []string) int {
 	cf.register(fs)
 	var typeFlag, modelFlag, questionFlag, formatFlag, outputFlag, outputDirFlag, outputModeFlag string
 	var recursiveFlag, metaFlag bool
-	fs.StringVar(&typeFlag, "type", "", "query type: ocr|code|table|ui|diagram|chart|error|prompt|compare|describe (default describe)")
+	fs.StringVar(&typeFlag, "type", "", "query type: ocr|code|table|ui|diagram|chart|error|prompt|compare|doc|describe (default describe)")
 	fs.StringVar(&modelFlag, "model", "", "override the auto-selected model (a catalog ID)")
 	fs.StringVar(&questionFlag, "question", "", "specific question about the image (describe/read/prompt only)")
 	fs.StringVar(&formatFlag, "format", "", "output format: text|markdown|json|yaml|xml (default: presentational)")
@@ -163,7 +165,8 @@ func runOneShot(args []string) int {
 	}
 
 	// Expand positional args (literal / glob / dir / stdin) into image paths.
-	paths, err := expandInputs(positionals, recursiveFlag)
+	// read_document also accepts .pdf files from directories.
+	paths, err := expandInputs(positionals, recursiveFlag, toolID == tools.ToolReadDocument)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "localvision: %v\n", err)
 		return exitBadArgs
@@ -433,7 +436,6 @@ func runUnit(ctx context.Context, exec tools.Executor, tool tools.Tool, toolID s
 	if err != nil {
 		return unitResult{}, err
 	}
-	defer tools.CleanupImageRefs(refs)
 
 	extra := map[string]any{}
 	if question != "" {
@@ -442,11 +444,24 @@ func runUnit(ctx context.Context, exec tools.Executor, tool tools.Tool, toolID s
 	if outputMode != "" {
 		extra["output"] = strings.ToLower(strings.TrimSpace(outputMode))
 	}
-	system, user, _, err := tool.BuildRequest(tools.ToolInput{Images: refs, Extra: extra})
+
+	// Expand document inputs (e.g. read_document rasterizes a PDF into page
+	// images). Cleanup must reap the EXPANDED set (it holds any rasterized page
+	// temps), so defer after expansion; on expansion failure we still reap the
+	// original refs.
+	input := tools.ToolInput{Images: refs, Extra: extra}
+	input, err = tools.ExpandInput(ctx, tool, input)
+	if err != nil {
+		tools.CleanupImageRefs(refs)
+		return unitResult{}, fmt.Errorf("expand input: %w", err)
+	}
+	defer tools.CleanupImageRefs(input.Images)
+
+	system, user, _, err := tool.BuildRequest(input)
 	if err != nil {
 		return unitResult{}, fmt.Errorf("build request: %w", err)
 	}
-	raw, stats, err := exec.Run(ctx, toolID, system, user, refs, tool.MaxTokens())
+	raw, stats, err := exec.Run(ctx, toolID, system, user, input.Images, tool.MaxTokens())
 	if err != nil {
 		return unitResult{}, err
 	}

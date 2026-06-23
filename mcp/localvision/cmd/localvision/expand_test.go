@@ -20,7 +20,7 @@ func writeFile(t *testing.T, dir, name string) {
 func TestExpandLiteralFile(t *testing.T) {
 	d := t.TempDir()
 	writeFile(t, d, "a.png")
-	got, err := expandInputs([]string{filepath.Join(d, "a.png")}, false)
+	got, err := expandInputs([]string{filepath.Join(d, "a.png")}, false, false)
 	require.NoError(t, err)
 	assert.Equal(t, []string{filepath.Join(d, "a.png")}, got)
 }
@@ -30,7 +30,7 @@ func TestExpandGlob(t *testing.T) {
 	writeFile(t, d, "a.png")
 	writeFile(t, d, "b.png")
 	writeFile(t, d, "c.txt")
-	got, err := expandInputs([]string{filepath.Join(d, "*.png")}, false)
+	got, err := expandInputs([]string{filepath.Join(d, "*.png")}, false, false)
 	require.NoError(t, err)
 	sort.Strings(got)
 	assert.Equal(t, []string{filepath.Join(d, "a.png"), filepath.Join(d, "b.png")}, got)
@@ -38,7 +38,7 @@ func TestExpandGlob(t *testing.T) {
 
 func TestExpandGlobNoMatch(t *testing.T) {
 	d := t.TempDir()
-	_, err := expandInputs([]string{filepath.Join(d, "*.png")}, false)
+	_, err := expandInputs([]string{filepath.Join(d, "*.png")}, false, false)
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "matched no files")
 }
@@ -52,7 +52,7 @@ func TestExpandDirectoryNonRecursive(t *testing.T) {
 	require.NoError(t, os.Mkdir(sub, 0o755))
 	writeFile(t, sub, "nested.png") // must be skipped (non-recursive)
 
-	got, err := expandInputs([]string{d}, false)
+	got, err := expandInputs([]string{d}, false, false)
 	require.NoError(t, err)
 	sort.Strings(got)
 	assert.Equal(t, []string{filepath.Join(d, "a.png"), filepath.Join(d, "b.jpg")}, got)
@@ -65,7 +65,7 @@ func TestExpandDirectoryRecursive(t *testing.T) {
 	require.NoError(t, os.Mkdir(sub, 0o755))
 	writeFile(t, sub, "nested.png")
 
-	got, err := expandInputs([]string{d}, true)
+	got, err := expandInputs([]string{d}, true, false)
 	require.NoError(t, err)
 	sort.Strings(got)
 	assert.Equal(t, []string{
@@ -77,24 +77,24 @@ func TestExpandDirectoryRecursive(t *testing.T) {
 func TestExpandDirectoryNoImages(t *testing.T) {
 	d := t.TempDir()
 	writeFile(t, d, "readme.txt")
-	_, err := expandInputs([]string{d}, false)
+	_, err := expandInputs([]string{d}, false, false)
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "no image files")
 }
 
 func TestExpandMissingLiteral(t *testing.T) {
-	_, err := expandInputs([]string{filepath.Join(t.TempDir(), "nope.png")}, false)
+	_, err := expandInputs([]string{filepath.Join(t.TempDir(), "nope.png")}, false, false)
 	require.Error(t, err)
 }
 
 func TestExpandRejectsHTTP(t *testing.T) {
-	_, err := expandInputs([]string{"https://example.com/a.png"}, false)
+	_, err := expandInputs([]string{"https://example.com/a.png"}, false, false)
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "localhost-only")
 }
 
 func TestExpandURIPassthrough(t *testing.T) {
-	got, err := expandInputs([]string{"data:image/png;base64,AAAA", "file:///tmp/x.png"}, false)
+	got, err := expandInputs([]string{"data:image/png;base64,AAAA", "file:///tmp/x.png"}, false, false)
 	require.NoError(t, err)
 	assert.Equal(t, []string{"data:image/png;base64,AAAA", "file:///tmp/x.png"}, got)
 }
@@ -118,7 +118,7 @@ func TestExpandDedup(t *testing.T) {
 	d := t.TempDir()
 	writeFile(t, d, "a.png")
 	p := filepath.Join(d, "a.png")
-	got, err := expandInputs([]string{p, p}, false)
+	got, err := expandInputs([]string{p, p}, false, false)
 	require.NoError(t, err)
 	assert.Equal(t, []string{p}, got)
 }
@@ -133,13 +133,44 @@ func TestExpandMixedArgsOrderPreserved(t *testing.T) {
 		filepath.Join(d, "c.png"),
 		filepath.Join(d, "a.png"),
 		filepath.Join(d, "b.png"),
-	}, false)
+	}, false, false)
 	require.NoError(t, err)
 	assert.Equal(t, []string{
 		filepath.Join(d, "c.png"),
 		filepath.Join(d, "a.png"),
 		filepath.Join(d, "b.png"),
 	}, got)
+}
+
+// TestExpandDirectoryPDFsForReadDocument verifies the G3 fix: when includePDF
+// is set (read_document), a directory's .pdf files are collected alongside
+// images; without it they are skipped (so other tools don't try to feed PDFs
+// to the image path).
+func TestExpandDirectoryPDFsForReadDocument(t *testing.T) {
+	d := t.TempDir()
+	writeFile(t, d, "a.png")
+	writeFile(t, d, "paper.pdf")
+	writeFile(t, d, "notes.txt")
+
+	t.Run("includePDF collects pdfs", func(t *testing.T) {
+		got, err := expandInputs([]string{d}, false, true)
+		require.NoError(t, err)
+		assert.Len(t, got, 2, "png + pdf; txt excluded")
+		assert.Contains(t, got, filepath.Join(d, "a.png"))
+		assert.Contains(t, got, filepath.Join(d, "paper.pdf"))
+	})
+	t.Run("without includePDF pdfs are skipped", func(t *testing.T) {
+		got, err := expandInputs([]string{d}, false, false)
+		require.NoError(t, err)
+		assert.Len(t, got, 1, "only the png")
+		assert.Contains(t, got, filepath.Join(d, "a.png"))
+	})
+	t.Run("empty-image-dir-with-only-pdf errors for non-doc tool", func(t *testing.T) {
+		onlyPDF := t.TempDir()
+		writeFile(t, onlyPDF, "x.pdf")
+		_, err := expandInputs([]string{onlyPDF}, false, false)
+		require.Error(t, err)
+	})
 }
 
 func TestIsImageExt(t *testing.T) {

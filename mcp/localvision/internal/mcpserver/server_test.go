@@ -62,11 +62,13 @@ func (s stubTool) ParseOutput(raw string) (any, error) {
 	return raw, nil
 }
 
-// tenStubTools returns 10 distinct stub tools with the IDs the production
-// registry registers (one per tool, including image_to_prompt since v0.5.0).
-func tenStubTools() []tools.Tool {
+// elevenStubTools returns 11 distinct stub tools with the IDs the production
+// registry registers (one per tool, incl. image_to_prompt since v0.5.0 and
+// read_document since v0.6.0).
+func elevenStubTools() []tools.Tool {
 	ids := []string{
 		"read_image",
+		"read_document",
 		"extract_text",
 		"extract_code",
 		"extract_table",
@@ -95,13 +97,13 @@ func silentLogger() *slog.Logger {
 	return slog.New(slog.NewTextHandler(io.Discard, &slog.HandlerOptions{Level: slog.LevelError + 1}))
 }
 
-// newTestServer builds a Server with 9 stub tools and the given executor.
+// newTestServer builds a Server with 11 stub tools and the given executor.
 // It skips the production registry (which Track E hasn't populated yet).
 func newTestServer(t *testing.T, executor tools.Executor) *Server {
 	t.Helper()
 	srv, err := NewServer(Dependencies{
 		Logger:   silentLogger(),
-		Tools:    tenStubTools(),
+		Tools:    elevenStubTools(),
 		Executor: executor,
 	})
 	require.NoError(t, err)
@@ -167,18 +169,18 @@ func (e *progressEmittingExecutor) Run(ctx context.Context, toolID, systemPrompt
 	return e.recordingExecutor.Run(ctx, toolID, systemPrompt, userPrompt, images, maxTokens)
 }
 
-// TestServerRegistersTenTools verifies the server's tool registration
+// TestServerRegistersElevenTools verifies the server's tool registration
 // count via Server.ToolCount (a sanity check that doesn't require running
 // the SDK).
-func TestServerRegistersTenTools(t *testing.T) {
+func TestServerRegistersElevenTools(t *testing.T) {
 	srv := newTestServer(t, &recordingExecutor{})
-	assert.Equal(t, 10, srv.ToolCount(), "expected 10 tools registered")
+	assert.Equal(t, 11, srv.ToolCount(), "expected 11 tools registered")
 }
 
-// TestToolsListReturnsTenTools drives a real MCP client through the SDK
-// in-memory transport and asserts the server reports all 10 tools in
+// TestToolsListReturnsElevenTools drives a real MCP client through the SDK
+// in-memory transport and asserts the server reports all 11 tools in
 // tools/list.
-func TestToolsListReturnsTenTools(t *testing.T) {
+func TestToolsListReturnsElevenTools(t *testing.T) {
 	srv := newTestServer(t, &recordingExecutor{})
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -201,7 +203,62 @@ func TestToolsListReturnsTenTools(t *testing.T) {
 			"tool %q description must include the latency hint", tool.Name)
 		saw++
 	}
-	assert.Equal(t, 10, saw, "tools/list should return exactly 10 tools")
+	assert.Equal(t, 11, saw, "tools/list should return exactly 11 tools")
+}
+
+// TestCallToolPassesExpandedImagesToExecutor is the G3/R2 regression test:
+// when a tool is an Expander (read_document), callTool must pass the EXPANDED
+// image refs (e.g. rasterized PDF pages) to the executor — not the single
+// pre-expansion input ref. Without the input.Images fix this would report 1.
+func TestCallToolPassesExpandedImagesToExecutor(t *testing.T) {
+	exec := &recordingExecutor{}
+	tool := expanderStubTool{
+		stubTool: stubTool{id: "expand_test", description: "stub", maxTokens: 1024, system: "sys"},
+		pages:    []string{"/tmp/p1.png", "/tmp/p2.png", "/tmp/p3.png"},
+	}
+	srv, err := NewServer(Dependencies{
+		Logger:   silentLogger(),
+		Tools:    []tools.Tool{tool},
+		Executor: exec,
+	})
+	require.NoError(t, err)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	t1, t2 := mcp.NewInMemoryTransports()
+	_, err = srv.mcp.Connect(ctx, t1, nil)
+	require.NoError(t, err)
+	client := mcp.NewClient(&mcp.Implementation{Name: "test-client", Version: "v0.0.1"}, nil)
+	cs, err := client.Connect(ctx, t2, nil)
+	require.NoError(t, err)
+	defer cs.Close()
+
+	res, err := cs.CallTool(ctx, &mcp.CallToolParams{
+		Name:      "expand_test",
+		Arguments: map[string]any{"image_path": "/tmp/one.pdf"},
+	})
+	require.NoError(t, err)
+	require.False(t, res.IsError)
+
+	require.Len(t, exec.calls, 1)
+	assert.Equal(t, 3, exec.calls[0].images,
+		"executor must receive the EXPANDED page refs, not the single pre-expansion input")
+}
+
+// expanderStubTool is a stubTool that also implements tools.Expander, returning
+// a fixed set of page refs so the R2 regression test can assert callTool passes
+// the expanded set to the executor.
+type expanderStubTool struct {
+	stubTool
+	pages []string
+}
+
+func (e expanderStubTool) ExpandImages(_ context.Context, _ tools.ToolInput) ([]tools.ImageRef, error) {
+	refs := make([]tools.ImageRef, len(e.pages))
+	for i, p := range e.pages {
+		refs[i] = tools.ImageRef{LocalPath: p}
+	}
+	return refs, nil
 }
 
 // TestToolCallRoutesThroughExecutor verifies that a tools/call request

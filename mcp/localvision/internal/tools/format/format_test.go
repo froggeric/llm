@@ -48,7 +48,7 @@ func TestSuffix(t *testing.T) {
 	assert.Equal(t, "txt", Suffix(Auto), "Auto falls back to txt")
 }
 
-// stringOut is the parsed shape for 8 of 9 tools.
+// stringOut is the parsed shape for the string-output tools (all but extract_code).
 const stringOut = "# Heading\n\nSome text about the image."
 
 // codeOut mirrors tools.extractCodeTool.ParseOutput's return value.

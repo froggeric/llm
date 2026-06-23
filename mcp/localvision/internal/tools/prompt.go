@@ -1,8 +1,8 @@
 package tools
 
-// Task-tuned system prompts for each of the 10 tools.
+// Task-tuned system prompts for each of the 11 tools.
 //
-// These prompts are the entire reason we have 10 tools instead of one generic
+// These prompts are the entire reason we have 11 tools instead of one generic
 // "describe image" tool: each prompt steers the model toward a specific output
 // shape (Markdown tables, fenced code, terse bullet lists) so downstream
 // consumers (text-only LLMs) get a structure they can reason about.
@@ -18,6 +18,18 @@ package tools
 
 // promptReadImage is the generic "describe this image" prompt.
 const promptReadImage = `Describe this image in detail. Include visible text (verbatim), objects, people, layout, colors, and notable features. Use Markdown headings. Do not invent details that are not visible. If text is illegible, say so rather than guessing.`
+
+// promptReadDocument summarizes a multi-page document. The caller rasterizes the
+// PDF and sends the page images in order (one image per page); this prompt
+// tells the model to treat them as a single document and synthesize across
+// pages rather than describing each image in isolation.
+const promptReadDocument = `You are analyzing a document that has been split into page images, sent to you in page order (image 1 = page 1, image 2 = page 2, …). Treat them as ONE document, not separate images. Produce a useful summary a person could read instead of the document.
+Report:
+(1) **Document summary** — what the document is and its main points (2-4 sentences).
+(2) **Key content by page** — for each page (use a "### Page N" heading), the 1-3 most important things on it (key claims, headings, formulas, conclusions). Transcribe any critical text verbatim (titles, numbers, definitions).
+(3) **Tables and figures** — call out any tables (reproduce key cells) or figures (describe what each shows).
+(4) **Actions / open questions** — if the document implies follow-ups, todos, or contains questions, list them.
+Be accurate and do not invent content not visible in the pages. If the pages shown are a truncated prefix of a longer document, note "(showing the first N pages)". Use Markdown. If a specific question was asked, answer it using the document content.`
 
 // promptExtractText is OCR: extract every visible character verbatim.
 const promptExtractText = `Extract ALL text from the image verbatim. Preserve formatting, indentation, line breaks, and punctuation exactly as they appear. Output the text only — no commentary, no Markdown, no fences. If multiple distinct text blocks are visible, separate them with a blank line.`

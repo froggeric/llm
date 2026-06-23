@@ -92,7 +92,7 @@ func NewServer(deps Dependencies) (*Server, error) {
 	lifecycle := deps.Lifecycle
 
 	// Resolve the tool list. Tests pass Tools directly; production passes
-	// a Registry whose All() returns 10 tools once Track E lands.
+	// a Registry whose All() returns 11 tools once Track E lands.
 	toolList := deps.Tools
 	if len(toolList) == 0 {
 		if deps.Registry != nil {

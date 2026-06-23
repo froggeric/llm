@@ -125,7 +125,17 @@ func CleanupImageRef(ref ImageRef) {
 		return // not a temp file we created
 	}
 	once := v.(*sync.Once)
-	once.Do(func() { _ = os.Remove(ref.LocalPath) })
+	once.Do(func() {
+		_ = os.Remove(ref.LocalPath)
+		// Best-effort: remove a now-empty parent temp dir (e.g. a PDF
+		// rasterizer's out dir, created by read_document's Expander) without
+		// ever touching the shared os.TempDir() itself. os.Remove is a no-op on
+		// a non-empty dir, so this only succeeds once the page files inside it
+		// are gone.
+		if parent := filepath.Dir(ref.LocalPath); parent != os.TempDir() {
+			_ = os.Remove(parent)
+		}
+	})
 }
 
 // CleanupImageRefs is the slice form of CleanupImageRef. Convenience for
@@ -134,6 +144,20 @@ func CleanupImageRefs(refs []ImageRef) {
 	for _, r := range refs {
 		CleanupImageRef(r)
 	}
+}
+
+// RegisterTemp registers path for cleanup by CleanupImageRef/CleanupImageRefs,
+// using the same tempRegistry that data: URIs go through. Used by document
+// Expanders (e.g. read_document) to mark rasterized page temp files for reaping
+// after inference. Safe to call on an empty path (no-op), on a path already
+// registered, or on a real user file — Cleanup is a no-op if the path wasn't
+// registered, so registering a non-temp path is harmless (it just makes it
+// eligible for removal, so only ever call this on paths you own).
+func RegisterTemp(path string) {
+	if path == "" {
+		return
+	}
+	tempRegistry.Store(path, &sync.Once{})
 }
 
 // redactDataURI returns the header portion of a data: URI with the payload

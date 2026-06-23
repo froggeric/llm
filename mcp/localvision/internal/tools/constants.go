@@ -13,6 +13,7 @@ package tools
 // configurable prefix.
 const (
 	idReadImage       = "read_image"
+	idReadDocument    = "read_document"
 	idExtractText     = "extract_text"
 	idExtractCode     = "extract_code"
 	idExtractTable    = "extract_table"
@@ -29,6 +30,7 @@ const (
 // returned by each tool's ID() method.
 const (
 	ToolReadImage       = idReadImage
+	ToolReadDocument    = idReadDocument
 	ToolExtractText     = idExtractText
 	ToolExtractCode     = idExtractCode
 	ToolExtractTable    = idExtractTable

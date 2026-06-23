@@ -50,6 +50,7 @@ license = "Apache-2.0"
 preferred = true
 preferred_for = [
   "read_image",
+  "read_document",
   "extract_text",
   "extract_code",
   "extract_table",

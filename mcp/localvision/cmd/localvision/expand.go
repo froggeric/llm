@@ -28,6 +28,20 @@ func isImageExt(path string) bool {
 	return imageExts[ext]
 }
 
+// isAcceptedExt reports whether a directory entry should be collected for the
+// given tool: always an image extension, plus ".pdf" when the tool is
+// read_document (so `localvision papers/ --type doc` picks up PDFs). Keeping
+// PDF out of imageExts keeps that set semantically honest.
+func isAcceptedExt(path string, includePDF bool) bool {
+	if isImageExt(path) {
+		return true
+	}
+	if includePDF {
+		return strings.ToLower(strings.TrimPrefix(filepath.Ext(path), ".")) == "pdf"
+	}
+	return false
+}
+
 // expandInputs resolves positional args into a flat, de-duplicated list of
 // image references, supporting:
 //   - literal file paths
@@ -39,9 +53,11 @@ func isImageExt(path string) bool {
 // and are resolved later by tools.ParseImageRef). Remote http(s):// URLs are
 // rejected because the underlying llama-server is localhost-only.
 //
+// includePDF extends directory expansion to .pdf files (for read_document).
+//
 // Expansion is deterministic: WalkDir yields sorted paths, and dedup preserves
 // first-seen order so batch output is stable.
-func expandInputs(args []string, recursive bool) ([]string, error) {
+func expandInputs(args []string, recursive, includePDF bool) ([]string, error) {
 	var out []string
 	seen := make(map[string]bool)
 	add := func(p string) {
@@ -65,7 +81,7 @@ func expandInputs(args []string, recursive bool) ([]string, error) {
 				add(p)
 			}
 		default:
-			paths, err := expandOne(a, recursive)
+			paths, err := expandOne(a, recursive, includePDF)
 			if err != nil {
 				return nil, err
 			}
@@ -79,16 +95,20 @@ func expandInputs(args []string, recursive bool) ([]string, error) {
 
 // expandOne resolves a single non-URI, non-stdin argument: a literal file, a
 // glob pattern, or a directory.
-func expandOne(a string, recursive bool) ([]string, error) {
+func expandOne(a string, recursive, includePDF bool) ([]string, error) {
 	info, statErr := os.Stat(a)
 	if statErr == nil {
 		if info.IsDir() {
-			paths, err := expandDir(a, recursive)
+			paths, err := expandDir(a, recursive, includePDF)
 			if err != nil {
 				return nil, err
 			}
 			if len(paths) == 0 {
-				return nil, fmt.Errorf("directory %q contains no image files", a)
+				noun := "image"
+				if includePDF {
+					noun = "image/PDF"
+				}
+				return nil, fmt.Errorf("directory %q contains no %s files", a, noun)
 			}
 			return paths, nil
 		}
@@ -111,10 +131,11 @@ func expandOne(a string, recursive bool) ([]string, error) {
 	return nil, statErr
 }
 
-// expandDir returns the image files in dir. When recursive is false, only
-// top-level files are returned (subdirectories are skipped); when true, the
-// whole tree is walked. WalkDir yields a sorted, deterministic order.
-func expandDir(dir string, recursive bool) ([]string, error) {
+// expandDir returns the accepted files in dir (images, plus PDFs when
+// includePDF). When recursive is false, only top-level files are returned
+// (subdirectories are skipped); when true, the whole tree is walked. WalkDir
+// yields a sorted, deterministic order.
+func expandDir(dir string, recursive, includePDF bool) ([]string, error) {
 	var out []string
 	err := filepath.WalkDir(dir, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
@@ -129,7 +150,7 @@ func expandDir(dir string, recursive bool) ([]string, error) {
 			}
 			return nil
 		}
-		if isImageExt(path) {
+		if isAcceptedExt(path, includePDF) {
 			out = append(out, path)
 		}
 		return nil

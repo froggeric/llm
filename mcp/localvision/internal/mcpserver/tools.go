@@ -149,6 +149,31 @@ func (s *Server) callTool(ctx context.Context, req *mcp.CallToolRequest, t tools
 		Extra:  extra,
 	}
 
+	// Attach a progress sink so the model/binary downloads and inference can
+	// report progress to the client as notifications/progress — but only if the
+	// client opted in by sending a _meta.progressToken. No token ⇒ no
+	// notifications (today's behavior, byte-for-byte). The sink forwards each
+	// Update via NotifyProgress fire-and-forget with a 2 s timeout so a slow or
+	// stalled client pipe can never stall the tool call (NotifyProgress is a
+	// synchronous transport write in the SDK). Built before expansion so the
+	// sink is available to a document Expander too.
+	runCtx := ctx
+	if token := req.Params.GetProgressToken(); token != nil {
+		runCtx = progress.WithSink(ctx, &mcpProgressSink{session: req.Session, token: token})
+	}
+
+	// Expand document inputs (e.g. read_document rasterizes a PDF into page
+	// images). Non-Expanders are a no-op. The expanded refs REPLACE input.Images
+	// and flow into both BuildRequest and the executor; the deferred
+	// CleanupImageRefs above reaps any temp page files (and their out dir).
+	input, err = tools.ExpandInput(runCtx, t, input)
+	if err != nil {
+		logger.Warn("tool.ExpandImages failed", "error", err)
+		res := &mcp.CallToolResult{}
+		res.SetError(fmt.Errorf("expanding input for tool %q: %w", t.ID(), err))
+		return res, nil
+	}
+
 	// Ask the tool to build the model request. This is where the tool's
 	// task-specific prompt construction happens.
 	systemPrompt, userPrompt, imagePaths, err := t.BuildRequest(input)
@@ -158,35 +183,22 @@ func (s *Server) callTool(ctx context.Context, req *mcp.CallToolRequest, t tools
 		res.SetError(fmt.Errorf("building request for tool %q: %w", t.ID(), err))
 		return res, nil
 	}
-	// Note: imagePaths comes back from BuildRequest so the tool can
-	// re-order or filter. The executor still uses tools.ImageRef slice
-	// because that's the Executor interface. We trust the tool to be
-	// consistent: BuildRequest's imagePaths should be the same paths
-	// (modulo ordering) as input.Images' LocalPaths.
+	// imagePaths is advisory (a tool may re-order/filter); the executor uses the
+	// expanded input.Images below.
 	_ = imagePaths
 
-	// Run inference via the executor. ctx propagates to the lifecycle
-	// manager and to the underlying HTTP request, so notifications/cancelled
-	// (F3.6) and graceful shutdown both work.
+	// Run inference via the executor. runCtx propagates to the lifecycle
+	// manager and the HTTP request (so notifications/cancelled + graceful
+	// shutdown both work) and carries the progress sink. Pass input.Images —
+	// the EXPANDED refs (a PDF becomes its page images); using the pre-expansion
+	// `images` here would send the un-rasterized PDF to the model.
 	if s.executor == nil {
 		res := &mcp.CallToolResult{}
 		res.SetError(errExecutorUnavailable)
 		return res, nil
 	}
 
-	// Attach a progress sink so the model/binary downloads and inference can
-	// report progress to the client as notifications/progress — but only if the
-	// client opted in by sending a _meta.progressToken. No token ⇒ no
-	// notifications (today's behavior, byte-for-byte). The sink forwards each
-	// Update via NotifyProgress fire-and-forget with a 2 s timeout so a slow or
-	// stalled client pipe can never stall the tool call (NotifyProgress is a
-	// synchronous transport write in the SDK).
-	runCtx := ctx
-	if token := req.Params.GetProgressToken(); token != nil {
-		runCtx = progress.WithSink(ctx, &mcpProgressSink{session: req.Session, token: token})
-	}
-
-	raw, _, err := s.executor.Run(runCtx, t.ID(), systemPrompt, userPrompt, images, t.MaxTokens())
+	raw, _, err := s.executor.Run(runCtx, t.ID(), systemPrompt, userPrompt, input.Images, t.MaxTokens())
 	if err != nil {
 		logger.Warn("executor returned error", "error", err)
 		res := &mcp.CallToolResult{}

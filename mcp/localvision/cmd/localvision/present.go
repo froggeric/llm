@@ -43,6 +43,7 @@ func paint(c, s string) string {
 // toolGlyph maps a tool ID to a short human label for status lines.
 var toolGlyph = map[string]string{
 	tools.ToolReadImage:       "Describe",
+	tools.ToolReadDocument:    "Document",
 	tools.ToolExtractText:     "OCR",
 	tools.ToolExtractCode:     "Code",
 	tools.ToolExtractTable:    "Table",
