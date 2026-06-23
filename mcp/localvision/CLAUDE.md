@@ -4,6 +4,12 @@ A Go subdirectory-module (`mcp/localvision/`, its own go.mod) inside the
 `froggeric/llm` monorepo, built and released independently. Wraps a local
 `llama-server` subprocess to give text-only LLMs vision.
 
+## Commands
+
+- Build: `go build ./...` (or `make build`). Test: `go test -race ./...` (or `make test-race`). Vet: `go vet ./...`.
+- Run locally: `go run ./cmd/localvision img.png --type ocr` (one-shot) · `… run` (MCP server) · `… doctor` · `… setup`. A `llama-server` on `$PATH` is used if present, else one is downloaded; models live in `~/.localvision/models/`.
+- Test setup/downloads without touching your real config: `XDG_CONFIG_HOME=/tmp/x go run ./cmd/localvision setup` (config → `$XDG_CONFIG_HOME/localvision/config.toml`); `--cache-dir`/`--models-dir` redirect storage.
+
 ## Architecture
 
 - Pure Go, **CGO off** — the wrapper spawns `llama-server` (a subprocess) and does no inference itself, so it cross-compiles freely to all 6 targets.
