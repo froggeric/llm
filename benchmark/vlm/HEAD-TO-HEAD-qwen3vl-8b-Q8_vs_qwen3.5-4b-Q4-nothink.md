@@ -22,6 +22,7 @@ A is more accurate and more disciplined. It reads the VIC logo correctly, identi
 - **Pass 2:** full-read the decision-critical images.
 - **Verification:** every headline claim re-checked by regex across **all 3 runs** — quoted runs are representative.
 - **Deliberately ignored:** the `judgments_*` LLM-judge outputs and aggregate scores. Verdicts come from actual answers vs owner-verified ground truth.
+- **Scope (image only):** these verdicts cover static images only. Both models also support **video** natively (neither supports audio); the harness did not exercise video. See `BENCHMARK-REPORT-v5.md` § *Model specs & media support* for the full media matrix and mmproj sizes.
 
 ## Per-dimension verdict
 

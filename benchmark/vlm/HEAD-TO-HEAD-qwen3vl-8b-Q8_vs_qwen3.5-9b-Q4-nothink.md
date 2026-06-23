@@ -22,6 +22,7 @@ The deciding axis is **hallucination discipline**, not raw OCR power. Both model
 - **Pass 2:** full-read 11 decision-critical images (spatial test, counting tests, OCR wins/losses, dense-scene runaways, medical).
 - **Verification:** every headline claim below was re-checked by regex across all 3 runs — the run that's quoted is representative, not cherry-picked.
 - **Deliberately ignored:** the `judgments_v5/`, `judgments_q8/` LLM-judge outputs and the aggregate scores. Verdicts come from comparing actual answers to owner-verified ground truth.
+- **Scope (image only):** these verdicts cover static images only. Both models also support **video** natively (neither supports audio); the harness did not exercise video. See `BENCHMARK-REPORT-v5.md` § *Model specs & media support* for the full media matrix and mmproj sizes.
 
 ---
 

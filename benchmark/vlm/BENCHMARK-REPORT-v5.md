@@ -316,6 +316,34 @@ Each (variant, image) cell gets:
 - **max_tokens=16384** (handles thinking + visible output combined budget)
 - **Batch sizes `-b 4096 -ub 4096`** (image tokens fit in a single physical batch)
 
+### Model specs & media support
+
+**Scope caveat — image only:** every variant in this report was scored on **static images only**. The 30-image harness (`benchmark_llamaserver.py` over llama-server) encodes a single image per call; **video and audio were not exercised**, even where a model supports them natively. Treat all rankings as *image-understanding* quality, not full multimodal quality.
+
+**Native input modalities (per vendor docs):**
+
+| Family | Text | Image | Video | Audio | Docs (PDF/PPT) |
+|---|:--:|:--:|:--:|:--:|:--:|
+| Qwen3-VL | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Qwen3.5 / Qwen3.6 | ✅ | ✅ | ✅ | ❌ | ❌ |
+| GLM-4.6V (Flash-9B) | ✅ | ✅ | ✅ | ❌ | ✅ |
+| Gemma 4 E4B | ✅ | ✅ | ✅ (frames) | ✅ | ❌ |
+| Gemma 4 12B / 26B-A4B / 31B | ✅ | ✅ | ✅ (frames) | ❌† | ❌ |
+
+† Gemma-4 audio is only on the **12B-Unified** subvariant. The `-VL` suffix marks Qwen's vision-*specialist* line; **Qwen3.5/3.6 are natively multimodal** (early-fusion vision-language foundation), so they need no `-VL` tag to do vision — hence `qwen3.5-9b` / `qwen3.6-27b` ship a vision projector (mmproj) despite the suffix-free name. Audio in the Qwen family lives in the separate **Omni** line, which none of these belong to.
+
+**Vision-projector (mmproj, F16) sizes** — scales with the vision encoder, not the LLM:
+
+| Model | mmproj (F16) |
+|---|---|
+| Qwen3-VL-8B | ~1.1 GB |
+| Qwen3.5-4B | 641 MB |
+| Qwen3.5-9B | 876 MB |
+| Qwen3.6-27B | 885 MB |
+| Qwen3.6-35B-A3B | 858 MB |
+
+Qwen3-VL-4B, Gemma-4, and GLM-4.6V projectors were not retained on disk post-benchmark (sizes omitted). Sources: on-disk files + `unsloth/*-GGUF` on HuggingFace; media matrix from vendor model cards/docs.
+
 ### Files
 | file | purpose |
 |---|---|
