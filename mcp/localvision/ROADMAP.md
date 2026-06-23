@@ -426,22 +426,31 @@ Ambitious, far-fetched, explicitly invited for the later roadmap.
 
 ## Sequencing & priorities
 
-Themes **A–D are done** (v0.2.0–v0.4.0 shipped); **v0.5.0 shipped** (G8
-image→generation-prompt tool + E6 MCP temp-file cleanup); **v0.5.1 shipped**
-(`qwen3-vl-8b` as the default for all tools, re-analyzed quality+speed; plus a
+Themes **A–D are done** (v0.2.0–v0.4.0 shipped). The **v0.5 series shipped**:
+v0.5.0 (G8 image→generation-prompt tool + E6 MCP temp-file cleanup), v0.5.1
+(`qwen3-vl-8b` as the default for all tools, re-analyzed quality+speed, plus a
 fix for the model-file re-download bug — a shared `mmproj-F16.gguf` basename
-collision — by caching models per-model-subdirectory with auto-migration). The
-remaining work is reorganized into value-prioritized releases: front-load cheap
-high-impact items, build reach infrastructure next, then reliability, then new
-modalities. Effort in parentheses (`XS/S/M/L`); versions are advisory.
+collision — by caching models per-model-subdirectory with auto-migration), and
+v0.5.2 (a `doctor` default-model display fix so it matches tool selection on
+every hardware tier). The remaining work is reorganized into value-prioritized
+releases: front-load cheap high-impact items, build reach infrastructure next,
+then reliability, then new modalities. Effort in parentheses (`XS/S/M/L`);
+versions are advisory.
 
-### v0.5.0 — Breadth & polish  *(mostly XS–S; high value-per-effort)* — **SHIPPED**
-- ✅ **G8 image→generation-prompt** — new 10th tool (`--type prompt` / `image_to_prompt`): a structured diffusion-ready prompt to recreate an image.
-- ✅ **E6 MCP temp-file cleanup** — the MCP `callTool` path no longer leaks one `image_data` temp file per call; it reuses `tools.ParseImageRef` + `CleanupImageRefs`, matching the CLI path.
-- *Deferred:* **E2 auto-reap orphans** — re-scoped to `M` (needs a process marker + parent-liveness check; no detection exists yet). See Theme E2.
+### v0.5.x — Breadth & polish  *(mostly XS–S; high value-per-effort)* — **SHIPPED**
+- ✅ **v0.5.0** — **G8** image→generation-prompt (10th tool, `--type prompt` /
+  `image_to_prompt`) + **E6** MCP temp-file cleanup (the `callTool` path no longer
+  leaks one `image_data` temp file per call).
+- ✅ **v0.5.1** — **`qwen3-vl-8b` default for all tools** (re-analyzed quality+speed;
+  the 27B champion is opt-in via `--model`) + **model-file re-download fix**
+  (per-model subdirs + auto-migrate; the shared `mmproj-F16.gguf` basename
+  collision that re-downloaded the projector on every model switch).
+- ✅ **v0.5.2** — **`doctor` default-model display** now matches tool selection on
+  every hardware tier (was showing the 27B on 49+ GB Macs while tools used the 8B).
+- *Deferred:* **E2 auto-reap orphans** — re-scoped to `M` (needs a process marker
+  + parent-liveness check; no detection exists yet). See Theme E2.
 
-The remaining cheap high-value items below were **not** all landed in v0.5.0 — they
-cherry-pick freely into a point release or v0.6:
+The remaining cheap high-value items below cherry-pick freely into v0.6+:
 - **New tools:** G4 chart→CSV/JSON `S` · G5 diagram→Mermaid `S`
 - **UX wins:** F9 clipboard in/out `XS` · F12 shell completions `XS` · F11 doctor --fix `XS`
 - **Reliability/hygiene:** F3 result cache `S` · E4 tool-name prefix `S` · E3 doctor --compute-hashes `S` · E7 pin goreleaser + lint `S`
@@ -466,11 +475,12 @@ cherry-pick freely into a point release or v0.6:
 ### v1.0+ — Far future / research: H1–H5.
 
 **The path so far:** A1→B1→B2 (distribution) ✅ → C1–C6 (CLI) ✅ → D1–D5
-(cross-platform) ✅ → **v0.5.0 (G8 image→prompt tool + E6 MCP temp cleanup)** ✅.
-There is no single gate going forward. The highest-leverage single item is
-**F1 (HTTP API)** — it unlocks F2/F16 and reaches far beyond one MCP client — but
-the remaining cheap high-value items (F9, F3, G4/G5) can ride into a point
-release or v0.6 regardless of whether F1 is ready.
+(cross-platform) ✅ → **v0.5.x (G8 tool + E6 leak fix; qwen3-vl-8b default;
+model-cache collision fix; doctor display)** ✅. There is no single gate going
+forward. The highest-leverage single item is **F1 (HTTP API)** — it unlocks
+F2/F16 and reaches far beyond one MCP client — but the remaining cheap
+high-value items (F9, F3, G4/G5) can ride into v0.6 regardless of whether F1
+is ready.
 
 ## Idea index
 

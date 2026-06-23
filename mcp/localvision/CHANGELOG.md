@@ -9,6 +9,17 @@ once it reaches v1.0.0. Until then, minor changes may break compatibility.
 Tags for this subdirectory follow the Go module convention
 `mcp/localvision/v<MAJOR>.<MINOR>.<PATCH>`.
 
+## [Unreleased]
+
+### Internal
+
+- Addressed the senior code-review findings for the v0.5 series (which passed
+  with zero HIGH/MEDIUM): corrected stale "9 tools" comments and misleading
+  per-tool model references across `internal/tools`, and renamed the MCP test
+  stub fixture and tests (`nineStubTools` → `tenStubTools`,
+  `TestServerRegistersNineTools`/`TestToolsListReturnsNineTools` → `…TenTools`)
+  to match the 10-tool registry. No behavior change.
+
 ## [0.5.2] - 2026-06-23
 
 Small follow-up to v0.5.1.

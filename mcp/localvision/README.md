@@ -235,12 +235,14 @@ coordination via Ollama's API (ROADMAP Theme E5).
 
 ## Roadmap
 
-**v0.5.1** made `qwen3-vl-8b` the default model for all tools (re-analyzed quality
-+ speed) and fixed a bug that re-downloaded model files on every model switch
-(a shared-basename collision). **v0.5.0** shipped a new 10th tool
-(`image_to_prompt`) and an MCP temp-file leak fix, on top of **v0.4.0**
-(cross-platform: macOS/Linux/Windows, x86_64 + arm64) and **v0.3.0** (the
-standalone CLI: one-shot queries, `--format`, batch, `setup` wizard). Next, in
+**v0.5.2** fixed a `doctor` display quirk on large machines. **v0.5.1** made
+`qwen3-vl-8b` the default model for all tools (re-analyzed quality + speed) and
+fixed a bug that re-downloaded model files on every model switch (a
+shared-basename collision, now cached per-model with auto-migration). **v0.5.0**
+shipped a new 10th tool (`image_to_prompt`) and an MCP temp-file leak fix, on top
+of **v0.4.0** (cross-platform: macOS/Linux/Windows, x86_64 + arm64) and
+**v0.3.0** (the standalone CLI: one-shot queries, `--format`, batch, `setup`
+wizard). Next, in
 priority order: **v0.6 reach** (localhost HTTP API + streaming progress),
 **v0.7 reliability** (constrained decoding, multi-sample consensus), then
 **v0.8+ new modalities** (PDF, UI→code, video) and far-future research. Every
