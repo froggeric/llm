@@ -231,14 +231,15 @@ coordination via Ollama's API (ROADMAP Theme E5).
 
 ## Roadmap
 
-**v0.3.0** ships the standalone CLI (one-shot queries, `--format`, batch
-`--output-dir`/`--meta`, and the `setup` wizard). Next: cross-platform support
-(Linux/Windows + GPU backends — Theme D), then hardening and a localhost HTTP
-API / OpenAI-compatible endpoint (Theme F), richer tools (video, PDF, UI→code),
-and far-future research ideas. A richer (bubbletea) TUI for `setup` is tracked
-as a future enhancement, deferred to keep the dependency tree lean. Every item,
-its effort, and its target version is in
-[`ROADMAP.md`](./ROADMAP.md) (themes A–H).
+**v0.4.0** shipped cross-platform (macOS/Linux/Windows, x86_64 + arm64) on top
+of the standalone CLI (one-shot queries, `--format`, batch, `setup` wizard).
+Next, in priority order: **v0.5 breadth & polish** (new tools like
+image→generation-prompt, chart→CSV, diagram→Mermaid, plus clipboard in/out,
+result cache, and hygiene fixes), **v0.6 reach** (localhost HTTP API + streaming
+progress), **v0.7 reliability** (constrained decoding, multi-sample consensus),
+then **v0.8+ new modalities** (PDF, UI→code, video) and far-future research.
+Every item, its effort, and its target is in [`ROADMAP.md`](./ROADMAP.md)
+(themes A–H, prioritized into release tiers).
 
 ## Project layout
 

@@ -32,10 +32,11 @@ cross-platform HEIC/WEBP; spawn-on-demand lifecycle with warm reuse; SHA256
 verification; installs via **Homebrew** (macOS), `curl|sh` (darwin/linux),
 `go install` (all platforms).
 
-What's **next**: hardening (Theme E — streaming, tool prefixes, doctor
---update-llama-server, pin goreleaser), then the localhost HTTP API /
-OpenAI-compatible endpoint (Theme F), richer tools (video, PDF, UI→code), and
-far-future research ideas.
+What's **next**: themes A–D are done. The remaining work is reorganized into
+value-prioritized releases (see **Sequencing & priorities** below): **v0.5
+breadth & polish** (new tools like image→generation-prompt + cheap UX wins),
+**v0.6 reach** (localhost HTTP API + streaming), **v0.7 reliability** (constrained
+decoding, consensus), **v0.8+ new modalities** (PDF, UI→code, video).
 
 ---
 
@@ -108,11 +109,11 @@ the remote for `go install`), and `.goreleaser.yaml` uses `gomod.proxy: false`.
 ### B2. Homebrew ✅ `S–M` — *(done in v0.2.0)*
 
 `brews:` stanza added; goreleaser publishes `Formula/localvision.rb` to
-[`froggeric/homebrew-tap`](https://github.com/froggeric/homebrew-tap) using the
-`HOMEBREW_TAP_GITHUB_TOKEN` secret. Install: `brew tap froggeric/homebrew-tap &&
-brew trust froggeric/tap && brew install localvision`. (The cross-repo push
-token is currently the maintainer's gh token — replace with a dedicated
-fine-grained PAT scoped to the tap for hardening.)
+[`froggeric/homebrew-tap`](https://github.com/froggeric/homebrew-tap) using a
+dedicated **fine-grained `HOMEBREW_TAP_GITHUB_TOKEN`** (contents:write on the
+tap only — rotated from the maintainer's broad gh token in v0.4). Install:
+`brew tap froggeric/homebrew-tap && brew trust froggeric/tap && brew install
+localvision`.
 
 ### B3. Claude Code marketplace plugin 📋 `M` — *(idea 6)*
 
@@ -281,8 +282,9 @@ The long tail of known limitations, mostly small, mostly independent.
   unprefixed today). `S`
 - **E5.** Automatic Ollama coordination (unified-memory contention on Apple
   Silicon; today `doctor` only warns if `:11434` is occupied). `M`
-- **E6.** Wire temp-file cleanup — `tools.CleanupImageRef` is defined but never
-  called in the production path; data-URI temp files leak to `os.TempDir`. `S`
+- **E6.** Wire temp-file cleanup in the **MCP path** — the one-shot CLI already
+  calls `tools.CleanupImageRefs` (v0.3), but the MCP `callTool` path does not, so
+  data-URI temp files still leak to `os.TempDir` there. `S`
 - **E7.** Pin `goreleaser` to a known-good major version in the release
   workflow (today `brew install goreleaser` is unpinned) and add a `lint`
   (golangci-lint) step to CI. `S`
@@ -384,9 +386,16 @@ has 2 dedicated tools zai lacks. Two real gaps:
   bounding boxes (Qwen3-VL supports grounding) so agents can crop/click/replay. `M`
 - **G7. `compare_images` → UI regression + visual diff** — specialize the
   expected-vs-actual case and optionally emit a highlighted diff image. `S/M`
+- **G8. Image → generation prompt** (`image_to_prompt`) — produce a
+  diffusion-ready prompt (subject, style, composition, lighting, medium, artist
+  references, negative prompts) that recreates the image in SDXL/Flux/etc. The
+  inverse of `read_image`: describe → prose; this → a prompt to *reproduce*. High
+  value-per-effort (a new tool + a tuned prompt, reusing the existing framework).
+  If it proves popular, promote to a core `--type`. `S`
 
-**Preserve as differentiators:** `extract_code` and `extract_table` — dedicated
-tools zai has no equivalent for. Keep them best-in-class.
+**Preserve as differentiators:** `extract_code`, `extract_table`, and (proposed)
+**G8 image→prompt** — tools `zai_mcp_server` has no equivalent for. Keep them
+best-in-class.
 
 ---
 
@@ -407,42 +416,44 @@ Ambitious, far-fetched, explicitly invited for the later roadmap.
 
 ---
 
-## Sequencing & dependencies
+## Sequencing & priorities
 
-```
-v0.2.0  Foundation & first real distribution
-        A1 (CI) ✅ ─┬─► B1 (GitHub Releases) ✅ ─► B2 (Homebrew) ✅
-        A2 (binary) ✅─┘  A3 (names) ✅, A4 (docs) ✅, A5 ✅
-        C6 (benchmark params) — pull forward, low risk
+Themes **A–D are done** (v0.2.0–v0.4.0 shipped). The remaining work is
+reorganized into value-prioritized releases: front-load cheap high-impact items,
+build reach infrastructure next, then reliability, then new modalities. Effort
+in parentheses (`XS/S/M/L`); versions are advisory.
 
-v0.3.0  Standalone CLI + onboarding
-        C1 (one-shot + setup wizard) ─┬─► C2 (--type)
-                                       ├─► C3 (--format)
-                                       ├─► C4 (--output/batch)
-                                       └─► C5 (--model)
-        C1 + B4 (harness auto-install) together = the setup wizard
-        B3 (marketplace) — independent, can land any time after B1
+### v0.5.0 — Breadth & polish  *(mostly XS–S; high value-per-effort)*
+New tools (reuse the tool framework) + cheap UX/hygiene wins. Cherry-pick freely;
+these are largely independent.
+- **New tools:** G8 image→generation-prompt `S` · G4 chart→CSV/JSON `S` · G5 diagram→Mermaid `S`
+- **UX wins:** F9 clipboard in/out `XS` · F12 shell completions `XS` · F11 doctor --fix `XS`
+- **Reliability/hygiene:** F3 result cache `S` · E2 auto-reap orphans `S` · E6 MCP temp-cleanup `S` · E4 tool-name prefix `S` · E3 doctor --compute-hashes `S` · E7 pin goreleaser + lint `S`
 
-v0.4.0  Cross-platform
-        D1/D2 (detect) ─► D3 (CI matrix), D4 (cross-compile), D5 (HEIC)
+### v0.6.0 — Reach  *(M; serving-layer unlocks)*
+- **F1 localhost HTTP/REST API `M`** → unlocks F2 OpenAI-compat `M` + F16 web UI `L` — makes localvision usable from `curl`, scripts, cron, any language.
+- **E1 streaming notifications/progress `M`** — the single biggest UX win (every 30–70 s call feels silent today).
+- F8 doctor --selftest `S` · F13 model management `S` · F14 MCP resources/prompts `S` · F15 local stats `S`
 
-v0.5.0+ Hardening
-        E1–E7, mostly independent
+### v0.7.0 — Reliability  *(M; quality)*
+- **F4 constrained decoding / GBNF grammars `M`** — makes `--format` JSON guaranteed-valid (reinforces C3).
+- F5 multi-sample consensus + confidence `S/M` · F6 cascade/difficulty routing `M` · F7 self-verification `S/M`
+- E5 Ollama coordination `M`
 
-v0.6.0+ Reach & power + expanded tools (exploratory)
-        F1 (HTTP) ─► F2 (OpenAI-compat), F16 (web UI)
-        F4 (grammars) reinforces C3; F3 (cache), F5 (consensus), F8 (selftest)
-        F9/F11/F12 (clipboard/doctor --fix/completions) — cheap, land anytime
-        G1 (video), G2 (ui→artifact), G3 (PDF) — new modalities
+### v0.8.0+ — New modalities  *(L)*
+- G3 PDF / documents `M` · G2 UI→artifact/code `M/L` · G6 coordinate grounding `M` · G7 compare→visual-diff `S/M` · G1 video `L` · F10 watch mode `S`
 
-v1.0+   Far future / research-grade: H1–H5
-```
+### Distribution *(land in any release above)*
+- **B3** Claude Code marketplace plugin `M` — independent after B1.
+- **B4** auto-detect & wire AI coding harnesses `M–L` — pairs with the C1 setup wizard for onboarding.
 
-**Critical path:** A1 → B1 → B2. Green CI is the single unlock for
-distribution. C6 is the highest-value-per-effort quality item and should ride
-along with the foundation release. Themes F–H are exploratory reach / power /
-research items, not on the critical path; the cheap ones (F9/F11/F12) can land
-in any release.
+### v1.0+ — Far future / research: H1–H5.
+
+**The path so far:** A1→B1→B2 (distribution) ✅ → C1–C6 (CLI) ✅ → D1–D5
+(cross-platform) ✅. There is no single gate going forward. The highest-leverage
+single item is **F1 (HTTP API)** — it unlocks F2/F16 and reaches far beyond one
+MCP client — but the cheap high-value items (G8, F9, F3, G4/G5) should ride in
+v0.5 regardless of whether F1 is ready.
 
 ## Idea index
 
@@ -459,12 +470,13 @@ in any release.
 | 9 | GitHub Releases | B1 | v0.2.0 |
 | 10 | Manual model override | C5 | v0.3.0 |
 | 11 | Benchmark-faithful llama.cpp parameters | C6 | v0.2.0 |
+| 12 | Image → generation prompt (reproduce an image) | G8 | v0.5.0 |
 
 Pre-existing items folded in: pin `llama-server` SHA (A2), naming (A3),
 binary pipeline (A5), streaming (E1), auto-reap (E2), `--compute-hashes` (E3),
 tool-name prefix (E4), Ollama coordination (E5), temp-file cleanup (E6),
 release-tool pinning + lint (E7), cross-platform (D1–D5).
 
-Themes **F** (Reach & power, F1–F16), **G** (Expanded tools, G1–G7), and **H**
+Themes **F** (Reach & power, F1–F16), **G** (Expanded tools, G1–G8), and **H**
 (Far future, H1–H5) are proposed additions — not from the original 11 user
 ideas. They are exploratory; cherry-pick freely.
