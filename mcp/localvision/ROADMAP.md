@@ -18,25 +18,124 @@ item isn't in this file, it isn't planned.
 
 ## Where we are now
 
-**v0.4.0 shipped** — cross-platform (Theme D). `localvision` now builds and runs
-on macOS (Apple Silicon/Intel), Linux, and Windows (x86_64 + arm64) — all six
+**v0.5.2 shipped.** Themes **A–D are done** and the **v0.5 series** (breadth &
+polish) shipped across three point releases. `localvision` builds and runs on
+macOS (Apple Silicon/Intel), Linux, and Windows (x86_64 + arm64) — all six
 targets cross-compiled from one runner (pure Go, CGO off). Linux/Windows detect
 CUDA/ROCm/NVIDIA GPUs and size model selection against VRAM; a first-wins
 converter chain (`sips → magick → heif-convert → ffmpeg`) handles HEIC/WEBP
 everywhere; CI runs on ubuntu/windows/macos.
 
-What **works**: 9 MCP tools (MCP `run` command); the full one-shot CLI;
-`--format` / batch / `--meta`; the `setup` wizard; hardware detection
-(Apple Silicon + Linux CUDA/ROCm + Windows CUDA); VRAM-aware selection;
-cross-platform HEIC/WEBP; spawn-on-demand lifecycle with warm reuse; SHA256
-verification; installs via **Homebrew** (macOS), `curl|sh` (darwin/linux),
-`go install` (all platforms).
+What **works** (shipped):
+- **10 MCP tools** over the MCP `run` command — incl. `image_to_prompt` (v0.5.0).
+- The full **one-shot CLI**: `--type` (10 tools), `--format`, batch
+  (`--output`/`--output-dir`/`--meta`), the `setup` wizard.
+- **`qwen3-vl-8b` (Q8) as the default model for all tools** (v0.5.1, re-analyzed
+  quality+speed; the 27B champion is opt-in via `--model`).
+- Model files **cached per-model** with auto-migration (v0.5.1 fixed a bug that
+  re-downloaded the projector on every model switch).
+- MCP `callTool` temp-file hygiene (v0.5.0, E6) and a `doctor` default-model
+  display that matches tool selection on every tier (v0.5.2).
+- Hardware detection (Apple Silicon + Linux CUDA/ROCm + Windows CUDA);
+  VRAM-aware selection; cross-platform HEIC/WEBP; spawn-on-demand lifecycle with
+  warm reuse; SHA256 verification.
+- Installs via **Homebrew** (macOS), `curl|sh` (darwin/linux), `go install`
+  (all platforms).
 
-What's **next**: themes A–D are done. The remaining work is reorganized into
-value-prioritized releases (see **Sequencing & priorities** below): **v0.5
-breadth & polish** (new tools like image→generation-prompt + cheap UX wins),
-**v0.6 reach** (localhost HTTP API + streaming), **v0.7 reliability** (constrained
-decoding, consensus), **v0.8+ new modalities** (PDF, UI→code, video).
+What's **next** — the v0.5 breadth tier is shipped. The next release tier is
+**v0.6 — reach** (see **Sequencing & priorities** below). The headline items:
+- **F1 localhost HTTP/REST API** — makes localvision usable from `curl`, scripts,
+  cron, any language; unlocks F2 (OpenAI-compat) and F16 (web UI).
+- **E1 streaming `notifications/progress`** — the single biggest UX win (every
+  30–70 s call is silent today).
+
+After that: **v0.7 reliability** (F4 constrained decoding, F5 consensus), then
+**v0.8+ new modalities** (PDF, UI→code, video). Cheap high-value items
+(G4 chart→CSV, G5 diagram→Mermaid, F9 clipboard, F3 result cache, E3/E4/E7) can
+ride into any release.
+
+---
+
+## Roadmap at a glance
+
+All themes (A–H) and tasks, grouped by release phase, colored by status:
+🟢 **shipped** · 🟡 **next up** · ⚪ **planned** · 🔴 **deferred**. Arrows trace the
+release order; dotted lines mark the cross-cutting "any release" pools.
+
+```mermaid
+flowchart LR
+    classDef done fill:#d4edda,stroke:#28a745,color:#155724,stroke-width:2px
+    classDef next fill:#fff3cd,stroke:#d39e00,color:#6b4f00,stroke-width:2px
+    classDef planned fill:#eef1f3,stroke:#6c757d,color:#343a40
+    classDef defer fill:#f8d7da,stroke:#dc3545,color:#721c24
+
+    subgraph V2["v0.2.0 — Foundation & distribution"]
+        A["A Release hygiene: A1 CI, A2 llama-server, A3 naming, A4 docs, A5 delivery"]:::done
+        B1["B1 GitHub Releases"]:::done
+        B2["B2 Homebrew"]:::done
+        C6["C6 llama.cpp params"]:::done
+    end
+    subgraph V3["v0.3.0 — Standalone CLI"]
+        C["C One-shot CLI: C1 setup/query, C2 type flag, C3 format, C4 batch, C5 model override"]:::done
+    end
+    subgraph V4["v0.4.0 — Cross-platform"]
+        D["D Linux/Windows: D1 Linux GPU, D2 Windows GPU, D3 CI matrix, D4 6-target xc, D5 HEIC/WEBP"]:::done
+    end
+    subgraph V5["v0.5.x — Breadth & polish (SHIPPED)"]
+        G8["G8 image_to_prompt tool"]:::done
+        E6["E6 MCP temp-file cleanup"]:::done
+        M1["qwen3-vl-8b default for all + cache-collision fix"]:::done
+        M2["doctor default-model display"]:::done
+        E2["E2 auto-reap orphans"]:::defer
+    end
+    subgraph V6["v0.6.0 — Reach (NEXT)"]
+        F1["F1 HTTP/REST API (unlocks F2 OpenAI-compat, F16 web UI)"]:::next
+        E1["E1 streaming progress"]:::next
+        F8["F8 doctor selftest"]:::planned
+        F13["F13 model management"]:::planned
+        F14["F14 MCP resources/prompts"]:::planned
+        F15["F15 local stats"]:::planned
+    end
+    subgraph ANY["any release — cheap high-value wins"]
+        G4["G4 chart to CSV"]:::planned
+        G5["G5 diagram to Mermaid"]:::planned
+        F9["F9 clipboard in/out"]:::planned
+        F3["F3 result cache"]:::planned
+        E3["E3 compute-hashes"]:::planned
+        E4["E4 tool-name prefix"]:::planned
+        E7["E7 pin goreleaser + lint"]:::planned
+        F11["F11 doctor fix"]:::planned
+        F12["F12 shell completions"]:::planned
+    end
+    subgraph V7["v0.7.0 — Reliability"]
+        F4["F4 constrained decoding (GBNF)"]:::planned
+        F5["F5 multi-sample consensus"]:::planned
+        F6["F6 cascade routing"]:::planned
+        F7["F7 self-verification"]:::planned
+        E5["E5 Ollama coordination"]:::planned
+    end
+    subgraph V8["v0.8+ — New modalities"]
+        G3["G3 PDF / documents"]:::planned
+        G2["G2 UI to artifact/code"]:::planned
+        G6["G6 coordinate grounding"]:::planned
+        G7["G7 compare visual-diff"]:::planned
+        G1["G1 video analysis"]:::planned
+        F10["F10 watch mode"]:::planned
+    end
+    subgraph DIST["distribution — any release"]
+        B3["B3 Claude Code marketplace"]:::planned
+        B4["B4 harness auto-install"]:::planned
+    end
+    subgraph V1["v1.0+ — Far future / research"]
+        H["H: H1 tiny model, H2 search, H3 screen capture, H4 vision agent, H5 3D"]:::planned
+    end
+
+    V2 --> V3 --> V4 --> V5 --> V6
+    V6 --> V7 --> V8 --> V1
+    V5 -.-> ANY
+    V6 -.-> ANY
+    V8 -.-> DIST
+```
 
 ---
 
@@ -165,7 +264,8 @@ Each tool already has a task-tuned, benchmark-informed system prompt
 (`internal/tools/prompt.go`). Expose them as a `--type`/`--tool` flag on the
 one-shot path: `--type ocr`, `--type diagram`, `--type chart`, `--type code`,
 `--type ui`, `--type error`, `--type compare`, default `describe`. No new
-prompts to write — reuse the 9 existing ones.
+prompts to write — reuse the existing task-tuned ones (now 10, incl.
+`image_to_prompt`/`--type prompt` from v0.5.0).
 
 ### C3. `--format` output parameter ✅ `M–L` — *(done in v0.3.0)*
 
@@ -342,7 +442,7 @@ client. Several items here are small and can be pulled forward into any release.
 - **F13. Model management subcommands** — `localvision models list/pull/remove/
   switch`, pre-fetch. Make the catalog first-class instead of auto-magic only. `S`
 - **F14. MCP resources & prompts** — expose the catalog, benchmark summary, and
-  tool-selection guidance as MCP `resources`, and the 9 task prompts as reusable
+  tool-selection guidance as MCP `resources`, and the 10 task prompts as reusable
   `prompts`, so agents can introspect "which model and why" without a tool call. `S`
 - **F15. Local usage stats** — `localvision stats` (calls, models, tokens, time),
   purely local and opt-in. `S`
@@ -359,7 +459,7 @@ New tools and richer output, motivated by a comparison against a peer server.
 ### Tool landscape vs. `zai_mcp_server`
 
 `zai_mcp_server` exposes 8 vision tools. localvision covers 5 of them 1:1 and
-has 2 dedicated tools zai lacks. Two real gaps:
+has 3 dedicated tools zai lacks. Two real gaps:
 
 | `zai_mcp_server` | localvision | status |
 |---|---|---|
@@ -373,6 +473,7 @@ has 2 dedicated tools zai lacks. Two real gaps:
 | `analyze_video` | — | ✗ **gap** — no video (G1) |
 | — | `extract_code` | ★ localvision advantage (zai has none) |
 | — | `extract_table` | ★ localvision advantage (zai has none) |
+| — | `image_to_prompt` | ★ localvision advantage (zai has none) |
 
 ### Items
 
@@ -401,8 +502,8 @@ has 2 dedicated tools zai lacks. Two real gaps:
   optional `question` steers it toward Midjourney/SDXL/Flux/DALL·E or a style.
   Shipped as a core `--type prompt` / `image_to_prompt` tool. `S`
 
-**Preserve as differentiators:** `extract_code`, `extract_table`, and (proposed)
-**G8 image→prompt** — tools `zai_mcp_server` has no equivalent for. Keep them
+**Preserve as differentiators:** `extract_code`, `extract_table`, and **G8
+image→prompt** — tools `zai_mcp_server` has no equivalent for. Keep them
 best-in-class.
 
 ---
