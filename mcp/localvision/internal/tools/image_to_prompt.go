@@ -5,8 +5,8 @@ package tools
 // palette, mood, and a paste-ready comma-separated tag line. The optional
 // question argument steers the output toward a specific generator or style.
 //
-// Preferred on qwen3-vl-8b (constrained) and qwen3.6-27b (mainstream), like the
-// other perception tools.
+// Served by the default qwen3-vl-8b (qwen3.5-4b is the constrained-hardware
+// fallback).
 type imageToPromptTool struct{}
 
 func (imageToPromptTool) ID() string { return idImageToPrompt }

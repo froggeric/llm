@@ -9,7 +9,7 @@ import (
 // images and reports the differences. The model is instructed to focus on
 // changes rather than describing each image independently.
 //
-// Preferred on gemma4-26b-a4b when available.
+// Served by the default qwen3-vl-8b.
 type compareImagesTool struct{}
 
 func (compareImagesTool) ID() string { return idCompareImages }

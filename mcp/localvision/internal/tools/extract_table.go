@@ -3,8 +3,8 @@ package tools
 import "strings"
 
 // extract_table emits Markdown tables. ParseOutput strips any prose outside
-// the tables so the result is a clean pasteable block. Preferred on
-// gemma4-26b-a4b when available.
+// the tables so the result is a clean pasteable block. Served by the default
+// qwen3-vl-8b.
 type extractTableTool struct{}
 
 func (extractTableTool) ID() string { return idExtractTable }

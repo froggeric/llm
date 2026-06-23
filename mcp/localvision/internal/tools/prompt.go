@@ -1,8 +1,8 @@
 package tools
 
-// Task-tuned system prompts for each of the 9 tools.
+// Task-tuned system prompts for each of the 10 tools.
 //
-// These prompts are the entire reason we have 9 tools instead of one generic
+// These prompts are the entire reason we have 10 tools instead of one generic
 // "describe image" tool: each prompt steers the model toward a specific output
 // shape (Markdown tables, fenced code, terse bullet lists) so downstream
 // consumers (text-only LLMs) get a structure they can reason about.

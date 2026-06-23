@@ -1,8 +1,8 @@
 package tools
 
 // read_image is the generic "describe this image" tool. Used when the caller
-// doesn't have a more specific intent. Default model (qwen3-vl-8b on
-// mainstream, qwen3-vl-4b on constrained) is preferred_for this tool.
+// doesn't have a more specific intent. The default qwen3-vl-8b lists this tool
+// in preferred_for (qwen3.5-4b is the constrained-hardware fallback).
 type readImageTool struct{}
 
 // ID returns the tool identifier surfaced to MCP clients.

@@ -7,7 +7,7 @@ package tools
 //
 // Determinism: allTools returns tools sorted alphabetically by ID. The
 // Register method enforces uniqueness. Together these guarantee that
-// NewRegistry().All() returns the same 9 tools in the same order on every
+// NewRegistry().All() returns the same 10 tools in the same order on every
 // call, which keeps tools/list output stable for clients that diff snapshots.
 //
 // F5.4 (tool name collisions): tool IDs in this MCP are unprefixed (e.g.
@@ -19,7 +19,7 @@ package tools
 // this; the per-tool ID constants in constants.go are the single source of
 // truth so a prefix can be added in one place when that ships.
 
-// allTools returns instances of all 9 tools, ordered alphabetically by ID.
+// allTools returns instances of all 10 tools, ordered alphabetically by ID.
 // NewRegistry iterates this slice and Register()s each.
 //
 // The slice is constructed in alphabetical order (not via sort) so the

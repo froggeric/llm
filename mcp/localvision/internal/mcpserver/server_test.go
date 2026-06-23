@@ -61,9 +61,9 @@ func (s stubTool) ParseOutput(raw string) (any, error) {
 	return raw, nil
 }
 
-// nineStubTools returns 9 distinct stub tools with the IDs the production
-// registry will eventually register.
-func nineStubTools() []tools.Tool {
+// tenStubTools returns 10 distinct stub tools with the IDs the production
+// registry registers (one per tool, including image_to_prompt since v0.5.0).
+func tenStubTools() []tools.Tool {
 	ids := []string{
 		"read_image",
 		"extract_text",
@@ -73,6 +73,7 @@ func nineStubTools() []tools.Tool {
 		"describe_diagram",
 		"describe_chart",
 		"diagnose_error",
+		"image_to_prompt",
 		"compare_images",
 	}
 	out := make([]tools.Tool, len(ids))
@@ -99,7 +100,7 @@ func newTestServer(t *testing.T, executor tools.Executor) *Server {
 	t.Helper()
 	srv, err := NewServer(Dependencies{
 		Logger:   silentLogger(),
-		Tools:    nineStubTools(),
+		Tools:    tenStubTools(),
 		Executor: executor,
 	})
 	require.NoError(t, err)
@@ -149,18 +150,18 @@ func (r *recordingExecutor) Run(ctx context.Context, toolID, systemPrompt, userP
 	return "default response from " + toolID, tools.Stats{}, nil
 }
 
-// TestServerRegistersNineTools verifies the server's tool registration
+// TestServerRegistersTenTools verifies the server's tool registration
 // count via Server.ToolCount (a sanity check that doesn't require running
 // the SDK).
-func TestServerRegistersNineTools(t *testing.T) {
+func TestServerRegistersTenTools(t *testing.T) {
 	srv := newTestServer(t, &recordingExecutor{})
-	assert.Equal(t, 9, srv.ToolCount(), "expected 9 tools registered")
+	assert.Equal(t, 10, srv.ToolCount(), "expected 10 tools registered")
 }
 
-// TestToolsListReturnsNineTools drives a real MCP client through the SDK
-// in-memory transport and asserts the server reports all 9 tools in
+// TestToolsListReturnsTenTools drives a real MCP client through the SDK
+// in-memory transport and asserts the server reports all 10 tools in
 // tools/list.
-func TestToolsListReturnsNineTools(t *testing.T) {
+func TestToolsListReturnsTenTools(t *testing.T) {
 	srv := newTestServer(t, &recordingExecutor{})
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -183,7 +184,7 @@ func TestToolsListReturnsNineTools(t *testing.T) {
 			"tool %q description must include the latency hint", tool.Name)
 		saw++
 	}
-	assert.Equal(t, 9, saw, "tools/list should return exactly 9 tools")
+	assert.Equal(t, 10, saw, "tools/list should return exactly 10 tools")
 }
 
 // TestToolCallRoutesThroughExecutor verifies that a tools/call request

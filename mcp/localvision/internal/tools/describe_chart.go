@@ -1,8 +1,8 @@
 package tools
 
 // describe_chart analyzes data visualizations. The terse, structured output
-// is designed for downstream numerical reasoning. Preferred on
-// gemma4-26b-a4b when available.
+// is designed for downstream numerical reasoning. Served by the default
+// qwen3-vl-8b.
 type describeChartTool struct{}
 
 func (describeChartTool) ID() string { return idDescribeChart }

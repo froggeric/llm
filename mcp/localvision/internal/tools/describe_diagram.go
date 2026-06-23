@@ -1,8 +1,8 @@
 package tools
 
 // describe_diagram handles architecture, flowchart, ER, sequence, and
-// similar technical diagrams. Emits a structured Markdown report. Preferred
-// on gemma4-26b-a4b when available.
+// similar technical diagrams. Emits a structured Markdown report. Served by
+// the default qwen3-vl-8b.
 type describeDiagramTool struct{}
 
 func (describeDiagramTool) ID() string { return idDescribeDiagram }

@@ -1,4 +1,4 @@
-// Package tools defines the 9 vision tools the MCP exposes to clients.
+// Package tools defines the 10 vision tools the MCP exposes to clients.
 //
 // Each tool wraps a task-tuned system prompt + an output budget and is
 // paired with a model selection in the catalog's PreferredFor field.
@@ -39,7 +39,7 @@ type Tool interface {
 	MaxTokens() int
 
 	// SystemPrompt is the task-tuned system prompt sent to the model.
-	// Different per tool — this is the entire reason to have 9 tools instead
+	// Different per tool — this is the entire reason to have 10 tools instead
 	// of one generic "describe image".
 	SystemPrompt() string
 
@@ -108,7 +108,7 @@ type Registry struct {
 	tools map[string]Tool
 }
 
-// NewRegistry returns a Registry populated with all 9 tools. Track E
+// NewRegistry returns a Registry populated with all 10 tools. Track E
 // implements this in registry.go.
 //
 // The tools are registered in deterministic alphabetical order by ID so
