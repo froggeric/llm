@@ -253,55 +253,40 @@ Where G4-31B does win: **OCR-heavy dense compositions** (spritesheet +3, banner 
 
 ## Use-case-specific recommendations
 
-Recommendations are aligned to the **10 localvision MCP tools** (`read_image`, `extract_text`, `extract_code`, `extract_table`, `describe_ui`, `describe_diagram`, `describe_chart`, `diagnose_error`, `image_to_prompt`, `compare_images`), split into **two lenses kept separate**:
+**Post-refinement** (see [`REFINE-REPORT.md`](./REFINE-REPORT.md)): 7 new UI/OCR/code images tested with the actual localvision tool prompts (`describe_ui`/`extract_text`/`extract_code`) across 9 variants x 3 runs. The field is **tight** -- models cluster within 1-3 points on most tasks. No specialty swaps are needed; **two models cover every tool**:
 
-- **Quality table (the recommendation)** — per tool, the best **effective quality** model. Per image, quality = the v5 final cell (`0.4·det + 0.6·judge`, failure-mode capped) **× run-success-rate** (n_ok / n_attempted) — i.e. *expected per-call quality*, so a model that succeeds on only 1 of 3 runs scores a third of its good-run quality (partial failures count, not just total timeouts). **σ = across-run output divergence** (token-Jaccard) of the successful runs — it's never an artifact-of-one-run zero (a cell with <2 successful runs contributes σ=1.0). **effective = quality × (1 − k·σ)**, k=0.2. **MoE (`-A3B`/`-A4B`) are excluded from this table** (they're ranked in the master table above) — the badge always goes to the best dense model. **No latency/size here — this table is about quality.**
-- **Latency menu (the speed lens)** — best effective quality within a wall-clock budget per tool, so you can trade down from the quality leader.
-- Regenerate/retune with `code/recommend_by_tasktype.py --k 0.2 --timeout 300 [--include-moe]`; full per-variant detail in [`benchmark-results/tasktype-recommendations.md`](./benchmark-results/tasktype-recommendations.md).
+| Tool | Default (~30s) | Hard scenes (~70s) | Note |
+|---|---|---|---|
+| `read_image` | **Q3.5-9B-nothink** | Q3.6-27B-nothink | 27B for dense/complex scenes only |
+| `extract_text` | **Q3VL-8B-Q8** | -- | All models tie at 97-99% OCR recall |
+| `extract_code` | **Q3.5-9B-nothink** | Q3.6-27B-nothink | Q3.5-9B 99% recall; 27B gets identifier underscores |
+| `extract_table` | **Q3.5-9B-nothink** | -- | |
+| `describe_ui` | **Q3VL-8B-Q8** | -- | Refinement confirmed strong UI |
+| `describe_diagram` | **Q3VL-8B-Q8** | Q3.6-27B-nothink | |
+| `describe_chart` | **Q3VL-8B-Q8** | Q3.6-27B-nothink | |
+| `diagnose_error` | **Q3VL-8B-Q8** | -- | |
+| `image_to_prompt` | **Q3VL-8B-Q8** | -- | Weak proxy |
+| `compare_images` | -- | -- | Not evaluated (no image pairs) |
 
-### Quality table — effective = (final × run-success-rate) × (1 − k·σ)
+**Tier summary** (margins are small; don't overthink per-tool picks):
+- **Default (covers every tool):** **Q3VL-8B-Q8** (~30s, 8.1GB) or **Q3.5-9B-nothink** (~30s, 6.2GB). Both 100% reliable, fast, within 1-3 pts on every tool.
+- **Hard scenes:** add **Q3.6-27B-nothink** (~70s, 16.9GB). Nothink only -- think mode timed out (86%).
+- **Small/fast** (<=20s, <=8GB): **Q3.5-4B-nothink** (~20s, 3.2GB). Best quality-per-GB.
 
-| Tool | n | Recommended | Mode | eff/100 | mean/100 | σ(text) | ok% |
-|---|---|---|---|---|---|---|---|
-| `read_image` | 11 | **Q3.5-9B** | think | 62.9 | 69.8 | 0.50 | 100 |
-| `extract_text` | 5 | **GLM-9B-Q8** | think | 74.8 | 83.0 | 0.50 | 100 |
-| `extract_code` | 1 | **Q3.6-27B-nothink** | nothink | 93.4 | 100 | 0.33 | 100 |
-| `extract_table` | 2 | **Q3.5-9B** | think | 88.5 | 94.0 | 0.29 | 100 |
-| `describe_ui` | 1 | **Q3.6-27B** | think | 93.8 | 100 | 0.31 | 100 |
-| `describe_diagram` | 3 | **Q3VL-8B-Q8** | think | 82.5 | 89.1 | 0.37 | 100 |
-| `describe_chart` | 2 | **Q3.6-27B** | think | 87.0 | 94.0 | 0.37 | 100 |
-| `diagnose_error` | 1 | **Q3VL-8B** | think | 94.6 | 100 | 0.27 | 100 |
-| `image_to_prompt` | 4 | **Q3VL-8B-Q8** | think | 74.6 | 82.3 | 0.47 | 100 |
-| `compare_images` | 0 | — | — | — | — | — | — |
+**What the refinement changed:**
+- **GLM-9B-Q8 dropped** -- its OCR edge was CJK-signage-specific; on general OCR it ties (97-99%). CJK is negligible.
+- **Q3.6-27B-think ruled out** -- 3 timeouts (86%). Nothink only.
+- **Q3.5-4B-think ruled out for code** -- 65% recall (nothink is 98%).
+- **No model perfect on code** -- splits on hard identifiers (`createAujourdhui` vs `validatePlaylistKeys_`).
+- **Handwritten OCR universally hard** -- all bunch at 7-9/16 fields.
 
-*`eff` = expected per-call quality discounted by across-run output variance. `mean` = pre-reliability/variability (raw). `σ(text)` = run-output divergence (1.0 if a cell had <2 successful runs). `ok%` = mean run-success rate. Dense models only (MoE are ranked in the master table above).*
+**Avoid:** G4-12B-Q4 (hallucinates technical text); Q3.5-4B-think (code failure); Q3.5-9B-Q8 (62% reliability at Q8).
 
-### Latency menu — best effective quality within a wall-clock budget (dense)
+**Caveats.** Single-image tools (n=1) are directional only. `compare_images` not evaluated. Latency measured on M-series, single-user.
 
-| Tool | ≤20s | ≤45s | ≤90s | unlimited |
-|---|---|---|---|---|
-| `read_image` | — | Q3.5-4B | Q3.5-9B | Q3.5-9B |
-| `extract_text` | Q3VL-4B | GLM-9B-Q8 | GLM-9B-Q8 | GLM-9B-Q8 |
-| `extract_code` | Q3VL-4B | Q3.5-9B-nothink | Q3.6-27B-nothink | Q3.6-27B-nothink |
-| `extract_table` | — | Q3.5-4B | Q3.5-9B | Q3.5-9B |
-| `describe_ui` | Q3.5-4B-nothink | GLM-9B | Q3.6-27B | Q3.6-27B |
-| `describe_diagram` | Q3VL-8B-Q8 | Q3VL-8B-Q8 | Q3VL-8B-Q8 | Q3VL-8B-Q8 |
-| `describe_chart` | Q3VL-8B | Q3.5-9B-nothink | Q3.6-27B-nothink | Q3.6-27B |
-| `diagnose_error` | Q3VL-8B | Q3VL-8B | Q3VL-8B | Q3VL-8B |
-| `image_to_prompt` | Q3.5-4B-nothink | Q3VL-8B-Q8 | Q3VL-8B-Q8 | Q3VL-8B-Q8 |
-| `compare_images` | — | — | — | — |
+**Medical caveat** (X-ray/MRI under `read_image`): every variant missed the rib fracture on image 28. Do **not** deploy for clinical use.
 
-**How to read this.** The quality table recommends the **genuine quality leader per tool** — "Recommended" is the top `eff`, so the table is self-consistent at a glance, and `mean`/`ok%`/`σ` show *why* (e.g. a high `mean` can lose to a slightly-lower but more reliable/consistent model). The latency menu is the separate speed lens.
-- **Variability & reliability are in the score.** `extract_text`: GLM-9B-Q8's raw mean (83.0) beats Q3.6-27B-nothink's (82.5), but Q3.6-27B-nothink is more stable — here GLM-9B-Q8 edges it once success-rate+σ are combined. On `describe_chart`, the dense **Q3.6-27B** wins (the MoE Q3.6-35B-A3B-nothink would tie on raw quality but is excluded — see master table).
-- **Partial failures are penalized, not hidden.** The `ok%` column exposes flaky models — e.g. G4-12B-Q8 (~80% ok) and Q3.5-9B-Q8 (~61% ok) score far below their raw means, which is why they don't appear. (This is also why a σ of exactly 0 never shows: a one-successful-run cell now contributes σ=1.0 instead of masquerading as perfectly consistent.)
-- **MoE excluded here.** Q3.6-35B-A3B(-nothink) and G4-26B-A4B are tested and ranked in the master table, but kept out of these per-tool recommendations (full param footprint despite few active experts).
-- **Avoid** G4-12B-Q4 (hallucinates technical text — "Atomic acid" for "Domoic acid").
-
-**Caveats.** `extract_code`/`describe_ui`/`diagnose_error` are **single-image** (n=1) — directional only. `image_to_prompt` is a **weak proxy** (description quality on art, not recreation-prompt quality). `compare_images` is **not evaluated** (no image pairs). k=0.2 (σ discount) and the 300 s timeout are tunable (`--k`, `--timeout`). Latency is measured on the test machine (M-series, single-user) — scale to your hardware.
-
-**Medical caveat** (X-ray/MRI fall under `read_image`): every variant missed the rib fracture on image 28. Do **not** deploy any of these for clinical/diagnostic use.
-
-**Bottom line.** Use the **quality table** to pick the best model per tool, then the **latency menu** to trade down for speed. Dense, reliable, consistent models cover every tool — Q3VL-8B(-Q8) (diagrams, errors, image_to_prompt), Q3.5-9B (read_image, tables), Q3.6-27B (UI, charts), GLM-9B-Q8 (text/CJK), with Q3VL-4B / Q3.5-4B as the fast tiers in the menu. The 27B is the quality leader only where its consistency/reliability edge is real.
+Per-tool effective-quality scores are computable via `code/recommend_by_tasktype.py`; the refinement evidence is in [`REFINE-REPORT.md`](./REFINE-REPORT.md).
 
 ---
 
@@ -391,7 +376,6 @@ Qwen3-VL-4B, Gemma-4, and GLM-4.6V projectors were not retained on disk post-ben
 | `score_q8_multirun.py` | Q8 aggregation |
 | `benchmark_llamaserver.py` | test harness (webp-aware, configurable timeouts) |
 | `code/recommend_by_tasktype.py` | speed-aware per-task-type recommendations (fastest-within-Δ + Pareto + latency tiers) |
-| `benchmark-results/tasktype-recommendations.md` | generated per-task-type detail — all 24 variants (Q4+Q8) |
 | `test-images/GROUND-TRUTH.md` | owner-verified GT for all 30 images |
 | `benchmark-results/raw.jsonl` | all raw responses (Q4 + Q8) |
 | `benchmark-results/judgments_v5/` | 30 Q4 LLM-judge outputs |
