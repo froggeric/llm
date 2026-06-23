@@ -242,11 +242,14 @@ shared-basename collision, now cached per-model with auto-migration). **v0.5.0**
 shipped a new 10th tool (`image_to_prompt`) and an MCP temp-file leak fix, on top
 of **v0.4.0** (cross-platform: macOS/Linux/Windows, x86_64 + arm64) and
 **v0.3.0** (the standalone CLI: one-shot queries, `--format`, batch, `setup`
-wizard). Next, in
-priority order: **v0.6 reach** (localhost HTTP API + streaming progress),
-**v0.7 reliability** (constrained decoding, multi-sample consensus), then
-**v0.8+ new modalities** (PDF, UI→code, video) and far-future research. Every
-item, its effort, and its target is in [`ROADMAP.md`](./ROADMAP.md) (themes A–H,
+wizard). Next, in priority order: **v0.6 tools & UX** — more/better tools
+(chart→CSV, diagram→Mermaid, PDF/documents) and **streaming progress** for
+inference and downloads; then **v0.7 reliability** (constrained decoding,
+multi-sample consensus), then **v0.8+ new modalities & a native GUI** (UI→code,
+video, grounding). A background daemon / HTTP service was evaluated and
+**declined** — the current model (session-warm MCP + fire-and-exit CLI with
+batch) is good enough. Every item, its effort, and its target is in
+[`ROADMAP.md`](./ROADMAP.md) (themes A–H,
 prioritized into release tiers).
 
 ## Project layout

@@ -43,21 +43,21 @@ What **works** (shipped):
   (all platforms).
 
 What's **next** — the v0.5 breadth tier is shipped. The next release tier is
-**v0.6 — reach** (see **Sequencing & priorities** below). The headline items:
-- **F1 HTTP/REST service + background daemon** — `localvision serve --http`
-  runs as one long-lived process: keeps the model **warm across sessions** (no
-  per-session cold start — the biggest perceived-latency win), serves **many
-  clients** over loopback (`curl`/scripts/cron/any language, and several MCP
-  sessions sharing one warm model), and **owns the `llama-server` process**
-  (largely subsumes E2 orphan reap). Unlocks F2 (OpenAI-compat) and F16 (web UI).
-- **E1 streaming `notifications/progress`** — the single biggest in-call UX win
-  (every 30–70 s call is silent today).
-- **F9 clipboard in/out** — the #1 input friction ("the screenshot I just took").
+**v0.6 — tools & UX** (see **Sequencing & priorities** below). Two priorities:
+- **Improve / add tools** (top priority) — structured outputs for the existing
+  chart & diagram tools (G4 chart→CSV/JSON, G5 diagram→Mermaid) and a new
+  document modality (G3 PDF/pages).
+- **E1 streaming progress** — for **both** inference (every 30–70 s call is
+  silent today) **and** downloads (model/binary fetches during first-run setup).
+  The single biggest quality-of-life win.
+
+Explicitly **not** this release (see **Server & process model**): a background
+daemon / HTTP service (F1) — the current model is good enough; and clipboard
+(F9) / result cache (F3) are low-value and parked.
 
 After that: **v0.7 reliability** (F4 constrained decoding, F5 consensus), then
-**v0.8+ new modalities** (PDF, UI→code, video). Cheap high-value items
-(G4 chart→CSV, G5 diagram→Mermaid, F9 clipboard, F3 result cache, E3/E4/E7) can
-ride into any release.
+**v0.8+ new modalities** (UI→code, video, grounding), and further out a
+**native GUI frontend**.
 
 ---
 
@@ -79,13 +79,16 @@ How `localvision` runs today, and the background-service mode planned for v0.6.
   session; warm calls 5–25 s.
 - **No system daemon** (launchd/systemd) is installed.
 
-**Planned (v0.6, F1) — the always-on local vision service.** `localvision serve
---http :7665` runs as a single long-lived process you start once (foreground, or
-via launchd/systemd). It keeps the model warm across sessions, serves many
-clients over loopback HTTP, and owns `llama-server` — which **largely subsumes
-E2** (orphan reap: one managed process instead of per-session subprocesses that
-can orphan on crash). The stdio MCP mode stays the zero-config default; F1 is the
-opt-in service mode for reach + always-warm.
+**Decision (v0.5.x): no daemon.** A lingering / always-on / HTTP service
+(formerly F1) was evaluated and **declined**. Its benefits — cross-session
+warmth, a persistent CLI, non-MCP reach — are mostly theoretical for a personal
+local tool, while the cost (persistent process + IPC + single-instance + crash
+recovery + supervision) is real. The current model above is the chosen design:
+the MCP client keeps the server warm for the session, and one-shot CLI calls
+terminate and unload — with **batch amortizing the cold start** across many
+images (already shipped in v0.3.0: `localvision *.png --output-dir out/`). If
+reach is ever genuinely wanted, an HTTP listener can be added to the lifecycle
+later; until then F1, F2 (OpenAI-compat), and a web UI are **not pursuing**.
 
 ---
 
@@ -105,11 +108,11 @@ flowchart TD
     V2["v0.2.0 — Foundation &amp; distribution<br/>✅ A release hygiene: A1 CI, A2 llama-server, A3 naming, A4 docs, A5 delivery<br/>✅ B1 GitHub Releases, B2 Homebrew, C6 llama.cpp params"]:::done
     V3["v0.3.0 — Standalone CLI<br/>✅ C1 setup/query, C2 type, C3 format, C4 batch, C5 model override"]:::done
     V4["v0.4.0 — Cross-platform<br/>✅ D1 Linux GPU, D2 Windows GPU, D3 CI matrix, D4 6-target xc, D5 HEIC/WEBP"]:::done
-    V5["v0.5.x — Breadth &amp; polish (shipped)<br/>✅ G8 image_to_prompt, E6 MCP temp cleanup<br/>✅ qwen3-vl-8b default for all + cache-collision fix, doctor display<br/>🔴 E2 auto-reap orphans (deferred; mitigated by F1 daemon)"]:::done
-    V6["v0.6.0 — Reach: always-on service (next up)<br/>🚧 F1 HTTP service + background daemon (warm across sessions, owns llama-server, subsumes E2)<br/>🚧 E1 streaming progress · F9 clipboard<br/>📋 F8 doctor selftest, F13 model mgmt, F14 resources/prompts, F15 stats"]:::next
-    ANY["any release — cheap high-value wins<br/>📋 G4 chart-to-CSV, G5 diagram-to-Mermaid, F9 clipboard, F3 result cache<br/>📋 E3 compute-hashes, E4 tool-name prefix, E7 pin goreleaser+lint, F11 doctor fix, F12 completions"]:::planned
+    V5["v0.5.x — Breadth &amp; polish (shipped)<br/>✅ G8 image_to_prompt, E6 MCP temp cleanup<br/>✅ qwen3-vl-8b default for all + cache-collision fix, doctor display<br/>🔴 E2 auto-reap orphans (deferred)"]:::done
+    V6["v0.6.0 — Tools &amp; UX (next up)<br/>🚧 G4 chart-to-CSV, G5 diagram-to-Mermaid, G3 PDF/docs<br/>🚧 E1 streaming progress (inference + downloads)<br/>📋 F8 doctor selftest, F12 completions, E3 compute-hashes"]:::next
+    ANY["any release — hygiene<br/>📋 E3 compute-hashes, E4 tool-name prefix, E7 pin goreleaser+lint, F11 doctor fix, F12 completions<br/>parked: F3 cache, F9 clipboard — declined: F1 daemon, parallel batch"]:::planned
     V7["v0.7.0 — Reliability<br/>📋 F4 constrained decoding (GBNF), F5 consensus (provisional: 8B + high-variance cats only), F6 cascade, F7 self-verify, E5 Ollama coord"]:::planned
-    V8["v0.8+ — New modalities<br/>📋 G3 PDF, G2 UI-to-artifact, G6 grounding, G7 visual-diff, G1 video, F10 watch mode"]:::planned
+    V8["v0.8+ — New modalities &amp; native GUI<br/>📋 G2 UI-to-artifact, G6 grounding, G7 visual-diff, G1 video, F10 watch<br/>📋 F16 native GUI frontend"]:::planned
     DIST["distribution — any release<br/>📋 B3 Claude Code marketplace, B4 harness auto-install"]:::planned
     V1["v1.0+ — Far future / research<br/>📋 H1 tiny model, H2 search, H3 screen capture, H4 vision agent, H5 3D"]:::planned
 
@@ -354,8 +357,10 @@ misdetection. DirectML detection on Windows is deferred.
 
 The long tail of known limitations, mostly small, mostly independent.
 
-- **E1.** Streaming `notifications/progress` for long tool calls (today each
-  `tools/call` blocks 30–70 s). *(from v0.2 known-limitation)* `M`
+- **E1.** Streaming progress for long operations — **both** inference
+  (`notifications/progress` during each 30–70 s `tools/call`) **and** downloads
+  (model/binary fetch progress during first-run setup). Today both are silent.
+  `M` *(v0.6 headline)*
 - **E2.** Auto-reap orphan `llama-server` subprocesses on startup (today:
   manual via `pkill -fa llama-server`; `doctor` does not yet detect them).
   *Deferred from v0.5.0:* investigation showed no orphan-detection code exists,
@@ -365,9 +370,9 @@ The long tail of known limitations, mostly small, mostly independent.
   not an `S`, and carries automatic-kill risk, so it is re-scoped to a later
   release rather than rushed at the zero-problem bar. `M`
 
-  **Largely subsumed by F1 (v0.6):** a single long-lived `localvision serve`
-  daemon owns the `llama-server` process, so there are far fewer per-session
-  subprocesses to orphan. E2 then only matters for the stdio MCP mode.
+  *(No longer subsumed — the F1 daemon was declined, so E2 stays a standalone
+  deferred item for the stdio MCP mode. Low priority: orphans are rare and the
+  workaround is `pkill -fa llama-server`.)*
 - **E3.** `doctor --compute-hashes` to populate catalog SHA256s automatically
   (today: by hand). `S`
 - **E4.** Configurable tool-name prefix to avoid MCP collisions (tool names are
@@ -389,21 +394,20 @@ The long tail of known limitations, mostly small, mostly independent.
 Make localvision faster, more reliable, and reachable far beyond a single MCP
 client. Several items here are small and can be pulled forward into any release.
 
-- **F1. localhost HTTP/REST service + background daemon** — `localvision serve
-  --http :7665` exposing `/v1/ocr`, `/v1/describe`, etc.; loopback-only. Runs as a
-  single long-lived process (foreground, or launchd/systemd) that keeps the model
-  warm across sessions and serves many clients (`curl`/scripts/cron/any language,
-  and several MCP sessions sharing one warm model). The **always-on local vision
-  service** mode; it owns `llama-server`, so it **largely subsumes E2** (orphan
-  reap). The stdio MCP mode stays the zero-config default. → unlocks F2
-  (OpenAI-compat) + F16 (web UI). `M` (the v0.6 headline)
-- **F2. OpenAI-compatible `/v1/chat/completions` with vision** — expose the same
-  protocol you already speak to `llama-server`, upstream. Any OpenAI-compatible
-  client can then use localvision as a **local vision backend**. `M`
-- **F3. Content-addressed result cache** — reuse the per-image SHA256 (already
-  computed for logging) as a cache key in `~/.localvision/cache/`. Same image +
-  tool + model → instant replay. Big win for batches and re-runs. **Opt-in,
-  text-only, never stores image bytes** (privacy-conscious). `S`
+- **F1. ~~HTTP/REST service + background daemon~~ — not pursuing (decided v0.5.x).**
+  A lingering / always-on / HTTP daemon was evaluated and declined: its benefits
+  (cross-session warmth, persistent CLI, non-MCP reach) are mostly theoretical
+  for a personal local tool, and the cost (persistent process + IPC +
+  single-instance + crash recovery) is real. The current client-spawned model is
+  good enough; batch amortizes the CLI cold start (see **Server & process
+  model**). An HTTP listener can be grafted onto the lifecycle later if reach is
+  ever wanted.
+- **F2. ~~OpenAI-compatible `/v1/chat/completions`~~ — not pursuing.** Depended
+  on F1 (the HTTP service), which was declined. Revisit only if F1 is ever built.
+- **F3. ~~Content-addressed result cache~~ — parked (low value).** Reuse the
+  per-image SHA256 as a cache key for instant replay of repeated queries. Low
+  priority: overlaps little with real workflows and adds a cache-invalidation
+  surface. Revisit if a concrete need appears.
 - **F4. Constrained decoding (GBNF grammars)** — constrain `llama-server` output
   to valid JSON/CSV/table shape so structured formats are *guaranteed*
   well-formed, not prompt-begged. The real engine behind a reliable `--format`
@@ -427,9 +431,8 @@ client. Several items here are small and can be pulled forward into any release.
 - **F8. `doctor --selftest`** — run a handful of `benchmark/vlm/test-images`
   against the installed model and sanity-check output against `GROUND-TRUTH.md`.
   One-command "does my install actually work," reusing assets you already ship. `S`
-- **F9. Clipboard in/out** — read a screenshot from the clipboard, copy the
-  result text back out. Zero file management for the #1 input ("the screenshot
-  I just took"). `XS`
+- **F9. ~~Clipboard in/out~~ — parked (low value).** Read a screenshot from the
+  clipboard / copy the result back out. Low priority vs other tool work.
 - **F10. Watch mode** — `localvision watch ~/Screenshots --type ocr` processes
   every new file automatically. Hands-off pipelines. `S`
 - **F11. `doctor --fix`** — let `doctor` auto-remediate (clear corrupt cache,
@@ -443,9 +446,11 @@ client. Several items here are small and can be pulled forward into any release.
   `prompts`, so agents can introspect "which model and why" without a tool call. `S`
 - **F15. Local usage stats** — `localvision stats` (calls, models, tokens, time),
   purely local and opt-in. `S`
-- **F16. Local web UI** — `localvision ui` serves a drag-drop page (pick a tool,
-  see results) on top of the F1 HTTP API. Democrafts localvision to
-  non-developers. `L`
+- **F16. Native GUI frontend** — a native (macOS-first) app: drop/paste an image,
+  pick a tool, see results. Embeds localvision as a Go library (no daemon/HTTP
+  needed). Brings localvision to non-developers; further down the line (v0.8+).
+  (A web-UI variant was considered and dropped — it depended on the declined F1
+  HTTP service.) `L`
 
 ---
 
@@ -548,29 +553,31 @@ versions are advisory.
 - *Deferred:* **E2 auto-reap orphans** — re-scoped to `M` (needs a process marker
   + parent-liveness check; no detection exists yet). See Theme E2.
 
-The remaining cheap high-value items below cherry-pick freely into v0.6+:
-- **New tools:** G4 chart→CSV/JSON `S` · G5 diagram→Mermaid `S`
-- **UX wins:** F9 clipboard in/out `XS` · F12 shell completions `XS` · F11 doctor --fix `XS`
-- **Reliability/hygiene:** F3 result cache `S` · E4 tool-name prefix `S` · E3 doctor --compute-hashes `S` · E7 pin goreleaser + lint `S`
+Hygiene items cherry-pick freely into any release:
+- E3 doctor --compute-hashes `S` · E4 tool-name prefix `S` · E7 pin goreleaser + lint `S` · F11 doctor --fix `XS` · F12 shell completions `XS`
+- *Parked (low value, for now):* F3 result cache · F9 clipboard
+- *Declined:* F1 daemon/HTTP · F2 OpenAI-compat · parallel batch processing
 
-### v0.6.0 — Reach: the always-on local vision service  *(M; serving layer)*
-The headline is **F1** — turn localvision into a single long-lived service:
-- **F1 HTTP/REST service + background daemon `M`** — keeps the model warm across
-  sessions (no per-session cold start), serves many clients over loopback, and
-  owns `llama-server` (largely **subsumes E2** orphan reap). → F2 OpenAI-compat
-  `M` + F16 web UI `L`.
-- **E1 streaming notifications/progress `M`** — the single biggest in-call UX win
-  (every 30–70 s call feels silent today).
-- **F9 clipboard in/out `XS`** — the #1 input friction.
-- F8 doctor --selftest `S` · F13 model management `S` · F14 MCP resources/prompts `S` · F15 local stats `S`
+### v0.6.0 — Tools & UX  *(S–M; concrete, demand-driven)*
+Top priority is **more / better tools**; the one UX item is **streaming**.
+- **G4 `describe_chart` → CSV/JSON `S`** — return the underlying numbers, not
+  just prose. "Get this graph into my spreadsheet."
+- **G5 `describe_diagram` → Mermaid `S`** — emit editable markup. Image →
+  round-trippable diagram.
+- **G3 PDF / multi-page documents `M`** — rasterize pages (`pdftoppm`/`mutool`),
+  process per-page, summarize. Extends scope from images to documents.
+- **E1 streaming progress `M`** — progress for **both** inference and downloads
+  (first-run model/binary fetches). Today both are silent.
+- (Cherry-pick) F8 doctor --selftest `S` · F12 shell completions `XS` · E3 doctor --compute-hashes `S`.
 
 ### v0.7.0 — Reliability  *(M; quality)*
 - **F4 constrained decoding / GBNF grammars `M`** — makes `--format` JSON guaranteed-valid (reinforces C3).
 - F5 multi-sample consensus + confidence `S/M` *(provisional — small/mid models + high-variance categories only, pending experiment results)* · F6 cascade/difficulty routing `M` · F7 self-verification `S/M`
 - E5 Ollama coordination `M`
 
-### v0.8.0+ — New modalities  *(L)*
-- G3 PDF / documents `M` · G2 UI→artifact/code `M/L` · G6 coordinate grounding `M` · G7 compare→visual-diff `S/M` · G1 video `L` · F10 watch mode `S`
+### v0.8.0+ — New modalities & native GUI  *(L)*
+- G2 UI→artifact/code `M/L` · G6 coordinate grounding `M` · G7 compare→visual-diff `S/M` · G1 video `L` · F10 watch mode `S`
+- **F16 native GUI frontend** `L` — macOS-first; embeds localvision as a library. Further down the line.
 
 ### Distribution *(land in any release above)*
 - **B3** Claude Code marketplace plugin `M` — independent after B1.
@@ -580,11 +587,10 @@ The headline is **F1** — turn localvision into a single long-lived service:
 
 **The path so far:** A1→B1→B2 (distribution) ✅ → C1–C6 (CLI) ✅ → D1–D5
 (cross-platform) ✅ → **v0.5.x (G8 tool + E6 leak fix; qwen3-vl-8b default;
-model-cache collision fix; doctor display)** ✅. There is no single gate going
-forward. The highest-leverage single item is **F1 (HTTP API)** — it unlocks
-F2/F16 and reaches far beyond one MCP client — but the remaining cheap
-high-value items (F9, F3, G4/G5) can ride into v0.6 regardless of whether F1
-is ready.
+model-cache collision fix; doctor display)** ✅ → **v0.6 (tools & UX: streaming
++ structured chart/diagram output + PDF)** 🚧. The next priority is **more &
+better tools** (G3/G4/G5) plus **E1 streaming** (inference + downloads); a
+background daemon (F1) was evaluated and declined.
 
 ## Idea index
 
