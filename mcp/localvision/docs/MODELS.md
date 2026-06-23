@@ -88,7 +88,7 @@ notes = "Optional notes shown in `doctor` output."
 shasum -a 256 path/to/model.gguf | awk '{print $1}'
 ```
 
-Or use `localvision doctor --compute-hashes` (planned for v0.2). For v0.1, populate by hand.
+Or wait for `localvision doctor --compute-hashes` (planned, ROADMAP Theme E3). For now, populate by hand.
 
 ### Uploading to HuggingFace
 

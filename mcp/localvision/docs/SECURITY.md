@@ -97,7 +97,7 @@ If many tool calls arrive concurrently and the lifecycle manager doesn't seriali
 
 If the MCP crashes hard (SIGKILL, panic), the `llama-server` child may keep running.
 
-**Mitigation**: the `doctor` command checks for orphans via process listing. Future v0.2 will add an auto-reap on startup. For now, manual cleanup:
+**Mitigation**: the `doctor` command checks for orphans via process listing. A future release will add an auto-reap on startup (ROADMAP Theme E2). For now, manual cleanup:
 
 ```bash
 pkill -fa llama-server

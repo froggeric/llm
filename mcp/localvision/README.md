@@ -226,8 +226,8 @@ use vision tools:
 ollama stop                 # or: pkill -TERM ollama
 ```
 
-This is documented as a known limitation; v0.2 may add automatic
-coordination via Ollama's API.
+This is documented as a known limitation; a future release may add automatic
+coordination via Ollama's API (ROADMAP Theme E5).
 
 ## Roadmap
 

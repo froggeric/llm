@@ -1,8 +1,9 @@
 # Install
 
-localvision runs on macOS (Apple Silicon is the MVP target; Linux/Windows are stubbed for v0.2). You need:
+localvision runs on macOS (Apple Silicon/Intel), Linux, and Windows (x86_64 + arm64). As of v0.4 all three are supported, though Linux/Windows are tested via CI only (no real GPU hardware in the maintainer's loop — please report issues). You need:
 
-- A Mac with at least 8 GB unified memory (16 GB+ recommended).
+- macOS: an Apple-Silicon Mac with at least 8 GB unified memory (16 GB+ recommended); Intel Macs run in CPU-only mode.
+- Linux/Windows: a CUDA (NVIDIA) or ROCm (AMD, Linux) GPU is strongly recommended for usable speed; CPU-only works but is slow. At least 8 GB RAM / VRAM.
 - ~5 GB free disk for the smallest model + ~5 MB for the binary.
 - Go 1.23+ if installing from source, or the prebuilt binary from GitHub Releases.
 

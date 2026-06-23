@@ -55,6 +55,11 @@ and arm64) in addition to macOS Apple Silicon/Intel. The wrapper is pure Go
   hardware** from the dev machine (macOS). Report discrepancies; `default_model`
   overrides any misdetection.
 - DirectML (DirectX 12) GPU detection is not implemented on Windows.
+- The v0.4 feature packages (models/setup/format/cmd) are fully tested on
+  Windows, but ~14 **pre-existing** tests asserting Unix-only behavior (exec-bit
+  preservation, `#!/bin/sh` subprocesses, SIGTERM/SIGKILL, Unix path literals)
+  skip on Windows. They still run on macOS + Linux. Full Windows hardening of
+  those paths is tracked follow-up.
 - Homebrew remains macOS-only (Linux/Windows users use `curl | sh` or
   `go install`); the formula's `brews:` stanza uses a goreleaser-deprecated
   (but functional) field — tracked as ROADMAP Theme E7.
