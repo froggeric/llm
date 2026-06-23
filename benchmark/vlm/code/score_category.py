@@ -37,7 +37,7 @@ IMG_CAT = {
     "extract-code-test-1.png": "extract_code",
     "08-poster-class-schedule.jpg": "extract_table",
     "ui-test-1.png": "describe_ui",
-    "04-architecture.png": "describe_diagram",
+    "04_architecture.png": "describe_diagram",
     "26-graph-ocean-acidification-hawaii.jpg": "describe_chart",
     "03_error_trace.png": "diagnose_error",
 }
