@@ -74,6 +74,30 @@ func requireSingleImage(input ToolInput) (ImageRef, error) {
 // post-process (extract_code, extract_table) override ParseOutput.
 func passthroughOutput(raw string) (any, error) { return raw, nil }
 
+// outputMode extracts and validates the optional "output" argument from a
+// tool's Extra map (set via the MCP tool's `output` field or the CLI
+// --output-mode flag). It returns "prose" when the argument is absent or empty
+// (the default, so callers that never set it get today's behavior), the mode
+// when it matches one of allowed, or a clear error for an unknown value.
+//
+// allowed is the per-tool set of non-prose modes (e.g. ["csv","json"] for
+// describe_chart); "prose" is always implicitly valid and prepended to the
+// error's hint list.
+func outputMode(extra map[string]any, allowed []string) (string, error) {
+	v, _ := extra["output"].(string)
+	mode := strings.ToLower(strings.TrimSpace(v))
+	if mode == "" {
+		return "prose", nil
+	}
+	for _, a := range allowed {
+		if mode == a {
+			return mode, nil
+		}
+	}
+	valid := append([]string{"prose"}, allowed...)
+	return "", fmt.Errorf("unsupported output %q (valid: %s)", mode, strings.Join(valid, ", "))
+}
+
 // extractCodeBlock pulls the first fenced code block out of raw, returning
 // the fenced contents (without the backticks) and the language tag, if any.
 // Used by extract_code's ParseOutput. Returns the trimmed input verbatim if

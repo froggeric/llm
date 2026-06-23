@@ -205,6 +205,117 @@ func TestBuildRequestSanity(t *testing.T) {
 	}
 }
 
+// TestDescribeChartOutputModes verifies G4: describe_chart's BuildRequest
+// returns a mode-specific system prompt for output=csv/json, and the prose
+// default returns SystemPrompt() (preserving the TestBuildRequestSanity
+// invariant that the default path returns SystemPrompt()).
+func TestDescribeChartOutputModes(t *testing.T) {
+	tool := describeChartTool{}
+	img := []ImageRef{{LocalPath: "/tmp/c.png", Source: "/tmp/c.png"}}
+
+	t.Run("prose default equals SystemPrompt", func(t *testing.T) {
+		sys, _, _, err := tool.BuildRequest(ToolInput{Images: img, Extra: map[string]any{}})
+		require.NoError(t, err)
+		assert.Equal(t, tool.SystemPrompt(), sys)
+	})
+	t.Run("csv mode", func(t *testing.T) {
+		sys, _, _, err := tool.BuildRequest(ToolInput{Images: img, Extra: map[string]any{"output": "csv"}})
+		require.NoError(t, err)
+		assert.Equal(t, promptDescribeChartCSV, sys)
+		assert.NotEqual(t, tool.SystemPrompt(), sys)
+	})
+	t.Run("json mode", func(t *testing.T) {
+		sys, _, _, err := tool.BuildRequest(ToolInput{Images: img, Extra: map[string]any{"output": "json"}})
+		require.NoError(t, err)
+		assert.Equal(t, promptDescribeChartJSON, sys)
+	})
+	t.Run("uppercase/whitespace tolerated", func(t *testing.T) {
+		sys, _, _, err := tool.BuildRequest(ToolInput{Images: img, Extra: map[string]any{"output": "  CSV "}})
+		require.NoError(t, err)
+		assert.Equal(t, promptDescribeChartCSV, sys)
+	})
+	t.Run("invalid mode errors clearly", func(t *testing.T) {
+		_, _, _, err := tool.BuildRequest(ToolInput{Images: img, Extra: map[string]any{"output": "xml"}})
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "unsupported output")
+	})
+}
+
+// TestDescribeChartParseOutput verifies G4 ParseOutput: a fenced csv block is
+// stripped to clean CSV, json (bare or fenced) parses to a real object, and
+// prose passes through unchanged.
+func TestDescribeChartParseOutput(t *testing.T) {
+	tool := describeChartTool{}
+	t.Run("csv fence stripped", func(t *testing.T) {
+		raw := "```csv\nlabel,revenue\nQ1,4.2\nQ2,5.1\n```"
+		out, err := tool.ParseOutput(raw)
+		require.NoError(t, err)
+		assert.Equal(t, "label,revenue\nQ1,4.2\nQ2,5.1", out)
+	})
+	t.Run("bare json parsed", func(t *testing.T) {
+		raw := `{"chart_type":"bar","series":[{"name":"a","points":[["Q1",4.2]]}]}`
+		out, err := tool.ParseOutput(raw)
+		require.NoError(t, err)
+		m, ok := out.(map[string]any)
+		require.True(t, ok, "json mode must return a parsed object")
+		assert.Equal(t, "bar", m["chart_type"])
+	})
+	t.Run("fenced json parsed", func(t *testing.T) {
+		raw := "```json\n{\"chart_type\":\"line\"}\n```"
+		out, err := tool.ParseOutput(raw)
+		require.NoError(t, err)
+		m, ok := out.(map[string]any)
+		require.True(t, ok)
+		assert.Equal(t, "line", m["chart_type"])
+	})
+	t.Run("prose passthrough", func(t *testing.T) {
+		raw := "## Chart type\nThis is a bar chart.\n"
+		out, err := tool.ParseOutput(raw)
+		require.NoError(t, err)
+		assert.Equal(t, raw, out)
+	})
+}
+
+// TestDescribeDiagramOutputModes verifies G5: mermaid mode returns the mermaid
+// prompt; the prose default returns SystemPrompt().
+func TestDescribeDiagramOutputModes(t *testing.T) {
+	tool := describeDiagramTool{}
+	img := []ImageRef{{LocalPath: "/tmp/d.png", Source: "/tmp/d.png"}}
+	t.Run("prose default equals SystemPrompt", func(t *testing.T) {
+		sys, _, _, err := tool.BuildRequest(ToolInput{Images: img, Extra: map[string]any{}})
+		require.NoError(t, err)
+		assert.Equal(t, tool.SystemPrompt(), sys)
+	})
+	t.Run("mermaid mode", func(t *testing.T) {
+		sys, _, _, err := tool.BuildRequest(ToolInput{Images: img, Extra: map[string]any{"output": "mermaid"}})
+		require.NoError(t, err)
+		assert.Equal(t, promptDescribeDiagramMermaid, sys)
+		assert.NotEqual(t, tool.SystemPrompt(), sys)
+	})
+	t.Run("diagram rejects csv mode", func(t *testing.T) {
+		_, _, _, err := tool.BuildRequest(ToolInput{Images: img, Extra: map[string]any{"output": "csv"}})
+		require.Error(t, err)
+	})
+}
+
+// TestDescribeDiagramParseOutput verifies G5: a fenced mermaid block is stripped
+// to pasteable markup; prose passes through unchanged.
+func TestDescribeDiagramParseOutput(t *testing.T) {
+	tool := describeDiagramTool{}
+	t.Run("mermaid fence stripped", func(t *testing.T) {
+		raw := "```mermaid\nflowchart TD\n  A --> B\n```"
+		out, err := tool.ParseOutput(raw)
+		require.NoError(t, err)
+		assert.Equal(t, "flowchart TD\n  A --> B", out)
+	})
+	t.Run("prose passthrough", func(t *testing.T) {
+		raw := "## Diagram type\nThis is an architecture diagram.\n"
+		out, err := tool.ParseOutput(raw)
+		require.NoError(t, err)
+		assert.Equal(t, raw, out)
+	})
+}
+
 // TestBuildRequestRejectsMissingImage ensures single-image tools surface a
 // clear error when the caller forgot to supply an image. compare_images is
 // excluded (it needs exactly 2, not at-least-1).

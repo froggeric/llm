@@ -115,7 +115,7 @@ func runOneShot(args []string) int {
 	fs.SetOutput(os.Stderr)
 	var cf commonFlags
 	cf.register(fs)
-	var typeFlag, modelFlag, questionFlag, formatFlag, outputFlag, outputDirFlag string
+	var typeFlag, modelFlag, questionFlag, formatFlag, outputFlag, outputDirFlag, outputModeFlag string
 	var recursiveFlag, metaFlag bool
 	fs.StringVar(&typeFlag, "type", "", "query type: ocr|code|table|ui|diagram|chart|error|prompt|compare|describe (default describe)")
 	fs.StringVar(&modelFlag, "model", "", "override the auto-selected model (a catalog ID)")
@@ -123,6 +123,7 @@ func runOneShot(args []string) int {
 	fs.StringVar(&formatFlag, "format", "", "output format: text|markdown|json|yaml|xml (default: presentational)")
 	fs.StringVar(&outputFlag, "output", "", "write the result to this file (single image only)")
 	fs.StringVar(&outputDirFlag, "output-dir", "", "write one result file per input into this directory")
+	fs.StringVar(&outputModeFlag, "output-mode", "", "representation for chart/diagram: prose|csv|json (chart) | mermaid (diagram); default prose")
 	fs.BoolVar(&recursiveFlag, "recursive", false, "recurse into directories when expanding inputs")
 	fs.BoolVar(&metaFlag, "meta", false, "write a .meta.json sidecar (tokens/timing) next to each --output/--output-dir result")
 
@@ -136,6 +137,17 @@ func runOneShot(args []string) int {
 	requestedFormat, err := format.Parse(formatFlag)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "localvision: %v\n", err)
+		return exitBadArgs
+	}
+
+	// Validate --output-mode (the chart/diagram representation) early too. It
+	// is the union of both tools' modes; a value valid for one tool but not the
+	// other is still accepted and simply ignored by the tool that doesn't use it.
+	switch strings.ToLower(strings.TrimSpace(outputModeFlag)) {
+	case "", "prose", "csv", "json", "mermaid":
+		// ok ("" / "prose" = default)
+	default:
+		fmt.Fprintf(os.Stderr, "localvision: invalid --output-mode %q (valid: prose, csv, json, mermaid)\n", outputModeFlag)
 		return exitBadArgs
 	}
 
@@ -322,7 +334,7 @@ func runOneShot(args []string) int {
 		phaseStart := len(phaseTimes)
 		sp = newSpinner(label)
 
-		res, runErr := runUnit(ctx, exec, tool, toolID, unitPaths, questionFlag)
+		res, runErr := runUnit(ctx, exec, tool, toolID, unitPaths, questionFlag, outputModeFlag)
 
 		sp.halt()
 		// Close out the final phase's elapsed time for this unit.
@@ -416,7 +428,7 @@ type unitResult struct {
 // runUnit runs a single inference over the given paths and returns the parsed
 // result + telemetry. It owns image-ref construction and cleanup (data: URIs
 // are written to temp files that must exist for the duration of Run).
-func runUnit(ctx context.Context, exec tools.Executor, tool tools.Tool, toolID string, unitPaths []string, question string) (unitResult, error) {
+func runUnit(ctx context.Context, exec tools.Executor, tool tools.Tool, toolID string, unitPaths []string, question, outputMode string) (unitResult, error) {
 	refs, err := buildImageRefs(unitPaths)
 	if err != nil {
 		return unitResult{}, err
@@ -426,6 +438,9 @@ func runUnit(ctx context.Context, exec tools.Executor, tool tools.Tool, toolID s
 	extra := map[string]any{}
 	if question != "" {
 		extra["question"] = question
+	}
+	if outputMode != "" {
+		extra["output"] = strings.ToLower(strings.TrimSpace(outputMode))
 	}
 	system, user, _, err := tool.BuildRequest(tools.ToolInput{Images: refs, Extra: extra})
 	if err != nil {

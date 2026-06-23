@@ -49,6 +49,27 @@ const promptDescribeDiagram = `Describe this technical diagram. Report:
 (4) A one-sentence summary of what the diagram represents.
 Use Markdown headings for each section.`
 
+// promptDescribeDiagramMermaid emits editable Mermaid markup (G5) — an
+// image → round-trippable diagram.
+const promptDescribeDiagramMermaid = `You are an expert at reading technical diagrams. Convert the diagram in this image into Mermaid markup that reproduces it.
+Rules:
+- Detect the diagram kind and emit the matching Mermaid type: flowchart TD/LR (boxes and arrows), sequenceDiagram (actors and interactions across lifelines), classDiagram (UML classes), erDiagram (entities and relationships), stateDiagram-v2 (state machines), or graph.
+- Output ONLY a fenced mermaid code block (triple-backtick then "mermaid") containing valid Mermaid. No prose before or after.
+- Preserve every named component and every labeled connection. Use the exact labels from the image as node IDs and edge labels (quote them if they contain spaces or special characters).
+- Keep node and edge text verbatim. If the image is not a diagram, emit an empty mermaid block with a one-line %% comment explaining why.`
+
+// diagramPromptFor returns the system prompt for describe_diagram given the
+// requested output mode. "prose" (the default) is the canonical
+// promptDescribeDiagram returned by SystemPrompt(); mermaid is the G5 mode.
+func diagramPromptFor(mode string) string {
+	switch mode {
+	case "mermaid":
+		return promptDescribeDiagramMermaid
+	default:
+		return promptDescribeDiagram
+	}
+}
+
 // promptDescribeChart is for data visualizations. Terse, structured output
 // for downstream numerical reasoning.
 const promptDescribeChart = `You are a data analyst. Describe the chart in this image. Report:
@@ -58,6 +79,35 @@ const promptDescribeChart = `You are a data analyst. Describe the chart in this 
 (4) Notable values, outliers, and inflection points (with numbers).
 (5) Overall trend.
 Use Markdown headings. Be terse.`
+
+// promptDescribeChartCSV emits the underlying numbers as CSV (G4). The fenced
+// ```csv block is designed to paste straight into a spreadsheet.
+const promptDescribeChartCSV = `You are a data analyst. Extract the underlying data of the chart in this image as CSV.
+Output ONLY a fenced csv code block (triple-backtick then "csv") containing:
+- A header row: the first column is the category or x-axis label, followed by one column per data series named exactly as in the legend.
+- One data row per category/point. Numeric values only — no units, no thousands separators, no currency symbols, no percent signs inside the number.
+Estimate any value that must be read off the axes. Preserve the left-to-right / category order shown. Do not include any prose, explanation, or commentary outside the csv block.`
+
+// promptDescribeChartJSON emits the underlying numbers as a JSON object (G4),
+// returned as real structured content for machine consumers.
+const promptDescribeChartJSON = `You are a data analyst. Extract the underlying data of the chart in this image as a single JSON object.
+Output ONLY valid JSON — no code fence, no prose, nothing before or after — with this shape:
+{"chart_type": "bar|line|pie|scatter|heatmap", "title": "", "axes": {"x": {"label": "", "unit": ""}, "y": {"label": "", "unit": ""}}, "series": [{"name": "", "points": [["x", 0]]}]}
+Rules: numeric values are JSON numbers (not strings). "title" is the visible chart title or "". Estimate any value read off the axes. Each series has a name and a points array of [x, y] pairs. Keep the order shown in the chart.`
+
+// chartPromptFor returns the system prompt for describe_chart given the
+// requested output mode. "prose" (the default) is the canonical
+// promptDescribeChart returned by SystemPrompt(); csv/json are the G4 modes.
+func chartPromptFor(mode string) string {
+	switch mode {
+	case "csv":
+		return promptDescribeChartCSV
+	case "json":
+		return promptDescribeChartJSON
+	default:
+		return promptDescribeChart
+	}
+}
 
 // promptDiagnoseError is for stack-trace / exception screenshots. The
 // constrained output budget (800 tokens) forces the model to be terse.
