@@ -24,11 +24,6 @@ model that does.
 
 Run `localvision doctor` to see which model applies to your hardware.
 
-> **Note (49+ GB Macs):** `doctor`'s "Default model" line may show `qwen3.6-27b`
-> on very large machines (the generic default falls back to the largest fitting
-> model). Actual tool calls still use `qwen3-vl-8b` (the per-tool selector). This
-> is a display-only quirk; pass `--model` to use a different model.
-
 ### Cache layout
 
 Model files are cached per-model under `~/.localvision/models/<model-id>/` (e.g.
@@ -158,7 +153,7 @@ Given the catalog and detected hardware:
 1. Compute `available = effective_memory - 4 GB safety margin - 1 GB resident llama-server` (`effective_memory` = VRAM on a discrete GPU, else unified/system RAM).
 2. Filter to models where `min_vram_gb <= available`.
 3. **Per-tool model** (used for actual tool calls): among fitting models, those whose `preferred_for` contains the tool ID, in deterministic order — **largest `min_vram_gb` first** (most capable wins), then `display_name` lexically. If none list the tool, fall through to the default.
-4. **Default model** (fallback + `doctor` display): the `preferred=true` entry whose `hardware_tier` matches the user's tier among the fitting set; if no tier-preferred fits, the largest fitting model (same deterministic order).
+4. **Default model** (fallback + `doctor` display): the `preferred=true` entry whose `hardware_tier` matches the user's tier among the fitting set; if no tier-preferred fits, the largest fitting model that lists at least one tool (so the default matches what tools use); if none list a tool, the largest fitting model overall.
 5. If nothing fits, the catalog returns `ErrNoFittingModel` and the MCP surfaces a structured error to the client (never crashes).
 
 In the v0.5.1 catalog only `qwen3-vl-8b` lists tools, so step 3 picks it

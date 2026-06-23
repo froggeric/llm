@@ -91,13 +91,16 @@ func sortDeterministic(in []modelEntry) {
 	})
 }
 
-// selectDefault implements the DefaultModel algorithm from PLAN-v2.md:
+// selectDefault implements the DefaultModel algorithm:
 //
 //  1. Filter to fitting models.
 //  2. If empty: return ErrNoFittingModel.
 //  3. If the Preferred=true entry whose HardwareTier matches hw.Tier is in
 //     the fitting set, return its ID.
-//  4. Otherwise, return the first entry in deterministic order.
+//  4. Otherwise, prefer the largest fitting model that lists at least one
+//     tool in preferred_for (so the generic default matches what tool calls
+//     actually use); if none lists a tool, fall back to the largest fitting
+//     model overall.
 //
 // safetyMarginGB is configurable so callers can pass through the user's
 // config. Tests pass 0 to get the default.
@@ -110,7 +113,7 @@ func selectDefault(c *Catalog, hw HardwareInfo, safetyMarginGB float64) (string,
 		)
 	}
 	// Step 3: look for the tier's preferred entry among fitting candidates.
-	// Validate has already enforced "exactly one preferred per tier", so
+	// Validate has already enforced "at most one preferred per tier", so
 	// finding one matching (tier, preferred=true) is unambiguous.
 	for _, e := range candidates {
 		if e.spec.Preferred && e.spec.HardwareTier == hw.Tier {
@@ -118,9 +121,19 @@ func selectDefault(c *Catalog, hw HardwareInfo, safetyMarginGB float64) (string,
 		}
 	}
 	// Step 4: deterministic fallback. fittingModels sorts by MinVramGb
-	// DESCENDING, so candidates[0] is the most capable model that fits.
-	// On a 96 GB Mac with our 2-model catalog, this returns Qwen3-VL 8B
-	// (the better model) rather than Qwen3-VL 4B (the smaller one).
+	// DESCENDING, so iteration is largest-first. Prefer models that list at
+	// least one tool (preferred_for non-empty): a model that lists no tool is
+	// opt-in (--model only) and should not become the default just because it
+	// is the largest. If none lists a tool, take the largest fitting model.
+	var listed []modelEntry
+	for _, e := range candidates {
+		if len(e.spec.PreferredFor) > 0 {
+			listed = append(listed, e)
+		}
+	}
+	if len(listed) > 0 {
+		return listed[0].id, nil
+	}
 	return candidates[0].id, nil
 }
 

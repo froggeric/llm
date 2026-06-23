@@ -9,6 +9,20 @@ once it reaches v1.0.0. Until then, minor changes may break compatibility.
 Tags for this subdirectory follow the Go module convention
 `mcp/localvision/v<MAJOR>.<MINOR>.<PATCH>`.
 
+## [0.5.2] - 2026-06-23
+
+Small follow-up to v0.5.1.
+
+### Fixed
+
+- **`doctor` now shows the model tools actually use on large machines.** On
+  49+ GB Macs, v0.5.1's `doctor` reported `qwen3.6-27b` as the "Default model"
+  (the generic default fell back to the largest fitting model), even though
+  tool calls used `qwen3-vl-8b`. The default-selection fallback now prefers a
+  fitting model that lists tools (`preferred_for` non-empty) over a larger
+  opt-in model that lists none — so the displayed default matches real tool
+  selection on every hardware tier. (`--model` still selects any catalog model.)
+
 ## [0.5.1] - 2026-06-23
 
 Models + selection. Two fixes driven by user-reported pain: model files kept
@@ -329,7 +343,8 @@ First usable release. macOS Apple Silicon only (Linux/Windows stubbed for v0.2).
 - `InternVL3.5 8B` was considered but dropped from v0.1 — no clean upstream
   GGUF source and it ranked last in our 7-model benchmark.
 
-[Unreleased]: https://github.com/froggeric/llm/compare/v0.5.1
+[Unreleased]: https://github.com/froggeric/llm/compare/v0.5.2
+[v0.5.2]: https://github.com/froggeric/llm/releases/tag/v0.5.2
 [v0.5.1]: https://github.com/froggeric/llm/releases/tag/v0.5.1
 [v0.5.0]: https://github.com/froggeric/llm/releases/tag/v0.5.0
 [v0.4.0]: https://github.com/froggeric/llm/releases/tag/v0.4.0

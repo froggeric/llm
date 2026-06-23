@@ -385,6 +385,26 @@ func TestDefaultModel_FallsBackToLargest(t *testing.T) {
 	}
 }
 
+func TestDefaultModel_PrefersToolListingOverLarger(t *testing.T) {
+	// When no tier-preferred fits, the default prefers a fitting model that
+	// lists tools (preferred_for non-empty) over a larger model that lists
+	// none. This keeps the generic default aligned with what tool calls use:
+	// an opt-in, no-tool model should not win just by being biggest. (v0.5.2:
+	// the builtin qwen3.6-27b lists no tools; on a 96 GB Mac the default must
+	// still be the tool-listing qwen3-vl-8b, not the 27b.)
+	c := &Catalog{
+		SchemaVersion: 1,
+		Models: map[string]ModelSpec{
+			"big-optin": {DisplayName: "Big", MinVramGb: 20, HardwareTier: TierHighEnd, PreferredFor: []string{}, GGUF: ggufURL, Mmproj: mmprojURL, GGUFSha256: validHash64, MmprojSha256: validHash64, Ctx: 4096, License: "MIT"},
+			"serves":    {DisplayName: "Serves", MinVramGb: 6, HardwareTier: TierHighEnd, PreferredFor: []string{"read_image"}, GGUF: ggufURL, Mmproj: mmprojURL, GGUFSha256: validHash64, MmprojSha256: validHash64, Ctx: 4096, License: "MIT"},
+		},
+	}
+	hw := HardwareInfo{TotalMemoryGB: 96, Tier: TierHighEnd}
+	id, err := c.DefaultModel(hw)
+	require.NoError(t, err)
+	assert.Equal(t, "serves", id, "default should prefer the tool-listing model over the larger opt-in one")
+}
+
 func TestDefaultModel_TieBreakByDisplayName(t *testing.T) {
 	// Two models with same MinVramGb: alphabetical by DisplayName.
 	c := &Catalog{

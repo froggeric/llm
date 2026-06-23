@@ -19,7 +19,7 @@ the `llama-server` subprocess binds to `127.0.0.1` only.
 > **[github.com/froggeric/llm/issues](https://github.com/froggeric/llm/issues)**.
 > As a workaround, `default_model` in the config overrides any misdetection.
 
-> **Status:** **v0.5.1** — cross-platform: runs on macOS (Apple Silicon/Intel),
+> **Status:** **v0.5.2** — cross-platform: runs on macOS (Apple Silicon/Intel),
 > Linux, and Windows (x86_64 + arm64). One-shot CLI (`localvision img.png --type
 > ocr`), `--format`, batch (`--output-dir --meta`), a `setup` wizard, a
 > cross-platform HEIC/WEBP converter chain, 10 vision tools (including
