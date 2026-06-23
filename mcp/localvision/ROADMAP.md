@@ -58,80 +58,29 @@ ride into any release.
 
 ## Roadmap at a glance
 
-All themes (A–H) and tasks, grouped by release phase, colored by status:
-🟢 **shipped** · 🟡 **next up** · ⚪ **planned** · 🔴 **deferred**. Arrows trace the
-release order; dotted lines mark the cross-cutting "any release" pools.
+All themes (A–H) and tasks, one node per release phase, read top → bottom.
+Each node is colored by the phase's status and lists its tasks with a per-task
+marker: ✅ shipped · 🚧 next up · 📋 planned · 🔴 deferred. Dotted lines mark the
+cross-cutting "any release" pools.
 
 ```mermaid
-flowchart LR
+flowchart TD
     classDef done fill:#d4edda,stroke:#28a745,color:#155724,stroke-width:2px
     classDef next fill:#fff3cd,stroke:#d39e00,color:#6b4f00,stroke-width:2px
     classDef planned fill:#eef1f3,stroke:#6c757d,color:#343a40
-    classDef defer fill:#f8d7da,stroke:#dc3545,color:#721c24
 
-    subgraph V2["v0.2.0 — Foundation & distribution"]
-        A["A Release hygiene: A1 CI, A2 llama-server, A3 naming, A4 docs, A5 delivery"]:::done
-        B1["B1 GitHub Releases"]:::done
-        B2["B2 Homebrew"]:::done
-        C6["C6 llama.cpp params"]:::done
-    end
-    subgraph V3["v0.3.0 — Standalone CLI"]
-        C["C One-shot CLI: C1 setup/query, C2 type flag, C3 format, C4 batch, C5 model override"]:::done
-    end
-    subgraph V4["v0.4.0 — Cross-platform"]
-        D["D Linux/Windows: D1 Linux GPU, D2 Windows GPU, D3 CI matrix, D4 6-target xc, D5 HEIC/WEBP"]:::done
-    end
-    subgraph V5["v0.5.x — Breadth & polish (SHIPPED)"]
-        G8["G8 image_to_prompt tool"]:::done
-        E6["E6 MCP temp-file cleanup"]:::done
-        M1["qwen3-vl-8b default for all + cache-collision fix"]:::done
-        M2["doctor default-model display"]:::done
-        E2["E2 auto-reap orphans"]:::defer
-    end
-    subgraph V6["v0.6.0 — Reach (NEXT)"]
-        F1["F1 HTTP/REST API (unlocks F2 OpenAI-compat, F16 web UI)"]:::next
-        E1["E1 streaming progress"]:::next
-        F8["F8 doctor selftest"]:::planned
-        F13["F13 model management"]:::planned
-        F14["F14 MCP resources/prompts"]:::planned
-        F15["F15 local stats"]:::planned
-    end
-    subgraph ANY["any release — cheap high-value wins"]
-        G4["G4 chart to CSV"]:::planned
-        G5["G5 diagram to Mermaid"]:::planned
-        F9["F9 clipboard in/out"]:::planned
-        F3["F3 result cache"]:::planned
-        E3["E3 compute-hashes"]:::planned
-        E4["E4 tool-name prefix"]:::planned
-        E7["E7 pin goreleaser + lint"]:::planned
-        F11["F11 doctor fix"]:::planned
-        F12["F12 shell completions"]:::planned
-    end
-    subgraph V7["v0.7.0 — Reliability"]
-        F4["F4 constrained decoding (GBNF)"]:::planned
-        F5["F5 multi-sample consensus"]:::planned
-        F6["F6 cascade routing"]:::planned
-        F7["F7 self-verification"]:::planned
-        E5["E5 Ollama coordination"]:::planned
-    end
-    subgraph V8["v0.8+ — New modalities"]
-        G3["G3 PDF / documents"]:::planned
-        G2["G2 UI to artifact/code"]:::planned
-        G6["G6 coordinate grounding"]:::planned
-        G7["G7 compare visual-diff"]:::planned
-        G1["G1 video analysis"]:::planned
-        F10["F10 watch mode"]:::planned
-    end
-    subgraph DIST["distribution — any release"]
-        B3["B3 Claude Code marketplace"]:::planned
-        B4["B4 harness auto-install"]:::planned
-    end
-    subgraph V1["v1.0+ — Far future / research"]
-        H["H: H1 tiny model, H2 search, H3 screen capture, H4 vision agent, H5 3D"]:::planned
-    end
+    V2["v0.2.0 — Foundation &amp; distribution<br/>✅ A release hygiene: A1 CI, A2 llama-server, A3 naming, A4 docs, A5 delivery<br/>✅ B1 GitHub Releases, B2 Homebrew, C6 llama.cpp params"]:::done
+    V3["v0.3.0 — Standalone CLI<br/>✅ C1 setup/query, C2 type, C3 format, C4 batch, C5 model override"]:::done
+    V4["v0.4.0 — Cross-platform<br/>✅ D1 Linux GPU, D2 Windows GPU, D3 CI matrix, D4 6-target xc, D5 HEIC/WEBP"]:::done
+    V5["v0.5.x — Breadth &amp; polish (shipped)<br/>✅ G8 image_to_prompt, E6 MCP temp cleanup<br/>✅ qwen3-vl-8b default for all + cache-collision fix, doctor display<br/>🔴 E2 auto-reap orphans (deferred)"]:::done
+    V6["v0.6.0 — Reach (next up)<br/>🚧 F1 HTTP/REST API — unlocks F2 OpenAI-compat + F16 web UI<br/>🚧 E1 streaming progress<br/>📋 F8 doctor selftest, F13 model mgmt, F14 resources/prompts, F15 local stats"]:::next
+    ANY["any release — cheap high-value wins<br/>📋 G4 chart-to-CSV, G5 diagram-to-Mermaid, F9 clipboard, F3 result cache<br/>📋 E3 compute-hashes, E4 tool-name prefix, E7 pin goreleaser+lint, F11 doctor fix, F12 completions"]:::planned
+    V7["v0.7.0 — Reliability<br/>📋 F4 constrained decoding (GBNF), F5 consensus, F6 cascade, F7 self-verify, E5 Ollama coord"]:::planned
+    V8["v0.8+ — New modalities<br/>📋 G3 PDF, G2 UI-to-artifact, G6 grounding, G7 visual-diff, G1 video, F10 watch mode"]:::planned
+    DIST["distribution — any release<br/>📋 B3 Claude Code marketplace, B4 harness auto-install"]:::planned
+    V1["v1.0+ — Far future / research<br/>📋 H1 tiny model, H2 search, H3 screen capture, H4 vision agent, H5 3D"]:::planned
 
-    V2 --> V3 --> V4 --> V5 --> V6
-    V6 --> V7 --> V8 --> V1
+    V2 --> V3 --> V4 --> V5 --> V6 --> V7 --> V8 --> V1
     V5 -.-> ANY
     V6 -.-> ANY
     V8 -.-> DIST
