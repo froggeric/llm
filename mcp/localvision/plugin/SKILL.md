@@ -5,7 +5,7 @@ description: Use whenever the user references an image (file path, screenshot, p
 
 # Image reading (localvision)
 
-The `localvision` MCP server provides 10 vision tools backed by a local `llama.cpp` subprocess. Use them when you (the assistant) need information from an image you cannot see, or when the user explicitly asks for local analysis.
+The `localvision` MCP server provides 11 vision tools backed by a local `llama.cpp` subprocess. Use them when you (the assistant) need information from an image you cannot see, or when the user explicitly asks for local analysis.
 
 ## When to invoke
 
@@ -28,12 +28,13 @@ Pick the **most specific** tool that matches the user's intent. More specific to
 
 | User's image is... | Tool |
 |---|---|
+| A **PDF document** (paper, report, slides, scan) | `read_document` |
 | Code in an editor, terminal, photograph, whiteboard | `extract_code` |
 | Text to transcribe verbatim (receipts, documents, signs) | `extract_text` |
 | Tables (spreadsheets, CSVs, database views) | `extract_table` |
 | A UI screenshot, design mock, app window | `describe_ui` |
-| Architecture / ER / flowchart / sequence diagram | `describe_diagram` |
-| A chart, graph, plot, or data visualization | `describe_chart` |
+| Architecture / ER / flowchart / sequence diagram | `describe_diagram` (pass `output: "mermaid"` for editable markup) |
+| A chart, graph, plot, or data visualization | `describe_chart` (pass `output: "csv"` or `"json"` for the underlying numbers) |
 | Terminal error, stack trace, exception dialog | `diagnose_error` |
 | An image to reproduce as a text-to-image (diffusion) prompt | `image_to_prompt` |
 | Two images to diff (before/after, regression) | `compare_images` |

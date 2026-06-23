@@ -11,14 +11,70 @@ Tags for this subdirectory follow the Go module convention
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-06-24
+
+Tools & UX: a new document tool, structured chart/diagram output, and streaming
+progress. See [`ROADMAP.md`](./ROADMAP.md) (G3, G4, G5, E1).
+
+### Added
+
+- **`read_document` tool** (G3): rasterize a PDF and summarize it in one
+  inference — document summary, per-page highlights (critical text transcribed),
+  tables/figures called out. New 11th tool (`localvision paper.pdf --type doc`).
+  Rasterization uses an opportunistic, CLI-only, `$PATH`-discovered chain
+  (`pdftoppm` → `mutool` → `magick`/`convert` → `gs`); none is bundled. Up to 20
+  pages (longer documents are truncated, noted in the output). Magic-byte
+  detection means a `data:`-URI PDF written to a `.bin` temp is recognized too.
+  Requires a rasterizer on `$PATH` (poppler/mupdf/imagemagick/ghostscript).
+- **Structured chart output** (G4): `describe_chart` gains an optional `output`
+  argument — `csv` (underlying numbers, paste into a spreadsheet) or `json` (a
+  JSON object of the data, returned as MCP structured content). Default `prose`
+  is unchanged. CLI: `--output-mode csv|json`.
+- **Editable diagram markup** (G5): `describe_diagram` gains `output=mermaid` —
+  editable Mermaid markup that reproduces the diagram. CLI: `--output-mode mermaid`.
+- **Streaming progress** (E1): the CLI spinner and MCP `notifications/progress`
+  now report real progress instead of going silent for 30–70 s. Downloads
+  (model files, the ~80 MB `llama-server` binary) stream bytes (`%` + MiB);
+  inference reports phase transitions and a climbing elapsed heartbeat.
+  MCP clients opt in by sending `_meta.progressToken`; no token = no
+  notifications (byte-for-byte today). Fire-and-forget with a 2 s timeout so a
+  slow client can never stall a call. (Real token-by-token SSE output streaming
+  is deferred to v0.7.)
+
+### Changed
+
+- Tool count is now **11**. The `read_document` tool is added to the
+  `qwen3-vl-8b` catalog entry's `preferred_for`.
+- `describe_chart`/`describe_diagram` `BuildRequest` return a mode-specific
+  prompt when a non-prose `output` is requested; the default (`prose`) still
+  returns `SystemPrompt()` (backward compatible).
+
 ### Internal
 
-- Addressed the senior code-review findings for the v0.5 series (which passed
-  with zero HIGH/MEDIUM): corrected stale "9 tools" comments and misleading
-  per-tool model references across `internal/tools`, and renamed the MCP test
-  stub fixture and tests (`nineStubTools` → `tenStubTools`,
-  `TestServerRegistersNineTools`/`TestToolsListReturnsNineTools` → `…TenTools`)
-  to match the 10-tool registry. No behavior change.
+- New `internal/progress` package: a context-carried, nil-safe progress Sink
+  (`Update`/`WithSink`/`SinkFrom`/`Report`/`Heartbeat`/`Throttled`). Threaded
+  through the lifecycle (downloads + phases), the executor (inference
+  heartbeat), the MCP `callTool` (per-request `NotifyProgress` sink), and the
+  CLI spinner — without changing the `tools.Executor` interface or its mocks.
+- New `tools.Expander` interface + `ExpandInput` + `RegisterTemp`: an optional
+  hook a tool implements to turn one document input into multiple image refs
+  (`read_document` rasterizes PDFs). The 10 existing tools pay nothing.
+- `llama.LifecycleManager.Phase` now takes a `context.Context` so per-request
+  progress sinks reach the download/load/ready transitions. `Options.PhaseHook`
+  is retained for back-compat (the CLI spinner still uses it for per-phase timing).
+- `tools.CleanupImageRef` now also reaps a now-empty rasterizer out dir (never
+  the shared `os.TempDir()`), so PDF page temps don't leak their parent dir.
+
+### Known limitations
+
+- `read_document` needs a PDF rasterizer on `$PATH`; on a host with none, the
+  tool errors with installable options named. The rasterizer argv is
+  cross-platform by inspection; CI exercises it only via fakes (no real
+  rasterizer in the 3-OS matrix).
+- Multi-page PDFs are sent to the model in one inference; very long documents
+  are capped at 20 pages (per-page batching is a future enhancement).
+- Inference progress is an elapsed heartbeat, not real token streaming (SSE is
+  a v0.7 item).
 
 ## [0.5.2] - 2026-06-23
 
@@ -354,7 +410,8 @@ First usable release. macOS Apple Silicon only (Linux/Windows stubbed for v0.2).
 - `InternVL3.5 8B` was considered but dropped from v0.1 — no clean upstream
   GGUF source and it ranked last in our 7-model benchmark.
 
-[Unreleased]: https://github.com/froggeric/llm/compare/v0.5.2
+[Unreleased]: https://github.com/froggeric/llm/compare/v0.6.0
+[v0.6.0]: https://github.com/froggeric/llm/releases/tag/v0.6.0
 [v0.5.2]: https://github.com/froggeric/llm/releases/tag/v0.5.2
 [v0.5.1]: https://github.com/froggeric/llm/releases/tag/v0.5.1
 [v0.5.0]: https://github.com/froggeric/llm/releases/tag/v0.5.0

@@ -5,7 +5,7 @@ vision-language model tools to text-only coding LLMs (Claude Code, Codex CLI,
 etc.).
 
 **Status:** v0.1.0 shipped; `main` carries the unreleased v0.2 catalog refresh.
-All interface contracts are implemented — the 9 tools, the `llama.cpp`
+All interface contracts are implemented — the 11 tools, the `llama.cpp`
 lifecycle, the model catalog, and hardware detection are live. For the forward
 plan see [`ROADMAP.md`](./ROADMAP.md); for shipped state see
 [`CHANGELOG.md`](./CHANGELOG.md).

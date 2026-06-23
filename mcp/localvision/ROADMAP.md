@@ -18,18 +18,29 @@ item isn't in this file, it isn't planned.
 
 ## Where we are now
 
-**v0.5.2 shipped.** Themes **A–D are done** and the **v0.5 series** (breadth &
-polish) shipped across three point releases. `localvision` builds and runs on
-macOS (Apple Silicon/Intel), Linux, and Windows (x86_64 + arm64) — all six
-targets cross-compiled from one runner (pure Go, CGO off). Linux/Windows detect
-CUDA/ROCm/NVIDIA GPUs and size model selection against VRAM; a first-wins
-converter chain (`sips → magick → heif-convert → ffmpeg`) handles HEIC/WEBP
-everywhere; CI runs on ubuntu/windows/macos.
+**v0.6.0 shipped.** Themes **A–D are done**, the **v0.5 series** (breadth &
+polish) shipped across three point releases, and **v0.6 (tools & UX)** shipped
+G3 + G4 + G5 + E1. `localvision` builds and runs on macOS (Apple Silicon/Intel),
+Linux, and Windows (x86_64 + arm64) — all six targets cross-compiled from one
+runner (pure Go, CGO off). Linux/Windows detect CUDA/ROCm/NVIDIA GPUs and size
+model selection against VRAM; a first-wins converter chain
+(`sips → magick → heif-convert → ffmpeg`) handles HEIC/WEBP everywhere; CI runs
+on ubuntu/windows/macos.
 
 What **works** (shipped):
-- **10 MCP tools** over the MCP `run` command — incl. `image_to_prompt` (v0.5.0).
-- The full **one-shot CLI**: `--type` (10 tools), `--format`, batch
-  (`--output`/`--output-dir`/`--meta`), the `setup` wizard.
+- **11 MCP tools** over the MCP `run` command — incl. `image_to_prompt` (v0.5.0)
+  and `read_document` (v0.6.0).
+- The full **one-shot CLI**: `--type` (11 tools), `--format`, `--output-mode`
+  (structured chart/diagram), batch (`--output`/`--output-dir`/`--meta`), the
+  `setup` wizard.
+- **Structured chart output** (G4, v0.6.0): `describe_chart --output-mode csv|json`.
+  **Editable diagram markup** (G5, v0.6.0): `describe_diagram --output-mode mermaid`.
+- **PDF ingestion** (G3, v0.6.0): `read_document` rasterizes a PDF via a
+  `$PATH`-discovered chain (`pdftoppm → mutool → magick/convert → gs`) and
+  summarizes it in one inference.
+- **Streaming progress** (E1, v0.6.0): the CLI spinner and MCP
+  `notifications/progress` report real byte (downloads) + elapsed (inference)
+  progress instead of going silent. (Real token-by-token SSE is deferred to v0.7.)
 - **`qwen3-vl-8b` (Q8) as the default model for all tools** (v0.5.1, re-analyzed
   quality+speed; the 27B champion is opt-in via `--model`).
 - Model files **cached per-model** with auto-migration (v0.5.1 fixed a bug that
@@ -42,22 +53,20 @@ What **works** (shipped):
 - Installs via **Homebrew** (macOS), `curl|sh` (darwin/linux), `go install`
   (all platforms).
 
-What's **next** — the v0.5 breadth tier is shipped. The next release tier is
-**v0.6 — tools & UX** (see **Sequencing & priorities** below). Two priorities:
-- **Improve / add tools** (top priority) — structured outputs for the existing
-  chart & diagram tools (G4 chart→CSV/JSON, G5 diagram→Mermaid) and a new
-  document modality (G3 PDF/pages).
-- **E1 streaming progress** — for **both** inference (every 30–70 s call is
-  silent today) **and** downloads (model/binary fetches during first-run setup).
-  The single biggest quality-of-life win.
+What's **next** — the v0.6 tools & UX tier is shipped. The next release tier is
+**v0.7 — reliability** (see **Sequencing & priorities** below):
+- **F4 constrained decoding (GBNF)** — guarantee well-formed JSON/CSV so the
+  structured-output tools (G4/G5) are reliable, not prompt-begged.
+- **SSE output streaming** — real token-by-token progress (pulled forward from
+  v0.6's elapsed heartbeat), reinforcing E1.
+- **F5 multi-sample consensus** (provisional) and **F7 self-verification**.
 
-Explicitly **not** this release (see **Server & process model**): a background
-daemon / HTTP service (F1) — the current model is good enough; and clipboard
-(F9) / result cache (F3) are low-value and parked.
+Explicitly **not** pursuing (see **Server & process model**): a background
+daemon / HTTP service (F1) — the current model is good enough; clipboard (F9) /
+result cache (F3) are low-value and parked.
 
-After that: **v0.7 reliability** (F4 constrained decoding, F5 consensus), then
-**v0.8+ new modalities** (UI→code, video, grounding), and further out a
-**native GUI frontend**.
+After v0.7: **v0.8+ new modalities** (UI→code, video, grounding), and further
+out a **native GUI frontend**.
 
 ---
 
@@ -109,9 +118,9 @@ flowchart TD
     V3["v0.3.0 — Standalone CLI<br/>✅ C1 setup/query, C2 type, C3 format, C4 batch, C5 model override"]:::done
     V4["v0.4.0 — Cross-platform<br/>✅ D1 Linux GPU, D2 Windows GPU, D3 CI matrix, D4 6-target xc, D5 HEIC/WEBP"]:::done
     V5["v0.5.x — Breadth &amp; polish (shipped)<br/>✅ G8 image_to_prompt, E6 MCP temp cleanup<br/>✅ qwen3-vl-8b default for all + cache-collision fix, doctor display<br/>🔴 E2 auto-reap orphans (deferred)"]:::done
-    V6["v0.6.0 — Tools &amp; UX (next up)<br/>🚧 G4 chart-to-CSV, G5 diagram-to-Mermaid, G3 PDF/docs<br/>🚧 E1 streaming progress (inference + downloads)<br/>📋 F8 doctor selftest, F12 completions, E3 compute-hashes"]:::next
+    V6["v0.6.0 — Tools &amp; UX (shipped)<br/>✅ G4 chart-to-CSV/JSON, G5 diagram-to-Mermaid, G3 read_document (PDF)<br/>✅ E1 streaming progress (downloads + inference heartbeat; SSE deferred to v0.7)"]:::done
     ANY["any release — hygiene<br/>📋 E3 compute-hashes, E4 tool-name prefix, E7 pin goreleaser+lint, F11 doctor fix, F12 completions<br/>parked: F3 cache, F9 clipboard — declined: F1 daemon, parallel batch"]:::planned
-    V7["v0.7.0 — Reliability<br/>📋 F4 constrained decoding (GBNF), F5 consensus (provisional: 8B + high-variance cats only), F6 cascade, F7 self-verify, E5 Ollama coord"]:::planned
+    V7["v0.7.0 — Reliability (next up)<br/>🚧 F4 constrained decoding (GBNF), F5 consensus (provisional: 8B + high-variance cats only), F7 self-verify<br/>🚧 SSE output streaming (pulled forward from v0.6), E5 Ollama coord"]:::next
     V8["v0.8+ — New modalities &amp; native GUI<br/>📋 G2 UI-to-artifact, G6 grounding, G7 visual-diff, G1 video, F10 watch<br/>📋 F16 native GUI frontend"]:::planned
     DIST["distribution — any release<br/>📋 B3 Claude Code marketplace, B4 harness auto-install"]:::planned
     V1["v1.0+ — Far future / research<br/>📋 H1 tiny model, H2 search, H3 screen capture, H4 vision agent, H5 3D"]:::planned
@@ -357,10 +366,16 @@ misdetection. DirectML detection on Windows is deferred.
 
 The long tail of known limitations, mostly small, mostly independent.
 
-- **E1.** Streaming progress for long operations — **both** inference
-  (`notifications/progress` during each 30–70 s `tools/call`) **and** downloads
-  (model/binary fetch progress during first-run setup). Today both are silent.
-  `M` *(v0.6 headline)*
+- **E1.** ✅ **Done in v0.6.0.** Streaming progress for long operations — **both**
+  downloads (model/binary fetch bytes, `%` + MiB) **and** inference (phase
+  transitions + a climbing elapsed heartbeat), surfaced to the CLI spinner and
+  MCP `notifications/progress` (clients opt in via `_meta.progressToken`; no
+  token = no notifications). Implementation: a ctx-carried, nil-safe progress
+  Sink (`internal/progress`) threaded through the lifecycle, executor, and MCP
+  `callTool`, with no change to the `tools.Executor` interface. Real
+  token-by-token **SSE output streaming is deferred to v0.7** (the elapsed
+  heartbeat already kills the silence; SSE pulls forward alongside F4 constrained
+  decoding). `M`
 - **E2.** Auto-reap orphan `llama-server` subprocesses on startup (today:
   manual via `pkill -fa llama-server`; `doctor` does not yet detect them).
   *Deferred from v0.5.0:* investigation showed no orphan-detection code exists,
@@ -485,13 +500,20 @@ has 3 dedicated tools zai lacks. Two real gaps:
   **code** (HTML/Tailwind/React), a **design spec**, a **rebuild prompt**, or a
   description. Fills the `ui_to_artifact` gap; `describe_ui` becomes the
   description mode of a more powerful tool. `M/L`
-- **G3. PDF / multi-page / document ingestion** — rasterize PDF/DOCX/slides
-  pages (e.g. `pdftoppm`/`mutool`), process per-page, summarize. Extends scope
-  from images to documents. `M`
-- **G4. `describe_chart` → structured data** — return the underlying numbers as
-  CSV/JSON, not just prose. "Get this graph into my spreadsheet." `S`
-- **G5. `describe_diagram` → editable markup** — emit Mermaid/PlantUML/graph
-  JSON. Image → round-trippable, editable diagram. `S`
+- **G3. PDF / multi-page / document ingestion** — ✅ **Done in v0.6.0** as the
+  `read_document` tool. Rasterizes a PDF via a `$PATH`-discovered chain
+  (`pdftoppm`/`mutool`/`magick`/`convert`/`gs`), sends the page images to the
+  model in one inference, and summarizes (per-page highlights + tables/figures).
+  Up to 20 pages. No decoder bundled. DOCX/slides would need LibreOffice — not in
+  v0.6 (PDF only); revisit if demand appears. `M`
+- **G4. `describe_chart` → structured data** — ✅ **Done in v0.6.0.** An optional
+  `output` argument returns the underlying numbers as CSV or JSON (not just
+  prose). "Get this graph into my spreadsheet." JSON is surfaced as MCP
+  structured content. `S`
+- **G5. `describe_diagram` → editable markup** — ✅ **Done in v0.6.0.** An
+  optional `output=mermaid` emits editable Mermaid markup that reproduces the
+  diagram. Image → round-trippable, editable diagram. (PlantUML/graph JSON
+  deferred unless asked.) `S`
 - **G6. Coordinate grounding** — have `describe_ui`/`describe_diagram` return
   bounding boxes (Qwen3-VL supports grounding) so agents can crop/click/replay. `M`
 - **G7. `compare_images` → UI regression + visual diff** — specialize the
@@ -535,10 +557,11 @@ v0.5.0 (G8 image→generation-prompt tool + E6 MCP temp-file cleanup), v0.5.1
 fix for the model-file re-download bug — a shared `mmproj-F16.gguf` basename
 collision — by caching models per-model-subdirectory with auto-migration), and
 v0.5.2 (a `doctor` default-model display fix so it matches tool selection on
-every hardware tier). The remaining work is reorganized into value-prioritized
-releases: front-load cheap high-impact items, build reach infrastructure next,
-then reliability, then new modalities. Effort in parentheses (`XS/S/M/L`);
-versions are advisory.
+every hardware tier). **v0.6.0 shipped tools & UX**: G3 (`read_document` PDF
+ingestion), G4 (chart → CSV/JSON), G5 (diagram → Mermaid), and E1 (streaming
+progress for downloads + inference; SSE deferred to v0.7). The remaining work is
+reorganized into value-prioritized releases: reliability next, then new
+modalities. Effort in parentheses (`XS/S/M/L`); versions are advisory.
 
 ### v0.5.x — Breadth & polish  *(mostly XS–S; high value-per-effort)* — **SHIPPED**
 - ✅ **v0.5.0** — **G8** image→generation-prompt (10th tool, `--type prompt` /
@@ -558,21 +581,22 @@ Hygiene items cherry-pick freely into any release:
 - *Parked (low value, for now):* F3 result cache · F9 clipboard
 - *Declined:* F1 daemon/HTTP · F2 OpenAI-compat · parallel batch processing
 
-### v0.6.0 — Tools & UX  *(S–M; concrete, demand-driven)*
-Top priority is **more / better tools**; the one UX item is **streaming**.
-- **G4 `describe_chart` → CSV/JSON `S`** — return the underlying numbers, not
-  just prose. "Get this graph into my spreadsheet."
-- **G5 `describe_diagram` → Mermaid `S`** — emit editable markup. Image →
-  round-trippable diagram.
-- **G3 PDF / multi-page documents `M`** — rasterize pages (`pdftoppm`/`mutool`),
-  process per-page, summarize. Extends scope from images to documents.
-- **E1 streaming progress `M`** — progress for **both** inference and downloads
-  (first-run model/binary fetches). Today both are silent.
-- (Cherry-pick) F8 doctor --selftest `S` · F12 shell completions `XS` · E3 doctor --compute-hashes `S`.
+### v0.6.0 — Tools & UX  *(S–M; concrete, demand-driven)* — **SHIPPED**
+Top priority was **more / better tools**; the one UX item was **streaming**.
+- ✅ **G4 `describe_chart` → CSV/JSON `S`** — `output` arg returns the underlying
+  numbers (CSV for spreadsheets, JSON as structured content).
+- ✅ **G5 `describe_diagram` → Mermaid `S`** — `output=mermaid` emits editable markup.
+- ✅ **G3 PDF / multi-page documents `M`** — the new `read_document` tool
+  rasterizes a PDF (`pdftoppm`/`mutool`/`magick`/`gs`) and summarizes it.
+- ✅ **E1 streaming progress `M`** — real byte (downloads) + elapsed (inference)
+  progress via a ctx-carried Sink; CLI spinner + MCP `notifications/progress`.
+  *(Real token-by-token SSE deferred to v0.7.)*
+- *(Not in v0.6:)* F8 doctor --selftest `S` · F12 shell completions `XS` · E3 doctor --compute-hashes `S`.
 
-### v0.7.0 — Reliability  *(M; quality)*
-- **F4 constrained decoding / GBNF grammars `M`** — makes `--format` JSON guaranteed-valid (reinforces C3).
-- F5 multi-sample consensus + confidence `S/M` *(provisional — small/mid models + high-variance categories only, pending experiment results)* · F6 cascade/difficulty routing `M` · F7 self-verification `S/M`
+### v0.7.0 — Reliability  *(M; quality)* — **next up**
+- **F4 constrained decoding / GBNF grammars `M`** — guarantees well-formed JSON/CSV so G4/G5 structured output is reliable, not prompt-begged.
+- **SSE output streaming** — real token-by-token progress, pulled forward from v0.6's elapsed heartbeat (reinforces E1).
+- F5 multi-sample consensus + confidence `S/M` *(provisional — small/mid models + high-variance categories only, pending experiment results)* · F7 self-verification `S/M` · F6 cascade `M`
 - E5 Ollama coordination `M`
 
 ### v0.8.0+ — New modalities & native GUI  *(L)*
@@ -587,10 +611,10 @@ Top priority is **more / better tools**; the one UX item is **streaming**.
 
 **The path so far:** A1→B1→B2 (distribution) ✅ → C1–C6 (CLI) ✅ → D1–D5
 (cross-platform) ✅ → **v0.5.x (G8 tool + E6 leak fix; qwen3-vl-8b default;
-model-cache collision fix; doctor display)** ✅ → **v0.6 (tools & UX: streaming
-+ structured chart/diagram output + PDF)** 🚧. The next priority is **more &
-better tools** (G3/G4/G5) plus **E1 streaming** (inference + downloads); a
-background daemon (F1) was evaluated and declined.
+model-cache collision fix; doctor display)** ✅ → **v0.6 (tools & UX: G3
+read_document + G4 chart→CSV/JSON + G5 diagram→Mermaid + E1 streaming
+progress)** ✅ → **v0.7 (reliability: F4 constrained decoding + SSE output
+streaming + F5/F7)** 🚧. A background daemon (F1) was evaluated and declined.
 
 ## Idea index
 

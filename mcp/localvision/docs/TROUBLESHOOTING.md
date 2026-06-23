@@ -114,7 +114,7 @@ kill <older-pid>
 
 The lifecycle manager uses port-sampling via `net.Listen("127.0.0.1:0")`, so two processes won't bind the same port — but both will compete for GPU memory.
 
-### 8. `tools/list` returns 10 tools but `tools/call` always fails
+### 8. `tools/list` returns 11 tools but `tools/call` always fails
 
 The catalog validates (SHA256s are correct), the binary is present, but every tool call returns an error.
 

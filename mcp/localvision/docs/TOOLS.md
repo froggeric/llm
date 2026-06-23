@@ -1,18 +1,19 @@
 # Tools reference
 
-10 tools, each with a task-tuned system prompt. Pick the **most specific** tool for the job — generic `read_image` is the fallback when nothing else fits.
+11 tools, each with a task-tuned system prompt. Pick the **most specific** tool for the job — generic `read_image` is the fallback when nothing else fits.
 
 ## Quick reference
 
 | Tool | Input | Output | Default model | Expected latency |
 |---|---|---|---|---|
 | `read_image` | 1 image, optional question | Prose description | qwen3-vl-8b | 30–60 s |
+| `read_document` | 1 PDF (or image), optional question | Document summary + per-page highlights | qwen3-vl-8b | 30–90 s |
 | `extract_text` | 1 image | Verbatim OCR text | qwen3.6-27b / qwen3-vl-8b | 30–60 s |
 | `extract_code` | 1 image | Fenced code block with language | qwen3.6-27b / qwen3-vl-8b | 30–60 s |
 | `extract_table` | 1 image | Markdown tables | qwen3.6-27b / qwen3-vl-8b | 30–70 s |
 | `describe_ui` | 1 image | Layout + components + errors | qwen3.6-27b / qwen3-vl-8b | 30–60 s |
-| `describe_diagram` | 1 image | Diagram type + components + connections | qwen3.6-27b / qwen3-vl-8b | 30–70 s |
-| `describe_chart` | 1 image | Chart type + axes + series + trends | qwen3.6-27b / qwen3-vl-8b | 30–70 s |
+| `describe_diagram` | 1 image, optional `output=mermaid` | Diagram description (or editable Mermaid) | qwen3.6-27b / qwen3-vl-8b | 30–70 s |
+| `describe_chart` | 1 image, optional `output=csv\|json` | Chart description (or CSV/JSON data) | qwen3.6-27b / qwen3-vl-8b | 30–70 s |
 | `diagnose_error` | 1 image | Error type + root cause + file:line | qwen3.6-27b / qwen3-vl-8b | 30–60 s |
 | `image_to_prompt` | 1 image, optional question | Text-to-image generation prompt | qwen3.6-27b / qwen3-vl-8b | 30–60 s |
 | `compare_images` | 2 images | Bullet list of differences | qwen3.6-27b / qwen3-vl-8b | 40–80 s |
@@ -74,6 +75,23 @@ System prompt focus: visible text (verbatim), objects, people, layout, colors, n
 
 Max output: 1500 tokens.
 
+### `read_document`
+
+Document ingestion. Use for PDFs (papers, reports, slides, scans). The PDF is
+rasterized into page images and summarized in one inference: a document summary,
+per-page key points (with critical text transcribed verbatim), and any tables or
+figures called out.
+
+Requires a PDF rasterizer on `$PATH`: poppler (`pdftoppm`), mupdf (`mutool`),
+ImageMagick (`magick`/`convert`), or ghostscript (`gs`). None is bundled. Up to
+20 pages; longer documents are truncated to the first 20 (noted in the output).
+
+CLI: `localvision paper.pdf --type doc` (or `--type pdf`). Accepts the same input
+shape as the image tools, with `image_path` pointing at a `.pdf`. A directory
+expanded with `--type doc` picks up `.pdf` files.
+
+Max output: 2048 tokens.
+
 ### `extract_text`
 
 OCR-focused. Use for receipts, documents, signs, anything where the verbatim text matters.
@@ -116,6 +134,9 @@ System prompt focus: diagram type, all named components, all connections with la
 
 Max output: 2000 tokens.
 
+Optional `output` argument: `prose` (default, the description above) or `mermaid`
+(editable Mermaid markup that reproduces the diagram). CLI: `--output-mode mermaid`.
+
 ### `describe_chart`
 
 Charts and data visualizations. Use for bar/line/pie charts, plots, dashboards with metrics.
@@ -123,6 +144,10 @@ Charts and data visualizations. Use for bar/line/pie charts, plots, dashboards w
 System prompt focus: chart type, axes with units, data series with names, notable values and outliers, trends.
 
 Max output: 1024 tokens.
+
+Optional `output` argument: `prose` (default, the description above), `csv` (the
+underlying numbers as CSV, ready to paste into a spreadsheet), or `json` (a JSON
+object of the data). CLI: `--output-mode csv|json`.
 
 ### `diagnose_error`
 

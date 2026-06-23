@@ -55,7 +55,7 @@ Requires Go 1.23+ (we use `log/slog`, range-over-func, and other 1.23+ features)
 
 ## Adding a new tool
 
-1. Pick an ID (lowercase snake_case). Avoid collisions with existing 10 tools.
+1. Pick an ID (lowercase snake_case). Avoid collisions with existing 11 tools.
 2. Create `internal/tools/<your_tool>.go` implementing the `Tool` interface.
 3. Add a task-tuned system prompt to `internal/tools/prompt.go`.
 4. Add the tool to `allTools()` in `internal/tools/registry.go`.

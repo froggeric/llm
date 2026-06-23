@@ -19,13 +19,16 @@ the `llama-server` subprocess binds to `127.0.0.1` only.
 > **[github.com/froggeric/llm/issues](https://github.com/froggeric/llm/issues)**.
 > As a workaround, `default_model` in the config overrides any misdetection.
 
-> **Status:** **v0.5.2** — cross-platform: runs on macOS (Apple Silicon/Intel),
+> **Status:** **v0.6.0** — cross-platform: runs on macOS (Apple Silicon/Intel),
 > Linux, and Windows (x86_64 + arm64). One-shot CLI (`localvision img.png --type
 > ocr`), `--format`, batch (`--output-dir --meta`), a `setup` wizard, a
-> cross-platform HEIC/WEBP converter chain, 10 vision tools (including
-> `image_to_prompt`), and `qwen3-vl-8b` as the default model for all tools (the
-> 27B champion is opt-in via `--model`). Model files no longer re-download on
-> every model switch.
+> cross-platform HEIC/WEBP converter chain, 11 vision tools — including
+> `read_document` (PDF ingestion) and `image_to_prompt`. Charts and diagrams can
+> return structured output (`describe_chart --output-mode csv|json`,
+> `describe_diagram --output-mode mermaid`). Inference and downloads now stream
+> progress (CLI spinner + MCP `notifications/progress`). `qwen3-vl-8b` is the
+> default model for all tools (the 27B champion is opt-in via `--model`). Model
+> files no longer re-download on every model switch.
 
 ---
 
@@ -35,6 +38,7 @@ the `llama-server` subprocess binds to `127.0.0.1` only.
 MCP protocol:
 
 - `read_image` — describe an image in natural language
+- `read_document` — rasterize a PDF and summarize it (needs a rasterizer on `$PATH`)
 - `extract_text` — OCR / transcription
 - `extract_code` — extract source code from a screenshot
 - `extract_table` — structured table extraction
@@ -155,16 +159,21 @@ localvision setup                          # first run: pick a model, write conf
 localvision img.png                        # describe an image
 localvision shot.png --type ocr            # extract text (OCR)
 localvision err.png  --type error          # diagnose an error/stack trace
-localvision chart.png --type chart --format json | jq .
+localvision chart.png --type chart --output-mode csv      # chart → CSV
+localvision chart.png --type chart --output-mode json | jq .
+localvision arch.png --type diagram --output-mode mermaid # diagram → Mermaid
+localvision paper.pdf --type doc           # summarize a PDF
 localvision a.png b.png --type compare     # diff two images
 localvision *.png --type ocr --output-dir out/ --format json --meta
 ```
 
-`--type` selects one of ten tools (`ocr|code|table|ui|diagram|chart|error|prompt|
-compare|describe`). Inputs may be file paths, globs, directories (`--recursive`),
+`--type` selects one of eleven tools (`ocr|code|table|ui|diagram|chart|error|prompt|
+doc|compare|describe`). Inputs may be file paths, globs, directories (`--recursive`),
 or `-` for stdin (`find . -name '*.png' | localvision - --type ocr`).
 `--model` overrides the auto-selected model; `--output`/`--output-dir` write
 results to files; `--meta` writes a `.json` telemetry sidecar per output.
+`--output-mode` requests a structured representation from `chart` (`csv`/`json`)
+or `diagram` (`mermaid`); default `prose`.
 
 With no arguments, `localvision` runs `setup` in a terminal and the MCP server
 when invoked over a pipe (i.e. by an MCP client). Run `localvision --help` for
@@ -235,20 +244,21 @@ coordination via Ollama's API (ROADMAP Theme E5).
 
 ## Roadmap
 
-**v0.5.2** fixed a `doctor` display quirk on large machines. **v0.5.1** made
-`qwen3-vl-8b` the default model for all tools (re-analyzed quality + speed) and
-fixed a bug that re-downloaded model files on every model switch (a
-shared-basename collision, now cached per-model with auto-migration). **v0.5.0**
-shipped a new 10th tool (`image_to_prompt`) and an MCP temp-file leak fix, on top
-of **v0.4.0** (cross-platform: macOS/Linux/Windows, x86_64 + arm64) and
-**v0.3.0** (the standalone CLI: one-shot queries, `--format`, batch, `setup`
-wizard). Next, in priority order: **v0.6 tools & UX** — more/better tools
-(chart→CSV, diagram→Mermaid, PDF/documents) and **streaming progress** for
-inference and downloads; then **v0.7 reliability** (constrained decoding,
-multi-sample consensus), then **v0.8+ new modalities & a native GUI** (UI→code,
-video, grounding). A background daemon / HTTP service was evaluated and
-**declined** — the current model (session-warm MCP + fire-and-exit CLI with
-batch) is good enough. Every item, its effort, and its target is in
+**v0.6.0** shipped tools & UX: an 11th tool `read_document` (PDF ingestion via a
+`$PATH`-discovered rasterizer chain), structured chart output
+(`describe_chart --output-mode csv|json`) and diagram markup
+(`describe_diagram --output-mode mermaid`), and **streaming progress** for both
+inference and downloads (CLI spinner + MCP `notifications/progress`; real
+token-by-token SSE is deferred to v0.7). **v0.5.x** added `image_to_prompt`, an
+MCP temp-file leak fix, `qwen3-vl-8b` as the default for all tools, and a
+per-model cache that stopped model files re-downloading on every switch. Earlier:
+**v0.4.0** (cross-platform: macOS/Linux/Windows, x86_64 + arm64) and **v0.3.0**
+(the standalone CLI: one-shot queries, `--format`, batch, `setup` wizard). Next:
+**v0.7 reliability** (constrained decoding / GBNF, multi-sample consensus, SSE
+output streaming), then **v0.8+ new modalities & a native GUI** (UI→code, video,
+grounding). A background daemon / HTTP service was evaluated and **declined** —
+the current model (session-warm MCP + fire-and-exit CLI with batch) is good
+enough. Every item, its effort, and its target is in
 [`ROADMAP.md`](./ROADMAP.md) (themes A–H,
 prioritized into release tiers).
 

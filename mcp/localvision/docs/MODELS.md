@@ -174,3 +174,19 @@ Models in the catalog are sourced from the open-weight ecosystem. Known weakness
 - **Qwen3.6-27B (nothink)** is the champion but needs 24+ GB RAM for comfortable operation.
 
 For full benchmark results, see [`../../../benchmark/vlm/BENCHMARK-REPORT-v5.md`](../../../benchmark/vlm/BENCHMARK-REPORT-v5.md).
+
+## PDF rasterizer (read_document)
+
+The `read_document` tool (v0.6.0) rasterizes a PDF into page images before
+inference. It uses the first available rasterizer on `$PATH` — none is bundled:
+
+1. `pdftoppm` (poppler)
+2. `mutool draw` (mupdf)
+3. `magick` / `convert` (ImageMagick, via its ghostscript delegate — frequently
+   policy-disabled out of the box)
+4. `gs` (ghostscript)
+
+Install any one, e.g. `brew install poppler` (macOS) or `apt install poppler-utils`
+(Debian/Ubuntu). When none is found, `read_document` errors with these options
+named. The rasterizer chain mirrors the HEIC/WEBP converter in `internal/llama`;
+see `internal/document/rasterize.go`.
