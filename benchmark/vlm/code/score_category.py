@@ -24,6 +24,7 @@ Run from benchmark/vlm/ :  python3 code/score_category.py
 import json
 import re
 import statistics
+import sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -185,13 +186,18 @@ def load_cat():
 
 
 def main():
-    cells = load_cat()
+    # Optional model filter (substring of the model name) so a multi-model
+    # raw.jsonl doesn't mix results. Default = the recommended default model.
+    model_filter = sys.argv[1] if len(sys.argv) > 1 else "qwen3-vl-8b"
+    cells = {k: v for k, v in load_cat().items() if model_filter in k[0]}
     if not cells:
-        print("No cat-* rows found. Run code/run_category.sh first."); return
+        print(f"No cat-* rows found for model matching '{model_filter}'. "
+              f"Run: ./code/run_category.sh <model>"); return
     EXTRACTION_GT["extract_code"] = code_gt()
     TEMPS = sorted({t for _, _, t in cells})
+    model_name = SHORTM.get(next(iter(cells))[0], next(iter(cells))[0])
 
-    print("# Per-category self-consistency sweep — scoring (run_id=cat-*)\n")
+    print(f"# Per-category self-consistency sweep — {model_name} (run_id=cat-*)\n")
     print("> 5 reps per (category × temp). **single** = mean per-run; **union@5** = "
           "≥1 run has it; **maj@5** = per-fact/token majority (≥3/5).\n")
 
