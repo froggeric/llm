@@ -2,6 +2,7 @@ package document
 
 import (
 	"context"
+	"errors"
 	"os"
 	"path/filepath"
 	"testing"
@@ -107,6 +108,44 @@ func TestRasterizeAllFail(t *testing.T) {
 	_, err := Rasterize(context.Background(), "x.pdf", t.TempDir(), 3)
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "a, b", "error names the tools that were tried")
+	assert.NotContains(t, err.Error(), "0 pages", "a crashed rasterizer must not read as an empty PDF")
+}
+
+// TestRasterizeEmptyPDFCleanNoPages: every available tool runs without error
+// but emits zero pages (an empty/corrupt PDF). The error must distinguish this
+// from a crash so the caller can surface a clear "empty document" message.
+func TestRasterizeEmptyPDFCleanNoPages(t *testing.T) {
+	withChain(t, []rasterizer{
+		fakeRasterizer("pdftoppm", 0, true, false), // runs clean, 0 pages
+		fakeRasterizer("mutool", 0, true, false),   // also clean, 0 pages
+	})
+	_, err := Rasterize(context.Background(), "empty.pdf", t.TempDir(), 3)
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "0 pages", "a clean 0-page run should read as empty, not 'failed'")
+	assert.Contains(t, err.Error(), "empty.pdf")
+}
+
+// TestRasterizeFailsFastOnCtxCancel: a cancelled ctx must abort before
+// spawning the whole chain (rather than running every rasterizer into the
+// same cancellation).
+func TestRasterizeFailsFastOnCtxCancel(t *testing.T) {
+	var calls int
+	withChain(t, []rasterizer{
+		{name: "a", avail: func() bool { return true }, run: func(ctx context.Context, _ string, _ string, _ int) ([]string, error) {
+			calls++
+			return nil, ctx.Err()
+		}},
+		{name: "b", avail: func() bool { return true }, run: func(context.Context, string, string, int) ([]string, error) {
+			calls++
+			return nil, errors.New("should not be reached")
+		}},
+	})
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	_, err := Rasterize(ctx, "x.pdf", t.TempDir(), 3)
+	require.Error(t, err)
+	assert.ErrorIs(t, err, context.Canceled)
+	assert.Equal(t, 0, calls, "ctx.Err() pre-check must short-circuit before any run is called")
 }
 
 func TestRasterizeSortedNumerically(t *testing.T) {

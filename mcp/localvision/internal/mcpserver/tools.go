@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"path/filepath"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"time"
 
@@ -130,11 +131,15 @@ func (s *Server) callTool(ctx context.Context, req *mcp.CallToolRequest, t tools
 		res.SetError(err)
 		return res, nil
 	}
-	// Reap any temp files written for data: URIs (image_data) once the call
-	// finishes. Safe on real user paths: CleanupImageRefs only removes paths
-	// ParseImageRef registered. The temp files must survive through Run, so
-	// cleanup is deferred to the end of callTool (E6 — the v0.4 MCP path leaked
-	// one temp file per image_data call; the CLI path never did).
+	// Temp-file cleanup. Two sets to reap, both safe on real user paths
+	// (CleanupImageRefs only removes paths ParseImageRef/RegisterTemp registered):
+	//   - the ORIGINAL `images` (registered here): reaps data: URI temps that an
+	//     Expander discards — e.g. a data:-URI PDF decoded to a .bin temp that
+	//     read_document rasterizes and replaces. No-op on real image_path files.
+	//   - the EXPANDED `input.Images` (registered after ExpandInput below): reaps
+	//     rasterized page temps and their out dir.
+	// Registering ONLY on `images` would leak page temps; ONLY on input.Images
+	// would leak a data:-URI PDF's .bin. Both run at return (idempotent).
 	defer tools.CleanupImageRefs(images)
 
 	// Build the ToolInput: pass through anything we didn't consume.
@@ -152,27 +157,37 @@ func (s *Server) callTool(ctx context.Context, req *mcp.CallToolRequest, t tools
 	// Attach a progress sink so the model/binary downloads and inference can
 	// report progress to the client as notifications/progress — but only if the
 	// client opted in by sending a _meta.progressToken. No token ⇒ no
-	// notifications (today's behavior, byte-for-byte). The sink forwards each
-	// Update via NotifyProgress fire-and-forget with a 2 s timeout so a slow or
-	// stalled client pipe can never stall the tool call (NotifyProgress is a
-	// synchronous transport write in the SDK). Built before expansion so the
-	// sink is available to a document Expander too.
+	// notifications (today's behavior, byte-for-byte). The sink forwards Updates
+	// to the client in order via a single dispatcher goroutine, each send bounded
+	// by a 2 s timeout so a slow or stalled client pipe can never stall the tool
+	// call (NotifyProgress is a synchronous transport write in the SDK). Built
+	// before expansion so the sink is available to a document Expander too. The
+	// deferred close drains the buffer and reaps the dispatcher goroutine so it
+	// never outlives the call.
 	runCtx := ctx
 	if token := req.Params.GetProgressToken(); token != nil {
-		runCtx = progress.WithSink(ctx, &mcpProgressSink{session: req.Session, token: token})
+		sink := newMcpProgressSink(req.Session, token)
+		defer sink.close()
+		runCtx = progress.WithSink(ctx, sink)
 	}
 
 	// Expand document inputs (e.g. read_document rasterizes a PDF into page
 	// images). Non-Expanders are a no-op. The expanded refs REPLACE input.Images
-	// and flow into both BuildRequest and the executor; the deferred
-	// CleanupImageRefs above reaps any temp page files (and their out dir).
+	// and flow into both BuildRequest and the executor. The deferred
+	// CleanupImageRefs reaps any temp page files (and their out dir) — it MUST
+	// run on input.Images (the expanded set), so it is registered here after
+	// expansion. On expansion failure we reap the original refs directly before
+	// returning (the Expander is responsible for cleaning any partial temps it
+	// created before erroring, e.g. read_document's RemoveAll(outDir)).
 	input, err = tools.ExpandInput(runCtx, t, input)
 	if err != nil {
+		tools.CleanupImageRefs(images)
 		logger.Warn("tool.ExpandImages failed", "error", err)
 		res := &mcp.CallToolResult{}
 		res.SetError(fmt.Errorf("expanding input for tool %q: %w", t.ID(), err))
 		return res, nil
 	}
+	defer tools.CleanupImageRefs(input.Images)
 
 	// Ask the tool to build the model request. This is where the tool's
 	// task-specific prompt construction happens.
@@ -482,30 +497,117 @@ var (
 	errUnsupportedImageSource = errors.New("unsupported image source")
 )
 
+// progressNotifyTimeout bounds how long a single NotifyProgress send may take
+// before the sink gives up on it. NotifyProgress is a SYNCHRONOUS transport
+// write in the SDK (its handler calls the connection's Notify directly), so
+// without a timeout a slow or stalled client stdin pipe could block the
+// dispatcher and back up subsequent updates. Progress is best-effort: dropping
+// an update on timeout is acceptable.
+const progressNotifyTimeout = 2 * time.Second
+
+// progressSinkBufferSize caps how many updates the dispatcher buffers. Updates
+// beyond this are dropped (non-blocking send) — progress is best-effort and a
+// burst faster than the transport can emit should not grow an unbounded queue.
+const progressSinkBufferSize = 32
+
+// progressCloseDeadline bounds the TOTAL time close() may spend draining the
+// buffer on callTool return. A stuck client pipe could otherwise stall each
+// send for progressNotifyTimeout; with a full buffer that is unacceptably
+// long. Once the deadline fires, remaining buffered updates are abandoned
+// (progress is best-effort) and the dispatcher exits so callTool returns.
+const progressCloseDeadline = 5 * time.Second
+
 // mcpProgressSink adapts a progress.Sink to the MCP notifications/progress
-// transport. Each Update is forwarded to the client via
-// ServerSession.NotifyProgress, fire-and-forget in a goroutine bounded by a 2 s
-// timeout. NotifyProgress is a SYNCHRONOUS transport write in the SDK (its
-// handler calls getConn().Notify directly), so without isolating it a slow or
-// stalled client stdin pipe could block the tool call itself. Progress is
-// best-effort: dropping an update on timeout is acceptable.
+// transport. All Updates are forwarded to the client via a SINGLE dispatcher
+// goroutine that sends them in order through ServerSession.NotifyProgress,
+// each bounded by progressNotifyTimeout. This preserves delivery order (a
+// client progress bar must not jump backwards) while never blocking the tool
+// call: NotifyProgress is a synchronous transport write in the SDK, so a slow
+// or stalled client stdin pipe could otherwise stall the producer. Progress is
+// best-effort: updates dropped on a full buffer, a send timeout, or the close
+// deadline are acceptable. close() drains the buffer (best-effort, bounded by
+// progressCloseDeadline) and must be called when the owning callTool returns so
+// the dispatcher goroutine does not outlive the call.
 type mcpProgressSink struct {
 	session *mcp.ServerSession
 	token   any
+	ch      chan progress.Update
+	done    chan struct{}
+	stopCh  chan struct{} // closed by close() to signal the dispatcher to abandon remaining sends
+	once    sync.Once
 }
 
-func (s *mcpProgressSink) Progress(u progress.Update) {
-	params := &mcp.ProgressNotificationParams{
-		ProgressToken: s.token,
-		Progress:      u.Current,
-		Total:         u.Total,
-		Message:       mcpProgressMessage(u),
+// newMcpProgressSink builds a sink that forwards Updates to session as
+// notifications/progress tagged with token. The dispatcher goroutine is
+// started here and runs until close() is called.
+func newMcpProgressSink(session *mcp.ServerSession, token any) *mcpProgressSink {
+	s := &mcpProgressSink{
+		session: session,
+		token:   token,
+		ch:      make(chan progress.Update, progressSinkBufferSize),
+		done:    make(chan struct{}),
+		stopCh:  make(chan struct{}),
 	}
-	go func() {
-		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-		defer cancel()
-		_ = s.session.NotifyProgress(ctx, params)
-	}()
+	go s.dispatch()
+	return s
+}
+
+// Progress enqueues u for ordered delivery. It is non-blocking: if the buffer
+// is full (the client is slower than the producer), u is dropped — progress is
+// best-effort and a flood must not back-pressure the tool call.
+func (s *mcpProgressSink) Progress(u progress.Update) {
+	select {
+	case s.ch <- u:
+	default:
+		// Buffer full: drop. A later update carries newer progress anyway.
+	}
+}
+
+// close drains any buffered updates (bounded by progressCloseDeadline total)
+// and stops the dispatcher goroutine. Idempotent. If the deadline fires first
+// (a stuck client pipe), remaining updates are abandoned and the dispatcher
+// exits so callTool returns promptly.
+func (s *mcpProgressSink) close() {
+	s.once.Do(func() {
+		close(s.ch)
+		// Bound the drain: if the dispatcher is stuck on a slow send, give up
+		// after progressCloseDeadline and let the goroutine wind down on its
+		// own (it checks stopCh between sends).
+		timer := time.NewTimer(progressCloseDeadline)
+		defer timer.Stop()
+		select {
+		case <-s.done:
+		case <-timer.C:
+			close(s.stopCh)
+			<-s.done
+		}
+	})
+}
+
+// dispatch is the single writer goroutine. It sends updates in FIFO order, each
+// with its own timeout, until the channel is closed (by close()) — then it
+// drains any remaining buffered updates before exiting. It watches stopCh so a
+// close() that hits progressCloseDeadline can abort a stuck drain.
+func (s *mcpProgressSink) dispatch() {
+	defer close(s.done)
+	for {
+		select {
+		case <-s.stopCh:
+			return
+		case u, ok := <-s.ch:
+			if !ok {
+				return
+			}
+			ctx, cancel := context.WithTimeout(context.Background(), progressNotifyTimeout)
+			_ = s.session.NotifyProgress(ctx, &mcp.ProgressNotificationParams{
+				ProgressToken: s.token,
+				Progress:      u.Current,
+				Total:         u.Total,
+				Message:       mcpProgressMessage(u),
+			})
+			cancel()
+		}
+	}
 }
 
 // mcpProgressMessage renders a short human label for a progress Update (the

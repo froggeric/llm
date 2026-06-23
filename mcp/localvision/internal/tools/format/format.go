@@ -1,7 +1,7 @@
 // Package format encodes a tool's parsed output into the representation
 // requested via the CLI --format flag (text/markdown/json/yaml/xml).
 //
-// It is a CLI-layer post-processor: the 9 tool prompts and the MCP server
+// It is a CLI-layer post-processor: the 11 tool prompts and the MCP server
 // path are untouched. The model always produces its natural output; this
 // package converts that into the requested encoding for machine consumption
 // (scripting, piping to jq, batch sidecar files).

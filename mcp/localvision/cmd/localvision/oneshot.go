@@ -142,9 +142,12 @@ func runOneShot(args []string) int {
 		return exitBadArgs
 	}
 
-	// Validate --output-mode (the chart/diagram representation) early too. It
-	// is the union of both tools' modes; a value valid for one tool but not the
-	// other is still accepted and simply ignored by the tool that doesn't use it.
+	// Validate --output-mode (the chart/diagram representation) early too. The
+	// CLI accepts the UNION of both tools' modes so the flag can be set before
+	// --type is resolved; a mode that is valid for one tool but not the other
+	// (e.g. --output-mode mermaid --type chart) is then rejected by the tool's
+	// BuildRequest with a clear "unsupported output" error rather than silently
+	// falling back to prose.
 	switch strings.ToLower(strings.TrimSpace(outputModeFlag)) {
 	case "", "prose", "csv", "json", "mermaid":
 		// ok ("" / "prose" = default)

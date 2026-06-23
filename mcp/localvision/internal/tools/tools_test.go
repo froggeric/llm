@@ -157,7 +157,7 @@ func TestDescriptionIncludesLatencyHint(t *testing.T) {
 
 // TestSystemPromptNonEmpty is a smoke check: an empty system prompt means
 // the model will produce generic output, which defeats the entire point of
-// having 9 specialized tools.
+// having 11 specialized tools.
 func TestSystemPromptNonEmpty(t *testing.T) {
 	for _, tool := range allToolInstances {
 		t.Run(tool.ID(), func(t *testing.T) {

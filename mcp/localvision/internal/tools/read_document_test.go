@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// TestExpandInputNoOpForNonExpander: read_image (and the other 10 perception
+// TestExpandInputNoOpForNonExpander: read_image (and the other 10 non-document
 // tools) don't implement Expander, so ExpandInput must return the input
 // unchanged.
 func TestExpandInputNoOpForNonExpander(t *testing.T) {

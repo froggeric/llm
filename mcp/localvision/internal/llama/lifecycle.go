@@ -282,6 +282,21 @@ func NewWithOptions(opts Options) (*LifecycleManager, error) {
 	return m, nil
 }
 
+// Phase reports a lifecycle transition to the progress sink attached to ctx
+// (if any) AND to the legacy Options.PhaseHook (if any). Callers pass the
+// request ctx so a per-request sink (e.g. an MCP notifications/progress
+// reporter attached by callTool) receives download/load/ready transitions,
+// while the CLI's PhaseHook still drives the per-phase timing summary. It is
+// safe to call from any goroutine; Report and PhaseHook are both concurrency-
+// safe (the sink contract requires it, and PhaseHook is only invoked from
+// loadLocked/Acquire which hold m.mu).
+func (m *LifecycleManager) Phase(ctx context.Context, phase, detail string) {
+	progress.Report(ctx, progress.Update{Phase: phase, Detail: detail})
+	if m.opts.PhaseHook != nil {
+		m.opts.PhaseHook(phase, detail)
+	}
+}
+
 // Acquire ensures the given model is loaded and returns a Client that can
 // serve requests for it.
 //
@@ -294,17 +309,6 @@ func NewWithOptions(opts Options) (*LifecycleManager, error) {
 // ctx cancellation is propagated: if the ctx is cancelled while waiting for
 // a model to load, Acquire returns ctx.Err(). Note that ctx cancellation
 // does NOT kill the underlying subprocess — only Shutdown does that.
-// Phase reports a lifecycle transition to the progress sink attached to ctx
-// (if any) AND to the legacy Options.PhaseHook (if any). Callers pass the
-// request ctx so a per-request sink (e.g. an MCP notifications/progress
-// reporter) receives download/load/ready transitions.
-func (m *LifecycleManager) Phase(ctx context.Context, phase, detail string) {
-	progress.Report(ctx, progress.Update{Phase: phase, Detail: detail})
-	if m.opts.PhaseHook != nil {
-		m.opts.PhaseHook(phase, detail)
-	}
-}
-
 func (m *LifecycleManager) Acquire(ctx context.Context, modelID string) (c *Client, release func(), err error) {
 	if m == nil {
 		return nil, nil, errors.New("nil lifecycle manager")

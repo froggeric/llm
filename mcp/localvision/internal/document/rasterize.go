@@ -87,18 +87,34 @@ func Rasterize(ctx context.Context, pdfPath, outDir string, maxPages int) ([]str
 		return nil, fmt.Errorf("mkdir rasterize out dir: %w", err)
 	}
 	var tried []string
+	ranClean := false // a rasterizer exited 0 but emitted no pages (e.g. empty PDF)
 	for _, r := range rasterizersVar {
 		if !r.avail() {
 			continue
 		}
+		// Fail fast on a cancelled ctx: a cancelled conversion would otherwise
+		// burn through the whole chain (each exec.CommandContext also exits on
+		// cancel, but this avoids N subprocess spawns + their error noise).
+		if err := ctx.Err(); err != nil {
+			return nil, err
+		}
 		tried = append(tried, r.name)
 		paths, err := r.run(ctx, pdfPath, outDir, maxPages)
-		if err == nil && len(paths) > 0 {
-			return paths, nil
+		if err == nil {
+			if len(paths) > 0 {
+				return paths, nil
+			}
+			ranClean = true
 		}
 	}
 	if len(tried) == 0 {
 		return nil, fmt.Errorf("%w: install one of poppler (pdftoppm), mupdf (mutool), imagemagick (magick/convert), or ghostscript (gs)", ErrNoRasterizer)
+	}
+	// Every available tool ran without error but none emitted a page → the PDF
+	// itself is empty/unreadable (0 pages). Distinguish this from "the tools
+	// crashed" so the caller can surface a clear "empty document" message.
+	if ranClean {
+		return nil, fmt.Errorf("PDF %q rasterized to 0 pages (the document may be empty, corrupt, or image-only with no text layer); tried %s", pdfPath, strings.Join(tried, ", "))
 	}
 	return nil, fmt.Errorf("PDF rasterization failed (tried %s); check the file or install a different rasterizer", strings.Join(tried, ", "))
 }

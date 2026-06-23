@@ -261,6 +261,101 @@ func (e expanderStubTool) ExpandImages(_ context.Context, _ tools.ToolInput) ([]
 	return refs, nil
 }
 
+// tempWritingExpander is an Expander that creates REAL temp page files under a
+// fresh temp dir (mimicking read_document's rasterizer) and registers them for
+// cleanup. Used by TestCallToolReapsExpandedPageTemps to assert callTool's
+// deferred cleanup reaps the EXPANDED page temps (and their out dir), not just
+// the pre-expansion input refs — the v0.6 MCP path leaked one set of page
+// temps per read_document call before the defer was moved onto input.Images.
+type tempWritingExpander struct {
+	stubTool
+	pages []string // relative page names written under a fresh temp dir
+}
+
+func (e *tempWritingExpander) ExpandImages(_ context.Context, _ tools.ToolInput) ([]tools.ImageRef, error) {
+	dir, err := os.MkdirTemp("", "lvm-test-doc-*")
+	if err != nil {
+		return nil, err
+	}
+	refs := make([]tools.ImageRef, 0, len(e.pages))
+	for _, name := range e.pages {
+		p := filepath.Join(dir, name)
+		if err := os.WriteFile(p, []byte("PNG"), 0o644); err != nil {
+			_ = os.RemoveAll(dir)
+			return nil, err
+		}
+		tools.RegisterTemp(p)
+		refs = append(refs, tools.ImageRef{LocalPath: p})
+	}
+	return refs, nil
+}
+
+// TestCallToolReapsExpandedPageTemps is the page-temp-leak regression test.
+// callTool must clean up the EXPANDED page temps (input.Images), not just the
+// pre-expansion input ref. Before the fix, the defer captured the original
+// `images` slice and every rasterized page temp leaked.
+func TestCallToolReapsExpandedPageTemps(t *testing.T) {
+	tool := &tempWritingExpander{
+		stubTool: stubTool{id: "expand_test", description: "stub", maxTokens: 1024, system: "sys"},
+		pages:    []string{"page-1.png", "page-2.png", "page-3.png"},
+	}
+
+	// Capture the expanded page paths the executor sees, so we can stat them
+	// after the call returns.
+	var seenPaths []string
+	exec := &pathListingExecutor{
+		inner:  &recordingExecutor{},
+		onSeen: func(p []string) { seenPaths = p },
+	}
+
+	srv, err := NewServer(Dependencies{
+		Logger:   silentLogger(),
+		Tools:    []tools.Tool{tool},
+		Executor: exec,
+	})
+	require.NoError(t, err)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	t1, t2 := mcp.NewInMemoryTransports()
+	_, err = srv.mcp.Connect(ctx, t1, nil)
+	require.NoError(t, err)
+	client := mcp.NewClient(&mcp.Implementation{Name: "test-client", Version: "v0.0.1"}, nil)
+	cs, err := client.Connect(ctx, t2, nil)
+	require.NoError(t, err)
+	defer cs.Close()
+
+	res, err := cs.CallTool(ctx, &mcp.CallToolParams{
+		Name:      "expand_test",
+		Arguments: map[string]any{"image_path": "/tmp/one.pdf"},
+	})
+	require.NoError(t, err)
+	require.False(t, res.IsError)
+	require.NotEmpty(t, seenPaths, "executor should have seen the expanded page temps")
+
+	for _, p := range seenPaths {
+		_, statErr := os.Stat(p)
+		assert.True(t, os.IsNotExist(statErr),
+			"expanded page temp %q must be reaped after callTool; stat err=%v", p, statErr)
+	}
+}
+
+// pathListingExecutor wraps an Executor and records the LocalPath of every
+// image it sees via onSeen before delegating.
+type pathListingExecutor struct {
+	inner  tools.Executor
+	onSeen func(paths []string)
+}
+
+func (e *pathListingExecutor) Run(ctx context.Context, toolID, sys, user string, imgs []tools.ImageRef, max int) (string, tools.Stats, error) {
+	paths := make([]string, len(imgs))
+	for i, im := range imgs {
+		paths[i] = im.LocalPath
+	}
+	e.onSeen(paths)
+	return e.inner.Run(ctx, toolID, sys, user, imgs, max)
+}
+
 // TestToolCallRoutesThroughExecutor verifies that a tools/call request
 // for one of the registered tools reaches the executor with correctly
 // normalized arguments.
@@ -359,6 +454,67 @@ func TestCallToolSendsProgressNotifications(t *testing.T) {
 	assert.Equal(t, "tok-1", got[1].ProgressToken)
 	assert.Equal(t, float64(100), got[0].Progress)
 	assert.Equal(t, float64(5), got[1].Progress)
+}
+
+// TestCallToolProgressNotificationsOrdered verifies the single-dispatcher
+// guarantee: a burst of many updates must arrive at the client in the SAME
+// order they were emitted (a progress bar must not jump backwards). The old
+// fire-and-forget-per-update design raced these and delivered them out of
+// order; the serialized dispatcher preserves FIFO.
+func TestCallToolProgressNotificationsOrdered(t *testing.T) {
+	var mu sync.Mutex
+	var got []float64
+	client := mcp.NewClient(&mcp.Implementation{Name: "test-client", Version: "v0.0.1"}, &mcp.ClientOptions{
+		ProgressNotificationHandler: func(_ context.Context, req *mcp.ProgressNotificationClientRequest) {
+			mu.Lock()
+			got = append(got, req.Params.Progress)
+			mu.Unlock()
+		},
+	})
+
+	// Emit 20 monotonically-increasing values; the client must see them in order.
+	const n = 20
+	emit := make([]progress.Update, n)
+	for i := 0; i < n; i++ {
+		emit[i] = progress.Update{Phase: "inferring", Current: float64(i), Unit: "s"}
+	}
+	exec := &progressEmittingExecutor{emit: emit}
+	srv := newTestServer(t, exec)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	t1, t2 := mcp.NewInMemoryTransports()
+	_, err := srv.mcp.Connect(ctx, t1, nil)
+	require.NoError(t, err)
+	cs, err := client.Connect(ctx, t2, nil)
+	require.NoError(t, err)
+	defer cs.Close()
+
+	params := &mcp.CallToolParams{Name: "read_image", Arguments: map[string]any{"image_path": "/tmp/fake.png"}}
+	params.SetProgressToken("tok")
+	res, err := cs.CallTool(ctx, params)
+	require.NoError(t, err)
+	require.False(t, res.IsError)
+
+	// Poll until all n land (they're serialized so all should arrive).
+	deadline := time.Now().Add(3 * time.Second)
+	for time.Now().Before(deadline) {
+		mu.Lock()
+		c := len(got)
+		mu.Unlock()
+		if c >= n {
+			break
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+
+	mu.Lock()
+	defer mu.Unlock()
+	require.Len(t, got, n, "all %d updates should arrive", n)
+	for i := 0; i < n; i++ {
+		assert.Equal(t, float64(i), got[i],
+			"notification %d arrived out of order (got %v); the dispatcher must preserve FIFO", i, got)
+	}
 }
 
 // TestCallToolNoProgressTokenSendsNothing asserts that a client which does NOT

@@ -35,7 +35,7 @@ mcp/localvision/
 │   ├── mcpserver/                  # MCP protocol glue (uses go-sdk)
 │   ├── llama/                      # subprocess lifecycle, binary mgmt, HTTP client
 │   ├── models/                     # catalog, hardware detection, downloader
-│   ├── tools/                      # 9 tool implementations
+│   ├── tools/                      # 11 tool implementations
 │   ├── config/                     # user config
 │   └── logging/                    # slog setup
 ├── plugin/                         # Claude Code plugin manifest + SKILL.md
