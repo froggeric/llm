@@ -108,7 +108,7 @@ flowchart TD
     V5["v0.5.x — Breadth &amp; polish (shipped)<br/>✅ G8 image_to_prompt, E6 MCP temp cleanup<br/>✅ qwen3-vl-8b default for all + cache-collision fix, doctor display<br/>🔴 E2 auto-reap orphans (deferred; mitigated by F1 daemon)"]:::done
     V6["v0.6.0 — Reach: always-on service (next up)<br/>🚧 F1 HTTP service + background daemon (warm across sessions, owns llama-server, subsumes E2)<br/>🚧 E1 streaming progress · F9 clipboard<br/>📋 F8 doctor selftest, F13 model mgmt, F14 resources/prompts, F15 stats"]:::next
     ANY["any release — cheap high-value wins<br/>📋 G4 chart-to-CSV, G5 diagram-to-Mermaid, F9 clipboard, F3 result cache<br/>📋 E3 compute-hashes, E4 tool-name prefix, E7 pin goreleaser+lint, F11 doctor fix, F12 completions"]:::planned
-    V7["v0.7.0 — Reliability<br/>📋 F4 constrained decoding (GBNF), F5 consensus, F6 cascade, F7 self-verify, E5 Ollama coord"]:::planned
+    V7["v0.7.0 — Reliability<br/>📋 F4 constrained decoding (GBNF), F5 consensus (provisional: 8B + high-variance cats only), F6 cascade, F7 self-verify, E5 Ollama coord"]:::planned
     V8["v0.8+ — New modalities<br/>📋 G3 PDF, G2 UI-to-artifact, G6 grounding, G7 visual-diff, G1 video, F10 watch mode"]:::planned
     DIST["distribution — any release<br/>📋 B3 Claude Code marketplace, B4 harness auto-install"]:::planned
     V1["v1.0+ — Far future / research<br/>📋 H1 tiny model, H2 search, H3 screen capture, H4 vision agent, H5 3D"]:::planned
@@ -408,10 +408,16 @@ client. Several items here are small and can be pulled forward into any release.
   to valid JSON/CSV/table shape so structured formats are *guaranteed*
   well-formed, not prompt-begged. The real engine behind a reliable `--format`
   (reinforces C3). `M`
-- **F5. Multi-sample consensus + confidence** — run N=3 on hard images,
-  majority-vote, surface a `confidence`/disagreement field. Attacks the
-  run-to-run variance the benchmark documented (σ up to 0.48). On-mission
-  ("reliability > peak score"). `S/M`
+- **F5. Multi-sample consensus + confidence** *(provisional — under active
+  experiment)* — run N samples on an image, correlate (majority / union), surface
+  a `confidence`/disagreement field. Attacks the run-to-run variance the
+  benchmark documented (σ up to 0.48). **Scope, pending the experiment results:**
+  only worth it on the **small/mid models** (the 8B — N samples on the 27B's ~70 s
+  latency is prohibitive) and only for **high-variance categories** (e.g. UI
+  description); low-variance extraction (OCR/code/table) is near-deterministic at
+  temp 0.1 and gains nothing. If it ships it is a per-tool/per-model opt-in, not a
+  blanket default — and it may not ship at all if the sweep says the gain isn't
+  there. `S/M` (see `benchmark/vlm/REPEAT-REPORT.md` + the per-category sweep)
 - **F6. Cascade / difficulty routing** — cheap model first; escalate to the 27B
   only when confidence is low. Saves resources, reserves the big gun for hard
   cases. `M`
@@ -560,7 +566,7 @@ The headline is **F1** — turn localvision into a single long-lived service:
 
 ### v0.7.0 — Reliability  *(M; quality)*
 - **F4 constrained decoding / GBNF grammars `M`** — makes `--format` JSON guaranteed-valid (reinforces C3).
-- F5 multi-sample consensus + confidence `S/M` · F6 cascade/difficulty routing `M` · F7 self-verification `S/M`
+- F5 multi-sample consensus + confidence `S/M` *(provisional — small/mid models + high-variance categories only, pending experiment results)* · F6 cascade/difficulty routing `M` · F7 self-verification `S/M`
 - E5 Ollama coordination `M`
 
 ### v0.8.0+ — New modalities  *(L)*
