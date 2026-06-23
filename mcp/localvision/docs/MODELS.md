@@ -2,24 +2,41 @@
 
 The catalog is a TOML file that describes every model the MCP can serve. It lives at `internal/models/builtin.toml` (embedded in the binary) and can be extended via overlays at `~/.localvision/catalog.d/*.toml`.
 
-## Built-in catalog (v0.2.0)
+## Built-in catalog (v0.5.1)
 
-Based on the v6 benchmark (30 images, 3 runs, 24 variants, hybrid scoring).
+Based on the v6 benchmark (30 images, 3 runs, 24 variants, hybrid scoring), re-analyzed for the quality-vs-speed tradeoff.
 
-| Model | Display name | Tier | Min VRAM | Preferred for |
-|---|---|---|---|---|
-| `qwen3-vl-8b` | Qwen3-VL 8B (Q8_0) | constrained | 6 GB | all tools |
-| `qwen3.5-4b` | Qwen3.5 4B (nothink) | constrained | 3 GB | `read_image` (fallback) |
-| `qwen3.6-27b` | Qwen3.6 27B (nothink) | mainstream | 17 GB | all tools |
+| Model | Display name | Min VRAM | Role |
+|---|---|---|---|
+| `qwen3-vl-8b` | Qwen3-VL 8B (Q8_0) | 6 GB | **default for all tools** (where it fits) |
+| `qwen3.5-4b` | Qwen3.5 4B (nothink) | 3 GB | fallback where the 8B does not fit |
+| `qwen3.6-27b` | Qwen3.6 27B (nothink) | 17 GB | opt-in, max quality (`--model qwen3.6-27b`) |
 
-**How selection works**:
+**How selection works (v0.5.1 — "8B for all")**:
 
-- On 4–8 GB Macs: `qwen3.5-4b` is the only model that fits. Runs with `enable_thinking=false` (chat_template_kwargs).
-- On 12–16 GB Macs: `qwen3-vl-8b` (Q8_0) is preferred — the only 100%-reliable Q8 model in the benchmark (0 timeouts, σ=0.33).
-- On 24+ GB Macs: `qwen3.6-27b` is preferred — the benchmark champion (79.6/100, σ=0.24, 0 failures).
-- On 48+ GB Macs: no upgrade. `qwen3.6-27b` remains the best model in the study; larger models (Qwen3.6-35B-A3B, Gemma 4 31B) tested worse despite the bigger footprint.
+Only `qwen3-vl-8b` lists tools in `preferred_for`, so the per-tool selector picks
+it everywhere it fits; where it does not, the selector falls back to the largest
+model that does.
+
+- On 4–8 GB Macs: `qwen3-vl-8b` does not fit (6 GB min) → `qwen3.5-4b` (runs with `enable_thinking=false`).
+- On ~12 GB+ Macs: `qwen3-vl-8b` (Q8_0) — the only 100%-reliable Q8 in the benchmark (0 timeouts, σ=0.33), ~3× faster than the 27B (26 s vs 70 s) and within ~5 quality points (74.4 vs 79.6). A re-analysis of quality + speed made it the pick over the 27B champion for the default.
+- `qwen3.6-27b` (the benchmark champion, 79.6/100, σ=0.24, 0 failures) is **opt-in only** — never auto-selected. Pass `--model qwen3.6-27b` for the last ~5 quality points when you can afford the latency and footprint (needs 24+ GB).
 
 Run `localvision doctor` to see which model applies to your hardware.
+
+> **Note (49+ GB Macs):** `doctor`'s "Default model" line may show `qwen3.6-27b`
+> on very large machines (the generic default falls back to the largest fitting
+> model). Actual tool calls still use `qwen3-vl-8b` (the per-tool selector). This
+> is a display-only quirk; pass `--model` to use a different model.
+
+### Cache layout
+
+Model files are cached per-model under `~/.localvision/models/<model-id>/` (e.g.
+`models/qwen3-vl-8b/mmproj-F16.gguf`). Upgrading from v0.5.0 or earlier migrates
+any already-cached files into the right subdirectory on first load — no
+re-download. (The old flat layout collided on the shared `mmproj-F16.gguf`
+basename and re-downloaded the projector on every model switch; v0.5.1 fixes
+that.)
 
 ### Why these models
 
@@ -75,7 +92,7 @@ notes = "Optional notes shown in `doctor` output."
 | `min_system_ram_gb` | int | yes | Minimum system RAM (for CPU-only fallback). |
 | `released` | string (YYYY-MM) | yes | Release date for sorting. |
 | `license` | string (SPDX) | yes | SPDX license ID (Apache-2.0, MIT, etc.). |
-| `preferred` | bool | yes | `true` if this is the default for its tier. Invariant: exactly one preferred per tier. |
+| `preferred` | bool | yes | `true` if this is the default for its tier. Invariant: at most one preferred per tier (a tier may have none; selection then falls back to the largest fitting model). |
 | `preferred_for` | array of strings | yes (can be empty) | Tool IDs this model is best for. Empty = never auto-picked. |
 | `hardware_tier` | string | yes | One of `constrained`, `mainstream`, `high_end`. |
 | `bench_toks` | float | yes (can be 0) | Throughput from the benchmark, in tokens/sec. Informational. |
@@ -138,11 +155,16 @@ Every applied overlay field is logged at startup (`slog.Info` with `overlay=file
 
 Given the catalog and detected hardware:
 
-1. Compute `available_vram = total_memory - 4 GB safety margin - 1 GB resident llama-server`.
-2. Filter to models where `min_vram_gb <= available_vram`.
-3. **Default model**: the `preferred=true` entry whose `hardware_tier` matches the user's tier.
-4. **Per-tool model**: among fitting models, those whose `preferred_for` contains the tool ID; tie-break by smallest `min_vram_gb`, then by `display_name` lexically.
+1. Compute `available = effective_memory - 4 GB safety margin - 1 GB resident llama-server` (`effective_memory` = VRAM on a discrete GPU, else unified/system RAM).
+2. Filter to models where `min_vram_gb <= available`.
+3. **Per-tool model** (used for actual tool calls): among fitting models, those whose `preferred_for` contains the tool ID, in deterministic order — **largest `min_vram_gb` first** (most capable wins), then `display_name` lexically. If none list the tool, fall through to the default.
+4. **Default model** (fallback + `doctor` display): the `preferred=true` entry whose `hardware_tier` matches the user's tier among the fitting set; if no tier-preferred fits, the largest fitting model (same deterministic order).
 5. If nothing fits, the catalog returns `ErrNoFittingModel` and the MCP surfaces a structured error to the client (never crashes).
+
+In the v0.5.1 catalog only `qwen3-vl-8b` lists tools, so step 3 picks it
+everywhere it fits; where it does not (tiny hardware), step 4 lands on
+`qwen3.5-4b`. `qwen3.6-27b` lists no tools and is not preferred, so it is never
+auto-selected — select it with `--model`.
 
 See `internal/models/selection.go` for the implementation.
 

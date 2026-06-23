@@ -182,6 +182,57 @@ func downloadImpl(ctx context.Context, url, destPath, expectedSha256 string, pro
 	return nil
 }
 
+// MigrateLegacyFile moves a v0.4-era flat-cache file (modelsDir/<basename>) into
+// its model's per-model subdir (modelsDir/<modelID>/<basename>) when it is
+// verified by SHA256 to be that model's file. Best-effort and idempotent:
+//
+//   - newPath already exists -> nothing to do (already migrated, or freshly
+//     downloaded under the new layout).
+//   - legacyPath missing -> nothing to do (no v0.4 cache for this file).
+//   - legacyPath exists but its SHA != expected -> leave it. This is the
+//     expected case for the colliding mmproj-F16.gguf: the on-disk file belongs
+//     to whichever model loaded last, and only that model's load will claim it.
+//     Other models leave it alone and download their own into their subdir.
+//   - legacyPath SHA == expected -> os.MkdirAll(dir(newPath)) then
+//     os.Rename(legacyPath, newPath). Returns migrated=true.
+//
+// rename is same-volume (newPath is under the same modelsDir), so it is atomic
+// and cross-OS. Returns an error only when a rename that should succeed fails;
+// stat/hash errors are swallowed (the caller's Download will just fetch fresh).
+func MigrateLegacyFile(ctx context.Context, legacyPath, newPath, expectedSha256 string) (bool, error) {
+	if newPath == "" || legacyPath == "" || legacyPath == newPath {
+		return false, nil
+	}
+	// Already at the new location: nothing to migrate.
+	if _, err := os.Stat(newPath); err == nil {
+		return false, nil
+	} else if !errors.Is(err, os.ErrNotExist) {
+		return false, nil // unreadable; skip rather than guess
+	}
+	// Is there a legacy file to claim?
+	if _, err := os.Stat(legacyPath); err != nil {
+		return false, nil // no legacy file
+	}
+	got, err := computeSHA256(ctx, legacyPath)
+	if err != nil {
+		return false, nil // can't hash; let Download fetch fresh
+	}
+	if got != normalizeHex(expectedSha256) {
+		// Not this model's file (e.g. a different model's mmproj-F16.gguf).
+		// Leave it; its real owner claims it on its own load.
+		return false, nil
+	}
+	if err := os.MkdirAll(filepath.Dir(newPath), 0o755); err != nil {
+		return false, fmt.Errorf("migrate: mkdir %s: %w", filepath.Dir(newPath), err)
+	}
+	if err := os.Rename(legacyPath, newPath); err != nil {
+		return false, fmt.Errorf("migrate: rename %s -> %s: %w", legacyPath, newPath, err)
+	}
+	slog.Info("migrated legacy model file to per-model subdir",
+		"from", legacyPath, "to", newPath, "sha256", got)
+	return true, nil
+}
+
 // copyFile copies src to dst, overwriting dst if it exists. Used by the
 // resume path to seed .partial.tmp from .partial.
 func copyFile(src, dst string) error {

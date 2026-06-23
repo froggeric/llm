@@ -427,12 +427,17 @@ func (m *LifecycleManager) loadLocked(acquireCtx, spawnCtx context.Context, mode
 		m.binaryResolved = true
 	}
 
-	// Resolve local file paths from the URLs in the spec. Downloader
-	// convention: destPath = modelsDir/<basename>.
-	ggufLocal := filepath.Join(m.modelsDir, filepath.Base(spec.GGUF))
+	// Resolve local file paths from the URLs in the spec. Files are stored
+	// per-model under modelsDir/<modelID>/ so models that share a basename
+	// (all three catalog models ship mmproj-F16.gguf) don't clobber each
+	// other. The v0.4 layout (modelsDir/<basename>) re-downloaded the
+	// projector on every model switch because each overwrite failed the
+	// next model's SHA check.
+	modelDir := filepath.Join(m.modelsDir, modelID)
+	ggufLocal := filepath.Join(modelDir, filepath.Base(spec.GGUF))
 	mmprojLocal := ""
 	if spec.Mmproj != "" {
-		mmprojLocal = filepath.Join(m.modelsDir, filepath.Base(spec.Mmproj))
+		mmprojLocal = filepath.Join(modelDir, filepath.Base(spec.Mmproj))
 	}
 
 	// Ensure model files are present. The Downloader is a no-op if the
@@ -440,10 +445,30 @@ func (m *LifecycleManager) loadLocked(acquireCtx, spawnCtx context.Context, mode
 	// on every Acquire (it caches the hash result internally).
 	if m.opts.VerifyHashHook == nil {
 		// Real download path (skipped in tests via VerifyHashHook).
-		if err := os.MkdirAll(m.modelsDir, 0o755); err != nil {
+		if err := os.MkdirAll(modelDir, 0o755); err != nil {
 			m.state = StateCrashed
 			m.cond.Broadcast()
-			return fmt.Errorf("mkdir models dir %s: %w", m.modelsDir, err)
+			return fmt.Errorf("mkdir model dir %s: %w", modelDir, err)
+		}
+		// One-time migration of v0.4-era flat-cache files (modelsDir/<basename>)
+		// into this model's subdir, when SHA-verified to be this model's file.
+		// Best-effort: on any non-fatal issue the Download below just fetches
+		// fresh. This is what lets existing cached models move (not re-download)
+		// to the collision-free layout.
+		migrate := func(legacy, dest, wantSHA string) {
+			migrated, err := models.MigrateLegacyFile(acquireCtx, legacy, dest, wantSHA)
+			switch {
+			case err != nil:
+				m.logger.Warn("legacy model file migration failed; will download fresh",
+					"legacy", legacy, "error", err)
+			case migrated:
+				m.logger.Info("migrated cached model file into per-model subdir",
+					"model", modelID, "to", dest)
+			}
+		}
+		migrate(filepath.Join(m.modelsDir, filepath.Base(spec.GGUF)), ggufLocal, spec.GGUFSha256)
+		if mmprojLocal != "" {
+			migrate(filepath.Join(m.modelsDir, filepath.Base(spec.Mmproj)), mmprojLocal, spec.MmprojSha256)
 		}
 		d := &models.Downloader{}
 		// Only show "downloading" when bytes are actually transferred (the

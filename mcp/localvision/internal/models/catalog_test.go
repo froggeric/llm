@@ -222,18 +222,21 @@ func TestLoad_NoOverlayDir(t *testing.T) {
 	if len(c.Models) == 0 {
 		t.Error("builtin catalog has no models")
 	}
-	// Spot-check: qwen3-vl-8b must exist, be preferred in constrained, and
-	// point at the Q8_0 variant (v6 benchmark finding).
+	// Spot-check: qwen3-vl-8b is the v0.5.1 default for ALL tools — preferred,
+	// mainstream tier, lists every tool, and points at the Q8_0 variant.
 	m, ok := c.Models["qwen3-vl-8b"]
 	require.True(t, ok)
 	if !m.Preferred {
-		t.Error("qwen3-vl-8b should be preferred")
+		t.Error("qwen3-vl-8b should be preferred (the default)")
 	}
-	if m.HardwareTier != TierConstrained {
-		t.Errorf("qwen3-vl-8b tier = %q; want constrained", m.HardwareTier)
+	if m.HardwareTier != TierMainstream {
+		t.Errorf("qwen3-vl-8b tier = %q; want mainstream", m.HardwareTier)
 	}
 	if !strings.Contains(m.GGUF, "Q8_0") {
 		t.Errorf("qwen3-vl-8b gguf URL should reference Q8_0; got %q", m.GGUF)
+	}
+	if len(m.PreferredFor) == 0 {
+		t.Error("qwen3-vl-8b should list tools in preferred_for (the default for all)")
 	}
 	// Spot-check: qwen3.5-4b must exist, have chat_template_kwargs with
 	// enable_thinking=false.
@@ -246,14 +249,51 @@ func TestLoad_NoOverlayDir(t *testing.T) {
 	if !ok || v != false {
 		t.Errorf("qwen3.5-4b chat_template_kwargs.enable_thinking = %v; want false", v)
 	}
-	// Spot-check: qwen3.6-27b must exist and be preferred in mainstream.
+	// Spot-check: qwen3.6-27b is opt-in only (v0.5.1) — NOT preferred and lists
+	// no tools, so it is never auto-selected; users pick it via --model.
 	m3, ok := c.Models["qwen3.6-27b"]
 	require.True(t, ok)
-	if !m3.Preferred {
-		t.Error("qwen3.6-27b should be preferred")
+	if m3.Preferred {
+		t.Error("qwen3.6-27b should NOT be preferred (opt-in only since v0.5.1)")
+	}
+	if len(m3.PreferredFor) != 0 {
+		t.Errorf("qwen3.6-27b should list no tools (opt-in only); got %v", m3.PreferredFor)
 	}
 	if m3.HardwareTier != TierMainstream {
 		t.Errorf("qwen3.6-27b tier = %q; want mainstream", m3.HardwareTier)
+	}
+}
+
+// TestBuiltinCatalog_DefaultsTo8BForAll locks in the v0.5.1 "8B for all tools"
+// decision: the per-tool selector picks qwen3-vl-8b on any hardware where it
+// fits, falls back to qwen3.5-4b only where the 8B cannot, and never
+// auto-selects the opt-in qwen3.6-27b.
+func TestBuiltinCatalog_DefaultsTo8BForAll(t *testing.T) {
+	c, err := Load("")
+	require.NoError(t, err)
+
+	tools := []string{
+		"read_image", "extract_text", "extract_code", "extract_table",
+		"describe_ui", "describe_diagram", "describe_chart", "diagnose_error",
+		"image_to_prompt", "compare_images",
+	}
+
+	// Mainstream (32 GB): the 8B fits and is the only model listing any tool.
+	mainstream := HardwareInfo{TotalMemoryGB: 32, Tier: TierMainstream, Backend: BackendAppleSilicon}
+	for _, tool := range tools {
+		got, err := c.ModelFor(tool, mainstream)
+		require.NoError(t, err, "tool %q", tool)
+		assert.Equal(t, "qwen3-vl-8b", got,
+			"tool %q should use the 8B on mainstream hardware", tool)
+	}
+
+	// Tiny (8 GB): the 8B (min_vram 6) does not fit -> fallback to the 4B.
+	tiny := HardwareInfo{TotalMemoryGB: 8, Tier: TierConstrained, Backend: BackendAppleSilicon}
+	for _, tool := range tools {
+		got, err := c.ModelFor(tool, tiny)
+		require.NoError(t, err, "tool %q", tool)
+		assert.Equal(t, "qwen3.5-4b", got,
+			"tool %q should fall back to the 4B on 8 GB hardware", tool)
 	}
 }
 

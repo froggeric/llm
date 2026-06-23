@@ -54,7 +54,7 @@ All tools accept these input shapes (pick whichever is easiest for the caller):
 
 **Budget 30–60 seconds per call.** Each call:
 
-1. Picks a model based on your hardware (the catalog has 3 models across constrained and mainstream tiers).
+1. Picks a model based on your hardware (`qwen3-vl-8b` by default; `qwen3.5-4b` on tiny machines where the 8B doesn't fit).
 2. Loads the model into a `llama-server` subprocess (cold start: 5–10 s; subsequent calls on the same model: 0.1–0.5 s).
 3. Runs one inference and returns text.
 
@@ -75,7 +75,7 @@ If accuracy is paramount (medical, legal, security-relevant), say so to the user
 
 ## After invoking
 
-- **Cite the source.** Tell the user which model was used — e.g. "Analyzed locally with Qwen3.6-27B" or "Qwen3-VL 8B" — whichever the catalog picked for this hardware.
+- **Cite the source.** Tell the user which model was used — e.g. "Analyzed locally with Qwen3-VL 8B" (the default), or "Qwen3.6-27B" if you passed `--model qwen3.6-27b` for max quality.
 - **Don't pretend you saw the image.** You didn't — you got a description. If the user asks follow-up questions you can't answer from the description, call the tool again with the new question.
 - **Surface uncertainty.** If the tool's output mentions ambiguity ("I see 5 or 6 people", "the text appears to say X"), pass that uncertainty on to the user. Don't collapse it to a confident answer.
 

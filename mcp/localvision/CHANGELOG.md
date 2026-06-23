@@ -9,6 +9,39 @@ once it reaches v1.0.0. Until then, minor changes may break compatibility.
 Tags for this subdirectory follow the Go module convention
 `mcp/localvision/v<MAJOR>.<MINOR>.<PATCH>`.
 
+## [0.5.1] - 2026-06-23
+
+Models + selection. Two fixes driven by user-reported pain: model files kept
+re-downloading, and a re-analysis of the v6 benchmark (quality + speed together)
+changed the default model.
+
+### Changed
+
+- **`qwen3-vl-8b` (Q8) is now the default for all tools**, everywhere it fits.
+  A re-analysis of the v6 benchmark picked the 8B-Q8 as the best all-round model:
+  the only 100%-reliable Q8 in the study (0 timeouts, σ=0.33), 74.4/100 (within
+  ~5 pts of the 27B champion's 79.6), and ~3× faster (26 s vs 70 s per image).
+  `qwen3.6-27b` (the champion) becomes **opt-in** (`--model qwen3.6-27b`); never
+  auto-selected. `qwen3.5-4b` remains the fallback on 4–8 GB Macs where the 8B
+  does not fit. See [`docs/MODELS.md`](./docs/MODELS.md).
+
+### Fixed
+
+- **Model files no longer re-download on every model switch.** All three catalog
+  models ship a projector named `mmproj-F16.gguf`; the v0.4 flat cache
+  (`~/.localvision/models/<basename>`) stored them at one path, so each model
+  switch failed the next model's SHA check and re-downloaded the ~0.4–1.5 GB
+  projector. Model files are now cached **per-model**
+  (`~/.localvision/models/<model-id>/`), eliminating the collision. On first load
+  after the upgrade, any already-cached files are **migrated** (SHA-verified,
+  renamed into the right subdirectory) — no re-download of your existing models.
+
+### Known limitations
+
+- On 49+ GB Macs, `doctor`'s "Default model" line may show `qwen3.6-27b` (the
+  generic default falls back to the largest fitting model), though actual tool
+  calls still use `qwen3-vl-8b`. Display-only; pass `--model` to override.
+
 ## [0.5.0] - 2026-06-23
 
 Breadth & polish: a new 10th tool plus a reliability fix. See
@@ -296,7 +329,8 @@ First usable release. macOS Apple Silicon only (Linux/Windows stubbed for v0.2).
 - `InternVL3.5 8B` was considered but dropped from v0.1 — no clean upstream
   GGUF source and it ranked last in our 7-model benchmark.
 
-[Unreleased]: https://github.com/froggeric/llm/compare/v0.5.0
+[Unreleased]: https://github.com/froggeric/llm/compare/v0.5.1
+[v0.5.1]: https://github.com/froggeric/llm/releases/tag/v0.5.1
 [v0.5.0]: https://github.com/froggeric/llm/releases/tag/v0.5.0
 [v0.4.0]: https://github.com/froggeric/llm/releases/tag/v0.4.0
 [v0.3.0]: https://github.com/froggeric/llm/releases/tag/v0.3.0

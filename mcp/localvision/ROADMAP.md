@@ -427,10 +427,13 @@ Ambitious, far-fetched, explicitly invited for the later roadmap.
 ## Sequencing & priorities
 
 Themes **A–D are done** (v0.2.0–v0.4.0 shipped); **v0.5.0 shipped** (G8
-image→generation-prompt tool + E6 MCP temp-file cleanup). The remaining work is
-reorganized into value-prioritized releases: front-load cheap high-impact items,
-build reach infrastructure next, then reliability, then new modalities. Effort
-in parentheses (`XS/S/M/L`); versions are advisory.
+image→generation-prompt tool + E6 MCP temp-file cleanup); **v0.5.1 shipped**
+(`qwen3-vl-8b` as the default for all tools, re-analyzed quality+speed; plus a
+fix for the model-file re-download bug — a shared `mmproj-F16.gguf` basename
+collision — by caching models per-model-subdirectory with auto-migration). The
+remaining work is reorganized into value-prioritized releases: front-load cheap
+high-impact items, build reach infrastructure next, then reliability, then new
+modalities. Effort in parentheses (`XS/S/M/L`); versions are advisory.
 
 ### v0.5.0 — Breadth & polish  *(mostly XS–S; high value-per-effort)* — **SHIPPED**
 - ✅ **G8 image→generation-prompt** — new 10th tool (`--type prompt` / `image_to_prompt`): a structured diffusion-ready prompt to recreate an image.

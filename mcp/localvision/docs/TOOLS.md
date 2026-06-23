@@ -6,7 +6,7 @@
 
 | Tool | Input | Output | Default model | Expected latency |
 |---|---|---|---|---|
-| `read_image` | 1 image, optional question | Prose description | qwen3.6-27b (mainstream) / qwen3-vl-8b (constrained) | 30–60 s |
+| `read_image` | 1 image, optional question | Prose description | qwen3-vl-8b | 30–60 s |
 | `extract_text` | 1 image | Verbatim OCR text | qwen3.6-27b / qwen3-vl-8b | 30–60 s |
 | `extract_code` | 1 image | Fenced code block with language | qwen3.6-27b / qwen3-vl-8b | 30–60 s |
 | `extract_table` | 1 image | Markdown tables | qwen3.6-27b / qwen3-vl-8b | 30–70 s |
@@ -17,11 +17,9 @@
 | `image_to_prompt` | 1 image, optional question | Text-to-image generation prompt | qwen3.6-27b / qwen3-vl-8b | 30–60 s |
 | `compare_images` | 2 images | Bullet list of differences | qwen3.6-27b / qwen3-vl-8b | 40–80 s |
 
-"Default model" depends on detected hardware tier (see [MODELS.md](./MODELS.md)):
-- **constrained** (≤16 GB unified memory): `qwen3-vl-8b` (Q8_0), preferred for all tools. On 4–8 GB Macs where it does not fit, falls back to `qwen3.5-4b` (nothink).
-- **mainstream** (16+ GB): `qwen3.6-27b` (nothink), preferred for all tools; also used on 48+ GB Macs (no larger model justified by the v6 study).
+**Default model** (v0.5.1): `qwen3-vl-8b` (Q8_0) for **all tools**, everywhere it fits (~12 GB+ Macs). On 4–8 GB Macs where the 8B does not fit, it falls back to `qwen3.5-4b` (nothink). The benchmark champion `qwen3.6-27b` is opt-in — pass `--model qwen3.6-27b` for max quality (needs 24+ GB). See [MODELS.md](./MODELS.md).
 
-Override per-tool via the catalog's `preferred_for` field, or globally via `default_model` in `~/.localvision/config.toml` (a CLI `--model` override is planned — see [ROADMAP.md](../ROADMAP.md), item C5).
+Override globally via `default_model` in `~/.localvision/config.toml`, or per-call with `--model`.
 
 ## Input format
 
