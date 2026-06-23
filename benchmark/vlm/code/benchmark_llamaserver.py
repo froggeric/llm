@@ -72,21 +72,80 @@ PROMPT_EXTRACT_CODE = (
     "(triple-backtick followed by the language name on the opening line). "
     "Preserve all indentation exactly. No explanation before or after the fence."
 )
-# filename prefix -> (prompt_id, prompt_text)
+# --- remaining prompts verbatim from mcp/localvision/internal/tools/prompt.go
+PROMPT_READ_IMAGE = (
+    "Describe this image in detail. Include visible text (verbatim), objects, people, "
+    "layout, colors, and notable features. Use Markdown headings. Do not invent details "
+    "that are not visible. If text is illegible, say so rather than guessing."
+)
+PROMPT_EXTRACT_TABLE = (
+    "Extract tables from the image. Output each table as a Markdown table (header row, "
+    "separator row, data rows). Preserve column alignment. If multiple tables are present, "
+    "separate them with a horizontal rule (---). If a cell spans multiple lines, join them "
+    "with a space. Do not include any text outside the Markdown tables."
+)
+PROMPT_DESCRIBE_DIAGRAM = (
+    "Describe this technical diagram. Report:\n"
+    "(1) Diagram type (architecture, flowchart, ER, sequence, state machine, etc.).\n"
+    "(2) All named components (boxes, nodes, classes, tables).\n"
+    "(3) All connections with their labels and protocols.\n"
+    "(4) A one-sentence summary of what the diagram represents.\n"
+    "Use Markdown headings for each section."
+)
+PROMPT_DESCRIBE_CHART = (
+    "You are a data analyst. Describe the chart in this image. Report:\n"
+    "(1) Chart type (bar, line, pie, scatter, heatmap, etc.).\n"
+    "(2) Axes with units and ranges.\n"
+    "(3) Data series with names.\n"
+    "(4) Notable values, outliers, and inflection points (with numbers).\n"
+    "(5) Overall trend.\n"
+    "Use Markdown headings. Be terse."
+)
+PROMPT_DIAGNOSE_ERROR = (
+    "You are a debugging assistant. This image shows an error or stack trace. Report:\n"
+    "(1) Error type (exception class / error code).\n"
+    "(2) Root-cause message verbatim.\n"
+    "(3) Most relevant file:line in the stack trace.\n"
+    "(4) One-sentence likely cause.\n"
+    "Use Markdown. Be terse."
+)
+# prompt_id -> prompt text (registry; used by --prompt-map and the prefix table).
+PROMPT_BY_ID = {
+    "describe": UNIFORM_PROMPT,
+    "read_image": PROMPT_READ_IMAGE,
+    "extract_text": PROMPT_EXTRACT_TEXT,
+    "extract_code": PROMPT_EXTRACT_CODE,
+    "extract_table": PROMPT_EXTRACT_TABLE,
+    "describe_ui": PROMPT_DESCRIBE_UI,
+    "describe_diagram": PROMPT_DESCRIBE_DIAGRAM,
+    "describe_chart": PROMPT_DESCRIBE_CHART,
+    "diagnose_error": PROMPT_DIAGNOSE_ERROR,
+}
+# filename prefix -> prompt_id (generic --tool-prompts mode)
 TOOL_PROMPTS = [
-    ("ui-test-", ("describe_ui", PROMPT_DESCRIBE_UI)),
-    ("ocr-test-", ("extract_text", PROMPT_EXTRACT_TEXT)),
-    ("extract-code-test-", ("extract_code", PROMPT_EXTRACT_CODE)),
+    ("ui-test-", "describe_ui"),
+    ("ocr-test-", "extract_text"),
+    ("extract-code-test-", "extract_code"),
 ]
 
 
-def prompt_for_image(name, use_tool_prompts):
-    """Return (prompt_id, prompt_text) for an image; falls back to the generic describe prompt."""
-    if use_tool_prompts:
-        for prefix, pid_prompt in TOOL_PROMPTS:
+def prompt_for_image(name, use_tool_prompts, prompt_map=None):
+    """Return (prompt_id, prompt_text) for an image.
+
+    Resolution order: explicit --prompt-map entry (exact filename) > --tool-prompts
+    prefix table > generic describe prompt.
+    """
+    pid = None
+    if prompt_map and name in prompt_map:
+        pid = prompt_map[name]
+    elif use_tool_prompts:
+        for prefix, mapped_id in TOOL_PROMPTS:
             if name.startswith(prefix):
-                return pid_prompt
-    return ("describe", UNIFORM_PROMPT)
+                pid = mapped_id
+                break
+    if pid is None:
+        pid = "describe"
+    return pid, PROMPT_BY_ID[pid]
 
 
 # Per-call timeout (seconds) for the HTTP request to llama-server.
@@ -441,6 +500,12 @@ def main():
                              "server's --temp default). Raise above 0.1 to add decoding diversity "
                              "so correlated outputs differ — the self-consistency lever for "
                              "majority/union aggregation.")
+    parser.add_argument("--prompt-map", type=str, default=None,
+                        help="JSON file mapping image filename -> prompt_id (read_image, "
+                             "extract_text, extract_code, extract_table, describe_ui, "
+                             "describe_diagram, describe_chart, diagnose_error). When set, ONLY "
+                             "images named in the map are processed, each with its named MCP "
+                             "tool prompt. Used by the per-category sweep.")
     args = parser.parse_args()
 
     gguf = Path(args.gguf)
@@ -453,7 +518,15 @@ def main():
         print(f"ERROR: mmproj not found: {mmproj}", file=sys.stderr)
         sys.exit(1)
 
+    prompt_map = None
+    if args.prompt_map:
+        with open(args.prompt_map) as f:
+            prompt_map = json.load(f)
+
     images = list_images(pattern=args.image_pattern)
+    if prompt_map:
+        # --prompt-map scopes the run to exactly the images it names.
+        images = [img for img in images if img.name in prompt_map]
     if args.repeat > 1:
         # Multi-sampling: run every scoped image N times in one warmed session.
         # Don't skip on prior completions; orchestrator uses a repeat-* run-id.
@@ -496,7 +569,7 @@ def main():
             n_calls = len(todo) * args.repeat
             call_i = 0
             for idx, (img,) in enumerate(todo, 1):
-                pid, prompt = prompt_for_image(img.name, args.tool_prompts)
+                pid, prompt = prompt_for_image(img.name, args.tool_prompts, prompt_map)
                 for rep in range(args.repeat):
                     call_i += 1
                     rep_tag = f" rep {rep+1}/{args.repeat}" if args.repeat > 1 else ""
