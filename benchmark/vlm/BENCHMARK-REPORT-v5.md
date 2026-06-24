@@ -254,26 +254,24 @@ Where G4-31B does win: **OCR-heavy dense compositions** (spritesheet +3, banner 
 
 ## Use-case-specific recommendations
 
-**Post-refinement + multi-sampling** (see [`REFINE-REPORT.md`](./REFINE-REPORT.md), [`CATEGORY-REPORT.md`](./CATEGORY-REPORT.md), [`REPEAT-REPORT.md`](./REPEAT-REPORT.md); per-tool qualitative verdict from reading the actual 3× outputs is below). The picture has sharpened: **one default model (8B-Q8) covers every tool reliably**, plus a **precision specialist (27B)** for fine extraction, a **max-coverage pick (MoE)** when 22GB is available, and a **strong small model (4B-Q8)** that edges the 8B on several tools. Multi-sampling (3 reps) is model×category specific — worth it on coverage tools, not on code/diagram:
+**Post-refinement + multi-sampling** (see [`REFINE-REPORT.md`](./REFINE-REPORT.md), [`CATEGORY-REPORT.md`](./CATEGORY-REPORT.md), [`REPEAT-REPORT.md`](./REPEAT-REPORT.md); per-tool qualitative verdict from reading the actual 3× outputs is below). Structure: a **small + fast default per tool** (4B-Q8 4GB or 8B 8GB — competitive on 7/8 tools), and a **medium upgrade (MoE 22GB / 27B 17GB) only where it genuinely beats the small default** — which turns out to be *mostly just `read_image`*. Multi-sampling (3 reps) is model×category specific — worth it on coverage tools, not on code/diagram:
 
-| Tool | Recommended (+ repeat recipe) | Why / alternatives |
+| Tool | Default — small + fast (4B-Q8 4GB / 8B 8GB) | Better? — medium (27B 17GB / MoE 22GB), only if it beats the default |
 |---|---|---|
-| `read_image` | **MoE 3× @0.7 union** — or 8B 3× union | MoE-3× most complete (beats 27B on Waldo, finds hovercraft it misses) and faster (68s vs 27B's 103s); 8B-3× ties the 27B at 8GB |
-| `extract_text` | 8B 3× @0.4 union — or MoE | 8B cleanest (10/15 fields); MoE clean + faster (14.6s). **4B-Q4 hallucinates** (`registrodelaoliva`), **GLM misreads + slow** (`Corralajo`, 38s) — GLM's OCR edge is CJK-only |
-| `describe_ui` | **MoE 3× @0.7 union** — or **4B-Q8** | MoE & 4B-Q8 capture the hierarchy (INTEGRATIONS / MODEL PROVIDERS, shortcuts) the 8B flattens; 4B-Q8 fastest (13s) |
-| `describe_chart` | **8B 3× @0.7 union** | 8B most precise (correct "line chart" type + exact ranges); MoE ties on numbers but *mislabels it "scatter"* |
-| `extract_table` | 8B single — or MoE 3× majority | all reach 11/11 classes; 8B clean + fast, MoE richer. **Avoid 4B-Q4** (malformed Markdown tables) |
-| `extract_code` | **27B one-shot** (precision) — or **4B-Q8 single** (fast) | 27B uniquely gets `validatePlaylistKeys_`; 4B-Q8 gets `createAujourdhui` right (8B writes it wrong) + faster; multi-sampling no help |
-| `describe_diagram` | 8B single — or MoE | **even the 27B misses the phantom line** (all models 9/12); 27B wasted here (50s = 8B's 9s) |
-| `diagnose_error` | **27B one-shot** (precision) — or **4B-Q8** (completeness) | 27B gets the key `main.py:42`; 4B-Q8 captures the full exception chain (92%); 8B terse (69%) |
-| `image_to_prompt` | 8B single | repeats untested |
-| `compare_images` | -- | not evaluated |
+| `read_image` | 8B **3× @0.7 union** (40%) | **MoE 3×** ✓ (50%; finds hovercraft the small models miss) |
+| `extract_text` | 8B **3× @0.4 union** (74%, cleanest) | — MoE 70% < 8B; not better |
+| `describe_ui` | **4B-Q8 3× @0.7 union** (97%, hierarchy; faster than 8B) | MoE 3× (100%) — marginal, needs 22GB |
+| `describe_chart` | 8B **3× @0.7 union** (92%, precise type/ranges) | — MoE ties numbers but mislabels "scatter" |
+| `extract_table` | 8B single (79%, clean) | MoE 3× majority (84%) — marginal |
+| `extract_code` | **4B-Q8 single** (98%, `createAujourdhui` ✓) | 27B — gets the `_` underscore (small models miss it) but writes the apostrophe wrong: **trade-off, not strictly better** |
+| `describe_diagram` | 8B or 4B-Q8 single (91%) | — even the 27B misses the phantom line |
+| `diagnose_error` | **4B-Q8** (92%, full chain — best of all) | — 27B (77%) only adds `main.py:42`; not better |
+| `image_to_prompt` | 8B single | — |
+| `compare_images` | -- | — |
 
 **Tier summary:**
-- **Default (every tool, 8GB):** **Q3VL-8B-Q8** (~20-30s single / ~54s for 3×). Reliable, well-formatted all-rounder. **Multi-sample (3× union) the coverage tools** (`read_image`, `describe_ui`, `describe_chart`, `extract_text`); **single** for code/diagram/error.
-- **Max coverage (22GB, needs 24GB+ Mac):** **Q3.6-35B-A3B (MoE) 3× union** — matches or *beats* the 27B on coverage (more complete on scenes, finds things the 27B misses) AND is faster (**3 MoE calls < 1 27B call**). The reconsidered hard-scenes pick for coverage tools.
-- **Precision specialist (17GB):** **Q3.6-27B-nothink, one-shot** — *narrowed to `extract_code` + `diagnose_error`*, where its fine-detail accuracy (identifier underscores, exact `main.py:42`) is unmatched. One-shot only (low-variance + slow, ~52-103s; think = 86% reliable, ruled out).
-- **Small/fast (4GB):** **Q3.5-4B-Q8** — edges the 8B on `extract_code` (identifier), `describe_ui` (structure), `diagnose_error` (completeness) at ~58 tok/s. Prefer over the flaky Q4 (which emits HTML garbage / malformed tables on some runs).
+- **Default — small + fast (≤8GB, ≤30s):** the **4B-Q8 (4GB)** or **8B (8GB)**, picked per tool. They're competitive on 7/8 tools — the **4B-Q8 edges the 8B** on `extract_code`/`describe_ui`/`diagnose_error` and is smaller+faster (~58 tok/s vs the 8B's 37-40); the **8B leads** `extract_text`/`describe_chart` (4B-Q8 is weak there). Multi-sample (3× union) the coverage tools; single for code/diagram/error. (Prefer 4B-**Q8** over the flaky 4B-Q4, which emits HTML garbage / malformed tables on some runs.)
+- **Better — medium (17-22GB, 50-100s):** **MoE** or **27B**, but **worth it only for `read_image`** (MoE 3×: +hovercraft, more complete; and 3 MoE calls < 1 27B call). The **27B's precision edge** (`extract_code` underscore, `diagnose_error` `main.py:42`) is a *trade-off*, not a strict upgrade, and it's **wasted on diagrams** (misses the phantom line too, 50s = the 8B's 9s). **On most tools the small models match or beat the medium — so default small, escalate only for `read_image`.**
 
 **Multi-sampling operating point** (full detail in [`CATEGORY-REPORT.md`](./CATEGORY-REPORT.md) / [`REPEAT-REPORT.md`](./REPEAT-REPORT.md)):
 - **3 reps** is the sweet spot (`union@3 ≈ union@5`). Each extra repeat ≈ one warm call (~9-21s); warm calls are 1.1-1.6× faster than the cold first call, so 3× costs ~70-75% of naïve 3× cold.
