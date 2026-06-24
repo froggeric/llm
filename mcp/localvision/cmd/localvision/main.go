@@ -345,6 +345,7 @@ One-shot query:
   --model     override the auto-selected model (a catalog ID)
   --format    text|markdown|json|yaml|xml (default: presentational)
   --output-mode prose|csv|json|mermaid  representation for chart/diagram (default prose)
+  --sample N  experimental: multi-sample union@N for coverage tools (off by default)
   --output F  write the single result to F
   --output-dir D  write one result file per input into D (batch)
   --recursive recurse into directories when expanding inputs

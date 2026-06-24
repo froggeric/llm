@@ -11,6 +11,29 @@ Tags for this subdirectory follow the Go module convention
 
 ## [Unreleased]
 
+### Added (experimental)
+
+- **Multi-sample consensus (F5 scaffold, off by default)** — a new `--sample N`
+  one-shot flag opts coverage tools into union@N multi-sampling: N warm calls at
+  the tool's sampling temperature, fused into one comprehensive result by a
+  text-only merge pass on the same warm model. Driven by the v6 benchmark's
+  category report (`benchmark/vlm/CATEGORY-REPORT.md`): `read_image` /
+  `describe_ui` / `describe_chart` sample at 0.7, `extract_text` at 0.4;
+  `extract_code` / `describe_diagram` / `diagnose_error` ignore `--sample`
+  (their errors are systematic, so repeats can't help). The temperature "gate"
+  is removed for sampled calls (at 0.1 the N runs are ~identical and correlation
+  adds nothing); single calls stay at 0.1. A/B on the 8B: union@3 surfaced more
+  detail at ~2.1× latency. Default off — on-by-default waits on more images per
+  category and a merge-precision metric.
+
+### Internal
+
+- `internal/tools/sampling.go`: per-tool `Sampling{Mode,Temp}` recipe +
+  `SamplingFor`. The executor no longer hardcodes `Temperature: 0.1`; it uses
+  the tool's sampling temp when sampling, 0.1 otherwise. New `infer` /
+  `mergeSamples` paths in the executor (graceful degradation on sample/merge
+  failure). `SetSampleReps` on `CatalogExecutor`.
+
 ## [0.6.0] - 2026-06-24
 
 Tools & UX: a new document tool, structured chart/diagram output, and streaming

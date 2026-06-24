@@ -428,19 +428,44 @@ client. Several items here are small and can be pulled forward into any release.
   to valid JSON/CSV/table shape so structured formats are *guaranteed*
   well-formed, not prompt-begged. The real engine behind a reliable `--format`
   (reinforces C3). `M`
-- **F5. Multi-sample consensus + confidence** *(provisional — under active
-  experiment)* — run N samples on an image, correlate (majority / union), surface
-  a `confidence`/disagreement field. Attacks the run-to-run variance the
-  benchmark documented (σ up to 0.48). **Scope, pending the experiment results:**
-  only worth it on the **small/mid models** (the 8B — N samples on the 27B's ~70 s
-  latency is prohibitive) and only for **high-variance categories** (e.g. UI
-  description); low-variance extraction (OCR/code/table) is near-deterministic at
-  temp 0.1 and gains nothing. If it ships it is a per-tool/per-model opt-in, not a
-  blanket default — and it may not ship at all if the sweep says the gain isn't
-  there. `S/M` (see `benchmark/vlm/REPEAT-REPORT.md` + the per-category sweep)
-- **F6. Cascade / difficulty routing** — cheap model first; escalate to the 27B
-  only when confidence is low. Saves resources, reserves the big gun for hard
-  cases. `M`
+- **F5. Multi-sample consensus (union@N)** — 🚧 **scaffolded (experimental,
+  off by default).** Run N warm samples on an image and fuse them into one
+  comprehensive result. The mechanism is built and A/B'd on the 8B:
+  - **Per-tool recipe** (from `benchmark/vlm/CATEGORY-REPORT.md`): `union@0.7`
+    for `read_image` / `describe_ui` / `describe_chart`; `union@0.4` for
+    `extract_text` (OCR peaks at mid-temp); **single** for `extract_code` /
+    `describe_diagram` / `diagnose_error` (systematic errors — sampling can't
+    help). Encoded in `tools.SamplingFor`.
+  - **The gate**: temperature. At 0.1 the N runs come out ~identical and
+    correlation adds nothing; the benefit only appears at 0.4–0.7. So the
+    raised temp applies *only when sampling* — single calls stay at 0.1
+    (today's behavior).
+  - **The mechanism**: N `ChatVision` calls (warm — the lifecycle keeps the
+    model in-slot, so calls 2–N are 1.1–1.6× cheaper) → a text-only **merge
+    pass** on the same warm model fusing the N outputs into one. The merge is
+    the non-obvious part: you can't string-union prose.
+  - **A/B** (`describe_chart`, 8B): union@3 = 51.5s (~2.1× single's 24s) and
+    surfaced more detail (dual-axis/dotted-points, quantified the pCO₂ range,
+    sharper inflection) — "cheap long-tail polish, not a quality revolution"
+    (the model already scores 85% single). On a single-mode tool
+    (`extract_code --sample 3`) it correctly no-ops to one call.
+  - **Status**: CLI `--sample N` opts in; default off. On-by-default waits on a
+    second image per category (the report is n=1/directional) and a
+    hallucination/precision metric on the merge. `S/M` (see
+    `benchmark/vlm/{REPEAT,CATEGORY}-REPORT.md`)
+- **F6. Per-tool model routing** (was "cascade / difficulty routing") — route
+  each tool to the model the benchmark actually crowned for it, via
+  `preferred_for` (the selector already supports this without touching the
+  preferred-per-tier rule). From `benchmark/vlm/BENCHMARK-REPORT-v5.md`'s
+  use-case table: **MoE→`read_image`** (coverage), **8B→`extract_text`/
+  `describe_chart`** (precision), **4B-Q8→`extract_code`/`describe_ui`/
+  `diagnose_error`** (edges the 8B), 27B only for fine-extraction precision
+  (`validatePlaylistKeys_` underscore, `main.py:42`) as a trade-off not a
+  default. **Asset-gated**: needs 4B-**Q8** and the MoE (Q3.6-35B-A3B) added to
+  the catalog — GGUFs + SHAs mirrored to huggingface.co/froggeric/ first (the
+  current catalog ships 4B-Q4 / 8B-Q8 / 27B-Q4). The benchmark also flagged
+  both 4B quants have a wart (Q4 flaky output, Q8 timeout-prone 87%), so the
+  flat 8B-Q8 default stays correct until per-tool routing is wired. `M`
 - **F7. Self-verification pass** — for `extract_text`/`extract_code`, a second
   cheap call re-checks the extraction against the image and flags mismatches.
   Catches hallucinations. `S/M`
@@ -598,8 +623,9 @@ Top priority was **more / better tools**; the one UX item was **streaming**.
 ### v0.7.0 — Reliability  *(M; quality)* — **next up**
 - **F4 constrained decoding / GBNF grammars `M`** — guarantees well-formed JSON/CSV so G4/G5 structured output is reliable, not prompt-begged.
 - **SSE output streaming** — real token-by-token progress, pulled forward from v0.6's elapsed heartbeat (reinforces E1).
-- F5 multi-sample consensus + confidence `S/M` *(provisional — small/mid models + high-variance categories only, pending experiment results)* · F7 self-verification `S/M` · F6 cascade `M`
-- E5 Ollama coordination `M`
+- **F5 multi-sample consensus (union@N)** `S/M` — 🚧 **scaffolded behind `--sample` (off by default), A/B'd on the 8B**; v0.7 graduates it (on-by-default per-tool once a 2nd image/category + a merge-precision metric land). See Theme F5.
+- **F6 per-tool model routing** `M` — route each tool to its benchmark-crowned model via `preferred_for` (MoE→read_image, 8B→chart/text, 4B-Q8→code/ui/error). Asset-gated on mirroring 4B-Q8 + the MoE. See Theme F6.
+- F7 self-verification `S/M` · E5 Ollama coordination `M`
 
 ### v0.8.0+ — New modalities & native GUI  *(L)*
 - G2 UI→artifact/code `M/L` · G6 coordinate grounding `M` · G7 compare→visual-diff `S/M` · G1 video `L` · F10 watch mode `S`

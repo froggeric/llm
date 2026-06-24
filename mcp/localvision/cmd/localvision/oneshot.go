@@ -119,6 +119,7 @@ func runOneShot(args []string) int {
 	cf.register(fs)
 	var typeFlag, modelFlag, questionFlag, formatFlag, outputFlag, outputDirFlag, outputModeFlag string
 	var recursiveFlag, metaFlag bool
+	var sampleFlag int
 	fs.StringVar(&typeFlag, "type", "", "query type: ocr|code|table|ui|diagram|chart|error|prompt|compare|doc|describe (default describe)")
 	fs.StringVar(&modelFlag, "model", "", "override the auto-selected model (a catalog ID)")
 	fs.StringVar(&questionFlag, "question", "", "specific question about the image (describe/read/prompt only)")
@@ -128,6 +129,7 @@ func runOneShot(args []string) int {
 	fs.StringVar(&outputModeFlag, "output-mode", "", "representation for chart/diagram: prose|csv|json (chart) | mermaid (diagram); default prose")
 	fs.BoolVar(&recursiveFlag, "recursive", false, "recurse into directories when expanding inputs")
 	fs.BoolVar(&metaFlag, "meta", false, "write a .meta.json sidecar (tokens/timing) next to each --output/--output-dir result")
+	fs.IntVar(&sampleFlag, "sample", 0, "multi-sample union@N for coverage tools (read_image/ui/chart/ocr): N warm calls fused into one comprehensive result via a merge pass (F5; experimental, off by default)")
 
 	flagArgs, positionals := splitArgs(args, fs)
 	if err := fs.Parse(flagArgs); err != nil {
@@ -296,6 +298,9 @@ func runOneShot(args []string) int {
 			return exitBadArgs
 		}
 		exec.SetOverrideModel(override)
+	}
+	if sampleFlag > 1 {
+		exec.SetSampleReps(sampleFlag)
 	}
 
 	// SIGINT/SIGTERM cancels in-flight inference so Ctrl-C during a 30-70s
