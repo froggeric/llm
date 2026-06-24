@@ -95,6 +95,21 @@ func runSetup(args []string) int {
 	}
 	fmt.Fprintln(w)
 
+	// 2b. Per-tool routing (v0.7): the benchmark crowns a different best model
+	// per tool. Offer to write the recommended per-tool routing explicitly.
+	fmt.Fprintf(w, "%s\n", paintOut(cBold, "Per-tool model routing (optional)"))
+	fmt.Fprintf(w, "  The benchmark crowns a different best model per tool, e.g.\n")
+	fmt.Fprintf(w, "  Qwen3.5-4B-Q8 for code/UI/diagram/error and Qwen3-VL-8B-Q8 for\n")
+	fmt.Fprintf(w, "  the rest. Routing each tool to its best model improves per-task\n")
+	fmt.Fprintf(w, "  quality, but a mixed-tool session then switches models (a cold\n")
+	fmt.Fprintf(w, "  reload per switch); the default keeps one warm model for all tools.\n")
+	useRouting, ok := readYesNo(r, w, "Write the benchmark's recommended per-tool routing?", false)
+	if !ok {
+		fmt.Fprintln(w, "\nSetup canceled.")
+		return exitGeneric
+	}
+	fmt.Fprintln(w)
+
 	// 3. llama-server status.
 	fmt.Fprintf(w, "%s\n", paintOut(cBold, "llama-server binary"))
 	if path, found := setup.DetectLLAMAServer(); found {
@@ -127,7 +142,7 @@ func runSetup(args []string) int {
 	}
 
 	// Build + persist.
-	final, err := setup.BuildConfig(cfg, catalog, hw, setup.Choices{Model: picked.ID})
+	final, err := setup.BuildConfig(cfg, catalog, hw, setup.Choices{Model: picked.ID, PerToolRouting: useRouting})
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "setup: %v\n", err)
 		return exitGeneric

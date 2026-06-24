@@ -84,6 +84,10 @@ func ModelOptions(catalog *models.Catalog, hw models.HardwareInfo) []ModelOption
 type Choices struct {
 	Model         string // catalog ID
 	DefaultFormat string // optional default --format; empty = presentational
+	// PerToolRouting, when true, writes explicit [tools.<id>].model tables for
+	// the benchmark's recommended per-tool routing (derived from the catalog's
+	// preferred_for partition for the detected hardware). v0.7.
+	PerToolRouting bool
 }
 
 // BuildConfig applies Choices to a base config (typically freshly loaded with
@@ -105,5 +109,43 @@ func BuildConfig(base *config.Config, catalog *models.Catalog, hw models.Hardwar
 	out := *base // shallow copy is safe: every field is a value type (string/duration)
 	out.DefaultModel = ch.Model
 	out.DefaultFormat = ch.DefaultFormat
+	if ch.PerToolRouting {
+		// Write explicit [tools.<id>].model tables for the benchmark's
+		// recommended per-tool routing, derived from the catalog's preferred_for
+		// partition resolved against the detected hardware (catalog.ModelFor).
+		// This makes the routing visible + editable in the TOML; it matches what
+		// the executor would pick anyway, but freezing it lets the user tweak
+		// individual tools. method (sampling) is left unset (off).
+		tools := routedToolIDs(catalog)
+		routing := make(map[string]config.ToolConfig, len(tools))
+		for _, t := range tools {
+			m, err := catalog.ModelFor(t, hw)
+			if err != nil {
+				continue // skip tools with no fitting model (e.g. unsupported backend)
+			}
+			routing[t] = config.ToolConfig{Model: m}
+		}
+		if len(routing) > 0 {
+			out.Tools = routing
+		}
+	}
 	return &out, nil
+}
+
+// routedToolIDs returns the set of tool IDs the catalog routes (the union of
+// every model's preferred_for). Used by BuildConfig to write the recommended
+// per-tool routing. Deterministic order.
+func routedToolIDs(catalog *models.Catalog) []string {
+	seen := map[string]bool{}
+	for _, m := range catalog.Models {
+		for _, t := range m.PreferredFor {
+			seen[t] = true
+		}
+	}
+	out := make([]string, 0, len(seen))
+	for t := range seen {
+		out = append(out, t)
+	}
+	sort.Strings(out)
+	return out
 }

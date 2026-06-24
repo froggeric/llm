@@ -32,6 +32,7 @@ import (
 	"github.com/froggeric/llm/mcp/localvision/internal/logging"
 	"github.com/froggeric/llm/mcp/localvision/internal/mcpserver"
 	"github.com/froggeric/llm/mcp/localvision/internal/models"
+	"github.com/froggeric/llm/mcp/localvision/internal/tools"
 	"github.com/froggeric/llm/mcp/localvision/internal/version"
 )
 
@@ -119,10 +120,11 @@ func runSubcommand(args []string) int {
 	}
 
 	srv, err := mcpserver.NewServer(mcpserver.Dependencies{
-		Logger:    rt.logger,
-		Lifecycle: rt.lifecycle,
-		Catalog:   rt.catalog,
-		Hardware:  rt.hw,
+		Logger:      rt.logger,
+		Lifecycle:   rt.lifecycle,
+		Catalog:     rt.catalog,
+		Hardware:    rt.hw,
+		ToolConfigs: cfg.Tools,
 	})
 	if err != nil {
 		logger.Error("failed to construct MCP server", "error", err)
@@ -263,6 +265,21 @@ func doctorSubcommand(args []string) int {
 		fmt.Fprintf(w, "Construction FAILED: %v\n", srvErr)
 	} else {
 		fmt.Fprintf(w, "Registered:     %d\n", srv.ToolCount())
+		// Per-tool model routing for the detected hardware (v0.7). Shows the
+		// model each tool resolves to (config [tools.<id>] override, else the
+		// catalog's preferred_for routing for this HW).
+		if hwErr == nil {
+			fmt.Fprintln(w, "Routing (per tool, detected hardware):")
+			for _, t := range tools.NewRegistry().All() {
+				resolved := "(no fitting model)"
+				if tc, ok := cfg.Tools[t.ID()]; ok && tc.Model != "" {
+					resolved = tc.Model + "  [config override]"
+				} else if m, err := catalog.ModelFor(t.ID(), hw); err == nil {
+					resolved = m
+				}
+				fmt.Fprintf(w, "  %-18s %s\n", t.ID(), resolved)
+			}
+		}
 	}
 	fmt.Fprintln(w)
 

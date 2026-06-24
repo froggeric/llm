@@ -52,18 +52,14 @@ preferred_for = [
   "read_image",
   "read_document",
   "extract_text",
-  "extract_code",
-  "extract_table",
-  "describe_ui",
-  "describe_diagram",
   "describe_chart",
-  "diagnose_error",
+  "extract_table",
   "image_to_prompt",
   "compare_images",
 ]
 hardware_tier = "mainstream"
 bench_toks = 38.0
-notes = "Default for all tools. The only 100%-reliable Q8 model in our v6 benchmark (0 timeouts across 90 cells, σ=0.33). A re-analysis (quality + speed) made it the pick over the 27B champion: within ~5 pts on quality but ~3× faster (26 s vs 70 s) and rock-solid. Fits from ~12 GB up."
+notes = "Default for most tools and the safest all-rounder. The only 100%-reliable Q8 model in our v6 benchmark (0 timeouts across 90 cells, σ=0.33). A re-analysis (quality + speed) made it the pick over the 27B champion: within ~5 pts on quality but ~3× faster (26 s vs 70 s) and rock-solid. v0.7 per-tool routing: the 8B-Q8 is the benchmark-best for read_image / extract_text / describe_chart / extract_table (+ the newer read_document / image_to_prompt / compare_images); the 4B-Q8 takes extract_code / describe_ui / describe_diagram / diagnose_error where it edges the 8B. See BENCHMARK-REPORT-v5.md."
 
 # =============================================================================
 # Qwen3.5 4B (nothink) — fallback where the 8B does not fit (4–8 GB Macs).
@@ -92,6 +88,42 @@ notes = "Best quality-per-GB in the v6 benchmark (23.6 pts/GB — 75.5/100 at 3.
 chat_template_kwargs = { enable_thinking = false }
 
 # =============================================================================
+# Qwen3.5 4B (Q8_0) — the benchmark-best model for extract_code / describe_ui /
+# describe_diagram / diagnose_error (it edges the 8B there at ~58 tok/s vs the
+# 8B's 37-40 and 4.2 GB vs 8.1 GB). v0.7 per-tool routing: lists those 4 tools
+# so selectModelFor routes them here wherever it fits. NOT preferred (the 8B is
+# the mainstream tier default) and on the mainstream tier, because at 4.2 GB it
+# only fits from ~10-12 GB up — on true 4-8 GB hardware only the 4B-Q4 fits, so
+# the 4B-Q4 stays the constrained fallback. The benchmark flags Q8 as ~87%-ok
+# (slightly timeout-prone), so the rock-solid 8B-Q8 stays the safe default for
+# mixed sessions. See BENCHMARK-REPORT-v5.md use-case table.
+# =============================================================================
+
+[models."qwen3.5-4b-q8"]
+display_name = "Qwen3.5 4B (Q8)"
+gguf = "https://huggingface.co/froggeric/Qwen3.5-4B-GGUF/resolve/main/Qwen3.5-4B-Q8_0.gguf"
+mmproj = "https://huggingface.co/froggeric/Qwen3.5-4B-GGUF/resolve/main/mmproj-F16.gguf"
+gguf_sha256 = "10cc391b403021dd11c614679d2fd92f611c3681d29e29651b717316965d61e1"
+mmproj_sha256 = "cd88edcf8d031894960bb0c9c5b9b7e1fea6ebee02b9f7ce925a00d12891f864"
+ctx = 32768
+gpu_layers = -1
+min_vram_gb = 4
+min_system_ram_gb = 8
+released = "2026-03"
+license = "Apache-2.0"
+preferred = false
+preferred_for = [
+  "extract_code",
+  "describe_ui",
+  "describe_diagram",
+  "diagnose_error",
+]
+hardware_tier = "mainstream"
+bench_toks = 58.0
+notes = "Edges the 8B-Q8 on extract_code / describe_ui / describe_diagram / diagnose_error (benchmark use-case table): same-or-better quality at ~58 tok/s (vs the 8B's 37-40) and 4.2 GB (vs 8.1 GB). Routed for those 4 tools wherever it fits (mainstream-tier; not preferred — the 8B is the tier default). The benchmark notes Q8 is ~87%-ok (slightly timeout-prone) — the 8B-Q8 is the safer pick for mixed-tool sessions; opt into per-tool routing deliberately. Must run with enable_thinking=false for vision."
+chat_template_kwargs = { enable_thinking = false }
+
+# =============================================================================
 # Qwen3.6 27B (nothink) — opt-in, max quality. Never auto-selected (preferred =
 # false, lists no tools); choose it explicitly with `--model qwen3.6-27b`. Needs
 # 24+ GB for comfortable operation.
@@ -114,4 +146,34 @@ preferred_for = []
 hardware_tier = "mainstream"
 bench_toks = 16.0
 notes = "Benchmark champion: 79.6/100, σ=0.24, 0 failures across 90 cells — the last ~5 quality points over the 8B, at ~3× the latency (70 s) and 17 GB footprint. Opt-in only: pass `--model qwen3.6-27b`. Needs 24+ GB. Must run with enable_thinking=false for vision (chat_template_kwargs below)."
+chat_template_kwargs = { enable_thinking = false }
+
+# =============================================================================
+# Qwen3.6 35B-A3B (nothink, sparse MoE — "3B active" per token) — opt-in.
+# Never auto-selected (preferred=false, lists no tools). The benchmark's
+# coverage pick for read_image WITH multi-sampling (--sample): finds details the
+# small models miss. But on a single call it TIES much smaller dense models
+# despite the 21.9 GB footprint (the 35B parameter count buys knowledge breadth,
+# not perception depth — see BENCHMARK-REPORT-v5 MoE reality check). So: opt-in
+# (`--model qwen3.6-35b-a3b`, or `[tools.read_image].model`), and pair with
+# `--sample` for the coverage benefit. Needs 24+ GB.
+# =============================================================================
+
+[models."qwen3.6-35b-a3b"]
+display_name = "Qwen3.6 35B-A3B (MoE, nothink)"
+gguf = "https://huggingface.co/froggeric/Qwen3.6-35B-A3B-GGUF/resolve/main/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+mmproj = "https://huggingface.co/froggeric/Qwen3.6-35B-A3B-GGUF/resolve/main/mmproj-F16.gguf"
+gguf_sha256 = "ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+mmproj_sha256 = "8971ee4f331ff0a4c609374f32984b3d4e6dc086c0aa35f1d637fad1829e887f"
+ctx = 32768
+gpu_layers = -1
+min_vram_gb = 17
+min_system_ram_gb = 24
+released = "2026-04"
+license = "Apache-2.0"
+preferred = false
+preferred_for = []
+hardware_tier = "mainstream"
+bench_toks = 40.0
+notes = "Sparse MoE (3B active/token, 21.9 GB). The benchmark's coverage pick for read_image WITH --sample (union@N): finds details the small models miss. On a single call it ties the 8B-Q8 / 4B-Q8 despite the footprint (the active-parameter count, not the total, drives vision quality) — so the 8B-Q8 is the better single-call choice. Opt-in via --model qwen3.6-35b-a3b or [tools.read_image].model, paired with --sample. Must run with enable_thinking=false for vision."
 chat_template_kwargs = { enable_thinking = false }

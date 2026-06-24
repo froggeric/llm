@@ -287,17 +287,15 @@ func runOneShot(args []string) int {
 	}
 
 	exec := mcpserver.NewCatalogExecutor(rt.catalog, rt.lifecycle, rt.hw, rt.logger)
-	// --model overrides; else config default_model; else catalog selection.
-	override := modelFlag
-	if override == "" {
-		override = cfg.DefaultModel
-	}
-	if override != "" {
-		if _, ok := rt.catalog.Models[override]; !ok {
-			fmt.Fprintf(os.Stderr, "localvision: model %q is not in the catalog\n", override)
+	exec.SetToolConfig(cfg.Tools)          // per-tool model + method overrides (v0.7)
+	exec.SetDefaultModel(cfg.DefaultModel) // config default_model = fallback (v0.7; does not force)
+	// --model forces one model for every tool (bypasses per-tool routing).
+	if modelFlag != "" {
+		if _, ok := rt.catalog.Models[modelFlag]; !ok {
+			fmt.Fprintf(os.Stderr, "localvision: model %q is not in the catalog\n", modelFlag)
 			return exitBadArgs
 		}
-		exec.SetOverrideModel(override)
+		exec.SetOverrideModel(modelFlag)
 	}
 	if sampleFlag > 1 {
 		exec.SetSampleReps(sampleFlag)

@@ -1,5 +1,10 @@
 package tools
 
+import (
+	"strconv"
+	"strings"
+)
+
 // SamplingMode says how a tool's inference should be repeated and aggregated
 // when multi-sampling is opted into (F5). Source: benchmark/vlm/CATEGORY-REPORT.md
 // "Implications for the localvision MCP".
@@ -47,4 +52,22 @@ func SamplingFor(toolID string) Sampling {
 		return s
 	}
 	return Sampling{Mode: SamplingSingle, Temp: 0.1}
+}
+
+// ParseMethod parses a per-tool method string (the `[tools.<id>].method` value):
+// "" or "off" → 0 (single), "union@N" → N (N>=2). Returns reps=0, ok=false for
+// an unparseable value (used by config validation + executor resolution).
+func ParseMethod(s string) (reps int, ok bool) {
+	t := strings.TrimSpace(s)
+	if t == "" || t == "off" {
+		return 0, true
+	}
+	if !strings.HasPrefix(t, "union@") {
+		return 0, false
+	}
+	n, err := strconv.Atoi(strings.TrimPrefix(t, "union@"))
+	if err != nil || n < 2 {
+		return 0, false
+	}
+	return n, true
 }

@@ -55,11 +55,16 @@ All tools accept these input shapes (pick whichever is easiest for the caller):
 
 **Budget 30–60 seconds per call.** Each call:
 
-1. Picks a model based on your hardware (`qwen3-vl-8b` by default; `qwen3.5-4b` on tiny machines where the 8B doesn't fit).
+1. Picks a model per tool based on your hardware — the v6 benchmark crowns a
+   different best model per tool, so `localvision` routes: `qwen3-vl-8b` for
+   `read_image`/`extract_text`/`describe_chart`/`extract_table`, `qwen3.5-4b-q8`
+   for `extract_code`/`describe_ui`/`describe_diagram`/`diagnose_error` (it edges
+   the 8B there); on tiny machines where neither fits, `qwen3.5-4b`. (`doctor`
+   shows the routing; `[tools.<id>]` in config overrides it; `--model` forces one.)
 2. Loads the model into a `llama-server` subprocess (cold start: 5–10 s; subsequent calls on the same model: 0.1–0.5 s).
 3. Runs one inference and returns text.
 
-The subprocess stays resident for 5 minutes after the last call (configurable via `~/.localvision/config.toml` → `idle_timeout`). Subsequent calls within that window skip the load step.
+The subprocess stays resident for 5 minutes after the last call (configurable via `~/.localvision/config.toml` → `idle_timeout`). Subsequent calls within that window skip the load step. Note: per-tool routing means a mixed-tool session may switch models (a cold reload per switch).
 
 ## Privacy
 

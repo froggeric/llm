@@ -12,6 +12,8 @@ import (
 	"time"
 
 	"github.com/BurntSushi/toml"
+
+	"github.com/froggeric/llm/mcp/localvision/internal/tools"
 )
 
 // ErrNotImplemented is retained for backwards compatibility; production code
@@ -42,6 +44,19 @@ const (
 	LogLevelError = "error"
 )
 
+// ToolConfig is a per-tool override, set via the `[tools.<id>]` TOML table:
+//
+//	[tools.read_image]
+//	model = "qwen3-vl-8b"     # override the model for this tool (catalog ID)
+//	method = "union@3"        # multi-sampling: "" | "off" | "union@N"
+//
+// Empty fields fall back to the default for that dimension (catalog per-tool
+// routing for model; off for method). v0.7.
+type ToolConfig struct {
+	Model  string `toml:"model,omitempty"`
+	Method string `toml:"method,omitempty"`
+}
+
 // Config is the parsed user configuration. All fields have safe defaults
 // except where noted.
 type Config struct {
@@ -59,6 +74,11 @@ type Config struct {
 	DefaultFormat  string  `toml:"default_format"`
 	SafetyMarginGB float64 `toml:"safety_margin_gb"`
 	HFUser         string  `toml:"hf_user"`
+
+	// Tools holds optional per-tool model + method (sampling) overrides
+	// ([tools.<id>] tables). Empty = catalog per-tool routing + sampling off.
+	// v0.7.
+	Tools map[string]ToolConfig `toml:"tools,omitempty"`
 
 	// LLAMAServerPinnedSHA256 is populated from internal/llama at link time
 	// (so the binary pins the hash it expects). Not set via TOML.
@@ -147,6 +167,15 @@ func Load(path string) (*Config, error) {
 		c.HFUser = DefaultHFUser
 	}
 
+	// Validate per-tool [tools.<id>] overrides. Method syntax is checked here
+	// (self-contained); model IDs are checked at resolution time, where the
+	// catalog is available (the executor).
+	for id, tc := range c.Tools {
+		if _, ok := tools.ParseMethod(tc.Method); !ok {
+			return nil, fmt.Errorf("[tools.%s].method %q: want \"off\" or \"union@N\" (N>=2)", id, tc.Method)
+		}
+	}
+
 	return c, nil
 }
 
@@ -175,6 +204,7 @@ func Save(path string, c *Config) error {
 		StartupTimeout: c.StartupTimeout,
 		SafetyMarginGB: c.SafetyMarginGB,
 		HFUser:         c.HFUser,
+		Tools:          c.Tools,
 	}
 	f, err := os.Create(path)
 	if err != nil {
@@ -194,17 +224,18 @@ func Save(path string, c *Config) error {
 // Internal/computed fields (e.g. LLAMAServerPinnedSHA256, toml:"-") are
 // intentionally excluded. omitempty keeps the file free of zero-valued noise.
 type savedConfig struct {
-	DefaultModel   string        `toml:"default_model,omitempty"`
-	DefaultFormat  string        `toml:"default_format,omitempty"`
-	CacheDir       string        `toml:"cache_dir,omitempty"`
-	ModelsDir      string        `toml:"models_dir,omitempty"`
-	BinDir         string        `toml:"bin_dir,omitempty"`
-	LogLevel       string        `toml:"log_level,omitempty"`
-	LogFile        string        `toml:"log_file,omitempty"`
-	IdleTimeout    time.Duration `toml:"idle_timeout,omitempty"`
-	StartupTimeout time.Duration `toml:"startup_timeout,omitempty"`
-	SafetyMarginGB float64       `toml:"safety_margin_gb,omitempty"`
-	HFUser         string        `toml:"hf_user,omitempty"`
+	DefaultModel   string                `toml:"default_model,omitempty"`
+	DefaultFormat  string                `toml:"default_format,omitempty"`
+	CacheDir       string                `toml:"cache_dir,omitempty"`
+	ModelsDir      string                `toml:"models_dir,omitempty"`
+	BinDir         string                `toml:"bin_dir,omitempty"`
+	LogLevel       string                `toml:"log_level,omitempty"`
+	LogFile        string                `toml:"log_file,omitempty"`
+	IdleTimeout    time.Duration         `toml:"idle_timeout,omitempty"`
+	StartupTimeout time.Duration         `toml:"startup_timeout,omitempty"`
+	SafetyMarginGB float64               `toml:"safety_margin_gb,omitempty"`
+	HFUser         string                `toml:"hf_user,omitempty"`
+	Tools          map[string]ToolConfig `toml:"tools,omitempty"`
 }
 
 // ApplyDirOverrides applies optional cache_dir / models_dir / bin_dir overrides

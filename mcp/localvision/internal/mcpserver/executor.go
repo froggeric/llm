@@ -22,6 +22,7 @@ import (
 	"log/slog"
 	"strings"
 
+	"github.com/froggeric/llm/mcp/localvision/internal/config"
 	"github.com/froggeric/llm/mcp/localvision/internal/llama"
 	"github.com/froggeric/llm/mcp/localvision/internal/models"
 	"github.com/froggeric/llm/mcp/localvision/internal/progress"
@@ -39,16 +40,24 @@ type CatalogExecutor struct {
 	lifecycle *llama.LifecycleManager
 	hardware  models.HardwareInfo
 	logger    *slog.Logger
-	// overrideModel, when non-empty, forces a specific model ID instead of the
-	// catalog's per-tool selection. Used by the CLI (--model / config
-	// default_model). The MCP server path leaves it empty so the richer
-	// per-tool selection applies.
+	// overrideModel, when non-empty, forces a specific model ID for EVERY tool
+	// (--model flag only). It bypasses per-tool routing. The MCP server path
+	// leaves it empty so the per-tool selection applies.
 	overrideModel string
+	// defaultModel is the config's default_model, used as a FALLBACK when a tool
+	// has no per-tool route and no fitting catalog model (rare). It does NOT
+	// force a single model — per-tool routing (catalog preferred_for + [tools.*])
+	// takes precedence. v0.7.
+	defaultModel string
 	// sampleReps, when > 1, opts union-mode tools into multi-sampling: N warm
 	// calls at the tool's sampling temperature, fused by a merge pass (F5).
 	// Single-mode tools and reps<=1 do one call at 0.1 (today's behavior).
 	// Default 0/1 = off.
 	sampleReps int
+	// toolConfigs holds optional per-tool model + method (sampling) overrides
+	// from the user config ([tools.<id>]). Empty/missing = catalog per-tool
+	// routing + sampling off. v0.7.
+	toolConfigs map[string]config.ToolConfig
 }
 
 // NewCatalogExecutor builds an executor wired to the given catalog and
@@ -79,6 +88,16 @@ func (e *CatalogExecutor) SetOverrideModel(id string) { e.overrideModel = id }
 // = off. Recipe per tool: see tools.SamplingFor.
 func (e *CatalogExecutor) SetSampleReps(reps int) { e.sampleReps = reps }
 
+// SetToolConfig installs per-tool model + method (sampling) overrides from the
+// user config ([tools.<id>]). Used by both call sites (CLI + MCP server). A nil
+// map clears it. v0.7.
+func (e *CatalogExecutor) SetToolConfig(tc map[string]config.ToolConfig) { e.toolConfigs = tc }
+
+// SetDefaultModel sets the config's default_model, used as a fallback when a
+// tool has no per-tool route and no fitting catalog model. It does NOT force a
+// single model (per-tool routing takes precedence). v0.7.
+func (e *CatalogExecutor) SetDefaultModel(id string) { e.defaultModel = id }
+
 // Run implements tools.Executor. It:
 //  1. Picks the right model for the tool via catalog.ModelFor(toolID, hw)
 //  2. Acquires a loaded-model client via lifecycle.Acquire(ctx, modelID)
@@ -99,22 +118,34 @@ func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPro
 		return "", tools.Stats{}, fmt.Errorf("executor: lifecycle manager is nil; first-run setup required")
 	}
 
-	// Step 1: pick the model. An explicit override (--model / config
-	// default_model) wins; otherwise use the catalog's per-tool selection.
+	// Step 1: pick the model. Precedence (highest wins):
+	//   --model flag  >  [tools.<id>].model  >  catalog per-tool selection  >  default_model fallback
+	// --model forces one model for every tool (backward compat). default_model is
+	// a FALLBACK only (it does not defeat per-tool routing). v0.7.
 	modelID := e.overrideModel
+	source := "override(--model)"
 	if modelID == "" {
-		var err error
-		modelID, err = e.catalog.ModelFor(toolID, e.hardware)
-		if err != nil {
+		if tc, ok := e.toolConfigs[toolID]; ok && tc.Model != "" {
+			modelID = tc.Model
+			source = "config([tools.<id>])"
+		} else if m, err := e.catalog.ModelFor(toolID, e.hardware); err == nil {
+			modelID = m
+			source = "catalog"
+		} else if e.defaultModel != "" {
+			modelID = e.defaultModel
+			source = "default_model"
+		} else {
 			return "", tools.Stats{}, fmt.Errorf("selecting model for tool %q: %w", toolID, err)
 		}
-	} else if _, ok := e.catalog.Models[modelID]; !ok {
-		return "", tools.Stats{}, fmt.Errorf("override model %q is not in the catalog", modelID)
-	} else if !e.catalog.Fits(modelID, e.hardware) {
-		e.logger.Warn("override model may not fit the detected hardware; proceeding anyway",
-			"model_id", modelID)
 	}
-	e.logger.Debug("selected model for tool", "tool_id", toolID, "model_id", modelID, "override", e.overrideModel != "")
+	if _, ok := e.catalog.Models[modelID]; !ok {
+		return "", tools.Stats{}, fmt.Errorf("model %q (resolved for tool %q via %s) is not in the catalog", modelID, toolID, source)
+	}
+	if source != "catalog" && !e.catalog.Fits(modelID, e.hardware) {
+		e.logger.Warn("resolved model may not fit the detected hardware; proceeding anyway",
+			"model_id", modelID, "tool_id", toolID, "source", source)
+	}
+	e.logger.Debug("selected model for tool", "tool_id", toolID, "model_id", modelID, "source", source)
 
 	// Step 2: load (or reuse) the model. Acquire blocks on an internal
 	// mutex so concurrent tool calls don't race on the subprocess.
@@ -154,14 +185,26 @@ func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPro
 	// (their errors are systematic, so repeats can't help). Temperature is the
 	// "gate" the benchmark names: at 0.1 the N runs come out ~identical and
 	// correlation adds nothing, so the raised temp only applies when sampling.
+	// Sampling resolution (F5). Off by default (single call at 0.1). Opt in via
+	// --sample N (CLI) or [tools.<id>].method = "union@N" (config); --sample wins
+	// when set. The tool's recipe (tools.SamplingFor) supplies the temperature
+	// when sampling (0.7 coverage, 0.4 OCR); a single-mode tool sampled by an
+	// explicit opt-in uses 0.7. Temperature is the "gate": at 0.1 the N runs are
+	// ~identical and correlation adds nothing, so the raised temp only applies
+	// when sampling.
 	sampling := tools.SamplingFor(toolID)
-	reps := e.sampleReps
-	if sampling.Mode != tools.SamplingUnion {
-		reps = 1
+	reps := 0
+	if e.sampleReps > 1 {
+		reps = e.sampleReps
+	} else if tc, ok := e.toolConfigs[toolID]; ok {
+		reps, _ = tools.ParseMethod(tc.Method)
 	}
 	temp := 0.1
 	if reps > 1 {
 		temp = sampling.Temp
+		if sampling.Mode != tools.SamplingUnion {
+			temp = 0.7 // explicit opt-in on a single-mode tool: a sane sampling temp
+		}
 	}
 
 	req := llama.ChatRequest{

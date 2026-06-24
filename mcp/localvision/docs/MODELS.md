@@ -2,27 +2,38 @@
 
 The catalog is a TOML file that describes every model the MCP can serve. It lives at `internal/models/builtin.toml` (embedded in the binary) and can be extended via overlays at `~/.localvision/catalog.d/*.toml`.
 
-## Built-in catalog (v0.5.1)
+## Built-in catalog (v0.7)
 
-Based on the v6 benchmark (30 images, 3 runs, 24 variants, hybrid scoring), re-analyzed for the quality-vs-speed tradeoff.
+Based on the v6 benchmark (30 images, 3 runs, 24 variants, hybrid scoring). v0.7
+adds **per-tool model routing**: the catalog crowns a different best model per
+tool (see `benchmark/vlm/BENCHMARK-REPORT-v5.md`'s use-case table), encoded in
+each model's `preferred_for`.
 
-| Model | Display name | Min VRAM | Role |
+| Model | Display name | Min VRAM | Role (v0.7) |
 |---|---|---|---|
-| `qwen3-vl-8b` | Qwen3-VL 8B (Q8_0) | 6 GB | **default for all tools** (where it fits) |
-| `qwen3.5-4b` | Qwen3.5 4B (nothink) | 3 GB | fallback where the 8B does not fit |
+| `qwen3-vl-8b` | Qwen3-VL 8B (Q8_0) | 6 GB | **mainstream default**; routed for `read_image` / `extract_text` / `describe_chart` / `extract_table` (+ `read_document` / `image_to_prompt` / `compare_images`) — the precision/cleanliness lead |
+| `qwen3.5-4b-q8` | Qwen3.5 4B (Q8) | 4 GB | routed for `extract_code` / `describe_ui` / `describe_diagram` / `diagnose_error` — edges the 8B there at ~58 tok/s and 4.2 GB |
+| `qwen3.5-4b` | Qwen3.5 4B (nothink, Q4) | 3 GB | sub-4 GB fallback (where the 8B and 4B-Q8 don't fit) |
 | `qwen3.6-27b` | Qwen3.6 27B (nothink) | 17 GB | opt-in, max quality (`--model qwen3.6-27b`) |
+| `qwen3.6-35b-a3b` | Qwen3.6 35B-A3B (MoE) | 17 GB | opt-in; the `read_image` coverage pick **with `--sample`** (ties smaller models on a single call despite 21 GB) |
 
-**How selection works (v0.5.1 — "8B for all")**:
+**How selection works (v0.7 — per-tool routing)**:
 
-Only `qwen3-vl-8b` lists tools in `preferred_for`, so the per-tool selector picks
-it everywhere it fits; where it does not, the selector falls back to the largest
-model that does.
+Each model lists the tools it's best at in `preferred_for`; the per-tool selector
+(`catalog.ModelFor`) picks the fitting model that lists the tool. Hardware fit
+still gates: on a 16 GB Mac both the 8B and 4B-Q8 fit → each tool routes to its
+best; on 4–8 GB only the 4B-Q4 fits → everything falls back to it.
 
-- On 4–8 GB Macs: `qwen3-vl-8b` does not fit (6 GB min) → `qwen3.5-4b` (runs with `enable_thinking=false`).
-- On ~12 GB+ Macs: `qwen3-vl-8b` (Q8_0) — the only 100%-reliable Q8 in the benchmark (0 timeouts, σ=0.33), ~3× faster than the 27B (26 s vs 70 s) and within ~5 quality points (74.4 vs 79.6). A re-analysis of quality + speed made it the pick over the 27B champion for the default.
-- `qwen3.6-27b` (the benchmark champion, 79.6/100, σ=0.24, 0 failures) is **opt-in only** — never auto-selected. Pass `--model qwen3.6-27b` for the last ~5 quality points when you can afford the latency and footprint (needs 24+ GB).
+- The 8B-Q8 remains the **safest all-rounder** (only 100%-reliable Q8: 0 timeouts, σ=0.33). It is the mainstream tier default and the fallback when a tool's routed model doesn't fit.
+- The 4B-Q8 edges the 8B on code/UI/diagram/error (benchmark use-case table) at ~58 tok/s, but is ~87%-ok (slightly timeout-prone) — opt into per-tool routing deliberately.
+- `qwen3.6-27b` (champion, 79.6/100) and the MoE are **opt-in only** (`--model`); never auto-selected.
 
-Run `localvision doctor` to see which model applies to your hardware.
+Run `localvision doctor` to see the per-tool routing for your hardware. Override
+per tool via `[tools.<id>]` in `config.toml` (see [CONFIGURATION.md](./CONFIGURATION.md)).
+
+> **Tradeoff:** per-tool routing switches models between tools in a mixed MCP
+> session (a cold reload per switch). `localvision setup` defaults to a single
+> warm model + opt-in routing to preserve warm reuse.
 
 ### Cache layout
 
@@ -156,10 +167,12 @@ Given the catalog and detected hardware:
 4. **Default model** (fallback + `doctor` display): the `preferred=true` entry whose `hardware_tier` matches the user's tier among the fitting set; if no tier-preferred fits, the largest fitting model that lists at least one tool (so the default matches what tools use); if none list a tool, the largest fitting model overall.
 5. If nothing fits, the catalog returns `ErrNoFittingModel` and the MCP surfaces a structured error to the client (never crashes).
 
-In the v0.5.1 catalog only `qwen3-vl-8b` lists tools, so step 3 picks it
-everywhere it fits; where it does not (tiny hardware), step 4 lands on
-`qwen3.5-4b`. `qwen3.6-27b` lists no tools and is not preferred, so it is never
-auto-selected — select it with `--model`.
+In the v0.7 catalog the `preferred_for` lists are **partitioned** across the 8B
+and the 4B-Q8 (the 8B lists the 7 tools it leads; the 4B-Q8 lists the 4 it edges
+the 8B on), so step 3 routes each tool to its benchmark-best fitting model. The
+4B-Q4 / 27B / MoE list no tools (opt-in). Where a tool's routed model doesn't
+fit (e.g. on 4–8 GB, where only the 4B-Q4 fits), step 4 lands on the 4B-Q4.
+`--model` or a `[tools.<id>].model` override bypasses the routing.
 
 See `internal/models/selection.go` for the implementation.
 

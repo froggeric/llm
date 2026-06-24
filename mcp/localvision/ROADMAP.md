@@ -453,19 +453,17 @@ client. Several items here are small and can be pulled forward into any release.
     second image per category (the report is n=1/directional) and a
     hallucination/precision metric on the merge. `S/M` (see
     `benchmark/vlm/{REPEAT,CATEGORY}-REPORT.md`)
-- **F6. Per-tool model routing** (was "cascade / difficulty routing") — route
-  each tool to the model the benchmark actually crowned for it, via
-  `preferred_for` (the selector already supports this without touching the
-  preferred-per-tier rule). From `benchmark/vlm/BENCHMARK-REPORT-v5.md`'s
-  use-case table: **MoE→`read_image`** (coverage), **8B→`extract_text`/
-  `describe_chart`** (precision), **4B-Q8→`extract_code`/`describe_ui`/
-  `diagnose_error`** (edges the 8B), 27B only for fine-extraction precision
-  (`validatePlaylistKeys_` underscore, `main.py:42`) as a trade-off not a
-  default. **Asset-gated**: needs 4B-**Q8** and the MoE (Q3.6-35B-A3B) added to
-  the catalog — GGUFs + SHAs mirrored to huggingface.co/froggeric/ first (the
-  current catalog ships 4B-Q4 / 8B-Q8 / 27B-Q4). The benchmark also flagged
-  both 4B quants have a wart (Q4 flaky output, Q8 timeout-prone 87%), so the
-  flat 8B-Q8 default stays correct until per-tool routing is wired. `M`
+- **F6. Per-tool model routing** — ✅ **Done (scaffolded).** The catalog now
+  routes per tool via `preferred_for` (no selection-code change): `qwen3.5-4b-q8`
+  ← `extract_code`/`describe_ui`/`describe_diagram`/`diagnose_error`, `qwen3-vl-8b`
+  ← the rest. Both new models are mirrored to huggingface.co/froggeric/ and in
+  the catalog (the MoE is opt-in — only beats the 8B for `read_image` coverage
+  WITH `--sample`). Per-tool `[tools.<id>]` config (model + method) + a setup-
+  wizard one-click "recommended routing" + a `doctor` routing table round it out.
+  `default_model` is now a fallback (no longer a forced override), so routing is
+  the default. **Tradeoff**: mixed-tool sessions switch models (cold reload per
+  switch); the wizard defaults to single-model + opt-in to preserve warm reuse.
+  From `benchmark/vlm/BENCHMARK-REPORT-v5.md`'s use-case table. `M`
 - **F7. Self-verification pass** — for `extract_text`/`extract_code`, a second
   cheap call re-checks the extraction against the image and flags mismatches.
   Catches hallucinations. `S/M`
@@ -623,8 +621,8 @@ Top priority was **more / better tools**; the one UX item was **streaming**.
 ### v0.7.0 — Reliability  *(M; quality)* — **next up**
 - **F4 constrained decoding / GBNF grammars `M`** — guarantees well-formed JSON/CSV so G4/G5 structured output is reliable, not prompt-begged.
 - **SSE output streaming** — real token-by-token progress, pulled forward from v0.6's elapsed heartbeat (reinforces E1).
-- **F5 multi-sample consensus (union@N)** `S/M` — 🚧 **scaffolded behind `--sample` (off by default), A/B'd on the 8B**; v0.7 graduates it (on-by-default per-tool once a 2nd image/category + a merge-precision metric land). See Theme F5.
-- **F6 per-tool model routing** `M` — route each tool to its benchmark-crowned model via `preferred_for` (MoE→read_image, 8B→chart/text, 4B-Q8→code/ui/error). Asset-gated on mirroring 4B-Q8 + the MoE. See Theme F6.
+- **F5 multi-sample consensus (union@N)** `S/M` — 🚧 **scaffolded behind `--sample` / `[tools.<id>].method` (off by default), A/B'd on the 8B**; v0.7 graduates it (on-by-default per-tool once a 2nd image/category + a merge-precision metric land). See Theme F5.
+- ✅ **F6 per-tool model routing** `M` — done: catalog `preferred_for` partition (4B-Q8←code/ui/diagram/error, 8B←rest), both new models mirrored, `[tools.<id>]` config, setup-wizard one-click, doctor routing table. MoE opt-in. See Theme F6.
 - F7 self-verification `S/M` · E5 Ollama coordination `M`
 
 ### v0.8.0+ — New modalities & native GUI  *(L)*

@@ -61,9 +61,42 @@ hf_user = "froggeric"
 | `cache_dir` | string | `~/.localvision` | Root state directory. |
 | `models_dir` | string | `<cache_dir>/models` | Model-file cache. |
 | `bin_dir` | string | `<cache_dir>/bin` | llama-server binary cache. |
-| `default_model` | string | (auto) | Override auto-selected default. |
+| `default_model` | string | (auto) | Fallback model when a tool has no per-tool route and no fitting catalog model (v0.7: a fallback, not a forced override — per-tool routing takes precedence). |
 | `safety_margin_gb` | float | `4.0` | Memory subtracted from total when computing availability. |
 | `hf_user` | string | `froggeric` | HuggingFace namespace for downloads. |
+
+## Per-tool model + method routing (v0.7)
+
+The catalog routes each tool to its benchmark-best model automatically (see
+`localvision doctor` for the table). You can override per tool with
+`[tools.<id>]` tables — both the **model** and the **sampling method**:
+
+```toml
+[tools.read_image]
+model = "qwen3.6-35b-a3b"   # route read_image to the MoE (catalog ID)
+method = "union@3"           # multi-sample: 3 warm calls fused into one result
+
+[tools.extract_code]
+model = "qwen3.5-4b-q8"      # pin a specific model for this tool
+```
+
+- `model` — a catalog ID. Empty = use the catalog's per-tool routing.
+- `method` — `off` (default) or `union@N` (multi-sample; experimental, ~N×
+  latency). Only worth it on coverage tools (`read_image`, `describe_ui`,
+  `describe_chart`, `extract_text`); see `benchmark/vlm/CATEGORY-REPORT.md`.
+
+**Resolution order** (highest wins): `--model` flag (forces one model for every
+tool) > `[tools.<id>].model` > catalog per-tool routing > `default_model`.
+Note: `default_model` is a *fallback* — it no longer forces a single model, so
+per-tool routing is the default behavior.
+
+`localvision setup` can write the benchmark's recommended per-tool routing for
+you (it asks). `localvision doctor` prints the resolved model per tool for your
+hardware.
+
+> **Tradeoff:** per-tool model routing means a mixed-tool MCP session switches
+> models between calls (a cold reload per switch). The wizard defaults to a
+> single warm model + opt-in routing to preserve warm reuse.
 
 ## Path expansion
 

@@ -11,28 +11,55 @@ Tags for this subdirectory follow the Go module convention
 
 ## [Unreleased]
 
+### Added
+
+- **Per-tool model routing (F6)** — the v6 benchmark crowns a different best
+  model per tool, so the catalog now routes per tool via `preferred_for`:
+  `qwen3.5-4b-q8` serves `extract_code` / `describe_ui` / `describe_diagram` /
+  `diagnose_error` (it edges the 8B there, at ~58 tok/s and 4.2 GB), and
+  `qwen3-vl-8b` serves the rest. Hardware fit still gates selection (on hardware
+  where the 8B doesn't fit, those tools fall back; the `qwen3.5-4b` Q4 remains
+  the sub-4 GB fallback). `doctor` now prints the per-tool routing table.
+- **Two new catalog models, mirrored to huggingface.co/froggeric**:
+  `qwen3.5-4b-q8` (Q8_0, 4.2 GB) and `qwen3.6-35b-a3b` (the sparse MoE, 21 GB,
+  opt-in via `--model` — the benchmark's `read_image` coverage pick *with*
+  `--sample`; on a single call it ties much smaller models, so it is not a
+  default).
+- **Per-tool config** — `[tools.<id>]` tables in `config.toml` override the
+  model (`model = "..."`) and the sampling method (`method = "union@N"`) per
+  tool. Layering: `--model` flag (forces all) > `[tools.<id>].model` > catalog
+  routing > `default_model` (now a **fallback**, no longer a forced override —
+  it no longer defeats per-tool routing). Method: `off` (default) / `union@N`.
+- **Setup wizard** — after picking a default model, offers to write the
+  benchmark's recommended per-tool routing as explicit `[tools.<id>].model`
+  tables (default-off; flagged that mixed-tool sessions then switch models).
+
 ### Added (experimental)
 
-- **Multi-sample consensus (F5 scaffold, off by default)** — a new `--sample N`
-  one-shot flag opts coverage tools into union@N multi-sampling: N warm calls at
-  the tool's sampling temperature, fused into one comprehensive result by a
-  text-only merge pass on the same warm model. Driven by the v6 benchmark's
-  category report (`benchmark/vlm/CATEGORY-REPORT.md`): `read_image` /
-  `describe_ui` / `describe_chart` sample at 0.7, `extract_text` at 0.4;
-  `extract_code` / `describe_diagram` / `diagnose_error` ignore `--sample`
-  (their errors are systematic, so repeats can't help). The temperature "gate"
-  is removed for sampled calls (at 0.1 the N runs are ~identical and correlation
-  adds nothing); single calls stay at 0.1. A/B on the 8B: union@3 surfaced more
-  detail at ~2.1× latency. Default off — on-by-default waits on more images per
-  category and a merge-precision metric.
+- **Multi-sample consensus (F5, off by default)** — `--sample N` (or
+  `[tools.<id>].method = "union@N"`) runs N warm calls at the tool's sampling
+  temperature and fuses them via a text-only merge pass. Driven by the v6
+  benchmark category report: `read_image` / `describe_ui` / `describe_chart` at
+  0.7, `extract_text` at 0.4. Any tool can be opted in (the per-tool recipe
+  supplies the temp; single-mode tools use 0.7 when forced). Single calls stay
+  at 0.1 (temp is the "gate" — at 0.1 the N runs are ~identical). A/B on the 8B:
+  union@3 surfaced more detail at ~2.1× latency.
 
-### Internal
+### Changed
 
-- `internal/tools/sampling.go`: per-tool `Sampling{Mode,Temp}` recipe +
-  `SamplingFor`. The executor no longer hardcodes `Temperature: 0.1`; it uses
-  the tool's sampling temp when sampling, 0.1 otherwise. New `infer` /
-  `mergeSamples` paths in the executor (graceful degradation on sample/merge
-  failure). `SetSampleReps` on `CatalogExecutor`.
+- The executor's `default_model` (config) is now a **fallback**, not a forced
+  override — per-tool catalog routing takes precedence. `--model` is still a
+  forced override (bypasses routing).
+- `doctor`'s Tools section shows the per-tool routing for the detected hardware.
+
+### Known limitations
+
+- **Per-tool model routing switches models between tools** in a mixed MCP
+  session (a cold reload per switch). The wizard defaults to single-model +
+  opt-in routing to preserve warm reuse; per-tool routing is a deliberate choice.
+- **4B-Q8 reliability** — the benchmark flags Q8 as ~87%-ok (slightly
+  timeout-prone); the rock-solid 8B-Q8 remains the safe default for mixed use.
+- **MoE = 21 GB**; only useful for `read_image` coverage with `--sample`; opt-in.
 
 ## [0.6.0] - 2026-06-24
 

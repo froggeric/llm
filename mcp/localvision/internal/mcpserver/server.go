@@ -13,6 +13,7 @@ import (
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
+	"github.com/froggeric/llm/mcp/localvision/internal/config"
 	"github.com/froggeric/llm/mcp/localvision/internal/llama"
 	"github.com/froggeric/llm/mcp/localvision/internal/models"
 	"github.com/froggeric/llm/mcp/localvision/internal/tools"
@@ -55,6 +56,9 @@ type Server struct {
 //     call. Use this in tests to inject a mock; in production, leave
 //     nil and the server builds a CatalogExecutor from Lifecycle +
 //     Catalog + Hardware.
+//   - ToolConfigs: optional per-tool model + method (sampling) overrides
+//     from the user config ([tools.<id>]); applied to the production
+//     CatalogExecutor. v0.7. Ignored if Executor is non-nil.
 //   - Registry: if non-nil, its All() is used as the tool list.
 //   - Tools: if non-empty, used as the tool list directly. Use this in
 //     tests where the registry hasn't been populated yet. If both
@@ -69,8 +73,10 @@ type Dependencies struct {
 	Catalog   *models.Catalog
 	Hardware  models.HardwareInfo
 	Executor  tools.Executor
-	Registry  *tools.Registry
-	Tools     []tools.Tool
+	// ToolConfigs: per-tool model + method overrides from config (v0.7).
+	ToolConfigs map[string]config.ToolConfig
+	Registry    *tools.Registry
+	Tools       []tools.Tool
 }
 
 // NewServer wires together the SDK server, tool registry, executor, and
@@ -105,7 +111,9 @@ func NewServer(deps Dependencies) (*Server, error) {
 	// Resolve the executor. Production: CatalogExecutor. Tests: a mock.
 	executor := deps.Executor
 	if executor == nil {
-		executor = NewCatalogExecutor(deps.Catalog, lifecycle, deps.Hardware, logger)
+		ce := NewCatalogExecutor(deps.Catalog, lifecycle, deps.Hardware, logger)
+		ce.SetToolConfig(deps.ToolConfigs) // per-tool model + method overrides (v0.7)
+		executor = ce
 	}
 
 	// Build the underlying SDK server. The Implementation's Version comes

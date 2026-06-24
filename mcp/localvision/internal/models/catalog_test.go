@@ -264,36 +264,48 @@ func TestLoad_NoOverlayDir(t *testing.T) {
 	}
 }
 
-// TestBuiltinCatalog_DefaultsTo8BForAll locks in the v0.5.1 "8B for all tools"
-// decision: the per-tool selector picks qwen3-vl-8b on any hardware where it
-// fits, falls back to qwen3.5-4b only where the 8B cannot, and never
-// auto-selects the opt-in qwen3.6-27b.
-func TestBuiltinCatalog_DefaultsTo8BForAll(t *testing.T) {
+// TestBuiltinCatalog_PerToolRouting locks in the v0.7 per-tool routing: on
+// mainstream hardware where both fit, the 8B-Q8 serves its 7 tools and the
+// 4B-Q8 serves the 4 it edges the 8B on; on hardware where neither fits,
+// everything falls back to the 4B-Q4; the opt-in 27B / MoE are never
+// auto-selected.
+func TestBuiltinCatalog_PerToolRouting(t *testing.T) {
 	c, err := Load("")
 	require.NoError(t, err)
 
-	tools := []string{
-		"read_image", "extract_text", "extract_code", "extract_table",
-		"describe_ui", "describe_diagram", "describe_chart", "diagnose_error",
-		"image_to_prompt", "compare_images",
-	}
+	eightB := []string{"read_image", "read_document", "extract_text", "describe_chart",
+		"extract_table", "image_to_prompt", "compare_images"}
+	fourBQ8 := []string{"extract_code", "describe_ui", "describe_diagram", "diagnose_error"}
 
-	// Mainstream (32 GB): the 8B fits and is the only model listing any tool.
+	// Mainstream (32 GB): both the 8B (min_vram 6) and the 4B-Q8 (min_vram 4)
+	// fit. Each tool routes to its benchmark-best model.
 	mainstream := HardwareInfo{TotalMemoryGB: 32, Tier: TierMainstream, Backend: BackendAppleSilicon}
-	for _, tool := range tools {
+	for _, tool := range eightB {
 		got, err := c.ModelFor(tool, mainstream)
 		require.NoError(t, err, "tool %q", tool)
-		assert.Equal(t, "qwen3-vl-8b", got,
-			"tool %q should use the 8B on mainstream hardware", tool)
+		assert.Equal(t, "qwen3-vl-8b", got, "tool %q should route to the 8B on mainstream HW", tool)
+	}
+	for _, tool := range fourBQ8 {
+		got, err := c.ModelFor(tool, mainstream)
+		require.NoError(t, err, "tool %q", tool)
+		assert.Equal(t, "qwen3.5-4b-q8", got, "tool %q should route to the 4B-Q8 on mainstream HW", tool)
 	}
 
-	// Tiny (8 GB): the 8B (min_vram 6) does not fit -> fallback to the 4B.
+	// Tiny (8 GB): only the 4B-Q4 (min_vram 3) fits -> everything falls back to it.
 	tiny := HardwareInfo{TotalMemoryGB: 8, Tier: TierConstrained, Backend: BackendAppleSilicon}
-	for _, tool := range tools {
+	for _, tool := range append(append([]string{}, eightB...), fourBQ8...) {
 		got, err := c.ModelFor(tool, tiny)
 		require.NoError(t, err, "tool %q", tool)
-		assert.Equal(t, "qwen3.5-4b", got,
-			"tool %q should fall back to the 4B on 8 GB hardware", tool)
+		assert.Equal(t, "qwen3.5-4b", got, "tool %q should fall back to the 4B-Q4 on 8 GB HW", tool)
+	}
+
+	// The opt-in models are never auto-selected for any tool.
+	for _, opt := range []string{"qwen3.6-27b", "qwen3.6-35b-a3b"} {
+		for _, tool := range append(append([]string{}, eightB...), fourBQ8...) {
+			got, err := c.ModelFor(tool, mainstream)
+			require.NoError(t, err)
+			assert.NotEqual(t, opt, got, "%s must never be auto-selected (opt-in only)", opt)
+		}
 	}
 }
 
