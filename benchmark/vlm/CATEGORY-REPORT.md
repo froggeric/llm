@@ -1,10 +1,54 @@
 # Category report — which localvision tools benefit from multi-sampling?
 
-**Date:** 2026-06-24 · models **Q3VL-8B-Q8** (default) **+ Q3.5-4B-nothink** (small) · 8 tool categories × 1 problematic image each × 3 temperatures (0.1 / 0.4 / 0.7) × 5 repeats = 120 calls per model · `run_id=cat-*`. The body is told for the **default 8B**; the [**Model size matters**](#model-size-matters--the-q35-4b-comparison) section adds the 4B.
+**Date:** 2026-06-24 · **7 models** (Q3VL-8B-Q8, Q3.5-4B Q4 & Q8, Q3.5-9B, GLM-4.6V-Flash-9B, Gemma-4-E4B, Q3.6-35B-A3B MoE) · 8 tool categories × 1 problematic image each × 3 temperatures (0.1 / 0.4 / 0.7) × **3 repeats** · `run_id=cat-*`. **3 reps is the operating point** — the sweet spot (see [`REPEAT-REPORT.md`](./REPEAT-REPORT.md): union@3 ≈ union@5, so 5 costs ~60% more time for ~0 extra quality). Start with the [**seven-model master picture**](#all-seven-models-at-3-reps--the-master-picture); the sections after are the default-8B drill-down.
 
-This follows [`REPEAT-REPORT.md`](./REPEAT-REPORT.md) (which showed, at temp 0.1 only, that correlation helps UI but not code). Here we add the two missing levers — **temperature** and **aggregator choice** — across **every category**, to answer: *which tools can benefit, and how?*
+This follows [`REPEAT-REPORT.md`](./REPEAT-REPORT.md) (which showed, at temp 0.1 only, that correlation helps UI but not code). Here we add the two missing levers — **temperature** and **aggregator choice** — across **every category and 7 models**, to answer: *which tools can benefit, for which models, and how?*
 
-## Headline — three regimes
+## All seven models at 3 reps — the master picture
+
+Running the sweep on 7 models (the 2 recommendations + 5 high-variance candidates) at the **3-rep operating point** settles the headline question: **the benefit is model × category specific, not universal.** Δ = `best@3@0.7 − single@0.1` (majority for extraction, union for coverage): **▲** ≥+2 benefit, **·** neutral, **▼** ≤−2 hurts.
+
+| Category \\ Model | 8B-Q8 | 3.5-4B Q4 | 3.5-4B Q8 | 3.5-9B | GLM-9B | G4-E4B | 3.6-35B-A3B |
+|---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| `read_image` | ▲+23 | ▲+17 | ·0 | ▲+13 | ▼−3 | ▲+3 | ▲+10 |
+| `extract_text` | ▲+9 | ▲+9 | ·0 | ▲+4 | ·0 | ·0 | ·−1 |
+| `extract_code` | ·−1 | ▼−34 | ·0 | ·+1 | ·0 | ▲+15 | ·+1 |
+| `extract_table` | ▲+2 | ·+1 | ·−1 | ▼−3 | ·0 | ▼−2 | ▲+4 |
+| `describe_ui` | ▲+8 | ·0 | ·0 | ·+2 | ·0 | ▲+7 | ·+2 |
+| `describe_diagram` | ·0 | ·0 | ·0 | ·0 | ·0 | ·0 | ·0 |
+| `describe_chart` | ▲+8 | ▲+13 | ▲+3 | ·0 | ▲+8 | ▲+8 | ▲+5 |
+| `diagnose_error` | ·0 | ▲+8 | ▲+18 | ▼−15 | ▲+31 | ▲+21 | ·0 |
+
+And where each model *starts* (single@0.1, absolute quality %) — because a big Δ from a low base can still be a low ceiling:
+
+| Category \\ Model | 8B-Q8 | 3.5-4B Q4 | 3.5-4B Q8 | 3.5-9B | GLM-9B | G4-E4B | 3.6-35B-A3B |
+|---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| `read_image` | 17 | 33 | 40 | 37 | 23 | 17 | 40 |
+| `extract_text` | 65 | 65 | 65 | 65 | 70 | 61 | 71 |
+| `extract_code` | 97 | 97 | 98 | 97 | 98 | **46** | 97 |
+| `extract_table` | 77 | 81 | 81 | 73 | 79 | 76 | 79 |
+| `describe_ui` | 89 | 97 | 97 | 95 | 97 | 90 | 98 |
+| `describe_diagram` | 91 | 91 | 91 | 91 | 91 | 91 | 91 |
+| `describe_chart` | 85 | 79 | 82 | 77 | 62 | **54** | 87 |
+| `diagnose_error` | 69 | 69 | 74 | 69 | **46** | **49** | 77 |
+
+**Six findings:**
+
+1. **No category universally benefits.** `describe_chart` benefits for 6/7 models; `describe_diagram` benefits for **none (0/7)** — the phantom gRPC line is a systematic error every model misses at every temp. `diagnose_error` spans **−15 (Q3.5-9B) to +31 (GLM-9B)**. "Does this tool benefit?" is a per-cell (model × category) question.
+
+2. **Benefit scales with variance / weakness.** The biggest Δs land where the model is weakest single-shot: G4-E4B code +15 (46→61), GLM/G4-E4B/Q3.5-4B-Q8 error +18–31 (46–74 → 69–92). High-variance models (G4-E4B, Q3.5-4B-Q4) benefit broadly; stable models (Q3.5-4B-Q8, the MoE) benefit narrowly.
+
+3. **But weak models stay weak in absolute terms.** G4-E4B code 46→61 is still far below the 8B's 97. Multi-sampling closes the gap to a model's *own ceiling*, not to the 8B. **The 8B-Q8 (and the MoE) remain the quality leaders; sampling amplifies, it doesn't replace.**
+
+4. **`read_image` gains track the baseline inversely.** The 8B has the *weakest* Waldo baseline (17%) yet the *biggest* gain (+23) — it surfaces few facts per run, so union has the most to add. Strong scene models (Q3.5-4B-Q8 40%, MoE 40%) gain less (+0, +10).
+
+5. **Extraction is fragile for noisy small models — and 3 reps isn't always enough there.** Q3.5-4B-Q4 code at temp 0.7 is so noisy that 3-rep **majority (≥2/3) can't clean it (62% F1); it needs ≥4 reps** (4-rep majority jumps to 97%, verified). So the **3-rep sweet spot holds for coverage (union@3 ≈ union@5)**, but for **majority-filtered extraction on the noisiest models you need ≥4 reps, or just stay at low temp** (where Q3.5-4B-Q4 code is already 97%). Stable models' extraction is fine at 3 reps / low temp.
+
+6. **`describe_diagram` is the one clean "never bother"** — 0/7 models, 0 Δ at every temp. Its discriminator (the dangling phantom line) is systematic for everyone.
+
+**Bottom line:** multi-sampling (3 reps; union for coverage / majority for extraction; temp ~0.4–0.7) is a real, cheap lever — worth most on the **high-variance models** and the **coverage / error** categories. But it is model- and category-specific, it does **not** lift weak models past strong ones, `describe_diagram` never benefits, and noisy-model extraction needs ≥4 reps or low temp.
+
+## The default model (8B-Q8) — three regimes (drill-down)
 
 Multi-sampling + correlation is **not** uniform across categories. Splitting by task shape:
 
@@ -16,9 +60,9 @@ Multi-sampling + correlation is **not** uniform across categories. Splitting by 
 
 So **5 of 8 tested tools benefit, 3 don't** — and the *aggregator* matters as much as the *sampling*.
 
-## Verdict matrix — union@5 @ temp 0.7 vs single @ temp 0.1 (production)
+## Verdict matrix — the 8B-Q8 in detail (original 5-rep view)
 
-> Primary metric: F1 for extraction categories (code, table), key-fact recall for coverage. Hallucination = mentions of curated "NOT in image" facts.
+> This is the 8B-Q8's original 5-rep verdict; the **3-rep** numbers (the operating point) are in the [master picture](#all-seven-models-at-3-reps--the-master-picture) above and are nearly identical (e.g. `read_image` +22 here vs +23 at 3 reps). Primary metric: F1 for extraction (code, table), key-fact recall for coverage. Hallucination = mentions of curated "NOT in image" facts.
 
 | Category | baseline single@0.1 | best correlated@0.7 | Δ | aggregator | verdict |
 |---|---:|---:|---:|---|---|
@@ -125,24 +169,26 @@ Four model-size findings:
 
 ## Implications for the localvision MCP
 
-| Tool | Sample-and-correlate? | Recipe |
-|---|---|---|
-| `read_image` | **Yes — high value.** | 5× @ temp 0.7, **union**. Biggest gain (+22 on dense scenes); the one run that finds Waldo is worth merging. |
-| `describe_ui` | **Yes.** | 5× @ temp 0.7, **union** (+8). |
-| `describe_chart` | **Yes.** | 5× @ temp 0.7, **union** (+8). |
-| `extract_text` | **Yes (noisy/handwritten OCR).** | 5× @ **temp 0.4**, union (+9; 0.4 beats 0.7 here). |
-| `extract_table` | **Yes — but majority.** | 5× @ temp 0.7, **majority** (+2; union hurts). |
-| `extract_code` | **No.** | Single call. Errors are systematic. |
-| `describe_diagram` | **No.** | Single call. |
-| `diagnose_error` | **No.** | Single call. |
-| `image_to_prompt` | *(untested — generative, no recall GT)* | — |
-| `compare_images` | *(untested — 2-image tool)* | — |
+The per-tool guidance below is **model-dependent** — check the [master picture](#all-seven-models-at-3-reps--the-master-picture) for your model. Recipes use **3 reps** (the operating point). High-variance models (G4-E4B, Q3.5-4B-Q4) gain the most; the 8B-Q8 and the MoE remain the quality leaders regardless of sampling.
 
-**Operational cost** (from `REPEAT-REPORT.md`): repeats are cheap — warm calls are 1.1–1.6× faster than the first (the server reuses the warmed slot), so sampling 5× costs ~70–75% of 5× the single-call time. For the 5 benefiting tools that's a good trade; for the 3 non-benefiting tools it's pure waste.
+| Tool | Sample-and-correlate? | Recipe (3 reps) | Benefits which models (Δ) |
+|---|---|---|---|
+| `read_image` | **Yes — high value.** | 3× @ 0.7, **union** | 8B **+23**, 4B-Q4 +17, 9B +13, MoE +10, G4-E4B +3; GLM-9B ▼−3 |
+| `describe_chart` | **Yes.** | 3× @ 0.7, union | 6/7 — all but Q3.5-9B |
+| `describe_ui` | **Yes.** | 3× @ 0.7, union | 8B +8, G4-E4B +7 |
+| `extract_text` | **Yes (noisy OCR).** | 3× @ **0.4**, union | 8B +9, 4B-Q4 +9, 9B +4 |
+| `diagnose_error` | **Model-specific — big for weak models.** | 3× @ 0.7, union | GLM-9B **+31**, G4-E4B +21, 4B-Q8 +18, 4B-Q4 +8; **9B ▼−15**; 0 on 8B/MoE |
+| `extract_table` | **Model-specific.** | 3× @ 0.7, majority | MoE +4, 8B +2; **9B ▼−3**, G4-E4B ▼−2 |
+| `extract_code` | **Mostly no.** | single (low-temp); or ≥4-rep majority for noisy models | G4-E4B +15; 4B-Q4 needs ≥4 reps; rest 0 |
+| `describe_diagram` | **No (0/7).** | single | none — systematic (phantom line) |
+| `image_to_prompt` | *(untested — generative, no recall GT)* | — | — |
+| `compare_images` | *(untested — 2-image tool)* | — | — |
+
+**Operational cost** (from `REPEAT-REPORT.md`): **3 reps is the operating point** — ~54s/image (8B) / ~41s (4B), and for coverage `union@3 ≈ union@5`, so 5 reps buys ~0 extra quality for ~60% more time. Warm calls are 1.1–1.6× faster than the first (the server reuses the warmed slot). The one exception: **noisy-model extraction** (e.g. Q3.5-4B-Q4 code) needs **≥4 reps** for majority to filter high-temp noise (3-rep majority = 62%; 4-rep = 97%).
 
 ## Limitations
 
-- **Two models tested (8B + 4B), but one image per category each** — the verdict is per-category *directional*, not exhaustive. The systematic-vs-stochastic distinction is the reliable signal: it held across *both* models for `extract_code` / `describe_diagram` (systematic → no benefit), while `diagnose_error` flipped from neutral (8B) to benefit (4B) — so category verdicts can be model-dependent. A second image per category would tighten the magnitudes.
+- **7 models tested, but one image per category each** — the verdict is per-cell (model × category) *directional*, not exhaustive. The reliable signals: systematic errors benefit for *no* model (`describe_diagram` 0/7; `extract_code` 0/7 except noisy G4-E4B), while stochastic categories (`read_image`, `describe_chart`) benefit for *most* models. A second image per category would tighten the magnitudes (and a few cells are noisy at 3 reps — e.g. GLM-9B `read_image` ▼−3 is ~1 fact).
 - **Small hallucination watch-list** — only 4 "NOT in image" facts (all on Waldo). The "no hallucination" finding is encouraging but narrow.
 - **`image_to_prompt` and `compare_images` excluded** — no single right answer / 2-image; need a different scoring method.
 

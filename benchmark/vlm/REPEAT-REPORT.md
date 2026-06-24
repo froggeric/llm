@@ -74,7 +74,7 @@ Per model (mean over images): **Q3VL-8B-Q8 53.7s → 86.6s (+61%)**, **Q3.5-4B 4
 | describe_chart | 92→92 (+0) | 92→92 (+0) |
 | diagnose_error | 69→69 (+0) | 77→77 (+0) |
 
-- **3 repeats is the efficient knee.** It captures essentially all the union benefit for ~60% less wall time than 5. Pushing to 5 only makes sense as maximum-coverage insurance on the hardest scenes — and even there, the marginal gain in this data is ~0. (The §1 "5× ≈ 70–75% of naïve 5×" saving is a *different* comparison — caching vs cold restarts — and doesn't change that reps 4–5 each still cost a full warm call.)
+- **3 repeats is the efficient knee** — for *coverage* (union). It captures essentially all the union benefit for ~60% less wall time than 5; pushing to 5 only makes sense as maximum-coverage insurance on the hardest scenes, and even there the marginal gain is ~0. **One exception surfaced by the 7-model category sweep ([CATEGORY-REPORT](./CATEGORY-REPORT.md)):** *majority-filtered extraction on the noisiest models* needs ≥4 reps — e.g. Q3.5-4B-Q4 code @0.7 is 62% F1 at 3-rep majority (≥2/3) but 97% at 4-rep (≥3/5). So: **3 reps for coverage; ≥4 reps (or low temp) for noisy-model extraction.** (The §1 "5× ≈ 70–75% of naïve 5×" saving is a *different* comparison — caching vs cold restarts — and doesn't change that reps 4–5 each still cost a full warm call.)
 
 ## 2. Quality — single vs majority vs union
 

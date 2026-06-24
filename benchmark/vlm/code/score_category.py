@@ -43,7 +43,15 @@ IMG_CAT = {
     "03_error_trace.png": "diagnose_error",
 }
 CAT_IMG = {v: k for k, v in IMG_CAT.items()}
-SHORTM = {"qwen3-vl-8b": "Q3VL-8B-Q8", "qwen3.5-4b": "Q3.5-4B-nt"}
+SHORTM = {
+    "qwen3-vl-8b": "Q3VL-8B-Q8", "qwen3.5-4b": "Q3.5-4B-nt", "qwen3.5-9b": "Q3.5-9B-nt",
+    "glm-4.6v-flash-9b": "GLM-9B", "qwen3.5-4b-Q8": "Q3.5-4B-Q8",
+    "gemma4-e4b": "G4-E4B", "qwen3.6-35b-a3b": "Q3.6-35B-A3B",
+}
+# Reps to score at. 3 is the sweet spot (REPEAT-REPORT.md): union@3 ~= union@5, so
+# 5 costs ~60% more wall time for ~0 extra quality. Cells with >NREP reps use the
+# first NREP (so the 8B/4B 5-rep runs re-score at 3 for an apples-to-apples view).
+NREP = 3
 
 UI1 = ["New Chat", "New Projects", "Search", "Hub", "Settings", "Chats", "INTEGRATIONS",
        "Experimental", "MCP Servers", "Claude Code", "MODEL PROVIDERS", "Llama.cpp", "MLX",
@@ -198,8 +206,8 @@ def main():
     model_name = SHORTM.get(next(iter(cells))[0], next(iter(cells))[0])
 
     print(f"# Per-category self-consistency sweep — {model_name} (run_id=cat-*)\n")
-    print("> 5 reps per (category × temp). **single** = mean per-run; **union@5** = "
-          "≥1 run has it; **maj@5** = per-fact/token majority (≥3/5).\n")
+    print(f"> {NREP} reps per (category × temp). **single** = mean per-run; **union@{NREP}** = "
+          f"≥1 run has it; **maj@{NREP}** = per-fact/token majority (≥{NREP//2+1}/{NREP}).\n")
 
     # ---- per-category detail ----
     for cat in ["read_image", "extract_text", "extract_code", "extract_table",
@@ -209,14 +217,14 @@ def main():
         by_temp = {t: [] for t in TEMPS}
         for (m, im, t), runs in cells.items():
             if im == img:
-                by_temp[t] = [c for _, c in runs]
+                by_temp[t] = [c for _, c in runs][:NREP]
         if not any(by_temp.values()):
             continue
         print(f"## {cat}  (`{img}`)\n")
         is_extr = cat in EXTRACTION_GT
         if is_extr:
             gt_tok = toks(EXTRACTION_GT[cat])
-            print("| temp | single R | single P | single F1 | union@5 R | union@5 P | union@5 F1 | maj@5 R | maj@5 P | maj@5 F1 |")
+            print(f"| temp | single R | single P | single F1 | union@{NREP} R | union@{NREP} P | union@{NREP} F1 | maj@{NREP} R | maj@{NREP} P | maj@{NREP} F1 |")
             print("|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
             for t in TEMPS:
                 cs = by_temp[t]
@@ -227,14 +235,14 @@ def main():
                 for c in cs:
                     p, r, f = prf(toks(c), gt_tok); sp.append(p); sr.append(r); sf.append(f)
                 up, ur, uf = prf(set().union(*(toks(c) for c in cs)), gt_tok)
-                mp, mr, mf = prf(maj_tokens(cs, 5), gt_tok)
+                mp, mr, mf = prf(maj_tokens(cs, NREP), gt_tok)
                 print(f"| {t} | {statistics.mean(sr)*100:.0f}% | {statistics.mean(sp)*100:.0f}% | "
                       f"{statistics.mean(sf)*100:.0f}% | {ur*100:.0f}% | {up*100:.0f}% | {uf*100:.0f}% | "
                       f"{mr*100:.0f}% | {mp*100:.0f}% | {mf*100:.0f}% |")
         else:
             facts = COVERAGE[cat]
             bads = HALLUC.get(cat, [])
-            print("| temp | single recall | union@5 recall | maj@5 recall | halluc single | halluc union@5 |")
+            print(f"| temp | single recall | union@{NREP} recall | maj@{NREP} recall | halluc single | halluc union@{NREP} |")
             print("|---|---:|---:|---:|---:|---:|")
             for t in TEMPS:
                 cs = by_temp[t]
@@ -242,31 +250,32 @@ def main():
                     continue
                 s = single_fact_recall(cs, facts) * 100
                 u = fact_recall(cs, facts) * 100
-                mj = maj_fact_recall(cs, facts, 5) * 100
+                mj = maj_fact_recall(cs, facts, NREP) * 100
                 hs = statistics.mean([halluc_count([c], bads) for c in cs]) if cs else 0
                 hu = halluc_count(cs, bads)
                 print(f"| {t} | {s:.0f}% | {u:.0f}% | {mj:.0f}% | {hs:.1f} | {hu} |")
         print()
 
     # ---- verdict matrix ----
-    print("## Verdict — does union@5 @ temp 0.7 beat single @ temp 0.1 (production)?\n")
-    print("> Primary metric = F1 for extraction categories, recall for coverage. "
-          "BENEFIT = ≥+2 pts with no precision/halluc collapse; HURTS = regression.\n")
-    print("| Category | baseline single@0.1 | union@5 @0.7 | Δ | precision/halluc Δ | verdict |")
+    print(f"## Verdict — best correlated @ temp 0.7 vs single @ temp 0.1 (production, {NREP} reps)\n")
+    print("> Best = **majority** for extraction (code/table), **union** for coverage. "
+          "Primary metric = F1 for extraction, recall for coverage. BENEFIT = ≥+2 pts.\n")
+    print(f"| Category | baseline single@0.1 | best@{NREP}@0.7 | Δ | precision/halluc Δ | verdict |")
     print("|---|---:|---:|---:|---:|---|")
     for cat in ["read_image", "extract_text", "extract_code", "extract_table",
                 "describe_ui", "describe_diagram", "describe_chart", "diagnose_error"]:
         img = CAT_IMG[cat]
-        c01 = [c for (m, im, t), rs in cells.items() if im == img and abs(t - 0.1) < 1e-9 for _, c in rs]
-        c07 = [c for (m, im, t), rs in cells.items() if im == img and abs(t - 0.7) < 1e-9 for _, c in rs]
+        c01 = [c for (m, im, t), rs in cells.items() if im == img and abs(t - 0.1) < 1e-9 for _, c in rs][:NREP]
+        c07 = [c for (m, im, t), rs in cells.items() if im == img and abs(t - 0.7) < 1e-9 for _, c in rs][:NREP]
         if not c01 or not c07:
             print(f"| {cat} | — | — | — | — | (missing) |"); continue
         if cat in EXTRACTION_GT:
             gt_tok = toks(EXTRACTION_GT[cat])
             base = statistics.mean([prf(toks(c), gt_tok)[2] for c in c01]) * 100
             base_p = statistics.mean([prf(toks(c), gt_tok)[0] for c in c01]) * 100
-            best = prf(set().union(*(toks(c) for c in c07)), gt_tok)[2] * 100
-            best_p = prf(set().union(*(toks(c) for c in c07)), gt_tok)[0] * 100
+            best_toks = maj_tokens(c07, NREP)
+            best = prf(best_toks, gt_tok)[2] * 100
+            best_p = prf(best_toks, gt_tok)[0] * 100
             d = best - base; dp = best_p - base_p
             note = f"P {base_p:.0f}→{best_p:.0f}% ({dp:+.0f})"
         else:
