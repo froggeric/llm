@@ -19,16 +19,19 @@ the `llama-server` subprocess binds to `127.0.0.1` only.
 > **[github.com/froggeric/llm/issues](https://github.com/froggeric/llm/issues)**.
 > As a workaround, `default_model` in the config overrides any misdetection.
 
-> **Status:** **v0.6.0** — cross-platform: runs on macOS (Apple Silicon/Intel),
-> Linux, and Windows (x86_64 + arm64). One-shot CLI (`localvision img.png --type
-> ocr`), `--format`, batch (`--output-dir --meta`), a `setup` wizard, a
-> cross-platform HEIC/WEBP converter chain, 11 vision tools — including
-> `read_document` (PDF ingestion) and `image_to_prompt`. Charts and diagrams can
-> return structured output (`describe_chart --output-mode csv|json`,
-> `describe_diagram --output-mode mermaid`). Inference and downloads now stream
-> progress (CLI spinner + MCP `notifications/progress`). `qwen3-vl-8b` is the
-> default model for all tools (the 27B champion is opt-in via `--model`). Model
-> files no longer re-download on every model switch.
+> **Status:** **v0.6.0 released**; **v0.7 in development on `main`** (per-tool
+> model routing + multi-sample consensus + 2 new models — unreleased). Cross-
+> platform: macOS (Apple Silicon/Intel), Linux, Windows (x86_64 + arm64). One-
+> shot CLI (`localvision img.png --type ocr`), `--format`, batch
+> (`--output-dir --meta`), a `setup` wizard, a cross-platform HEIC/WEBP converter
+> chain, 11 vision tools — including `read_document` (PDF ingestion) and
+> `image_to_prompt`. Charts and diagrams return structured output
+> (`describe_chart --output-mode csv|json`, `describe_diagram --output-mode
+> mermaid`). Inference and downloads stream progress (CLI spinner + MCP
+> `notifications/progress`). The catalog routes each tool to its benchmark-best
+> model (`qwen3-vl-8b` for most, `qwen3.5-4b-q8` for code/UI/diagram/error; the
+> 27B champion and the MoE are opt-in via `--model`). Model files no longer
+> re-download on every model switch.
 
 ---
 
@@ -244,21 +247,23 @@ coordination via Ollama's API (ROADMAP Theme E5).
 
 ## Roadmap
 
-**v0.6.0** shipped tools & UX: an 11th tool `read_document` (PDF ingestion via a
-`$PATH`-discovered rasterizer chain), structured chart output
-(`describe_chart --output-mode csv|json`) and diagram markup
-(`describe_diagram --output-mode mermaid`), and **streaming progress** for both
-inference and downloads (CLI spinner + MCP `notifications/progress`; real
-token-by-token SSE is deferred to v0.7). **v0.5.x** added `image_to_prompt`, an
-MCP temp-file leak fix, `qwen3-vl-8b` as the default for all tools, and a
-per-model cache that stopped model files re-downloading on every switch. Earlier:
-**v0.4.0** (cross-platform: macOS/Linux/Windows, x86_64 + arm64) and **v0.3.0**
-(the standalone CLI: one-shot queries, `--format`, batch, `setup` wizard). Next:
-**v0.7 reliability** (constrained decoding / GBNF, multi-sample consensus, SSE
-output streaming), then **v0.8+ new modalities & a native GUI** (UI→code, video,
-grounding). A background daemon / HTTP service was evaluated and **declined** —
-the current model (session-warm MCP + fire-and-exit CLI with batch) is good
-enough. Every item, its effort, and its target is in
+**v0.7 (in development on `main`, unreleased)** adds **per-tool model routing**
+(each tool → its benchmark-best model: `qwen3.5-4b-q8` for code/UI/diagram/error,
+`qwen3-vl-8b` for the rest; the MoE opt-in for `read_image` coverage), two new
+mirrored models, `[tools.<id>]` per-tool config (model + sampling method), a
+setup-wizard routing prompt, and the **multi-sample consensus** scaffold
+(`--sample N` / `method = "union@N"`, off by default). **v0.6.0** shipped tools
+& UX: an 11th tool `read_document` (PDF ingestion via a `$PATH`-discovered
+rasterizer chain), structured chart output (`describe_chart --output-mode
+csv|json`) and diagram markup (`describe_diagram --output-mode mermaid`), and
+**streaming progress** for inference + downloads (CLI spinner + MCP
+`notifications/progress`; real token-by-token SSE is deferred). **v0.5.x** added
+`image_to_prompt`, an MCP temp-file leak fix, `qwen3-vl-8b` as the default, and a
+per-model cache. Earlier: **v0.4.0** (cross-platform) and **v0.3.0** (the
+standalone CLI). Next after v0.7: **constrained decoding (GBNF)** + **SSE output
+streaming**, then **v0.8+ new modalities & a native GUI** (UI→code, video,
+grounding). A background daemon / HTTP service was evaluated and **declined**.
+Every item, its effort, and its target is in
 [`ROADMAP.md`](./ROADMAP.md) (themes A–H,
 prioritized into release tiers).
 

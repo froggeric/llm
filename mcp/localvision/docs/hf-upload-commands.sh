@@ -1,74 +1,68 @@
 #!/bin/bash
-# HuggingFace upload script for localvision v0.2 models.
+# HuggingFace upload reference for the localvision catalog models (v0.7: 5 models).
 #
-# Run these commands to upload the 3 models to the froggeric namespace.
-# Requires: huggingface-cli (pip install huggingface_hub) and HF auth
-# (huggingface-cli login).
+# Mirror of record: huggingface.co/froggeric/<repo>. After uploading, the SHA256
+# in internal/models/builtin.toml must match the file (verify with
+# `shasum -a 256 <local-file>`). The lifecycle verifies the SHA on every load.
 #
-# After uploads complete, the SHA256 values in builtin.toml should match
-# the files on HF. Verify with:
-#   shasum -a 256 <local-file>  →  should match the gguf_sha256 field
+# Requires: the `hf` CLI (pip install huggingface_hub) + auth (`hf auth login`,
+# a token with write scope on the froggeric namespace). `hf upload` auto-creates
+# the repo if it doesn't exist.
+#
+# This is a reference of what was uploaded; re-running is idempotent (HF rejects
+# identical content). Run the large MoE upload in the background — it's ~22 GB.
 
 set -e
 
 HF_USER="froggeric"
 
 echo "============================================================"
-echo "1/3: Upload Qwen3-VL-8B-Instruct-Q8_0.gguf + mmproj"
+echo "1. Qwen3-VL-8B-Instruct (Q8_0) — qwen3-vl-8b"
 echo "============================================================"
-huggingface-cli upload $HF_USER/Qwen3-VL-8B-Instruct-GGUF \
+hf upload $HF_USER/Qwen3-VL-8B-Instruct-GGUF \
   /Volumes/ssd/llm-models/qwen3-vl-8b/Qwen3-VL-8B-Instruct-Q8_0.gguf \
-  Qwen3-VL-8B-Instruct-Q8_0.gguf \
-  --repo-type model
-
-# mmproj already exists if the Q4 was uploaded previously; re-upload to be safe
-huggingface-cli upload $HF_USER/Qwen3-VL-8B-Instruct-GGUF \
+  Qwen3-VL-8B-Instruct-Q8_0.gguf
+hf upload $HF_USER/Qwen3-VL-8B-Instruct-GGUF \
   /Volumes/ssd/llm-models/qwen3-vl-8b/mmproj-F16.gguf \
-  mmproj-F16.gguf \
-  --repo-type model
+  mmproj-F16.gguf
 
 echo ""
 echo "============================================================"
-echo "2/3: Upload Qwen3.5-4B Q4_K_M + mmproj (new repo)"
+echo "2. Qwen3.5-4B (Q4_K_M + Q8_0) — qwen3.5-4b / qwen3.5-4b-q8"
 echo "============================================================"
-huggingface-cli repo create $HF_USER/Qwen3.5-4B-GGUF --type model || true
-
-huggingface-cli upload $HF_USER/Qwen3.5-4B-GGUF \
+hf upload $HF_USER/Qwen3.5-4B-GGUF \
   /Volumes/ssd/llm-models/qwen3.5_4b/Qwen3.5-4B-Q4_K_M.gguf \
-  Qwen3.5-4B-Q4_K_M.gguf \
-  --repo-type model
-
-huggingface-cli upload $HF_USER/Qwen3.5-4B-GGUF \
+  Qwen3.5-4B-Q4_K_M.gguf
+hf upload $HF_USER/Qwen3.5-4B-GGUF \
+  /Volumes/ssd/llm-models/qwen3.5_4b/Qwen3.5-4B-Q8_0.gguf \
+  Qwen3.5-4B-Q8_0.gguf          # v0.7: routed for code/ui/diagram/error
+hf upload $HF_USER/Qwen3.5-4B-GGUF \
   /Volumes/ssd/llm-models/qwen3.5_4b/mmproj-F16.gguf \
-  mmproj-F16.gguf \
-  --repo-type model
+  mmproj-F16.gguf               # shared by the Q4 + Q8 variants
 
 echo ""
 echo "============================================================"
-echo "3/3: Upload Qwen3.6-27B Q4_K_M + mmproj (new repo)"
+echo "3. Qwen3.6-27B (Q4_K_M) — qwen3.6-27b (opt-in)"
 echo "============================================================"
-huggingface-cli repo create $HF_USER/Qwen3.6-27B-GGUF --type model || true
-
-huggingface-cli upload $HF_USER/Qwen3.6-27B-GGUF \
+hf upload $HF_USER/Qwen3.6-27B-GGUF \
   /Volumes/ssd/llm-models/qwen3.6-27b/Qwen3.6-27B-Q4_K_M.gguf \
-  Qwen3.6-27B-Q4_K_M.gguf \
-  --repo-type model
-
-huggingface-cli upload $HF_USER/Qwen3.6-27B-GGUF \
+  Qwen3.6-27B-Q4_K_M.gguf
+hf upload $HF_USER/Qwen3.6-27B-GGUF \
   /Volumes/ssd/llm-models/qwen3.6-27b/mmproj-F16.gguf \
-  mmproj-F16.gguf \
-  --repo-type model
+  mmproj-F16.gguf
 
 echo ""
 echo "============================================================"
-echo "Optional: Delete deprecated Qwen3-VL-4B repo"
+echo "4. Qwen3.6-35B-A3B MoE (UD-Q4_K_M) — qwen3.6-35b-a3b (opt-in; ~22 GB)"
 echo "============================================================"
-echo "To remove the old Qwen3-VL-4B repo (no longer recommended):"
-echo "  Go to https://huggingface.co/$HF_USER/Qwen3-VL-4B-Instruct-GGUF/settings"
-echo "  Click 'Delete this repository'"
-echo ""
-echo "Or keep it for one release as a deprecation period."
+hf upload $HF_USER/Qwen3.6-35B-A3B-GGUF \
+  /Volumes/ssd/llm-models/qwen3.6-35b-a3b/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf \
+  Qwen3.6-35B-A3B-UD-Q4_K_M.gguf
+hf upload $HF_USER/Qwen3.6-35B-A3B-GGUF \
+  /Volumes/ssd/llm-models/qwen3.6-35b-a3b/mmproj-F16.gguf \
+  mmproj-F16.gguf
 
 echo ""
-echo "Done. Verify the catalog with:"
-echo "  go test ./internal/models/ -run TestLoad_NoOverlayDir -v"
+echo "Done. Verify reachability + the catalog SHAs:"
+echo "  curl -sIL -o /dev/null -w '%{http_code}\\n' https://huggingface.co/$HF_USER/<repo>/resolve/main/<file>"
+echo "  go test ./internal/models/..."

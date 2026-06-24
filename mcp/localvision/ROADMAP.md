@@ -18,12 +18,17 @@ item isn't in this file, it isn't planned.
 
 ## Where we are now
 
-**v0.6.0 shipped.** Themes **A–D are done**, the **v0.5 series** (breadth &
+**v0.6.0 released.** Themes **A–D are done**, the **v0.5 series** (breadth &
 polish) shipped across three point releases, and **v0.6 (tools & UX)** shipped
-G3 + G4 + G5 + E1. `localvision` builds and runs on macOS (Apple Silicon/Intel),
-Linux, and Windows (x86_64 + arm64) — all six targets cross-compiled from one
-runner (pure Go, CGO off). Linux/Windows detect CUDA/ROCm/NVIDIA GPUs and size
-model selection against VRAM; a first-wins converter chain
+G3 + G4 + G5 + E1. **v0.7 is in development on `main` (unreleased):** **F6
+per-tool model routing** (catalog `preferred_for` partition + `[tools.<id>]`
+config + setup-wizard + doctor table; 4B-Q8 + the MoE mirrored) and the **F5
+multi-sample consensus scaffold** (`--sample` / `union@N`, off by default) have
+landed; F4 (constrained decoding) + SSE output streaming remain for the v0.7
+release. `localvision` builds and runs on macOS (Apple Silicon/Intel), Linux, and
+Windows (x86_64 + arm64) — all six targets cross-compiled from one runner (pure
+Go, CGO off). Linux/Windows detect CUDA/ROCm/NVIDIA GPUs and size model
+selection against VRAM; a first-wins converter chain
 (`sips → magick → heif-convert → ffmpeg`) handles HEIC/WEBP everywhere; CI runs
 on ubuntu/windows/macos.
 
@@ -121,7 +126,7 @@ flowchart TD
     V5["v0.5.x — Breadth &amp; polish (shipped)<br/>✅ G8 image_to_prompt, E6 MCP temp cleanup<br/>✅ qwen3-vl-8b default for all + cache-collision fix, doctor display<br/>🔴 E2 auto-reap orphans (deferred)"]:::done
     V6["v0.6.0 — Tools &amp; UX (shipped)<br/>✅ G4 chart-to-CSV/JSON, G5 diagram-to-Mermaid, G3 read_document (PDF)<br/>✅ E1 streaming progress (downloads + inference heartbeat; SSE deferred to v0.7)"]:::done
     ANY["any release — hygiene<br/>📋 E3 compute-hashes, E4 tool-name prefix, E7 pin goreleaser+lint, F11 doctor fix, F12 completions<br/>parked: F3 cache, F9 clipboard — declined: F1 daemon, parallel batch"]:::planned
-    V7["v0.7.0 — Reliability (next up)<br/>🚧 F4 constrained decoding (GBNF), F5 consensus (provisional: 8B + high-variance cats only), F7 self-verify<br/>🚧 SSE output streaming (pulled forward from v0.6), E5 Ollama coord"]:::next
+    V7["v0.7.0 — Reliability &amp; routing (in dev on main)<br/>✅ F6 per-tool model routing (4B-Q8 + MoE mirrored), F5 multi-sample scaffold (--sample, off)<br/>🚧 F4 constrained decoding (GBNF), SSE output streaming, F7 self-verify, E5 Ollama coord"]:::next
     V8["v0.8+ — New modalities &amp; native GUI<br/>📋 G2 UI-to-artifact, G6 grounding, G7 visual-diff, G1 video, F10 watch<br/>📋 F16 native GUI frontend"]:::planned
     DIST["distribution — any release<br/>📋 B3 Claude Code marketplace, B4 harness auto-install"]:::planned
     V1["v1.0+ — Far future / research<br/>📋 H1 tiny model, H2 search, H3 screen capture, H4 vision agent, H5 3D"]:::planned
@@ -639,8 +644,9 @@ Top priority was **more / better tools**; the one UX item was **streaming**.
 (cross-platform) ✅ → **v0.5.x (G8 tool + E6 leak fix; qwen3-vl-8b default;
 model-cache collision fix; doctor display)** ✅ → **v0.6 (tools & UX: G3
 read_document + G4 chart→CSV/JSON + G5 diagram→Mermaid + E1 streaming
-progress)** ✅ → **v0.7 (reliability: F4 constrained decoding + SSE output
-streaming + F5/F7)** 🚧. A background daemon (F1) was evaluated and declined.
+progress)** ✅ → **v0.7 (F6 per-tool routing + F5 multi-sample scaffold, on main
+unreleased; F4 GBNF + SSE + F7 remaining)** 🚧. A background daemon (F1) was
+evaluated and declined.
 
 ## Idea index
 
