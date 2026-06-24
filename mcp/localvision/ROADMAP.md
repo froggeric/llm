@@ -72,7 +72,8 @@ out a **native GUI frontend**.
 
 ## Server & process model
 
-How `localvision` runs today, and the background-service mode planned for v0.6.
+How `localvision` runs today, and why a background-service mode was evaluated
+and **declined**.
 
 **Today — client-spawned, on-demand (stdio MCP).**
 
@@ -362,7 +363,7 @@ misdetection. DirectML detection on Windows is deferred.
 
 ---
 
-## Theme E — Hardening & polish → ongoing / `v0.5.0+`
+## Theme E — Hardening & polish → ongoing (E1 done `v0.6`, E6 done `v0.5`; E2 deferred)
 
 The long tail of known limitations, mostly small, mostly independent.
 
@@ -404,7 +405,7 @@ The long tail of known limitations, mostly small, mostly independent.
 
 ---
 
-## Theme F — Reach & power → `v0.6.0+`
+## Theme F — Reach & power → `v0.7.0+`
 
 Make localvision faster, more reliable, and reachable far beyond a single MCP
 client. Several items here are small and can be pulled forward into any release.
@@ -469,14 +470,14 @@ client. Several items here are small and can be pulled forward into any release.
 
 ---
 
-## Theme G — Expanded tool set & new modalities → `v0.6.0+`
+## Theme G — Expanded tool set & new modalities → G3/G4/G5 done `v0.6`; G1/G2/G6/G7 → `v0.8+`
 
 New tools and richer output, motivated by a comparison against a peer server.
 
 ### Tool landscape vs. `zai_mcp_server`
 
 `zai_mcp_server` exposes 8 vision tools. localvision covers 5 of them 1:1 and
-has 3 dedicated tools zai lacks. Two real gaps:
+has 4 dedicated tools zai lacks (incl. `read_document` for PDFs). Two real gaps:
 
 | `zai_mcp_server` | localvision | status |
 |---|---|---|
@@ -491,6 +492,7 @@ has 3 dedicated tools zai lacks. Two real gaps:
 | — | `extract_code` | ★ localvision advantage (zai has none) |
 | — | `extract_table` | ★ localvision advantage (zai has none) |
 | — | `image_to_prompt` | ★ localvision advantage (zai has none) |
+| — | `read_document` (PDF) | ★ localvision advantage (zai has none) |
 
 ### Items
 
@@ -526,9 +528,9 @@ has 3 dedicated tools zai lacks. Two real gaps:
   optional `question` steers it toward Midjourney/SDXL/Flux/DALL·E or a style.
   Shipped as a core `--type prompt` / `image_to_prompt` tool. `S`
 
-**Preserve as differentiators:** `extract_code`, `extract_table`, and **G8
-image→prompt** — tools `zai_mcp_server` has no equivalent for. Keep them
-best-in-class.
+**Preserve as differentiators:** `extract_code`, `extract_table`,
+`read_document` (PDF), and **G8 image→prompt** — tools `zai_mcp_server` has no
+equivalent for. Keep them best-in-class.
 
 ---
 
