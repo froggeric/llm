@@ -28,7 +28,7 @@ Sorted by **effective quality** = (v5 final × run-success-rate) × (1 − k·σ
 | # | Variant | Quant | Mode | Raw /100 | Effective | σ(text) | ok% | Latency s |  Size  | Note |
 |---|---|---|---|---|---|---|---|---|---|---|
 | 1 | **Q3.6-27B-nothink** | Q4 | nothink | 79.6 | **72.4** | 0.48 | 100 | 71 | 16.9GB | **Champion** — best effective, 100% reliable |
-| 2 | Q3.6-35B-A3B-nothink (MoE) | Q4 | nothink | 76.4 | 69.6 | 0.50 | 100 | 24 | 21.9GB | MoE — fast + top-tier; not in per-tool recs |
+| 2 | Q3.6-35B-A3B-nothink (MoE) | Q4 | nothink | 76.4 | 69.6 | 0.50 | 100 | 24 | 21.9GB | MoE — fast + top-tier; **coverage/hard-scenes pick** (3× union beats 27B on coverage, faster) |
 | 3 | Q3VL-8B-Q8 | Q8 | think | 74.4 | 69.0 | 0.43 | 100 | 30 | 8.1GB | **Best mid-tier** — Q8 strict win (0 fails, low σ); won describe_diagram + image_to_prompt |
 | 4 | Q3.6-35B-A3B (MoE) | Q4 | think | 75.0 | 68.6 | 0.48 | 100 | 43 | 21.9GB | MoE — think twin, slower than nothink |
 | 5 | GLM-9B | Q4 | think | 75.1 | 68.5 | 0.47 | 100 | 37 | 7.4GB | CJK-signage specialist; Q8 twin wins extract_text |
@@ -55,7 +55,7 @@ Sorted by **effective quality** = (v5 final × run-success-rate) × (1 − k·σ
 **Reading the table.** Variability and reliability move the needle, not just raw quality:
 - **Champion**: **Q3.6-27B-nothink** — #1 on both raw (79.6) and effective (72.4), 100% reliable.
 - **Raw ≠ effective**: **G4-12B-Q8** has a glossy raw 76.6 but **ok% 81** (times out ~1-in-5) + high σ → effective 56.1, ranked **#20**. **Q3.6-27B-think** (raw 78.2) falls to #13 behind its nothink twin because it's slower, less reliable (92%), and more variable. This is exactly why σ and ok% are in the score.
-- **MoE flagged** (Q3.6-35B-A3B-nothink #2, A3B #4, G4-26B-A4B #10): ranked here for completeness, but **excluded from the per-tool recommendations** below.
+- **MoE (Q3.6-35B-A3B-nothink #2)** is the coverage/hard-scenes pick in the per-tool recs below (3× union). Its think-twin (#4) and **G4-26B-A4B (#10)** stay excluded (slower / outclassed).
 - **Unusable at Q8**: Q3.5-9B-Q8 (ok% 62, #24) and Q3.5-4B-Q8 (ok% 76, #23) — strong on paper, timeout-prone in practice.
 - **Avoid** regardless of rank: G4-12B-Q4 (#17, hallucination flips — "Atomic acid" for "Domoic acid") and G4-E4B (#21, perception fails).
 
@@ -254,31 +254,46 @@ Where G4-31B does win: **OCR-heavy dense compositions** (spritesheet +3, banner 
 
 ## Use-case-specific recommendations
 
-**Post-refinement + multi-sampling** (see [`REFINE-REPORT.md`](./REFINE-REPORT.md), [`CATEGORY-REPORT.md`](./CATEGORY-REPORT.md), [`REPEAT-REPORT.md`](./REPEAT-REPORT.md)): one model covers every tool, now with **repeat-run (self-consistency) recipes** where they help. The 7-model sweep found multi-sampling is **model×category specific** — worth it on the coverage/error tools, not on code/diagram. Recipes use **3 reps** (the sweet spot — 5 costs ~60% more time for ~0 extra quality):
+**Post-refinement + multi-sampling** (see [`REFINE-REPORT.md`](./REFINE-REPORT.md), [`CATEGORY-REPORT.md`](./CATEGORY-REPORT.md), [`REPEAT-REPORT.md`](./REPEAT-REPORT.md); per-tool qualitative verdict from reading the actual 3× outputs is below). The picture has sharpened: **one default model (8B-Q8) covers every tool reliably**, plus a **precision specialist (27B)** for fine extraction, a **max-coverage pick (MoE)** when 22GB is available, and a **strong small model (4B-Q8)** that edges the 8B on several tools. Multi-sampling (3 reps) is model×category specific — worth it on coverage tools, not on code/diagram:
 
-| Tool | Default: Q3VL-8B-Q8 + repeat strategy | Hard scenes | Note |
-|---|---|---|---|
-| `read_image` | **3× @0.7 union** (+23) | Q3.6-27B-nothink (single) | dense scenes benefit most from sampling |
-| `extract_text` | **3× @0.4 union** (+9) | Q3.6-27B-nothink | OCR peaks at 0.4; union recovers misread fields |
-| `describe_ui` | **3× @0.7 union** (+8) | Q3.6-27B-nothink | recovers rarely-mentioned labels |
-| `describe_chart` | **3× @0.7 union** (+8) | Q3.6-27B-nothink | 6/7 models benefit |
-| `extract_table` | **3× @0.7 majority** (+2) | Q3.6-27B-nothink | small gain; *union hurts — use majority* |
-| `extract_code` | single | Q3.6-27B-nothink | systematic errors; 27B gets identifier underscores the 8B misses |
-| `describe_diagram` | single | Q3.6-27B-nothink | 0/7 models benefit (phantom-line systematic) |
-| `diagnose_error` | single | -- | 8B neutral (69%); GLM-9B 3×union reaches 77% if error-reading is critical |
-| `image_to_prompt` | single | -- | repeats untested |
-| `compare_images` | -- | -- | not evaluated |
+| Tool | Recommended (+ repeat recipe) | Why / alternatives |
+|---|---|---|
+| `read_image` | **MoE 3× @0.7 union** — or 8B 3× union | MoE-3× most complete (beats 27B on Waldo, finds hovercraft it misses) and faster (68s vs 27B's 103s); 8B-3× ties the 27B at 8GB |
+| `extract_text` | 8B 3× @0.4 union — or MoE | 8B cleanest (10/15 fields); MoE clean + faster (14.6s). **4B-Q4 hallucinates** (`registrodelaoliva`), **GLM misreads + slow** (`Corralajo`, 38s) — GLM's OCR edge is CJK-only |
+| `describe_ui` | **MoE 3× @0.7 union** — or **4B-Q8** | MoE & 4B-Q8 capture the hierarchy (INTEGRATIONS / MODEL PROVIDERS, shortcuts) the 8B flattens; 4B-Q8 fastest (13s) |
+| `describe_chart` | **8B 3× @0.7 union** | 8B most precise (correct "line chart" type + exact ranges); MoE ties on numbers but *mislabels it "scatter"* |
+| `extract_table` | 8B single — or MoE 3× majority | all reach 11/11 classes; 8B clean + fast, MoE richer. **Avoid 4B-Q4** (malformed Markdown tables) |
+| `extract_code` | **27B one-shot** (precision) — or **4B-Q8 single** (fast) | 27B uniquely gets `validatePlaylistKeys_`; 4B-Q8 gets `createAujourdhui` right (8B writes it wrong) + faster; multi-sampling no help |
+| `describe_diagram` | 8B single — or MoE | **even the 27B misses the phantom line** (all models 9/12); 27B wasted here (50s = 8B's 9s) |
+| `diagnose_error` | **27B one-shot** (precision) — or **4B-Q8** (completeness) | 27B gets the key `main.py:42`; 4B-Q8 captures the full exception chain (92%); 8B terse (69%) |
+| `image_to_prompt` | 8B single | repeats untested |
+| `compare_images` | -- | not evaluated |
 
 **Tier summary:**
-- **Default (covers every tool):** **Q3VL-8B-Q8** (~20-30s single / ~54s for 3×, 8.1GB). 100% reliable. **Multi-sample (3×) the coverage tools** (`read_image`, `describe_ui`, `describe_chart`, `extract_text`) with union — +8 to +23 pts for ~2× the latency; **single call** for `extract_code`, `describe_diagram`, `diagnose_error` (no benefit).
-- **Hard scenes:** **Q3.6-27B-nothink** (~50-70s, 16.9GB), **single call** — low-variance and slow, so 3× adds little at 3× the cost. Quality edge on dense scenes, code identifiers, charts. Nothink only (think = 86% reliability, ruled out).
-- **Small/fast** (<=20s, <=8GB): **Q3.5-4B-nothink** (~20s, 3.2GB). Best quality-per-GB. Its coverage tools gain from 3× union (high variance → bigger gains); but its **extraction is fragile at high temp** — use ≥4 reps majority or low temp (3-rep majority fails: 62% vs 97% at 4).
+- **Default (every tool, 8GB):** **Q3VL-8B-Q8** (~20-30s single / ~54s for 3×). Reliable, well-formatted all-rounder. **Multi-sample (3× union) the coverage tools** (`read_image`, `describe_ui`, `describe_chart`, `extract_text`); **single** for code/diagram/error.
+- **Max coverage (22GB, needs 24GB+ Mac):** **Q3.6-35B-A3B (MoE) 3× union** — matches or *beats* the 27B on coverage (more complete on scenes, finds things the 27B misses) AND is faster (**3 MoE calls < 1 27B call**). The reconsidered hard-scenes pick for coverage tools.
+- **Precision specialist (17GB):** **Q3.6-27B-nothink, one-shot** — *narrowed to `extract_code` + `diagnose_error`*, where its fine-detail accuracy (identifier underscores, exact `main.py:42`) is unmatched. One-shot only (low-variance + slow, ~52-103s; think = 86% reliable, ruled out).
+- **Small/fast (4GB):** **Q3.5-4B-Q8** — edges the 8B on `extract_code` (identifier), `describe_ui` (structure), `diagnose_error` (completeness) at ~58 tok/s. Prefer over the flaky Q4 (which emits HTML garbage / malformed tables on some runs).
 
 **Multi-sampling operating point** (full detail in [`CATEGORY-REPORT.md`](./CATEGORY-REPORT.md) / [`REPEAT-REPORT.md`](./REPEAT-REPORT.md)):
 - **3 reps** is the sweet spot (`union@3 ≈ union@5`). Each extra repeat ≈ one warm call (~9-21s); warm calls are 1.1-1.6× faster than the cold first call, so 3× costs ~70-75% of naïve 3× cold.
 - **Aggregator:** **union** for coverage (keeps real-but-rare facts); **majority** for extraction (filters high-temp noise). Never union on extraction (catastrophic on noisy/small models — e.g. Q3.5-4B-Q4 code 38% F1).
 - **Temp:** 0.7 for coverage, 0.4 for OCR (peaks then eases), low/single for code.
 - **Multi-sampling does NOT lift weak models past strong ones** — it amplifies a model toward its *own* ceiling. The 8B-Q8 (and the MoE) remain the quality leaders regardless.
+
+**Per-tool verdict — from reading the actual 3× outputs** (not just scores). Reading the real responses surfaced things the aggregates hid:
+
+- **read_image**: the 8B is coherent but *generic* on dense scenes; the **MoE & 3.5-9B** catch specifics it misses (horses, pink sail, hovercraft). ⚠️ **3.5-4B-Q4's high score is an artifact** — it emits HTML garbage (`<img src=...>`) on some runs (output swings 150→5037 chars); its union score merged broken runs. 3.5-9B is slowest (32s).
+- **extract_code**: **3.5-4B-Q8 beats the 8B** — writes `createAujourdhui` correctly where the 8B systematically writes `createAujourd'hui`, and faster (11s vs 15.5s). **GLM-9B also correct but ~100s** (reasoning phase — unusable). The **27B uniquely gets the trailing-underscore** `validatePlaylistKeys_`. Nobody is perfect.
+- **extract_table**: all find all 11 classes, but **3.5-4B-Q4's table is malformed** (collapsed columns) — content score hid it. 8B clean + fast; MoE richer.
+- **describe_ui**: **MoE & 3.5-4B-Q8 are richer than the 8B** — they capture the section hierarchy (INTEGRATIONS / MODEL PROVIDERS, even shortcuts) the 8B flattens into a bare list.
+- **diagnose_error**: **3.5-4B-Q8 genuinely best (92%)** — captures the full exception chain + verbatim message the 8B truncates. The **27B gets the key `main.py:42`** nobody else does.
+- **extract_text**: **8B cleanest** (10/15 fields); **MoE clean + faster** (14.6s). ⚠️ **4B-Q4 hallucinates** (`registrodelaoliva` — invented domain) and **GLM-9B misreads + is slow** (`Corralajo`, 38s) — GLM's OCR-specialist reputation is **CJK-signage-only**, not general OCR.
+- **describe_chart**: the **8B is the most precise** here — correct "line chart" type + exact ranges; the MoE ties on numbers but *mislabels it "scatter."* (A precision win for the 8B, unlike coverage where the MoE leads.)
+- **describe_diagram**: **even the 27B misses the phantom gRPC line** (all models 9/12) — so the 27B's precision doesn't extend to diagrams, and it's *wasted* here (50s for the 8B's 9s result).
+- **Synthesis**: the **MoE leads on breadth/coverage** (`read_image`, `describe_ui`); the **8B leads on precision** (`describe_chart` type/ranges); the **27B leads only on fine-extraction precision** (`extract_code` underscore, `diagnose_error` file:line); the **4B-Q8 is the quiet all-rounder value** (edges the 8B on code/ui/error, smallest+fastest). No single model wins every tool — the pick now depends on the tool.
+
+**Speed note:** the 8B is the *slowest per-token* decoder here (~37-40 tok/s); the MoE and 4B-Q8 run ~58 tok/s, the 4B-Q4 ~70 (when it works). **GLM-9B's reasoning makes it unusably slow on code (~100s).** On coverage, the MoE's 3 calls (53-68s) still beat a single 27B call (72-103s).
 
 **What the refinement changed:**
 - **GLM-9B-Q8 dropped** -- OCR edge was CJK-signage-specific; on general OCR it ties. CJK negligible.
