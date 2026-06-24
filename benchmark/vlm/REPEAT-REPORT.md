@@ -47,6 +47,35 @@ Per (model × image), wall-time of call 1 vs the median of warm calls 2–5:
 
 **Cost of sampling 5× vs 1× (caching included):** for Q3VL-8B-Q8 on code, 5 calls = 21.7 + 4×13.9 = **77s**, vs 5×21.7 = 108s naïvely — **~29% saved**. For Q3.5-4B: 49s vs 66s, ~25% saved.
 
+## Total time per image — 3 vs 5 repeats
+
+How much wall time does sampling actually cost, and is 5 worth it over 3? Totals per image (repeat experiment, temp 0.1, 5 back-to-back calls in one warmed session):
+
+| Model | Image | call 1 | mean warm | total 3 reps | total 5 reps | +3→5 | 5 over 3 |
+|---|---|---:|---:|---:|---:|---:|---:|
+| Q3VL-8B-Q8 | extract-code-test-1 | 21.7 | 13.9 | 49.3s | 77.1s | +27.8s | +56% |
+| Q3VL-8B-Q8 | ui-test-1 | 18.0 | 14.1 | 46.2s | 74.5s | +28.3s | +61% |
+| Q3VL-8B-Q8 | ui-test-2 | 24.2 | 21.0 | 65.7s | 108.1s | +42.4s | +65% |
+| Q3.5-4B | extract-code-test-1 | 13.2 | 9.0 | 30.9s | 49.1s | +18.1s | +59% |
+| Q3.5-4B | ui-test-1 | 13.5 | 11.8 | 38.0s | 60.9s | +22.9s | +60% |
+| Q3.5-4B | ui-test-2 | 18.1 | 20.1 | 55.4s | 98.6s | +43.2s | +78% |
+
+Per model (mean over images): **Q3VL-8B-Q8 53.7s → 86.6s (+61%)**, **Q3.5-4B 41.4s → 69.5s (+68%)**.
+
+**Reading:**
+- **5 repeats costs ~60% more wall time than 3.** Each extra repeat (4th, 5th) is roughly one warm call (~9–21s): warm calls are cheaper than the cold call 1 (see §1), but they are *not* free — you still pay a full inference per repeat.
+- **But the quality has already plateaued at 3.** On the category sweep (temp 0.7, where multi-sampling matters), `union@3 ≈ union@5` almost everywhere — the extra two reps recover ~0 additional facts:
+
+| category | 8B union@3→@5 | 4B union@3→@5 |
+|---|---|---|
+| read_image | 40→40 (+0) | 50→50 (+0) |
+| extract_text | 74→74 (+0) | 74→74 (+0) |
+| describe_ui | 97→97 (+0) | 97→100 (+3) |
+| describe_chart | 92→92 (+0) | 92→92 (+0) |
+| diagnose_error | 69→69 (+0) | 77→77 (+0) |
+
+- **3 repeats is the efficient knee.** It captures essentially all the union benefit for ~60% less wall time than 5. Pushing to 5 only makes sense as maximum-coverage insurance on the hardest scenes — and even there, the marginal gain in this data is ~0. (The §1 "5× ≈ 70–75% of naïve 5×" saving is a *different* comparison — caching vs cold restarts — and doesn't change that reps 4–5 each still cost a full warm call.)
+
 ## 2. Quality — single vs majority vs union
 
 `single` = mean per-run label recall (one random run). `maj@k` = per-label majority vote over first k runs (≥⌈k/2⌉). `union@k (pass@k)` = union over first k runs (≥1 run has it).
