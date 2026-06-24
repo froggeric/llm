@@ -17,6 +17,7 @@ This report consolidates Q4 and Q8 results, think and nothink variants, into a s
 - **Q8 is asymmetric and unreliable as a blanket upgrade**: it can rescue Gemma 4 (G4-12B σ drops 0.66 → 0.28) but introduces failure-rate issues (G4-12B-Q8 still times out on 22% of cells) and cripples Qwen hybrid thinkers. Test Q8 selectively, never as default.
 - **Universal failure**: every variant missed the rib fracture on image 28 (X-ray) — these models are not clinical-grade.
 - **Reliability matters more than peak score** for an MCP: users can tolerate a slightly-less-capable model that always returns something over a more-capable model that returns nothing 22% of the time.
+- **Self-consistency (multi-sampling) is a cheap quality lever on coverage tools**: 3 repeat runs @ temp 0.7 + **union** lifts `read_image` / `describe_ui` / `describe_chart` / `extract_text` by **+8 to +23 pts** on the 8B (more on high-variance models), for ~2× latency. It does nothing for `extract_code` / `describe_diagram` (systematic errors) and does not lift weak models past strong ones. Recipes in the [per-tool table](#use-case-specific-recommendations); full 7-model study in [`CATEGORY-REPORT.md`](./CATEGORY-REPORT.md).
 
 ---
 
@@ -253,25 +254,31 @@ Where G4-31B does win: **OCR-heavy dense compositions** (spritesheet +3, banner 
 
 ## Use-case-specific recommendations
 
-**Post-refinement** (see [`REFINE-REPORT.md`](./REFINE-REPORT.md)): 7 new UI/OCR/code images tested with the actual localvision tool prompts across 9 variants x 3 runs. The field is **tight** -- models cluster within 1-3 points. No specialty swaps needed; **one model covers every tool, with the 27B for hard scenes**:
+**Post-refinement + multi-sampling** (see [`REFINE-REPORT.md`](./REFINE-REPORT.md), [`CATEGORY-REPORT.md`](./CATEGORY-REPORT.md), [`REPEAT-REPORT.md`](./REPEAT-REPORT.md)): one model covers every tool, now with **repeat-run (self-consistency) recipes** where they help. The 7-model sweep found multi-sampling is **model×category specific** — worth it on the coverage/error tools, not on code/diagram. Recipes use **3 reps** (the sweet spot — 5 costs ~60% more time for ~0 extra quality):
 
-| Tool | Default (~20-30s, 8.1GB) | Hard scenes (~50-70s, 16.9GB) | Note |
+| Tool | Default: Q3VL-8B-Q8 + repeat strategy | Hard scenes | Note |
 |---|---|---|---|
-| `read_image` | **Q3VL-8B-Q8** | Q3.6-27B-nothink | 27B for dense/complex scenes |
-| `extract_text` | **Q3VL-8B-Q8** | Q3.6-27B-nothink | All models tie at 97-99% OCR recall |
-| `extract_code` | **Q3VL-8B-Q8** | Q3.6-27B-nothink | 27B gets identifier underscores Q3VL misses |
-| `extract_table` | **Q3VL-8B-Q8** | Q3.6-27B-nothink | |
-| `describe_ui` | **Q3VL-8B-Q8** | Q3.6-27B-nothink | |
-| `describe_diagram` | **Q3VL-8B-Q8** | Q3.6-27B-nothink | |
-| `describe_chart` | **Q3VL-8B-Q8** | Q3.6-27B-nothink | |
-| `diagnose_error` | **Q3VL-8B-Q8** | -- | |
-| `image_to_prompt` | **Q3VL-8B-Q8** | -- | Weak proxy |
-| `compare_images` | -- | -- | Not evaluated (no image pairs) |
+| `read_image` | **3× @0.7 union** (+23) | Q3.6-27B-nothink (single) | dense scenes benefit most from sampling |
+| `extract_text` | **3× @0.4 union** (+9) | Q3.6-27B-nothink | OCR peaks at 0.4; union recovers misread fields |
+| `describe_ui` | **3× @0.7 union** (+8) | Q3.6-27B-nothink | recovers rarely-mentioned labels |
+| `describe_chart` | **3× @0.7 union** (+8) | Q3.6-27B-nothink | 6/7 models benefit |
+| `extract_table` | **3× @0.7 majority** (+2) | Q3.6-27B-nothink | small gain; *union hurts — use majority* |
+| `extract_code` | single | Q3.6-27B-nothink | systematic errors; 27B gets identifier underscores the 8B misses |
+| `describe_diagram` | single | Q3.6-27B-nothink | 0/7 models benefit (phantom-line systematic) |
+| `diagnose_error` | single | -- | 8B neutral (69%); GLM-9B 3×union reaches 77% if error-reading is critical |
+| `image_to_prompt` | single | -- | repeats untested |
+| `compare_images` | -- | -- | not evaluated |
 
 **Tier summary:**
-- **Default (covers every tool):** **Q3VL-8B-Q8** (~20-30s, 8.1GB). 100% reliable, strong across all tools.
-- **Hard scenes:** **Q3.6-27B-nothink** (~50-70s, 16.9GB). Quality edge on dense scenes, code identifiers, charts. Nothink only (think = 86% reliability, ruled out).
-- **Small/fast** (<=20s, <=8GB): **Q3.5-4B-nothink** (~20s, 3.2GB). Best quality-per-GB.
+- **Default (covers every tool):** **Q3VL-8B-Q8** (~20-30s single / ~54s for 3×, 8.1GB). 100% reliable. **Multi-sample (3×) the coverage tools** (`read_image`, `describe_ui`, `describe_chart`, `extract_text`) with union — +8 to +23 pts for ~2× the latency; **single call** for `extract_code`, `describe_diagram`, `diagnose_error` (no benefit).
+- **Hard scenes:** **Q3.6-27B-nothink** (~50-70s, 16.9GB), **single call** — low-variance and slow, so 3× adds little at 3× the cost. Quality edge on dense scenes, code identifiers, charts. Nothink only (think = 86% reliability, ruled out).
+- **Small/fast** (<=20s, <=8GB): **Q3.5-4B-nothink** (~20s, 3.2GB). Best quality-per-GB. Its coverage tools gain from 3× union (high variance → bigger gains); but its **extraction is fragile at high temp** — use ≥4 reps majority or low temp (3-rep majority fails: 62% vs 97% at 4).
+
+**Multi-sampling operating point** (full detail in [`CATEGORY-REPORT.md`](./CATEGORY-REPORT.md) / [`REPEAT-REPORT.md`](./REPEAT-REPORT.md)):
+- **3 reps** is the sweet spot (`union@3 ≈ union@5`). Each extra repeat ≈ one warm call (~9-21s); warm calls are 1.1-1.6× faster than the cold first call, so 3× costs ~70-75% of naïve 3× cold.
+- **Aggregator:** **union** for coverage (keeps real-but-rare facts); **majority** for extraction (filters high-temp noise). Never union on extraction (catastrophic on noisy/small models — e.g. Q3.5-4B-Q4 code 38% F1).
+- **Temp:** 0.7 for coverage, 0.4 for OCR (peaks then eases), low/single for code.
+- **Multi-sampling does NOT lift weak models past strong ones** — it amplifies a model toward its *own* ceiling. The 8B-Q8 (and the MoE) remain the quality leaders regardless.
 
 **What the refinement changed:**
 - **GLM-9B-Q8 dropped** -- OCR edge was CJK-signage-specific; on general OCR it ties. CJK negligible.
