@@ -26,6 +26,7 @@ A Go subdirectory-module (`mcp/localvision/`, its own go.mod) inside the
 - OS-specific code lives in build-tagged files (`term_*.go`, `disk_*.go`, `hardware_*.go`). `unix.TIOCGETA`/`TCGETS` and `unix.Statfs`/`Statfs_t` are NOT cross-OS — one file per OS.
 - Windows syscalls missing from x/sys (e.g. `GlobalMemoryStatusEx`) → call via `windows.NewLazySystemDLL("kernel32.dll").NewProc(name)`; verify the Go struct matches the Win32 layout (byte-exact) on amd64 + arm64.
 - Tests with hardcoded Unix paths (`/tmp/`, `/opt/`) fail on Windows (`filepath.Abs` makes them drive-relative). Use `t.TempDir()`-based paths, or `t.Skip` on Windows for Unix-inherent tests (exec-bit, `#!/bin/sh`, SIGTERM/SIGKILL).
+- The `macos-14` CI runner reports **~7 GB RAM → constrained tier** (dev Macs are 16–64 GB), so tests that assert hardware-dependent selection output (per-tool `[tools.<id>]` routing tables, "model fits") pass locally but fail on CI. Drive those assertions with a synthetic `models.HardwareInfo{TotalMemoryGB: 64, Tier: TierHighEnd, ...}`, not real `DetectHardware()`. Local `go test -race` on a big Mac does NOT catch this.
 
 ## HEIC/WEBP
 
@@ -42,4 +43,5 @@ A Go subdirectory-module (`mcp/localvision/`, its own go.mod) inside the
 - Tag `mcp/localvision/vX.Y.Z` + push → triggers `vision-mcp-release.yml`. It normalizes the subdir tag to bare `vX.Y.Z` for goreleaser (`gomod.proxy: false`); GitHub Releases are named with the bare tag.
 - Verify locally first: `cd mcp/localvision && goreleaser release --snapshot --clean` (builds all 6 targets, no publish).
 - Before tagging: run the `code-reviewer` agent on the diff, fix all HIGH/MEDIUM, and E2E-test headline features against a real model (e.g. `localvision img.png --type ocr --format json | jq .`).
+- The release workflow builds via goreleaser and is **not gated on the CI test matrix** — a red CI check on the tag ships correct binaries but leaves the badge red. Confirm CI is green on the commit before tagging (the usual culprit is the `macos-14` 7 GB constrained-hw trap above).
 - Homebrew formula → `froggeric/homebrew-tap` via the `HOMEBREW_TAP_GITHUB_TOKEN` secret (fine-grained PAT).
