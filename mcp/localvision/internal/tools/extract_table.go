@@ -39,7 +39,7 @@ func (t extractTableTool) BuildRequest(input ToolInput) (systemPrompt, userPromp
 // looks like a Markdown table (no pipe characters), returns the raw text
 // verbatim — better to surface the model's "I couldn't find a table"
 // message than an empty string.
-func (extractTableTool) ParseOutput(raw string) (any, error) {
+func (extractTableTool) ParseOutput(_ ToolInput, raw string) (any, error) {
 	tables := extractMarkdownTables(raw)
 	if strings.TrimSpace(tables) == "" {
 		return raw, nil

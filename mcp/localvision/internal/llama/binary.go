@@ -137,7 +137,16 @@ func downloadVerifyAndExtract(ctx context.Context, url, bundleDir, finalBinPath,
 	if err != nil {
 		return "", fmt.Errorf("create tmp archive %s: %w", tmpArchive, err)
 	}
-	defer f.Close()
+	// Close exactly once: the explicit close below inspects the error and marks
+	// closed=true; the defer only closes on paths that don't reach the explicit
+	// close (the early-return error branches), so we never double-close (which
+	// would mask a real write/close error with a benign "already closed").
+	closed := false
+	defer func() {
+		if !closed {
+			_ = f.Close()
+		}
+	}()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
@@ -204,6 +213,7 @@ func downloadVerifyAndExtract(ctx context.Context, url, bundleDir, finalBinPath,
 		}
 	}
 	reportBytes() // final flush
+	closed = true // we close explicitly below; keep the defer from double-closing
 	if err := f.Close(); err != nil {
 		_ = os.Remove(tmpArchive)
 		return "", fmt.Errorf("close tmp archive: %w", err)

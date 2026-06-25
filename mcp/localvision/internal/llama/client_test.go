@@ -299,7 +299,7 @@ func TestBuildChatRequestBodyImageURLs(t *testing.T) {
 		UserPrompt:   "describe",
 		ImagePaths:   []string{pngPath, jpgPath},
 		MaxTokens:    100,
-		Temperature:  0.2,
+		Temperature:  ptrFloat64(0.2),
 	})
 	require.NoError(t, err)
 	s := string(body)
@@ -310,6 +310,21 @@ func TestBuildChatRequestBodyImageURLs(t *testing.T) {
 	assert.Contains(t, s, `"describe"`)
 	assert.Contains(t, s, `"max_tokens":100`)
 	assert.Contains(t, s, `"temperature":0.2`)
+}
+
+// TestBuildChatRequestBody_TemperatureExplicitZero (Tier-2 G): an explicit *0.0
+// must serialize as 0 (greedy), NOT be silently overwritten with the 0.1
+// default. nil still gets the default (0.1 on the wire).
+func TestBuildChatRequestBody_TemperatureExplicitZero(t *testing.T) {
+	greedy, err := buildChatRequestBody(ChatRequest{UserPrompt: "x", Temperature: ptrFloat64(0)})
+	require.NoError(t, err)
+	assert.NotContains(t, string(greedy), `"temperature":0.1`,
+		"explicit 0.0 must serialize as 0, not be overwritten with the 0.1 default")
+
+	def, err := buildChatRequestBody(ChatRequest{UserPrompt: "x"})
+	require.NoError(t, err)
+	assert.Contains(t, string(def), `"temperature":0.1`,
+		"nil Temperature must default to 0.1")
 }
 
 // TestBuildChatRequestBodyRejectsEmpty: empty request returns an error.

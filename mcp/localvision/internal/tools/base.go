@@ -76,9 +76,9 @@ func passthroughOutput(raw string) (any, error) { return raw, nil }
 
 // outputMode extracts and validates the optional "output" argument from a
 // tool's Extra map (set via the MCP tool's `output` field or the CLI
-// --output-mode flag). It returns "prose" when the argument is absent or empty
-// (the default, so callers that never set it get today's behavior), the mode
-// when it matches one of allowed, or a clear error for an unknown value.
+// --output-mode flag). It returns "prose" when the argument is absent, empty, or
+// explicitly "prose" (the default, and always valid per the schemas' enum), the
+// mode when it matches one of allowed, or a clear error for an unknown value.
 //
 // allowed is the per-tool set of non-prose modes (e.g. ["csv","json"] for
 // describe_chart); "prose" is always implicitly valid and prepended to the
@@ -86,7 +86,7 @@ func passthroughOutput(raw string) (any, error) { return raw, nil }
 func outputMode(extra map[string]any, allowed []string) (string, error) {
 	v, _ := extra["output"].(string)
 	mode := strings.ToLower(strings.TrimSpace(v))
-	if mode == "" {
+	if mode == "" || mode == "prose" {
 		return "prose", nil
 	}
 	for _, a := range allowed {

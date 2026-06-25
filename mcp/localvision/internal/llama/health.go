@@ -69,10 +69,11 @@ func waitForHealth(ctx context.Context, port int, timeout time.Duration) error {
 		if ok {
 			return nil
 		}
-		if err != nil {
-			// Surface unexpected probe errors only at debug level via
-			// return path; we don't log here to keep the package free of
-			// logger plumbing. The lifecycle logs the final timeout.
+		if err == nil {
+			// Server answered (even non-200): it's up and processing, so reset
+			// the backoff so we don't keep growing the interval once llama-server
+			// starts responding. Matches the doc comment above.
+			attempt = 0
 		}
 
 		// Compute the next backoff. We cap the index into the schedule

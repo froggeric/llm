@@ -88,7 +88,7 @@ func (t compareImagesTool) BuildRequest(input ToolInput) (systemPrompt, userProm
 	return t.SystemPrompt(), prompt, []string{input.Images[0].LocalPath, input.Images[1].LocalPath}, nil
 }
 
-func (compareImagesTool) ParseOutput(raw string) (any, error) {
+func (compareImagesTool) ParseOutput(_ ToolInput, raw string) (any, error) {
 	if raw == "" {
 		return "", errors.New("model returned empty output")
 	}

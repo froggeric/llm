@@ -53,13 +53,20 @@ func (t describeDiagramTool) BuildRequest(input ToolInput) (systemPrompt, userPr
 }
 
 // ParseOutput: mermaid mode → strip the fenced ```mermaid block and return the
-// pasteable Mermaid text; prose mode → passthrough (the Markdown report is not
-// a mermaid fence, so it falls through unchanged). If the model omitted the
-// fence, return the trimmed raw.
-func (describeDiagramTool) ParseOutput(raw string) (any, error) {
-	lang, body := extractCodeBlock(raw)
-	if strings.EqualFold(lang, "mermaid") {
-		return strings.TrimSpace(body), nil
+// pasteable Mermaid text (raw if the model omitted the fence); prose mode →
+// passthrough UNCHANGED. The mode is resolved from input.Extra (the same source
+// BuildRequest uses) so a prose report that happens to contain a mermaid fence
+// isn't mis-stripped.
+func (describeDiagramTool) ParseOutput(input ToolInput, raw string) (any, error) {
+	mode, err := outputMode(input.Extra, []string{"mermaid"})
+	if err != nil {
+		return nil, err
+	}
+	if mode == "mermaid" {
+		lang, body := extractCodeBlock(raw)
+		if strings.EqualFold(lang, "mermaid") {
+			return strings.TrimSpace(body), nil
+		}
 	}
 	return raw, nil
 }

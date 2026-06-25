@@ -47,10 +47,13 @@ type Tool interface {
 	// send to the lifecycle manager.
 	BuildRequest(input ToolInput) (systemPrompt, userPrompt string, imagePaths []string, err error)
 
-	// ParseOutput post-processes the model's raw text into the final
-	// response. Most tools just pass through; some (extract_table) convert
-	// to Markdown tables, extract_code strips preamble, etc.
-	ParseOutput(raw string) (any, error)
+	// ParseOutput post-processes the model's raw text into the final response.
+	// input is passed so the parser honors the requested output mode
+	// (input.Extra["output"], e.g. describe_chart's "csv"/"json") rather than
+	// content-sniffing. Most tools ignore input and pass the raw text through;
+	// some (extract_table, extract_code, describe_chart, describe_diagram)
+	// post-process.
+	ParseOutput(input ToolInput, raw string) (any, error)
 }
 
 // ToolInput is the parsed arguments from an MCP tools/call request.

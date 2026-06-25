@@ -1,49 +1,30 @@
 package llama
 
-import (
-	"os/exec"
-	"syscall"
-)
+import "os/exec"
 
-// signals.go provides platform-safe wrappers around subprocess signaling.
-// On POSIX (the only platform this MVP supports per F2.2), SIGTERM and
-// SIGKILL are well-known. We centralize them here so the lifecycle stays
-// readable and so tests can replace them via build tags if needed.
+// signals.go holds the cross-platform sigkill. The OS-specific sigterm and
+// processAlive live in signals_unix.go and signals_windows.go (build-tagged).
+//
+// Why the split: the untagged, syscall-based versions that used to live here
+// compiled on Windows but silently no-op'd there — os.Process.Signal returns
+// EWINDOWS for anything but SIGKILL/Interrupt, so SIGTERM did nothing and the
+// signal-0 processAlive probe always reported "dead". killSubprocessLocked then
+// skipped its SIGKILL escalation, leaving idle-killed llama-server subprocesses
+// orphaned on Windows (leaking VRAM). Per-OS files make the kill path actually
+// work on every target.
+//
+// lifecycle.go is unchanged: killSubprocessLocked / killIfIdle / unloadLocked /
+// Shutdown call sigterm / processAlive / sigkill, which now resolve per-OS via
+// build tags.
 
-// sigterm sends SIGTERM to the subprocess. Errors are ignored — the caller
-// will detect a still-alive process and escalate to SIGKILL.
-func sigterm(cmd *exec.Cmd) error {
-	if cmd == nil || cmd.Process == nil {
-		return nil
-	}
-	return cmd.Process.Signal(syscall.SIGTERM)
-}
-
-// sigkill sends SIGKILL to the subprocess. Errors are ignored.
+// sigkill forcefully terminates the subprocess. Cross-platform: SIGKILL on POSIX
+// (syscall.Kill), TerminateProcess on Windows — both reached through
+// os.Process.Kill. Callers ignore the error; the watcher goroutine
+// (watchSubprocess) is the single reaper (it owns cmd.Wait) and observes the
+// exit regardless.
 func sigkill(cmd *exec.Cmd) error {
 	if cmd == nil || cmd.Process == nil {
 		return nil
 	}
-	return cmd.Process.Signal(syscall.SIGKILL)
-}
-
-// processAlive reports whether the subprocess is still running. We probe by
-// sending signal 0 (POSIX "signal exists but no signal sent"). If the
-// process has exited AND been reaped, the call returns an error.
-//
-// Caveat: a zombie process (exited but not yet waited on) still answers
-// signal 0. Callers that need a definitive "is the process gone" answer
-// must call cmd.Wait() (which the lifecycle's watcher goroutine does).
-// processAlive is used in the lifecycle to poll for SIGTERM effectiveness
-// before escalating to SIGKILL — a zombie will be reaped by the watcher
-// soon enough that this approximation is safe.
-func processAlive(cmd *exec.Cmd) bool {
-	if cmd == nil || cmd.Process == nil {
-		return false
-	}
-	// signal 0 is the POSIX idiom for "is this PID alive?".
-	if err := cmd.Process.Signal(syscall.Signal(0)); err == nil {
-		return true
-	}
-	return false
+	return cmd.Process.Kill()
 }

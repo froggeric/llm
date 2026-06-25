@@ -42,7 +42,7 @@ func (t extractCodeTool) BuildRequest(input ToolInput) (systemPrompt, userPrompt
 // If the model didn't emit a fence (e.g. it returned the code as plain
 // text), ParseOutput returns the trimmed input as the "code" field with an
 // empty language — better than failing entirely.
-func (extractCodeTool) ParseOutput(raw string) (any, error) {
+func (extractCodeTool) ParseOutput(_ ToolInput, raw string) (any, error) {
 	lang, code := extractCodeBlock(raw)
 	if code == "" {
 		// Defensive: empty code body is almost always a parsing bug or a

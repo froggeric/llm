@@ -56,30 +56,41 @@ func (t describeChartTool) BuildRequest(input ToolInput) (systemPrompt, userProm
 	return chartPromptFor(mode), singleImageUserPrompt(input.Extra, false), []string{ref.LocalPath}, nil
 }
 
-// ParseOutput detects the requested representation from the model's output
-// shape (the mode isn't threaded through ParseOutput, so the shape itself is
-// the signal):
-//   - csv: a fenced ```csv block → strip the fence, return clean CSV text.
-//   - json: a JSON object (bare, or fenced as ```json) → parse to any so MCP
-//     surfaces it as StructuredContent; on parse failure return the text.
-//   - prose (default): the structured Markdown report → passthrough.
-//
-// Prose is a Markdown report (headings + bullets) — neither valid JSON nor a
-// fenced csv block — so it falls through unchanged.
-func (describeChartTool) ParseOutput(raw string) (any, error) {
-	lang, body := extractCodeBlock(raw)
-	if strings.EqualFold(lang, "csv") {
-		return strings.TrimSpace(body), nil
+// ParseOutput post-processes per the requested output mode (resolved from
+// input.Extra via the same outputMode helper BuildRequest uses):
+//   - csv: strip a fenced ```csv block and return clean CSV text (raw if the
+//     model omitted the fence).
+//   - json: parse a bare or fenced ```json object to any so MCP surfaces it as
+//     StructuredContent; on parse failure return the text.
+//   - prose (default): return the raw Markdown report UNCHANGED. Previously the
+//     parser content-sniffed, so a prose report that happened to be valid JSON
+//     (e.g. a bare-number trend summary) was mis-returned as structured output.
+func (describeChartTool) ParseOutput(input ToolInput, raw string) (any, error) {
+	mode, err := outputMode(input.Extra, []string{"csv", "json"})
+	if err != nil {
+		return nil, err
 	}
-	candidate := strings.TrimSpace(raw)
-	if strings.EqualFold(lang, "json") {
-		candidate = strings.TrimSpace(body)
-	}
-	if json.Valid([]byte(candidate)) {
-		var v any
-		if err := json.Unmarshal([]byte(candidate), &v); err == nil {
-			return v, nil
+	switch mode {
+	case "csv":
+		lang, body := extractCodeBlock(raw)
+		if strings.EqualFold(lang, "csv") {
+			return strings.TrimSpace(body), nil
 		}
+		return raw, nil
+	case "json":
+		lang, body := extractCodeBlock(raw)
+		candidate := strings.TrimSpace(raw)
+		if strings.EqualFold(lang, "json") {
+			candidate = strings.TrimSpace(body)
+		}
+		if json.Valid([]byte(candidate)) {
+			var v any
+			if err := json.Unmarshal([]byte(candidate), &v); err == nil {
+				return v, nil
+			}
+		}
+		return raw, nil
+	default: // prose
+		return raw, nil
 	}
-	return raw, nil
 }

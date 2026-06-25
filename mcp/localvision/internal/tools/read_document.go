@@ -61,7 +61,9 @@ func (t readDocumentTool) BuildRequest(input ToolInput) (systemPrompt, userPromp
 	return t.SystemPrompt(), singleImageUserPrompt(input.Extra, true), paths, nil
 }
 
-func (readDocumentTool) ParseOutput(raw string) (any, error) { return passthroughOutput(raw) }
+func (readDocumentTool) ParseOutput(_ ToolInput, raw string) (any, error) {
+	return passthroughOutput(raw)
+}
 
 // ExpandImages implements Expander. If the single input ref points at a PDF
 // (by magic bytes, so data:-URI PDFs written to a .bin temp are detected too),

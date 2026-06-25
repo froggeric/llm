@@ -28,7 +28,7 @@ func mainstreamHW() models.HardwareInfo {
 }
 
 func TestModelOptionsOrdering(t *testing.T) {
-	opts := ModelOptions(testCatalog(), mainstreamHW())
+	opts := ModelOptions(testCatalog(), mainstreamHW(), 0)
 	require.Len(t, opts, 3)
 
 	// Recommended (big, mainstream) first.
@@ -47,11 +47,11 @@ func TestModelOptionsOrdering(t *testing.T) {
 }
 
 func TestModelOptionsNilCatalog(t *testing.T) {
-	assert.Nil(t, ModelOptions(nil, mainstreamHW()))
+	assert.Nil(t, ModelOptions(nil, mainstreamHW(), 0))
 }
 
 func TestModelOptionsRecommendedMarkedOnce(t *testing.T) {
-	opts := ModelOptions(testCatalog(), mainstreamHW())
+	opts := ModelOptions(testCatalog(), mainstreamHW(), 0)
 	n := 0
 	for _, o := range opts {
 		if o.Recommended {
@@ -65,7 +65,7 @@ func TestModelOptionsUnsupportedBackendNoRecommended(t *testing.T) {
 	// An unsupported backend (e.g. Linux in v0.2) yields no DefaultModel, so
 	// nothing is marked recommended but all models still appear.
 	hw := models.HardwareInfo{Backend: models.BackendUnsupported}
-	opts := ModelOptions(testCatalog(), hw)
+	opts := ModelOptions(testCatalog(), hw, 0)
 	require.NotEmpty(t, opts)
 	for _, o := range opts {
 		assert.False(t, o.Recommended)

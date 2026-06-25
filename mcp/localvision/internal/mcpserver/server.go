@@ -75,8 +75,11 @@ type Dependencies struct {
 	Executor  tools.Executor
 	// ToolConfigs: per-tool model + method overrides from config (v0.7).
 	ToolConfigs map[string]config.ToolConfig
-	Registry    *tools.Registry
-	Tools       []tools.Tool
+	// SafetyMarginGB: the config's safety_margin_gb, threaded into catalog model
+	// selection (DefaultModel/ModelFor/Fits). <=0 → catalog default (4 GB). v0.7.
+	SafetyMarginGB float64
+	Registry       *tools.Registry
+	Tools          []tools.Tool
 }
 
 // NewServer wires together the SDK server, tool registry, executor, and
@@ -112,7 +115,8 @@ func NewServer(deps Dependencies) (*Server, error) {
 	executor := deps.Executor
 	if executor == nil {
 		ce := NewCatalogExecutor(deps.Catalog, lifecycle, deps.Hardware, logger)
-		ce.SetToolConfig(deps.ToolConfigs) // per-tool model + method overrides (v0.7)
+		ce.SetToolConfig(deps.ToolConfigs)        // per-tool model + method overrides (v0.7)
+		ce.SetSafetyMarginGB(deps.SafetyMarginGB) // config safety_margin_gb (v0.7)
 		executor = ce
 	}
 

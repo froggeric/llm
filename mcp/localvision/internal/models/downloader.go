@@ -112,6 +112,10 @@ func downloadImpl(ctx context.Context, url, destPath, expectedSha256 string, pro
 		slog.Warn("existing file failed SHA256; re-downloading",
 			"path", destPath, "expected", want, "got", existingHash)
 		_ = os.Remove(destPath)
+		// Invalidate the integrity cache for this path: the loader's
+		// verifySHA256 may have cached the (wrong) hash under a (size, mtime)
+		// key, and a subsequent verify would otherwise hit that stale entry.
+		defaultCache.invalidate(destPath)
 	}
 
 	partialPath := destPath + ".partial"

@@ -232,7 +232,7 @@ func (s *Server) callTool(ctx context.Context, req *mcp.CallToolRequest, t tools
 
 	// Ask the tool to post-process the raw text. Most tools pass through;
 	// some (extract_code, extract_table) do real work here.
-	parsed, err := t.ParseOutput(raw)
+	parsed, err := t.ParseOutput(input, raw)
 	if err != nil {
 		logger.Warn("tool.ParseOutput failed", "error", err)
 		res := &mcp.CallToolResult{}
@@ -555,7 +555,14 @@ func newMcpProgressSink(session *mcp.ServerSession, token any) *mcpProgressSink 
 // Progress enqueues u for ordered delivery. It is non-blocking: if the buffer
 // is full (the client is slower than the producer), u is dropped — progress is
 // best-effort and a flood must not back-pressure the tool call.
+//
+// It is safe to call concurrently with close(): close() closes s.ch, and a send
+// on a closed channel panics regardless of a non-blocking select, so the send is
+// guarded by a recover. Producers (lifecycle phase callbacks, the heartbeat
+// goroutine) join before close() runs in the current call graph, but this keeps
+// the sink's "concurrency-safe" contract honest if that ordering ever changes.
 func (s *mcpProgressSink) Progress(u progress.Update) {
+	defer func() { _ = recover() }() // close() may close s.ch concurrently
 	select {
 	case s.ch <- u:
 	default:

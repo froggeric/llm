@@ -18,3 +18,7 @@ func skipOnWindows(t *testing.T, why string) {
 		t.Skipf("Windows: %s", why)
 	}
 }
+
+// ptrFloat64 returns a pointer to v, for building *float64 ChatRequest fields
+// in tests (Temperature, TopP).
+func ptrFloat64(v float64) *float64 { return &v }

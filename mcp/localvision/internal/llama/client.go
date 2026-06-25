@@ -200,8 +200,6 @@ func mimeForExt(ext string) string {
 		return "image/png"
 	case ".gif":
 		return "image/gif"
-	case ".webp":
-		return "image/webp"
 	case ".bmp":
 		return "image/bmp"
 	default:
@@ -533,19 +531,13 @@ func buildChatRequestBody(req ChatRequest) ([]byte, error) {
 	if maxTokens <= 0 {
 		maxTokens = 1024
 	}
-	temperature := req.Temperature
-	if temperature == 0 {
-		// 0.0 is a valid value but tools default to 0.1 for determinism.
-		// Caller must explicitly pass 0.0 to disable — we use the small
-		// default if they left it unset (which we can't distinguish from
-		// a literal 0, but tools always set it).
-		temperature = 0.1
+	temperature := 0.1 // default: deterministic output
+	if req.Temperature != nil {
+		temperature = *req.Temperature // explicit value, incl. 0.0 for greedy
 	}
-	topP := req.TopP
-	if topP == 0 {
-		// 0.0 is a degenerate-but-valid top_p; treat 0 as "unset". The
-		// executor is the sole caller and always passes 0.95 (v6 bench).
-		topP = 0.95
+	topP := 0.95 // default: v6 benchmark value
+	if req.TopP != nil {
+		topP = *req.TopP
 	}
 	topK := req.TopK
 	if topK <= 0 {

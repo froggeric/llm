@@ -281,12 +281,12 @@ func TestBuiltinCatalog_PerToolRouting(t *testing.T) {
 	// fit. Each tool routes to its benchmark-best model.
 	mainstream := HardwareInfo{TotalMemoryGB: 32, Tier: TierMainstream, Backend: BackendAppleSilicon}
 	for _, tool := range eightB {
-		got, err := c.ModelFor(tool, mainstream)
+		got, err := c.ModelFor(tool, mainstream, 0)
 		require.NoError(t, err, "tool %q", tool)
 		assert.Equal(t, "qwen3-vl-8b", got, "tool %q should route to the 8B on mainstream HW", tool)
 	}
 	for _, tool := range fourBQ8 {
-		got, err := c.ModelFor(tool, mainstream)
+		got, err := c.ModelFor(tool, mainstream, 0)
 		require.NoError(t, err, "tool %q", tool)
 		assert.Equal(t, "qwen3.5-4b-q8", got, "tool %q should route to the 4B-Q8 on mainstream HW", tool)
 	}
@@ -294,7 +294,7 @@ func TestBuiltinCatalog_PerToolRouting(t *testing.T) {
 	// Tiny (8 GB): only the 4B-Q4 (min_vram 3) fits -> everything falls back to it.
 	tiny := HardwareInfo{TotalMemoryGB: 8, Tier: TierConstrained, Backend: BackendAppleSilicon}
 	for _, tool := range append(append([]string{}, eightB...), fourBQ8...) {
-		got, err := c.ModelFor(tool, tiny)
+		got, err := c.ModelFor(tool, tiny, 0)
 		require.NoError(t, err, "tool %q", tool)
 		assert.Equal(t, "qwen3.5-4b", got, "tool %q should fall back to the 4B-Q4 on 8 GB HW", tool)
 	}
@@ -302,7 +302,7 @@ func TestBuiltinCatalog_PerToolRouting(t *testing.T) {
 	// The opt-in models are never auto-selected for any tool.
 	for _, opt := range []string{"qwen3.6-27b", "qwen3.6-35b-a3b"} {
 		for _, tool := range append(append([]string{}, eightB...), fourBQ8...) {
-			got, err := c.ModelFor(tool, mainstream)
+			got, err := c.ModelFor(tool, mainstream, 0)
 			require.NoError(t, err)
 			assert.NotEqual(t, opt, got, "%s must never be auto-selected (opt-in only)", opt)
 		}
@@ -357,8 +357,8 @@ func TestDefaultModel_Determinism(t *testing.T) {
 	c := validCatalog()
 	hw := HardwareInfo{TotalMemoryGB: 32, Tier: TierMainstream, Backend: BackendAppleSilicon}
 
-	a, errA := c.DefaultModel(hw)
-	b, errB := c.DefaultModel(hw)
+	a, errA := c.DefaultModel(hw, 0)
+	b, errB := c.DefaultModel(hw, 0)
 	require.NoError(t, errA)
 	require.NoError(t, errB)
 	if a != b {
@@ -370,7 +370,7 @@ func TestDefaultModel_PrefersTierPreferred(t *testing.T) {
 	c := validCatalog()
 	hw := HardwareInfo{TotalMemoryGB: 32, Tier: TierMainstream, Backend: BackendAppleSilicon}
 
-	id, err := c.DefaultModel(hw)
+	id, err := c.DefaultModel(hw, 0)
 	require.NoError(t, err)
 	if id != "mainstream-model" {
 		t.Errorf("DefaultModel = %q; want mainstream-model (tier-preferred)", id)
@@ -390,7 +390,7 @@ func TestDefaultModel_FallsBackToLargest(t *testing.T) {
 		},
 	}
 	hw := HardwareInfo{TotalMemoryGB: 64, Tier: TierHighEnd}
-	id, err := c.DefaultModel(hw)
+	id, err := c.DefaultModel(hw, 0)
 	require.NoError(t, err)
 	if id != "big" {
 		t.Errorf("DefaultModel = %q; want big (largest MinVramGb that fits)", id)
@@ -412,7 +412,7 @@ func TestDefaultModel_PrefersToolListingOverLarger(t *testing.T) {
 		},
 	}
 	hw := HardwareInfo{TotalMemoryGB: 96, Tier: TierHighEnd}
-	id, err := c.DefaultModel(hw)
+	id, err := c.DefaultModel(hw, 0)
 	require.NoError(t, err)
 	assert.Equal(t, "serves", id, "default should prefer the tool-listing model over the larger opt-in one")
 }
@@ -427,7 +427,7 @@ func TestDefaultModel_TieBreakByDisplayName(t *testing.T) {
 		},
 	}
 	hw := HardwareInfo{TotalMemoryGB: 32, Tier: TierMainstream}
-	id, err := c.DefaultModel(hw)
+	id, err := c.DefaultModel(hw, 0)
 	require.NoError(t, err)
 	if id != "alpha" {
 		t.Errorf("DefaultModel = %q; want alpha (lexical)", id)
@@ -442,7 +442,7 @@ func TestDefaultModel_NoFittingModel(t *testing.T) {
 		},
 	}
 	hw := HardwareInfo{TotalMemoryGB: 8, Tier: TierConstrained}
-	_, err := c.DefaultModel(hw)
+	_, err := c.DefaultModel(hw, 0)
 	if !errors.Is(err, ErrNoFittingModel) {
 		t.Errorf("DefaultModel err = %v; want ErrNoFittingModel", err)
 	}
@@ -452,7 +452,7 @@ func TestModelFor_PrefersListed(t *testing.T) {
 	c := validCatalog()
 	hw := HardwareInfo{TotalMemoryGB: 64, Tier: TierHighEnd}
 
-	id, err := c.ModelFor("describe_chart", hw)
+	id, err := c.ModelFor("describe_chart", hw, 0)
 	require.NoError(t, err)
 	// "describe_chart" is in high-end-model.PreferredFor.
 	if id != "high-end-model" {
@@ -464,7 +464,7 @@ func TestModelFor_FallsBackToDefaultWhenToolNotListed(t *testing.T) {
 	c := validCatalog()
 	hw := HardwareInfo{TotalMemoryGB: 32, Tier: TierMainstream}
 
-	id, err := c.ModelFor("unknown_tool", hw)
+	id, err := c.ModelFor("unknown_tool", hw, 0)
 	require.NoError(t, err)
 	if id != "mainstream-model" {
 		t.Errorf("ModelFor(unknown) = %q; want default mainstream-model", id)
@@ -474,7 +474,7 @@ func TestModelFor_FallsBackToDefaultWhenToolNotListed(t *testing.T) {
 func TestModelFor_NoFittingModel(t *testing.T) {
 	c := validCatalog()
 	hw := HardwareInfo{TotalMemoryGB: 4, Tier: TierConstrained}
-	_, err := c.ModelFor("read_image", hw)
+	_, err := c.ModelFor("read_image", hw, 0)
 	if !errors.Is(err, ErrNoFittingModel) {
 		t.Errorf("ModelFor err = %v; want ErrNoFittingModel", err)
 	}
@@ -483,8 +483,8 @@ func TestModelFor_NoFittingModel(t *testing.T) {
 func TestModelFor_Determinism(t *testing.T) {
 	c := validCatalog()
 	hw := HardwareInfo{TotalMemoryGB: 32, Tier: TierMainstream}
-	a, errA := c.ModelFor("read_image", hw)
-	b, errB := c.ModelFor("read_image", hw)
+	a, errA := c.ModelFor("read_image", hw, 0)
+	b, errB := c.ModelFor("read_image", hw, 0)
 	require.NoError(t, errA)
 	require.NoError(t, errB)
 	if a != b {
@@ -512,4 +512,36 @@ func TestBuiltinCatalogEmbedded(t *testing.T) {
 // still used; the downloader test file actually exercises it.
 func TestContextImported(_ *testing.T) {
 	_ = context.Background()
+}
+
+// TestSelection_SafetyMarginInfluencesFit (Tier-1 C regression): the user's
+// config.safety_margin_gb must actually reach selection. With a 16 GB machine
+// and a 14 GB model, available = 16 - margin - 1 (resident) = 15 - margin, so
+// margin=1 admits the model (available 14 >= 14) and margin=8 rejects it
+// (available 7 < 14). Before the fix, selection always used the hardcoded 4 GB
+// default and ignored the config value.
+func TestSelection_SafetyMarginInfluencesFit(t *testing.T) {
+	c := &Catalog{SchemaVersion: 1, Models: map[string]ModelSpec{
+		"boundary": {
+			DisplayName:  "Boundary",
+			MinVramGb:    14,
+			HardwareTier: TierMainstream,
+			Preferred:    true,
+			GGUF:         ggufURL, Mmproj: mmprojURL,
+			GGUFSha256: validHash64, MmprojSha256: validHash64,
+			Ctx: 4096, License: "MIT",
+		},
+	}}
+	hw := HardwareInfo{TotalMemoryGB: 16, Tier: TierMainstream, Backend: BackendAppleSilicon}
+
+	// margin=1 → available 14 → the 14 GB model fits and is selected.
+	assert.True(t, c.Fits("boundary", hw, 1), "margin=1: model should fit (available 14 >= 14)")
+	id, err := c.DefaultModel(hw, 1)
+	require.NoError(t, err)
+	assert.Equal(t, "boundary", id)
+
+	// margin=8 → available 7 → the 14 GB model does NOT fit; nothing fits.
+	assert.False(t, c.Fits("boundary", hw, 8), "margin=8: model should NOT fit (available 7 < 14)")
+	_, err = c.DefaultModel(hw, 8)
+	assert.ErrorIs(t, err, ErrNoFittingModel)
 }

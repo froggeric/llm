@@ -210,3 +210,29 @@ func TestVerifySHA256_Exported(t *testing.T) {
 	want := sha256Hex(content)
 	assert.NoError(t, VerifySHA256(context.Background(), p, want))
 }
+
+// TestVerifySHA256_CacheInvalidationByPath (Tier-2 A6): after
+// defaultCache.invalidate(path), a poisoned cache entry is gone and verify
+// re-hashes the (correct) file. This is the mechanism the downloader relies on
+// when it removes a SHA-mismatched file: without invalidation, the loader's
+// subsequent verify would hit the stale wrong hash.
+func TestVerifySHA256_CacheInvalidationByPath(t *testing.T) {
+	content := "invalidate me\n"
+	p := writeTempFile(t, "model.gguf", content)
+	want := sha256Hex(content)
+
+	// First call computes and caches the correct hash.
+	require.NoError(t, verifySHA256(context.Background(), p, want))
+
+	fi, err := os.Stat(p)
+	require.NoError(t, err)
+	// Poison the cache under the same key (a stale wrong hash, as would happen
+	// if the loader cached the hash of a corrupt file before re-download).
+	defaultCache.store(p, fi.Size(), fi.ModTime().UnixNano(), strings.Repeat("0", 64))
+
+	// Invalidate, then verify: the entry is gone, so verify re-hashes the
+	// (correct) file and returns nil. Without invalidate this would FAIL (the
+	// poisoned cache hit surfaces a mismatch — see CacheHitSkipsRehash).
+	defaultCache.invalidate(p)
+	require.NoError(t, verifySHA256(context.Background(), p, want))
+}

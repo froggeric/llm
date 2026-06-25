@@ -98,13 +98,30 @@ func (f *commonFlags) register(fs *flag.FlagSet) {
 	fs.StringVar(&f.modelsDir, "models-dir", "", "override the models dir (config models_dir); where model files are stored")
 }
 
+// parseFlags parses args against fs and maps the stdlib parse result to an exit
+// code. -h/--help makes the flag package return flag.ErrHelp, which (unlike a
+// genuine bad-args error) must exit 0, not 2 — matching `localvision --help`.
+// Returns (code, true) when the caller should return immediately with that code
+// (help shown or bad args); returns (_, false) on success so the caller
+// continues. Used by every subcommand handler so the help/exit-code mapping
+// lives in one testable place.
+func parseFlags(fs *flag.FlagSet, args []string) (int, bool) {
+	if err := fs.Parse(args); err != nil {
+		if errors.Is(err, flag.ErrHelp) {
+			return exitOK, true
+		}
+		return exitBadArgs, true
+	}
+	return 0, false
+}
+
 func runSubcommand(args []string) int {
 	fs := flag.NewFlagSet("run", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 	var cf commonFlags
 	cf.register(fs)
-	if err := fs.Parse(args); err != nil {
-		return exitBadArgs
+	if code, bad := parseFlags(fs, args); bad {
+		return code
 	}
 
 	cfg, logger, err := loadAndConfigure(cf, false)
@@ -120,11 +137,12 @@ func runSubcommand(args []string) int {
 	}
 
 	srv, err := mcpserver.NewServer(mcpserver.Dependencies{
-		Logger:      rt.logger,
-		Lifecycle:   rt.lifecycle,
-		Catalog:     rt.catalog,
-		Hardware:    rt.hw,
-		ToolConfigs: cfg.Tools,
+		Logger:         rt.logger,
+		Lifecycle:      rt.lifecycle,
+		Catalog:        rt.catalog,
+		Hardware:       rt.hw,
+		ToolConfigs:    cfg.Tools,
+		SafetyMarginGB: cfg.SafetyMarginGB,
 	})
 	if err != nil {
 		logger.Error("failed to construct MCP server", "error", err)
@@ -166,8 +184,8 @@ func doctorSubcommand(args []string) int {
 	fs.SetOutput(os.Stderr)
 	var cf commonFlags
 	cf.register(fs)
-	if err := fs.Parse(args); err != nil {
-		return exitBadArgs
+	if code, bad := parseFlags(fs, args); bad {
+		return code
 	}
 
 	cfg, logger, err := loadAndConfigure(cf, false)
@@ -222,7 +240,7 @@ func doctorSubcommand(args []string) int {
 			fmt.Fprintln(w, "Validation:     OK")
 		}
 		if hwErr == nil {
-			if def, err := catalog.DefaultModel(hw); err != nil {
+			if def, err := catalog.DefaultModel(hw, cfg.SafetyMarginGB); err != nil {
 				fmt.Fprintf(w, "Default model:  NONE FITS: %v\n", err)
 			} else {
 				fmt.Fprintf(w, "Default model:  %s\n", def)
@@ -274,7 +292,7 @@ func doctorSubcommand(args []string) int {
 				resolved := "(no fitting model)"
 				if tc, ok := cfg.Tools[t.ID()]; ok && tc.Model != "" {
 					resolved = tc.Model + "  [config override]"
-				} else if m, err := catalog.ModelFor(t.ID(), hw); err == nil {
+				} else if m, err := catalog.ModelFor(t.ID(), hw, cfg.SafetyMarginGB); err == nil {
 					resolved = m
 				}
 				fmt.Fprintf(w, "  %-18s %s\n", t.ID(), resolved)

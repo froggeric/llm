@@ -194,10 +194,6 @@ type LifecycleManager struct {
 	// crashErr is the most recent crash error captured by the watcher.
 	crashErr error
 
-	// loadErr is the error from the most recent spawn attempt; cleared on
-	// the next successful Acquire.
-	loadErr error
-
 	// binaryPath is the resolved llama-server path, cached after first
 	// discovery so we don't re-stat it on every Acquire.
 	binaryPath     string
@@ -366,7 +362,6 @@ func (m *LifecycleManager) Acquire(ctx context.Context, modelID string) (c *Clie
 		// Load it. We pass m.spawnCtx (not ctx) so the subprocess survives
 		// this Acquire returning.
 		if err := m.loadLocked(ctx, m.spawnCtx, modelID); err != nil {
-			m.loadErr = err
 			return nil, nil, err
 		}
 
@@ -852,10 +847,15 @@ type ChatRequest struct {
 	UserPrompt   string   // user-turn prompt from the tool
 	ImagePaths   []string // absolute local paths to image files
 	MaxTokens    int      // per-tool output budget
-	Temperature  float64  // usually 0.1 for deterministic output
-	// TopP / TopK carry v6 benchmark sampling (0.95 / 64). buildChatRequestBody
-	// applies these as defaults when left at zero; the executor always sets them.
-	TopP float64
+	// Temperature is the sampling temperature. nil = default (0.1, deterministic);
+	// an explicit &0.0 requests greedy decoding. *float64 so "unset" is
+	// distinguishable from a literal 0.0 (which buildChatRequestBody used to
+	// silently overwrite with the default).
+	Temperature *float64
+	// TopP / TopK carry v6 benchmark sampling (0.95 / 64). TopP is *float64 so
+	// "unset" (nil → 0.95) is distinguishable from a literal 0.0; TopK is an int
+	// where <=0 means "unset" (greedy is 1, already expressible).
+	TopP *float64
 	TopK int
 	// ChatTemplateKwargs is forwarded as `chat_template_kwargs` in the
 	// request body. Populated from ModelSpec.ChatTemplateKwargs by the

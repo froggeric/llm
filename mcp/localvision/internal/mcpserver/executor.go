@@ -49,6 +49,10 @@ type CatalogExecutor struct {
 	// force a single model — per-tool routing (catalog preferred_for + [tools.*])
 	// takes precedence. v0.7.
 	defaultModel string
+	// safetyMarginGB is the config's safety_margin_gb, threaded into catalog
+	// selection (DefaultModel/ModelFor/Fits) so the user's knob actually
+	// reaches selection. <=0 → catalog default (4 GB). v0.7.
+	safetyMarginGB float64
 	// sampleReps, when > 1, opts union-mode tools into multi-sampling: N warm
 	// calls at the tool's sampling temperature, fused by a merge pass (F5).
 	// Single-mode tools and reps<=1 do one call at 0.1 (today's behavior).
@@ -98,6 +102,10 @@ func (e *CatalogExecutor) SetToolConfig(tc map[string]config.ToolConfig) { e.too
 // single model (per-tool routing takes precedence). v0.7.
 func (e *CatalogExecutor) SetDefaultModel(id string) { e.defaultModel = id }
 
+// SetSafetyMarginGB threads the config's safety_margin_gb into catalog model
+// selection (DefaultModel/ModelFor/Fits). <=0 keeps the catalog default (4 GB).
+func (e *CatalogExecutor) SetSafetyMarginGB(margin float64) { e.safetyMarginGB = margin }
+
 // Run implements tools.Executor. It:
 //  1. Picks the right model for the tool via catalog.ModelFor(toolID, hw)
 //  2. Acquires a loaded-model client via lifecycle.Acquire(ctx, modelID)
@@ -128,7 +136,7 @@ func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPro
 		if tc, ok := e.toolConfigs[toolID]; ok && tc.Model != "" {
 			modelID = tc.Model
 			source = "config([tools.<id>])"
-		} else if m, err := e.catalog.ModelFor(toolID, e.hardware); err == nil {
+		} else if m, err := e.catalog.ModelFor(toolID, e.hardware, e.safetyMarginGB); err == nil {
 			modelID = m
 			source = "catalog"
 		} else if e.defaultModel != "" {
@@ -141,7 +149,7 @@ func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPro
 	if _, ok := e.catalog.Models[modelID]; !ok {
 		return "", tools.Stats{}, fmt.Errorf("model %q (resolved for tool %q via %s) is not in the catalog", modelID, toolID, source)
 	}
-	if source != "catalog" && !e.catalog.Fits(modelID, e.hardware) {
+	if source != "catalog" && !e.catalog.Fits(modelID, e.hardware, e.safetyMarginGB) {
 		e.logger.Warn("resolved model may not fit the detected hardware; proceeding anyway",
 			"model_id", modelID, "tool_id", toolID, "source", source)
 	}
@@ -213,9 +221,9 @@ func (e *CatalogExecutor) Run(ctx context.Context, toolID, systemPrompt, userPro
 		UserPrompt:   userPrompt,
 		ImagePaths:   imagePaths,
 		MaxTokens:    maxTokens,
-		Temperature:  temp,
+		Temperature:  f64(temp),
 		// v6 benchmark sampling: light top-p/top-k pruning.
-		TopP:               0.95,
+		TopP:               f64(0.95),
 		TopK:               64,
 		ChatTemplateKwargs: spec.ChatTemplateKwargs,
 	}
@@ -278,16 +286,22 @@ func (e *CatalogExecutor) infer(ctx context.Context, client *llama.Client, req l
 		e.logger.Warn("merge pass failed; returning first sample", "err", err)
 		return samples[0], stats, nil
 	}
+	// Fold the merge call's token/time accounting into the running stats so the
+	// --meta sidecar / MCP accounting reflects the real cost of the merge pass.
+	stats.TokensIn += merged.TokensIn
+	stats.TokensOut += merged.TokensOut
+	stats.ElapsedMs += merged.ElapsedMs
 	e.logger.Debug("multi-sample+merge complete",
 		"model_id", modelID, "reps", len(samples), "tokens_out", stats.TokensOut, "elapsed_ms", stats.ElapsedMs)
-	return merged, stats, nil
+	return merged.Content, stats, nil
 }
 
 // mergeSamples fuses N independent analyses of the same image into one
 // comprehensive result via a text-only chat call on the same warm model (no
-// image — the inputs already describe it, so this is cheap). Returns the merged
-// text. Callers fall back to the first sample on error.
-func mergeSamples(ctx context.Context, client *llama.Client, modelID string, spec models.ModelSpec, samples []string, maxTokens int) (string, error) {
+// image — the inputs already describe it, so this is cheap). Returns the full
+// response so callers can fold the merge call's token/time accounting into the
+// running stats. Callers fall back to the first sample on error.
+func mergeSamples(ctx context.Context, client *llama.Client, modelID string, spec models.ModelSpec, samples []string, maxTokens int) (*llama.ChatResponse, error) {
 	var joined strings.Builder
 	for i, s := range samples {
 		if i > 0 {
@@ -300,16 +314,16 @@ func mergeSamples(ctx context.Context, client *llama.Client, modelID string, spe
 		SystemPrompt:       mergePrompt,
 		UserPrompt:         joined.String(),
 		MaxTokens:          maxTokens,
-		Temperature:        0.1, // deterministic merge
-		TopP:               0.95,
+		Temperature:        f64(0.1), // deterministic merge
+		TopP:               f64(0.95),
 		TopK:               64,
 		ChatTemplateKwargs: spec.ChatTemplateKwargs,
 	}
 	resp, err := client.ChatVision(ctx, req)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return resp.Content, nil
+	return resp, nil
 }
 
 // mergePrompt instructs the model to fuse N independent analyses of one image
@@ -320,6 +334,11 @@ const mergePrompt = `You are merging several independent analyses of the SAME im
 - Preserve the original section/heading structure.
 - Do NOT invent details that are not present in the inputs; if something is uncertain, keep the uncertainty.
 Output only the merged result — no preamble.`
+
+// f64 returns a pointer to v, for the *float64 ChatRequest fields (Temperature,
+// TopP). Lets call sites pass a literal value while keeping nil = "use the
+// default" (0.1 / 0.95) distinguishable from an explicit 0.0 (greedy).
+func f64(v float64) *float64 { return &v }
 
 // inferenceBudgetSec returns a soft, UX-only estimate of how many seconds an
 // inference will take, used as the Total for the inference progress heartbeat.

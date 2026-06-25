@@ -280,8 +280,12 @@ func validHash(h string) bool {
 //
 // Returns ErrNoFittingModel if nothing fits (8 GB Mac with no small model).
 // Callers MUST surface this as a structured MCP error, never crash.
-func (c *Catalog) DefaultModel(hw HardwareInfo) (string, error) {
-	return selectDefault(c, hw, defaultSelectionSafetyMarginGB)
+//
+// margin is the safety margin in GB subtracted from effective memory before the
+// fit check (the user's config.safety_margin_gb); margin<=0 falls back to the
+// catalog default (defaultSelectionSafetyMarginGB, 4 GB).
+func (c *Catalog) DefaultModel(hw HardwareInfo, margin float64) (string, error) {
+	return selectDefault(c, hw, margin)
 }
 
 // ModelFor returns the best model ID for the given tool on the given
@@ -291,22 +295,22 @@ func (c *Catalog) DefaultModel(hw HardwareInfo) (string, error) {
 //  3. Tie-break: smallest MinVramGb ascending, then DisplayName lexical
 //  4. If empty after step 2, fall back to DefaultModel
 //
-// Determinism: given the same (catalog, tool, hardware), always returns the
-// same ID.
-func (c *Catalog) ModelFor(tool string, hw HardwareInfo) (string, error) {
-	return selectModelFor(c, tool, hw, defaultSelectionSafetyMarginGB)
+// Determinism: given the same (catalog, tool, hardware, margin), always returns
+// the same ID. margin is the safety margin in GB (see DefaultModel); <=0 → default.
+func (c *Catalog) ModelFor(tool string, hw HardwareInfo, margin float64) (string, error) {
+	return selectModelFor(c, tool, hw, margin)
 }
 
 // Fits reports whether the named model plausibly fits the detected hardware
-// (using the default safety margin). Returns false if the model is unknown.
-// Used by callers that want to sanity-check an explicit model choice (e.g. the
-// CLI --model override).
-func (c *Catalog) Fits(id string, hw HardwareInfo) bool {
+// using the given safety margin (margin GB; <=0 → catalog default). Returns
+// false if the model is unknown. Used by callers that want to sanity-check an
+// explicit model choice (e.g. the CLI --model override).
+func (c *Catalog) Fits(id string, hw HardwareInfo, margin float64) bool {
 	m, ok := c.Models[id]
 	if !ok {
 		return false
 	}
-	return fitsModel(m, hw, defaultSelectionSafetyMarginGB)
+	return fitsModel(m, hw, margin)
 }
 
 // Downloader handles resumable HTTPS downloads of model files with SHA256

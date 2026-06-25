@@ -46,4 +46,6 @@ func (t imageToPromptTool) BuildRequest(input ToolInput) (systemPrompt, userProm
 	return t.SystemPrompt(), singleImageUserPrompt(input.Extra, true), []string{ref.LocalPath}, nil
 }
 
-func (imageToPromptTool) ParseOutput(raw string) (any, error) { return passthroughOutput(raw) }
+func (imageToPromptTool) ParseOutput(_ ToolInput, raw string) (any, error) {
+	return passthroughOutput(raw)
+}

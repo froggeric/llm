@@ -86,22 +86,23 @@ func loadOverlays(dir string, into *Catalog) error {
 // this to implement true per-field merge semantics rather than naive
 // overwrite-everything.
 type overlayModelSpec struct {
-	DisplayName    *string   `toml:"display_name"`
-	GGUF           *string   `toml:"gguf"`
-	Mmproj         *string   `toml:"mmproj"`
-	GGUFSha256     *string   `toml:"gguf_sha256"`
-	MmprojSha256   *string   `toml:"mmproj_sha256"`
-	Ctx            *int      `toml:"ctx"`
-	GpuLayers      *int      `toml:"gpu_layers"`
-	MinVramGb      *int      `toml:"min_vram_gb"`
-	MinSystemRamGb *int      `toml:"min_system_ram_gb"`
-	Released       *string   `toml:"released"`
-	License        *string   `toml:"license"`
-	HardwareTier   *string   `toml:"hardware_tier"`
-	Preferred      *bool     `toml:"preferred"`
-	PreferredFor   *[]string `toml:"preferred_for"`
-	BenchToks      *float64  `toml:"bench_toks"`
-	Notes          *string   `toml:"notes"`
+	DisplayName        *string         `toml:"display_name"`
+	GGUF               *string         `toml:"gguf"`
+	Mmproj             *string         `toml:"mmproj"`
+	GGUFSha256         *string         `toml:"gguf_sha256"`
+	MmprojSha256       *string         `toml:"mmproj_sha256"`
+	Ctx                *int            `toml:"ctx"`
+	GpuLayers          *int            `toml:"gpu_layers"`
+	MinVramGb          *int            `toml:"min_vram_gb"`
+	MinSystemRamGb     *int            `toml:"min_system_ram_gb"`
+	Released           *string         `toml:"released"`
+	License            *string         `toml:"license"`
+	HardwareTier       *string         `toml:"hardware_tier"`
+	Preferred          *bool           `toml:"preferred"`
+	PreferredFor       *[]string       `toml:"preferred_for"`
+	BenchToks          *float64        `toml:"bench_toks"`
+	Notes              *string         `toml:"notes"`
+	ChatTemplateKwargs *map[string]any `toml:"chat_template_kwargs"`
 }
 
 // rawOverlay is what we decode an overlay TOML into. Models is a map of
@@ -229,6 +230,10 @@ func mergeModelSpec(dst ModelSpec, ov overlayModelSpec, overlayName, modelID str
 		dst.Notes = *ov.Notes
 		tag("notes", *ov.Notes)
 	}
+	if ov.ChatTemplateKwargs != nil {
+		dst.ChatTemplateKwargs = *ov.ChatTemplateKwargs
+		tag("chat_template_kwargs", formatKwargs(*ov.ChatTemplateKwargs))
+	}
 	return dst
 }
 
@@ -242,3 +247,19 @@ func strconvBool(b bool) string {
 	return "false"
 }
 func strconvFtoa(f float64) string { return fmt.Sprintf("%v", f) }
+
+// formatKwargs renders a chat_template_kwargs map for the overlay-applied log
+// line: a deterministic, comma-joined list of its keys (values can be
+// arbitrarily nested, so we summarize rather than dump the whole map). An empty
+// map renders as "(empty)".
+func formatKwargs(m map[string]any) string {
+	if len(m) == 0 {
+		return "(empty)"
+	}
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return strings.Join(keys, ",")
+}

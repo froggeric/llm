@@ -137,3 +137,41 @@ func TestProbeHealthNon200(t *testing.T) {
 	require.NoError(t, err)
 	assert.False(t, ok)
 }
+
+// TestWaitForHealth_BackoffResetsOnResponse (Tier-2 A4): the doc comment
+// promises the backoff schedule "is reset each time the endpoint responds with
+// anything other than a connection error." A 503 is such a response (err==nil,
+// ok==false), so every sleep should be schedule[0]. Without the reset, the
+// second sleep would grow to the large schedule value. We distinguish the two
+// by total elapsed time, using a schedule whose first slot is tiny and whose
+// grown value is large.
+func TestWaitForHealth_BackoffResetsOnResponse(t *testing.T) {
+	// schedule[0] small, grown value large. With the reset, every sleep is
+	// schedule[0] and ~10 probes fit in the 50ms deadline; without the reset the
+	// 2nd sleep alone is 5s. The 1s threshold cleanly separates them with wide
+	// margin for CI load (reset stays well under 1s even with slow loopback
+	// probes; no-reset is ~5s). Earlier the threshold was 300ms, which was tight
+	// under load.
+	orig := healthBackoffSchedule
+	healthBackoffSchedule = []time.Duration{5 * time.Millisecond, 5 * time.Second}
+	t.Cleanup(func() { healthBackoffSchedule = orig })
+
+	// Server always answers 503 (up but not ready): err==nil, ok==false → the
+	// branch that should reset attempt.
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusServiceUnavailable)
+	}))
+	defer srv.Close()
+	port := srv.Listener.Addr().(*net.TCPAddr).Port
+
+	setHealthClient(&http.Client{Timeout: 100 * time.Millisecond})
+	t.Cleanup(func() { setHealthClient(&http.Client{}) })
+
+	start := time.Now()
+	err := waitForHealth(context.Background(), port, 50*time.Millisecond)
+	require.Error(t, err) // never 200 → times out
+	elapsed := time.Since(start)
+
+	assert.Less(t, elapsed, time.Second,
+		"backoff must reset on a server response (503), keeping sleeps at schedule[0]")
+}

@@ -38,4 +38,6 @@ func (t describeUITool) BuildRequest(input ToolInput) (systemPrompt, userPrompt 
 	return t.SystemPrompt(), singleImageUserPrompt(input.Extra, true), []string{ref.LocalPath}, nil
 }
 
-func (describeUITool) ParseOutput(raw string) (any, error) { return passthroughOutput(raw) }
+func (describeUITool) ParseOutput(_ ToolInput, raw string) (any, error) {
+	return passthroughOutput(raw)
+}

@@ -32,4 +32,6 @@ func (t diagnoseErrorTool) BuildRequest(input ToolInput) (systemPrompt, userProm
 	return t.SystemPrompt(), singleImageUserPrompt(input.Extra, false), []string{ref.LocalPath}, nil
 }
 
-func (diagnoseErrorTool) ParseOutput(raw string) (any, error) { return passthroughOutput(raw) }
+func (diagnoseErrorTool) ParseOutput(_ ToolInput, raw string) (any, error) {
+	return passthroughOutput(raw)
+}

@@ -58,7 +58,7 @@ func (s stubTool) BuildRequest(input tools.ToolInput) (systemPrompt, userPrompt 
 	}
 	return s.system, "user prompt for " + s.id, imagePaths, nil
 }
-func (s stubTool) ParseOutput(raw string) (any, error) {
+func (s stubTool) ParseOutput(_ tools.ToolInput, raw string) (any, error) {
 	return raw, nil
 }
 

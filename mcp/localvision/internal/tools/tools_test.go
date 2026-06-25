@@ -248,15 +248,18 @@ func TestDescribeChartOutputModes(t *testing.T) {
 // prose passes through unchanged.
 func TestDescribeChartParseOutput(t *testing.T) {
 	tool := describeChartTool{}
+	csvIn := ToolInput{Extra: map[string]any{"output": "csv"}}
+	jsonIn := ToolInput{Extra: map[string]any{"output": "json"}}
+	proseIn := ToolInput{Extra: map[string]any{"output": "prose"}}
 	t.Run("csv fence stripped", func(t *testing.T) {
 		raw := "```csv\nlabel,revenue\nQ1,4.2\nQ2,5.1\n```"
-		out, err := tool.ParseOutput(raw)
+		out, err := tool.ParseOutput(csvIn, raw)
 		require.NoError(t, err)
 		assert.Equal(t, "label,revenue\nQ1,4.2\nQ2,5.1", out)
 	})
 	t.Run("bare json parsed", func(t *testing.T) {
 		raw := `{"chart_type":"bar","series":[{"name":"a","points":[["Q1",4.2]]}]}`
-		out, err := tool.ParseOutput(raw)
+		out, err := tool.ParseOutput(jsonIn, raw)
 		require.NoError(t, err)
 		m, ok := out.(map[string]any)
 		require.True(t, ok, "json mode must return a parsed object")
@@ -264,7 +267,7 @@ func TestDescribeChartParseOutput(t *testing.T) {
 	})
 	t.Run("fenced json parsed", func(t *testing.T) {
 		raw := "```json\n{\"chart_type\":\"line\"}\n```"
-		out, err := tool.ParseOutput(raw)
+		out, err := tool.ParseOutput(jsonIn, raw)
 		require.NoError(t, err)
 		m, ok := out.(map[string]any)
 		require.True(t, ok)
@@ -272,9 +275,18 @@ func TestDescribeChartParseOutput(t *testing.T) {
 	})
 	t.Run("prose passthrough", func(t *testing.T) {
 		raw := "## Chart type\nThis is a bar chart.\n"
-		out, err := tool.ParseOutput(raw)
+		out, err := tool.ParseOutput(proseIn, raw)
 		require.NoError(t, err)
 		assert.Equal(t, raw, out)
+	})
+	t.Run("prose with json-looking body stays a string", func(t *testing.T) {
+		// Regression (Tier-1 D): a prose-mode report that happens to be valid
+		// JSON must NOT be parsed into structured output. The old code
+		// content-sniffed and would return a float64 here.
+		raw := "42.0"
+		out, err := tool.ParseOutput(proseIn, raw)
+		require.NoError(t, err)
+		assert.Equal(t, raw, out, "prose mode must return the raw string even when it's valid JSON")
 	})
 }
 
@@ -304,15 +316,17 @@ func TestDescribeDiagramOutputModes(t *testing.T) {
 // to pasteable markup; prose passes through unchanged.
 func TestDescribeDiagramParseOutput(t *testing.T) {
 	tool := describeDiagramTool{}
+	mermaidIn := ToolInput{Extra: map[string]any{"output": "mermaid"}}
+	proseIn := ToolInput{Extra: map[string]any{"output": "prose"}}
 	t.Run("mermaid fence stripped", func(t *testing.T) {
 		raw := "```mermaid\nflowchart TD\n  A --> B\n```"
-		out, err := tool.ParseOutput(raw)
+		out, err := tool.ParseOutput(mermaidIn, raw)
 		require.NoError(t, err)
 		assert.Equal(t, "flowchart TD\n  A --> B", out)
 	})
 	t.Run("prose passthrough", func(t *testing.T) {
 		raw := "## Diagram type\nThis is an architecture diagram.\n"
-		out, err := tool.ParseOutput(raw)
+		out, err := tool.ParseOutput(proseIn, raw)
 		require.NoError(t, err)
 		assert.Equal(t, raw, out)
 	})
@@ -448,7 +462,7 @@ func TestParseOutputSanity(t *testing.T) {
 							t.Fatalf("ParseOutput panicked on input %q: %v", raw, r)
 						}
 					}()
-					_, _ = tool.ParseOutput(raw)
+					_, _ = tool.ParseOutput(ToolInput{}, raw)
 				})
 			}
 		})
@@ -462,7 +476,7 @@ func TestExtractCodeParseOutput(t *testing.T) {
 
 	t.Run("strips leading and trailing prose", func(t *testing.T) {
 		raw := "Here is the code:\n\n```python\nprint('hi')\n```\n\nHope this helps."
-		out, err := tool.ParseOutput(raw)
+		out, err := tool.ParseOutput(ToolInput{}, raw)
 		require.NoError(t, err)
 
 		m, ok := out.(map[string]any)
@@ -473,7 +487,7 @@ func TestExtractCodeParseOutput(t *testing.T) {
 
 	t.Run("preserves indentation inside fence", func(t *testing.T) {
 		raw := "```go\nfunc main() {\n\tx := 1\n\t_ = x\n}\n```"
-		out, err := tool.ParseOutput(raw)
+		out, err := tool.ParseOutput(ToolInput{}, raw)
 		require.NoError(t, err)
 		m := out.(map[string]any)
 		assert.Equal(t, "go", m["language"])
@@ -482,7 +496,7 @@ func TestExtractCodeParseOutput(t *testing.T) {
 
 	t.Run("no fence returns verbatim", func(t *testing.T) {
 		raw := "package main\nfunc main() {}"
-		out, err := tool.ParseOutput(raw)
+		out, err := tool.ParseOutput(ToolInput{}, raw)
 		require.NoError(t, err)
 		m := out.(map[string]any)
 		assert.Equal(t, "", m["language"])
@@ -497,7 +511,7 @@ func TestExtractTableParseOutput(t *testing.T) {
 
 	t.Run("strips prose, keeps tables", func(t *testing.T) {
 		raw := "Here is the table:\n\n| A | B |\n| --- | --- |\n| 1 | 2 |\n\nDone."
-		out, err := tool.ParseOutput(raw)
+		out, err := tool.ParseOutput(ToolInput{}, raw)
 		require.NoError(t, err)
 		s := out.(string)
 		assert.Contains(t, s, "| A | B |")
@@ -508,7 +522,7 @@ func TestExtractTableParseOutput(t *testing.T) {
 
 	t.Run("no tables returns verbatim", func(t *testing.T) {
 		raw := "There were no tables in the image."
-		out, err := tool.ParseOutput(raw)
+		out, err := tool.ParseOutput(ToolInput{}, raw)
 		require.NoError(t, err)
 		assert.Equal(t, raw, out)
 	})

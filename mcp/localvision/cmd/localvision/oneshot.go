@@ -132,8 +132,8 @@ func runOneShot(args []string) int {
 	fs.IntVar(&sampleFlag, "sample", 0, "multi-sample union@N for coverage tools (read_image/ui/chart/ocr): N warm calls fused into one comprehensive result via a merge pass (F5; experimental, off by default)")
 
 	flagArgs, positionals := splitArgs(args, fs)
-	if err := fs.Parse(flagArgs); err != nil {
-		return exitBadArgs
+	if code, bad := parseFlags(fs, flagArgs); bad {
+		return code
 	}
 
 	// Validate --format early, before the slow model load. The config default
@@ -287,8 +287,9 @@ func runOneShot(args []string) int {
 	}
 
 	exec := mcpserver.NewCatalogExecutor(rt.catalog, rt.lifecycle, rt.hw, rt.logger)
-	exec.SetToolConfig(cfg.Tools)          // per-tool model + method overrides (v0.7)
-	exec.SetDefaultModel(cfg.DefaultModel) // config default_model = fallback (v0.7; does not force)
+	exec.SetToolConfig(cfg.Tools)              // per-tool model + method overrides (v0.7)
+	exec.SetDefaultModel(cfg.DefaultModel)     // config default_model = fallback (v0.7; does not force)
+	exec.SetSafetyMarginGB(cfg.SafetyMarginGB) // config safety_margin_gb → selection (v0.7)
 	// --model forces one model for every tool (bypasses per-tool routing).
 	if modelFlag != "" {
 		if _, ok := rt.catalog.Models[modelFlag]; !ok {
@@ -471,7 +472,7 @@ func runUnit(ctx context.Context, exec tools.Executor, tool tools.Tool, toolID s
 	if err != nil {
 		return unitResult{}, err
 	}
-	parsed, _ := tool.ParseOutput(raw)
+	parsed, _ := tool.ParseOutput(input, raw)
 	return unitResult{raw: raw, parsed: parsed, stats: stats}, nil
 }
 

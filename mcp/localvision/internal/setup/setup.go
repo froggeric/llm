@@ -44,12 +44,12 @@ func DetectLLAMAServer() (path string, found bool) {
 // models, then non-fitting ones. The recommended model is the catalog's
 // DefaultModel(hw); if that selection fails (e.g. unsupported backend),
 // nothing is marked recommended and the caller decides a default.
-func ModelOptions(catalog *models.Catalog, hw models.HardwareInfo) []ModelOption {
+func ModelOptions(catalog *models.Catalog, hw models.HardwareInfo, margin float64) []ModelOption {
 	if catalog == nil {
 		return nil
 	}
 	recommended := ""
-	if id, err := catalog.DefaultModel(hw); err == nil {
+	if id, err := catalog.DefaultModel(hw, margin); err == nil {
 		recommended = id
 	}
 	opts := make([]ModelOption, 0, len(catalog.Models))
@@ -58,7 +58,7 @@ func ModelOptions(catalog *models.Catalog, hw models.HardwareInfo) []ModelOption
 			ID:          id,
 			DisplayName: m.DisplayName,
 			Tier:        m.HardwareTier,
-			Fits:        catalog.Fits(id, hw),
+			Fits:        catalog.Fits(id, hw, margin),
 			Recommended: id == recommended,
 		})
 	}
@@ -119,7 +119,7 @@ func BuildConfig(base *config.Config, catalog *models.Catalog, hw models.Hardwar
 		tools := routedToolIDs(catalog)
 		routing := make(map[string]config.ToolConfig, len(tools))
 		for _, t := range tools {
-			m, err := catalog.ModelFor(t, hw)
+			m, err := catalog.ModelFor(t, hw, base.SafetyMarginGB)
 			if err != nil {
 				continue // skip tools with no fitting model (e.g. unsupported backend)
 			}

@@ -105,6 +105,12 @@ func sortDeterministic(in []modelEntry) {
 // safetyMarginGB is configurable so callers can pass through the user's
 // config. Tests pass 0 to get the default.
 func selectDefault(c *Catalog, hw HardwareInfo, safetyMarginGB float64) (string, error) {
+	// Normalize once so the no-fitting-model error reports the margin actually
+	// applied (callers/tests pass <=0 to mean "use the default"; fitsModel would
+	// otherwise substitute 4 GB silently and the message would read "0 GB").
+	if safetyMarginGB <= 0 {
+		safetyMarginGB = defaultSelectionSafetyMarginGB
+	}
 	candidates := fittingModels(c, hw, safetyMarginGB)
 	if len(candidates) == 0 {
 		return "", fmt.Errorf(
@@ -148,6 +154,9 @@ func selectDefault(c *Catalog, hw HardwareInfo, safetyMarginGB float64) (string,
 //
 // Determinism: same (catalog, tool, hardware) always returns same ID. F1.8.
 func selectModelFor(c *Catalog, tool string, hw HardwareInfo, safetyMarginGB float64) (string, error) {
+	if safetyMarginGB <= 0 {
+		safetyMarginGB = defaultSelectionSafetyMarginGB
+	}
 	fitting := fittingModels(c, hw, safetyMarginGB)
 	if len(fitting) == 0 {
 		// Nothing fits at all -> surface the no-fitting-model error

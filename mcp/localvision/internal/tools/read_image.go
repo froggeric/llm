@@ -47,4 +47,4 @@ func (t readImageTool) BuildRequest(input ToolInput) (systemPrompt, userPrompt s
 }
 
 // ParseOutput returns the model's text unchanged.
-func (readImageTool) ParseOutput(raw string) (any, error) { return passthroughOutput(raw) }
+func (readImageTool) ParseOutput(_ ToolInput, raw string) (any, error) { return passthroughOutput(raw) }

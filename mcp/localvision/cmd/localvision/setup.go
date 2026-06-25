@@ -26,8 +26,11 @@ func runSetup(args []string) int {
 	fs.SetOutput(os.Stderr)
 	var cf commonFlags
 	cf.register(fs)
-	if err := fs.Parse(args); err != nil {
-		return exitBadArgs
+	var nonInteractive bool
+	fs.BoolVar(&nonInteractive, "non-interactive", false, "write a default config without prompting (env-driven; see LOCALVISION_SETUP_*)")
+	fs.BoolVar(&nonInteractive, "yes", false, "alias for --non-interactive")
+	if code, bad := parseFlags(fs, args); bad {
+		return code
 	}
 
 	cfg, _, err := loadAndConfigure(cf, false)
@@ -39,9 +42,11 @@ func runSetup(args []string) int {
 	w := os.Stdout
 	r := bufio.NewReader(os.Stdin)
 
-	fmt.Fprintf(w, "%s\n", paintOut(cCyan+cBold, "localvision setup"))
-	fmt.Fprintln(w, "Guided first-run configuration. Press Ctrl-C at any time to cancel.")
-	fmt.Fprintln(w)
+	if !nonInteractive {
+		fmt.Fprintf(w, "%s\n", paintOut(cCyan+cBold, "localvision setup"))
+		fmt.Fprintln(w, "Guided first-run configuration. Press Ctrl-C at any time to cancel.")
+		fmt.Fprintln(w)
+	}
 
 	// 1. Hardware detection.
 	fmt.Fprintf(w, "%s\n", paintOut(cBold, "Detected hardware"))
@@ -63,10 +68,17 @@ func runSetup(args []string) int {
 		fmt.Fprintf(os.Stderr, "setup: load catalog: %v\n", err)
 		return exitGeneric
 	}
-	opts := setup.ModelOptions(catalog, hw)
+	opts := setup.ModelOptions(catalog, hw, cfg.SafetyMarginGB)
 	if len(opts) == 0 {
 		fmt.Fprintf(os.Stderr, "setup: catalog has no models\n")
 		return exitGeneric
+	}
+
+	// Non-interactive mode (--non-interactive / --yes): resolve Choices from env
+	// vars + the recommended model and persist, skipping all prompts. Lets setup
+	// run from CI/scripts with no TTY (interactive mode cancels on closed stdin).
+	if nonInteractive {
+		return setupNonInteractive(cfg, catalog, hw, opts, w)
 	}
 
 	fmt.Fprintf(w, "%s\n", paintOut(cBold, "Select a default model"))
@@ -142,7 +154,15 @@ func runSetup(args []string) int {
 	}
 
 	// Build + persist.
-	final, err := setup.BuildConfig(cfg, catalog, hw, setup.Choices{Model: picked.ID, PerToolRouting: useRouting})
+	return setupPersist(cfg, catalog, hw, setup.Choices{Model: picked.ID, PerToolRouting: useRouting}, w)
+}
+
+// setupPersist builds the config from choices and writes it to the default
+// config path, then prints the success banner + next steps. Returns the exit
+// code. Shared by the interactive and non-interactive paths so the persist
+// logic (BuildConfig + Save + banner) lives in exactly one place.
+func setupPersist(cfg *config.Config, catalog *models.Catalog, hw models.HardwareInfo, choices setup.Choices, w io.Writer) int {
+	final, err := setup.BuildConfig(cfg, catalog, hw, choices)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "setup: %v\n", err)
 		return exitGeneric
@@ -152,13 +172,58 @@ func runSetup(args []string) int {
 		fmt.Fprintf(os.Stderr, "setup: %v\n", err)
 		return exitGeneric
 	}
-
 	fmt.Fprintf(w, "\n%s Wrote %s\n", paintOut(cGreen, "✓"), path)
 	fmt.Fprintln(w, "\nNext steps:")
 	fmt.Fprintln(w, "  • Run `localvision doctor` to verify the install.")
 	fmt.Fprintln(w, "  • Point an MCP client at `localvision run` (see README).")
 	fmt.Fprintln(w, "  • Or run a one-shot query: `localvision img.png --type ocr`.")
 	return exitOK
+}
+
+// setupNonInteractive resolves a Choices from env vars + the recommended model
+// and persists it without prompting. Used by CI/scripts (no TTY). Env vars:
+//
+//	LOCALVISION_SETUP_MODEL   catalog ID (default: the recommended model for the HW)
+//	LOCALVISION_SETUP_ROUTING "1"/"true"/... enables per-tool routing (default false)
+//	LOCALVISION_SETUP_FORMAT  default --format (default: empty/presentational)
+//
+// An explicit LOCALVISION_SETUP_MODEL that isn't a catalog ID is an error (the
+// alternative — silently picking a different model — would surprise scripts).
+func setupNonInteractive(cfg *config.Config, catalog *models.Catalog, hw models.HardwareInfo, opts []setup.ModelOption, w io.Writer) int {
+	// Recommended model = the first option flagged Recommended (else opts[0]).
+	recommended := ""
+	if len(opts) > 0 {
+		recommended = opts[0].ID
+		for _, o := range opts {
+			if o.Recommended {
+				recommended = o.ID
+				break
+			}
+		}
+	}
+	modelID := os.Getenv("LOCALVISION_SETUP_MODEL")
+	if modelID == "" {
+		modelID = recommended
+	}
+	if modelID == "" {
+		fmt.Fprintln(os.Stderr, "setup: no model fits the detected hardware")
+		return exitGeneric
+	}
+	if _, ok := catalog.Models[modelID]; !ok {
+		fmt.Fprintf(os.Stderr, "setup: LOCALVISION_SETUP_MODEL=%q is not in the catalog\n", modelID)
+		return exitGeneric
+	}
+	useRouting := false
+	if v, ok := os.LookupEnv("LOCALVISION_SETUP_ROUTING"); ok {
+		if b, err := strconv.ParseBool(v); err == nil {
+			useRouting = b
+		}
+	}
+	return setupPersist(cfg, catalog, hw, setup.Choices{
+		Model:          modelID,
+		PerToolRouting: useRouting,
+		DefaultFormat:  os.Getenv("LOCALVISION_SETUP_FORMAT"),
+	}, w)
 }
 
 // readMenu prompts for a 1..n choice, defaulting to def on blank input. Returns

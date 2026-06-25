@@ -32,4 +32,6 @@ func (t extractTextTool) BuildRequest(input ToolInput) (systemPrompt, userPrompt
 	return t.SystemPrompt(), singleImageUserPrompt(input.Extra, false), []string{ref.LocalPath}, nil
 }
 
-func (extractTextTool) ParseOutput(raw string) (any, error) { return passthroughOutput(raw) }
+func (extractTextTool) ParseOutput(_ ToolInput, raw string) (any, error) {
+	return passthroughOutput(raw)
+}
