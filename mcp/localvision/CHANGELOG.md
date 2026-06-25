@@ -11,6 +11,14 @@ Tags for this subdirectory follow the Go module convention
 
 ## [Unreleased]
 
+_Nothing yet._
+
+## [0.7.0] - 2026-06-25
+
+Per-tool model routing + multi-sample consensus, two new mirrored models, and a
+round of correctness/UX fixes from a code review. See [`ROADMAP.md`](./ROADMAP.md)
+(F5, F6).
+
 ### Added
 
 - **Per-tool model routing (F6)** — the v6 benchmark crowns a different best
@@ -52,6 +60,44 @@ Tags for this subdirectory follow the Go module convention
   forced override (bypasses routing).
 - `doctor`'s Tools section shows the per-tool routing for the detected hardware.
 
+### Fixed
+
+- **Windows idle-kill no longer orphans `llama-server`.** The untagged,
+  `syscall`-based signaling compiled on Windows but silently no-op'd there
+  (`os.Process.Signal` returns `EWINDOWS`), so an idle `llama-server.exe` was
+  never killed — leaking VRAM until the MCP server exited. Signals are now split
+  per-OS (`signals_unix.go` / `signals_windows.go`); Windows probes liveness via
+  `OpenProcess` + `GetExitCodeProcess`, so the SIGKILL escalation now fires.
+- **`safety_margin_gb` now actually influences model selection.** The config knob
+  was parsed, validated, and shown by `doctor` but never reached selection (which
+  always used the hardcoded 4 GB default). It's now threaded through
+  `DefaultModel` / `ModelFor` / `Fits`.
+- **`describe_chart` / `describe_diagram` honor the requested output mode.**
+  `ParseOutput` content-sniffed, so a prose-mode report that happened to be valid
+  JSON was returned as structured output. It now gates on the requested mode
+  (`csv` / `json` / `mermaid` / `prose`); also fixes `outputMode` erroring on an
+  explicit `output = "prose"`.
+- **Subcommand `--help` exits 0, not 2.** `-h` / `--help` on `run`, `doctor`,
+  `setup`, and the one-shot form now match the top-level `--help` (shared
+  `parseFlags` helper).
+- **Overlay TOML can now set / override `chat_template_kwargs`** (the overlay
+  merge silently dropped it before).
+- **`mcpProgressSink.Progress` is safe to call after `close()`** — a send on the
+  closed progress channel could panic the server if a producer outlived the call;
+  it's now recovered.
+- **Multi-sample `--sample N` accounts the merge pass** in the `--meta` token /
+  timing sidecar (the merge call's tokens were previously dropped).
+- **Greedy decoding is expressible** — `ChatRequest.Temperature` / `TopP` are now
+  `*float64`, so an explicit `0.0` is honored instead of silently replaced with
+  the `0.1` default.
+- **`setup --non-interactive` / `--yes`** writes a config from
+  `LOCALVISION_SETUP_MODEL` / `_ROUTING` / `_FORMAT` env vars, for CI and scripts
+  (the interactive wizard cancels on closed stdin).
+- Smaller: `health` backoff resets once `llama-server` starts answering; the
+  downloaded-archive handle is closed exactly once; a SHA-mismatched model file
+  invalidates the integrity cache (avoids a stale-hash false mismatch); a dead
+  `loadErr` field and an unreachable `.webp` MIME branch were removed.
+
 ### Known limitations
 
 - **Per-tool model routing switches models between tools** in a mixed MCP
@@ -60,6 +106,11 @@ Tags for this subdirectory follow the Go module convention
 - **4B-Q8 reliability** — the benchmark flags Q8 as ~87%-ok (slightly
   timeout-prone); the rock-solid 8B-Q8 remains the safe default for mixed use.
 - **MoE = 21 GB**; only useful for `read_image` coverage with `--sample`; opt-in.
+- **Windows runtime not validated on real hardware** — the per-OS signal split
+  (which fixes the idle-kill orphan) cross-compiles clean on all six targets and
+  its nil-guard is covered by a test that runs on Windows, but the actual
+  load → idle → `llama-server.exe` exit + flat handle-count behavior was not
+  verified from the macOS dev box. Report discrepancies.
 
 ## [0.6.0] - 2026-06-24
 
@@ -460,7 +511,8 @@ First usable release. macOS Apple Silicon only (Linux/Windows stubbed for v0.2).
 - `InternVL3.5 8B` was considered but dropped from v0.1 — no clean upstream
   GGUF source and it ranked last in our 7-model benchmark.
 
-[Unreleased]: https://github.com/froggeric/llm/compare/v0.6.0
+[Unreleased]: https://github.com/froggeric/llm/compare/v0.7.0
+[0.7.0]: https://github.com/froggeric/llm/releases/tag/v0.7.0
 [v0.6.0]: https://github.com/froggeric/llm/releases/tag/v0.6.0
 [v0.5.2]: https://github.com/froggeric/llm/releases/tag/v0.5.2
 [v0.5.1]: https://github.com/froggeric/llm/releases/tag/v0.5.1

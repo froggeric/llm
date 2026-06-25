@@ -19,8 +19,8 @@ the `llama-server` subprocess binds to `127.0.0.1` only.
 > **[github.com/froggeric/llm/issues](https://github.com/froggeric/llm/issues)**.
 > As a workaround, `default_model` in the config overrides any misdetection.
 
-> **Status:** **v0.6.0 released**; **v0.7 in development on `main`** (per-tool
-> model routing + multi-sample consensus + 2 new models — unreleased). Cross-
+> **Status:** **v0.7.0** — per-tool model routing + multi-sample consensus + 2
+> new models, plus a round of correctness/UX fixes. Cross-
 > platform: macOS (Apple Silicon/Intel), Linux, Windows (x86_64 + arm64). One-
 > shot CLI (`localvision img.png --type ocr`), `--format`, batch
 > (`--output-dir --meta`), a `setup` wizard, a cross-platform HEIC/WEBP converter
@@ -247,7 +247,7 @@ coordination via Ollama's API (ROADMAP Theme E5).
 
 ## Roadmap
 
-**v0.7 (in development on `main`, unreleased)** adds **per-tool model routing**
+**v0.7.0** adds **per-tool model routing**
 (each tool → its benchmark-best model: `qwen3.5-4b-q8` for code/UI/diagram/error,
 `qwen3-vl-8b` for the rest; the MoE opt-in for `read_image` coverage), two new
 mirrored models, `[tools.<id>]` per-tool config (model + sampling method), a
@@ -260,7 +260,7 @@ csv|json`) and diagram markup (`describe_diagram --output-mode mermaid`), and
 `notifications/progress`; real token-by-token SSE is deferred). **v0.5.x** added
 `image_to_prompt`, an MCP temp-file leak fix, `qwen3-vl-8b` as the default, and a
 per-model cache. Earlier: **v0.4.0** (cross-platform) and **v0.3.0** (the
-standalone CLI). Next after v0.7: **constrained decoding (GBNF)** + **SSE output
+standalone CLI). Next: **constrained decoding (GBNF)** + **SSE output
 streaming**, then **v0.8+ new modalities & a native GUI** (UI→code, video,
 grounding). A background daemon / HTTP service was evaluated and **declined**.
 Every item, its effort, and its target is in

@@ -18,13 +18,13 @@ item isn't in this file, it isn't planned.
 
 ## Where we are now
 
-**v0.6.0 released.** Themes **A–D are done**, the **v0.5 series** (breadth &
-polish) shipped across three point releases, and **v0.6 (tools & UX)** shipped
-G3 + G4 + G5 + E1. **v0.7 is in development on `main` (unreleased):** **F6
-per-tool model routing** (catalog `preferred_for` partition + `[tools.<id>]`
-config + setup-wizard + doctor table; 4B-Q8 + the MoE mirrored) and the **F5
-multi-sample consensus scaffold** (`--sample` / `union@N`, off by default) have
-landed; F4 (constrained decoding) + SSE output streaming remain for the v0.7
+**v0.7.0 released.** Themes **A–D are done**, the **v0.5 series** (breadth &
+polish) shipped across three point releases, **v0.6 (tools & UX)** shipped
+G3 + G4 + G5 + E1, and **v0.7** shipped **F6 per-tool model routing** (catalog
+`preferred_for` partition + `[tools.<id>]` config + setup-wizard + doctor table;
+4B-Q8 + the MoE mirrored), the **F5 multi-sample consensus scaffold** (`--sample`
+/ `union@N`, off by default), and a round of correctness/UX fixes from a code
+review. F4 (constrained decoding) + SSE output streaming remain for the next
 release. `localvision` builds and runs on macOS (Apple Silicon/Intel), Linux, and
 Windows (x86_64 + arm64) — all six targets cross-compiled from one runner (pure
 Go, CGO off). Linux/Windows detect CUDA/ROCm/NVIDIA GPUs and size model
