@@ -1,0 +1,250 @@
+{
+  "image": "08-poster-class-schedule.jpg",
+  "judgments": {
+    "Q3VL-8B-Q8|t0.1|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes captured with correct days, times, and titles",
+        "Correctly records the unusual 13:10-14:00 OSTEOPOROSIS Prevention slot on Monday",
+        "Preserves all 'with the Embassy of India' and 'with Gabi' / 'w/ VIC Runners' notes in a dedicated column"
+      ],
+      "key_misses": [
+        "Does not mention the color-coding (blue/orange/green pill groups) or icons",
+        "Omits footer URL 'https://vichealth.club' and QR code"
+      ],
+      "hallucinations": [],
+      "justification": "A flawless transcription of all 11 classes including the tricky 13:10 overlap slot and all instructor notes; only misses decorative/contextual metadata (colors, footer) that wasn't strictly required."
+    },
+    "Q3VL-8B-Q8|t0.1|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes captured with correct days, times, and titles",
+        "Correctly records the unusual 13:10-14:00 OSTEOPOROSIS Prevention slot on Monday",
+        "Preserves all instructor notes in a dedicated column"
+      ],
+      "key_misses": [
+        "Does not mention color-coding or icons",
+        "Omits footer URL and QR code"
+      ],
+      "hallucinations": [],
+      "justification": "Identical and equally accurate to rep0; perfect schedule transcription with only contextual metadata omitted."
+    },
+    "Q3VL-8B-Q8|t0.1|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes captured with correct days, times, and titles",
+        "Correctly records the unusual 13:10-14:00 OSTEOPOROSIS Prevention slot",
+        "Preserves all instructor notes in a dedicated column"
+      ],
+      "key_misses": [
+        "Does not mention color-coding or icons",
+        "Omits footer URL and QR code"
+      ],
+      "hallucinations": [],
+      "justification": "Identical and equally accurate to the other t0.1 reps; complete and correct schedule."
+    },
+    "Q3VL-8B-Q8|t0.1|rep3": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes captured with correct days, times, and titles",
+        "Correctly records the unusual 13:10-14:00 OSTEOPOROSIS Prevention slot",
+        "Preserves all instructor notes in a dedicated column"
+      ],
+      "key_misses": [
+        "Does not mention color-coding or icons",
+        "Omits footer URL and QR code"
+      ],
+      "hallucinations": [],
+      "justification": "Identical and equally accurate to the other t0.1 reps; complete and correct schedule."
+    },
+    "Q3VL-8B-Q8|t0.1|rep4": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes captured with correct days, times, and titles",
+        "Correctly records the unusual 13:10-14:00 OSTEOPOROSIS Prevention slot",
+        "Preserves all instructor notes in a dedicated column"
+      ],
+      "key_misses": [
+        "Does not mention color-coding or icons",
+        "Omits footer URL and QR code"
+      ],
+      "hallucinations": [],
+      "justification": "Identical and equally accurate to the other t0.1 reps; complete and correct schedule."
+    },
+    "Q3VL-8B-Q8|t0.4|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes captured with correct days, times, and titles",
+        "Correctly records the unusual 13:10-14:00 OSTEOPOROSIS Prevention slot",
+        "Preserves all instructor notes in a dedicated column"
+      ],
+      "key_misses": [
+        "Does not mention color-coding or icons",
+        "Omits footer URL and QR code"
+      ],
+      "hallucinations": [],
+      "justification": "Complete and correct transcription of all 11 classes with notes; only contextual metadata omitted."
+    },
+    "Q3VL-8B-Q8|t0.4|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes captured with correct days, times, and titles",
+        "Correctly records the unusual 13:10-14:00 OSTEOPOROSIS Prevention slot",
+        "Preserves all instructor notes in a dedicated column"
+      ],
+      "key_misses": [
+        "Does not mention color-coding or icons",
+        "Omits footer URL and QR code"
+      ],
+      "hallucinations": [],
+      "justification": "Complete and correct transcription of all 11 classes with notes; only contextual metadata omitted."
+    },
+    "Q3VL-8B-Q8|t0.4|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes captured with correct days, times, and titles",
+        "Correctly records the unusual 13:10-14:00 OSTEOPOROSIS Prevention slot",
+        "Preserves all instructor notes in a dedicated column"
+      ],
+      "key_misses": [
+        "Does not mention color-coding or icons",
+        "Omits footer URL and QR code"
+      ],
+      "hallucinations": [],
+      "justification": "Complete and correct transcription of all 11 classes with notes; only contextual metadata omitted."
+    },
+    "Q3VL-8B-Q8|t0.4|rep3": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes captured with correct days, times, and titles",
+        "Correctly records the unusual 13:10-14:00 OSTEOPOROSIS Prevention slot",
+        "Preserves all instructor notes in a dedicated column"
+      ],
+      "key_misses": [
+        "Does not mention color-coding or icons",
+        "Omits footer URL and QR code"
+      ],
+      "hallucinations": [],
+      "justification": "Complete and correct transcription of all 11 classes with notes; only contextual metadata omitted."
+    },
+    "Q3VL-8B-Q8|t0.4|rep4": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes captured with correct days, times, and titles",
+        "Correctly records the unusual 13:10-14:00 OSTEOPOROSIS Prevention slot",
+        "Preserves all instructor notes in a dedicated column"
+      ],
+      "key_misses": [
+        "Does not mention color-coding or icons",
+        "Omits footer URL and QR code"
+      ],
+      "hallucinations": [],
+      "justification": "Complete and correct transcription of all 11 classes with notes; only contextual metadata omitted."
+    },
+    "Q3VL-8B-Q8|t0.7|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes captured with correct days, times, and titles",
+        "Correctly records the unusual 13:10-14:00 OSTEOPOROSIS Prevention slot",
+        "Inline-merges instructor notes into the activity cell accurately"
+      ],
+      "key_misses": [
+        "No dedicated notes column; notes folded into activity cell (less clean but still complete)",
+        "Does not mention color-coding or icons",
+        "Omits footer URL and QR code"
+      ],
+      "hallucinations": [],
+      "justification": "Content is fully correct across all 11 classes, but uses a 3-column layout with notes merged into the activity cell, slightly less structured than the dedicated-notes-column variants."
+    },
+    "Q3VL-8B-Q8|t0.7|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes captured with correct days, times, and titles",
+        "Correctly records the unusual 13:10-14:00 OSTEOPOROSIS Prevention slot",
+        "Preserves all instructor notes in a dedicated column"
+      ],
+      "key_misses": [
+        "Does not mention color-coding or icons",
+        "Omits footer URL and QR code"
+      ],
+      "hallucinations": [],
+      "justification": "Complete and correct transcription of all 11 classes with a dedicated notes column; only contextual metadata omitted."
+    },
+    "Q3VL-8B-Q8|t0.7|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes captured with correct days, times, and titles",
+        "Correctly records the unusual 13:10-14:00 OSTEOPOROSIS Prevention slot",
+        "Inline-merges instructor notes into the activity cell accurately"
+      ],
+      "key_misses": [
+        "No dedicated notes column; notes folded into activity cell (less clean but still complete)",
+        "Does not mention color-coding or icons",
+        "Omits footer URL and QR code"
+      ],
+      "hallucinations": [],
+      "justification": "Content is fully correct across all 11 classes, but uses a 3-column layout with notes merged into the activity cell, slightly less structured than the dedicated-notes-column variants."
+    },
+    "Q3VL-8B-Q8|t0.7|rep3": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes captured with correct days, times, and titles",
+        "Correctly records the unusual 13:10-14:00 OSTEOPOROSIS Prevention slot",
+        "Adds a 'Type' column whose group labels (Yoga/Shaolin/Fitness) are consistent with the poster's color groups"
+      ],
+      "key_misses": [
+        "Does not state the literal colors (blue/orange/green)",
+        "Omits footer URL and QR code"
+      ],
+      "hallucinations": [],
+      "justification": "Complete and correct transcription of all 11 classes, additionally inferring a class-type grouping that matches the poster's color coding; no errors."
+    },
+    "Q3VL-8B-Q8|t0.7|rep4": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes captured with correct days, times, and titles",
+        "Correctly records the unusual 13:10-14:00 OSTEOPOROSIS Prevention slot",
+        "Preserves all instructor notes in a dedicated column"
+      ],
+      "key_misses": [
+        "Does not mention color-coding or icons",
+        "Omits footer URL and QR code"
+      ],
+      "hallucinations": [],
+      "justification": "Complete and correct transcription of all 11 classes with a dedicated notes column; only contextual metadata omitted."
+    }
+  },
+  "ranking": [
+    "Q3VL-8B-Q8|t0.7|rep3",
+    "Q3VL-8B-Q8|t0.1|rep0",
+    "Q3VL-8B-Q8|t0.4|rep0",
+    "Q3VL-8B-Q8|t0.7|rep1",
+    "Q3VL-8B-Q8|t0.7|rep4",
+    "Q3VL-8B-Q8|t0.1|rep1",
+    "Q3VL-8B-Q8|t0.1|rep2",
+    "Q3VL-8B-Q8|t0.1|rep3",
+    "Q3VL-8B-Q8|t0.1|rep4",
+    "Q3VL-8B-Q8|t0.4|rep1",
+    "Q3VL-8B-Q8|t0.4|rep2",
+    "Q3VL-8B-Q8|t0.4|rep3",
+    "Q3VL-8B-Q8|t0.4|rep4",
+    "Q3VL-8B-Q8|t0.7|rep0",
+    "Q3VL-8B-Q8|t0.7|rep2"
+  ],
+  "notes": "The model is remarkably stable: 13 of 15 responses are byte-for-byte identical in content (only whitespace / header-label differences like 'Instructor/Notes' vs 'Instructor/Details'). Every response correctly transcribes all 11 classes including the non-obvious 13:10-14:00 OSTEOPOROSIS Prevention overlap slot and all instructor notes — zero hallucinated or omitted classes. Two responses (t0.7|rep0, t0.7|rep2) score 8 only because they merge notes into the activity cell with no dedicated column; t0.7|rep3 is ranked first for additionally surfacing a correct class-type grouping that mirrors the poster's color coding. No response states the literal pill colors, icons, or the footer URL/QR code, but those were not required for a schedule transcription."
+}

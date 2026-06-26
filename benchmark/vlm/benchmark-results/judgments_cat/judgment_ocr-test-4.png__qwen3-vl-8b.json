@@ -1,0 +1,235 @@
+{
+  "image": "ocr-test-4.png",
+  "judgments": {
+    "Q3VL-8B-Q8|t0.1|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct header: registry name, María Isabel Cabra Rojo, phone 928 537 272, fax 928 866 469, address C/ Bajo Blanco 2 Edificio Hubara 35660",
+        "Website www.registradores.org exactly right",
+        "Form title SOLICITUD DE NOTA SIMPLE INFORMATIVA and Nº Borrador 42/2025 correct; fincas 32840/32885/32803 and titular Adelina Muñoz + ID 50183525 captured"
+      ],
+      "key_misses": [
+        "Email domain written 'registradodelapropiedad.org' (extra 's'); correct is registrodelapropriedad.org",
+        "Nº Entrada 11636 instead of 11656",
+        "Applicant name 'Joa / Almirante Moropos' instead of Joan Almiñana Moropsa; Domicilio '4-19' instead of n°19; applicant email 'joanmora@jmail.com' instead of joansnobc@gmail.com; last finca 32811 instead of 32871"
+      ],
+      "hallucinations": [],
+      "justification": "Strong, thorough transcription of the visible form with only OCR misreads of visible text (domains, digits, handwritten name), no fabricated content."
+    },
+    "Q3VL-8B-Q8|t0.1|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header block (registry, registradora, phone/fax, address, website www.registradores.org) all correct",
+        "Form title and Nº Borrador 42/2025 correct; three of four fincas right; titular Adelina Muñoz + ID captured"
+      ],
+      "key_misses": [
+        "Email domain 'registradodelapropiedad.org' (extra 's'); Nº Entrada 11636 vs 11656; applicant name 'Almirante Moropos' vs Almiñana Moropsa",
+        "Applicant email 'joa.moropos@gmail.com' vs joansnobc@gmail.com; Domicilio '4-19' vs n°19; last finca 32811 vs 32871"
+      ],
+      "hallucinations": [],
+      "justification": "Nearly identical quality to rep0; same OCR misreads of visible handwritten/header text, no inventions."
+    },
+    "Q3VL-8B-Q8|t0.1|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header, registradora, phone/fax, address, and website www.registradores.org all correct",
+        "Form title and Nº Borrador correct; titular name + ID captured; three of four fincas correct"
+      ],
+      "key_misses": [
+        "Email domain 'registradodelapropiedad.org' (extra 's'); Nº Entrada 11636 vs 11656; applicant name 'Almirante Moropos'; applicant email 'joanmora@jmail.com'",
+        "Domicilio '4-19' vs n°19; last finca 32811 vs 32871"
+      ],
+      "hallucinations": [],
+      "justification": "Consistent with the other low-temp reps: accurate structure, OCR slips on visible text only."
+    },
+    "Q3VL-8B-Q8|t0.1|rep3": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header block fully correct including website www.registradores.org",
+        "Form title, Nº Borrador, three of four fincas, and titular + ID all captured"
+      ],
+      "key_misses": [
+        "Email domain 'registradodelapropiedad.org' (extra 's'); Nº Entrada 11636 vs 11656; applicant 'Almirante Moropos'",
+        "Applicant email 'joanmorcob@gmail.com' (closer domain than others but still wrong local part); Domicilio '4-19' vs n°19; last finca 32811 vs 32871"
+      ],
+      "hallucinations": [],
+      "justification": "Same OCR-error profile as sibling low-temp reps; applicant email happens to land on the correct gmail domain but wrong address."
+    },
+    "Q3VL-8B-Q8|t0.1|rep4": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header block and website www.registradores.org correct",
+        "Form title, Nº Borrador, titular + ID, three of four fincas all captured"
+      ],
+      "key_misses": [
+        "Email domain 'registradodelapropiedad.org' (extra 's'); Nº Entrada 11636 vs 11656; applicant 'Almirante Moropos'",
+        "Applicant email 'joanmorcob@gmail.com'; Domicilio '4-19' vs n°19; last finca 32811 vs 32871"
+      ],
+      "hallucinations": [],
+      "justification": "Indistinguishable in quality from the other t0.1 reps; all errors are visible-text misreads."
+    },
+    "Q3VL-8B-Q8|t0.4|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header block correct, including website www.registradores.org and the cleaner 'Tel:' label",
+        "D.N.I. 20041185C and phone 635889002 exactly right; titular Adelina Muñoz Arenas 50183525D close; three of four fincas right"
+      ],
+      "key_misses": [
+        "Email domain 'registradodelapropiedad.org' (extra 's'); Nº Entrada 11636 vs 11656; applicant 'Joaquin / Almiraña Noropos'",
+        "Applicant email 'joaquin.morales@jmail.com' (fabricated-sounding local part but still a misread of the visible handwritten email); Domicilio '4-19' vs n°19; last finca 32811 vs 32871"
+      ],
+      "hallucinations": [],
+      "justification": "Slightly cleaner D.N.I. formatting than the low-temp set, but introduces 'Joaquin'/'morales' guesses on the handwritten name/email; still OCR misreads of visible text, not inventions."
+    },
+    "Q3VL-8B-Q8|t0.4|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header block and website www.registradores.org correct",
+        "D.N.I. 20041185C, phone, titular + ID, and three of four fincas captured"
+      ],
+      "key_misses": [
+        "Email domain 'registradodelapropiedad.org' (extra 's'); Nº Entrada 11636 vs 11656; applicant 'Joaquin / Almirante Moropos'",
+        "Applicant email 'joaquinmora@gmail.com'; Domicilio '4-19' vs n°19; last finca 32811 vs 32871"
+      ],
+      "hallucinations": [],
+      "justification": "Comparable to t0.4|rep0; same family of visible-text OCR errors, no fabricated structure."
+    },
+    "Q3VL-8B-Q8|t0.4|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header block and website www.registradores.org correct",
+        "ALL FOUR fincas correct (32840/32885/32803/32871) — the only response to get the last finca right; D.N.I. 20041185C exact"
+      ],
+      "key_misses": [
+        "Email domain 'registradodelapropiedad.org' (extra 's'); Nº Entrada 11636 vs 11656; applicant 'Almiraña Moropos'; applicant email 'joanmiraña@gmail.com'",
+        "Domicilio '4-19' vs n°19 and 'esteban' vs estevet"
+      ],
+      "hallucinations": [],
+      "justification": "Best of the t0.4 batch — uniquely nails all four finca numbers; remaining errors are still visible-text misreads."
+    },
+    "Q3VL-8B-Q8|t0.4|rep3": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header block correct; website www.registradores.org right",
+        "Three of four fincas correct (incl. 32871); D.N.I. and phone captured"
+      ],
+      "key_misses": [
+        "Email domain split as 'registrodela propiedad.org' (spacing error); Nº Entrada 11676 vs 11656; applicant 'Almirante Noropos'",
+        "Applicant email 'joan.morob@jmail.com'; Domicilio '4-19' vs n°19"
+      ],
+      "hallucinations": [],
+      "justification": "Same quality tier; the email-domain spacing and Nº Entrada digit are visible-text misreads, not fabrications."
+    },
+    "Q3VL-8B-Q8|t0.4|rep4": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header block and website www.registradores.org correct",
+        "Form title, Nº Borrador, titular + ID, three of four fincas captured"
+      ],
+      "key_misses": [
+        "Email domain 'registradodelapropiedad.org' (extra 's'); Nº Entrada 11636 vs 11656; applicant 'Almirante Moropos'",
+        "Applicant email 'joanmorcob@gmail.com'; Domicilio '4-19' vs n°19; last finca 32811 vs 32871"
+      ],
+      "hallucinations": [],
+      "justification": "On par with the other mid-temp reps; only OCR slips on visible text."
+    },
+    "Q3VL-8B-Q8|t0.7|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header block and website www.registradores.org correct",
+        "Three of four fincas correct (incl. 32871); D.N.I. 20041185C and phone exact; titular + ID captured"
+      ],
+      "key_misses": [
+        "Email domain 'registradopropiedad.org' (dropped 'la'); Nº Entrada 11636 vs 11656; applicant 'Almirante Horopas'",
+        "Applicant email 'joanmarmob@jmail.com'; Domicilio '4-19' vs n°19 and 'Esteban' vs estevet"
+      ],
+      "hallucinations": [],
+      "justification": "Solid transcription; only visible-text misreads, including a dropped syllable in the email domain."
+    },
+    "Q3VL-8B-Q8|t0.7|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header block correct; website www.registradores.org exact",
+        "Three of four fincas correct (incl. 32871); D.N.I. and phone captured"
+      ],
+      "key_misses": [
+        "Email domain 'registradodelapropiedad.org' (extra 's'); Nº Entrada 11636 vs 11656; applicant 'Almirante Noropos'",
+        "Applicant email 'joanm.nobc@qmail.com' (qmail vs gmail); Domicilio '4-19' vs n°19"
+      ],
+      "hallucinations": [],
+      "justification": "Consistent with the cohort; all deviations are misreads of visible handwritten/printed text."
+    },
+    "Q3VL-8B-Q8|t0.7|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header block and website www.registradores.org correct",
+        "All four fincas correct (incl. 32871); titular Adelina Muñoz Arenas 50183525D exactly right"
+      ],
+      "key_misses": [
+        "Nº Borrador '142/2025' and Nº Entrada '81636/2025' — both leading-digit OCR errors (worst number read of the set)",
+        "Email domain 'registradodelapropiedad.org' (extra 's'); applicant 'Joaquin / Almiraña Moropos'; applicant email 'joaquinmora@jmail.com'; Domicilio '4-19' vs n°19 and 'estévez' vs estevet"
+      ],
+      "hallucinations": [],
+      "justification": "Gets all fincas and the titular right but badly misreads the two form serial numbers (extra leading digits) — visible-text errors only."
+    },
+    "Q3VL-8B-Q8|t0.7|rep3": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header block and website www.registradores.org correct",
+        "D.N.I. 20041185C and phone exact; three of four fincas captured"
+      ],
+      "key_misses": [
+        "Nº Entrada '88636/2025' — gross digit misread; email 'registrodelapropiedad.org' (correct 'la' but wrong 'propiedad' vs propriedad); titular ID '5018325.D' dropped a digit",
+        "Applicant 'Almiraña Moropos'; applicant email 'joanamoropos@jmail.com'; Domicilio '4-19' vs n°19 and 'Estevez' vs estevet"
+      ],
+      "hallucinations": [],
+      "justification": "More digit-dropping than peers (Nº Entrada, titular ID) but every error is a misread of visible text; no invented content."
+    },
+    "Q3VL-8B-Q8|t0.7|rep4": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header block and website www.registradores.org correct",
+        "Form title and Nº Borrador 42/2025 correct; titular Adelina Muñoz Arenas 50183525D exact; three of four fincas right"
+      ],
+      "key_misses": [
+        "Email domain split as 'registrodela propiedad.org' (spacing); Nº Entrada '01676/2025' (leading-digit error); applicant 'Almirante Norops'",
+        "Applicant email 'joanmorcob@gmail.com'; Domicilio '4-19' vs n°19 and 'estevao' vs estevet; last finca 32811 vs 32871"
+      ],
+      "hallucinations": [],
+      "justification": "Captures the titular cleanly but joins the high-temp reps in misreading Nº Entrada and the email domain; visible-text errors only."
+    }
+  },
+  "ranking": [
+    "Q3VL-8B-Q8|t0.4|rep2",
+    "Q3VL-8B-Q8|t0.1|rep0",
+    "Q3VL-8B-Q8|t0.1|rep3",
+    "Q3VL-8B-Q8|t0.1|rep1",
+    "Q3VL-8B-Q8|t0.1|rep2",
+    "Q3VL-8B-Q8|t0.1|rep4",
+    "Q3VL-8B-Q8|t0.4|rep0",
+    "Q3VL-8B-Q8|t0.4|rep1",
+    "Q3VL-8B-Q8|t0.4|rep3",
+    "Q3VL-8B-Q8|t0.4|rep4",
+    "Q3VL-8B-Q8|t0.7|rep0",
+    "Q3VL-8B-Q8|t0.7|rep1",
+    "Q3VL-8B-Q8|t0.7|rep2",
+    "Q3VL-8B-Q8|t0.7|rep4",
+    "Q3VL-8B-Q8|t0.7|rep3"
+  ],
+  "notes": "All 15 responses are faithful transcriptions of the visible form with zero fabricated content — every deviation is a misread of visible text (key_misses, not hallucinations). Recurring OCR weak spots across the whole set: the registry email domain (correct registrodelapropriedad.org is almost always rendered registradodelapropiedad.org with an extra 's', or broken with a space), the Nº Entrada digit (correct 11656 read as 11636 by most), the handwritten applicant name (Joan Almiñana Moropsa garbled in every rep), the Domicilio number (n°19 read as '4-19' in every rep), and the last finca (32871 read as 32811 in roughly half the reps). t0.4|rep2 is the single best run, uniquely capturing all four fincas; the higher-temp (t0.7) reps trend slightly worse on the numeric serial fields (Nº Entrada / titular ID digit-dropping)."
+}

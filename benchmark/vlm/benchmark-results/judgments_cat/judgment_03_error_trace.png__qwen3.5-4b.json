@@ -1,0 +1,268 @@
+{
+  "image": "03_error_trace.png",
+  "judgments": {
+    "Q3.5-4B|t0.1|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct error type psycopg2.OperationalError",
+        "Verbatim root-cause message including host db.internal, IP 10.0.0.5, port 5432, and FATAL password auth failed for user app",
+        "Cites db.py line 18 in connect, a real frame in the traceback",
+        "Sound one-sentence cause (mismatched DB password for app user)"
+      ],
+      "key_misses": [
+        "Does not mention the secondary ConnectionError or the main.py:42 frame",
+        "Omits exit code 1"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate verbatim error type and message with a correct file:line; just omits the secondary exception and the main.py frame."
+    },
+    "Q3.5-4B|t0.1|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct error type psycopg2.OperationalError",
+        "Verbatim root-cause message with all key fields (db.internal, 10.0.0.5, port 5432, FATAL, user app)",
+        "Cites db.py line 18 in connect",
+        "Correct one-sentence cause"
+      ],
+      "key_misses": [
+        "Omits secondary ConnectionError and main.py:42 frame",
+        "Omits exit code 1"
+      ],
+      "hallucinations": [],
+      "justification": "Effectively identical to rep0; correct verbatim message and error type, missing only the secondary exception context."
+    },
+    "Q3.5-4B|t0.1|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct error type psycopg2.OperationalError",
+        "Verbatim root-cause message with all key fields",
+        "Cites db.py line 18 in connect",
+        "Correct one-sentence cause"
+      ],
+      "key_misses": [
+        "Omits secondary ConnectionError and main.py:42 frame",
+        "Omits exit code 1"
+      ],
+      "hallucinations": [],
+      "justification": "Correct verbatim transcription and error type; only lacks the secondary exception and main.py frame."
+    },
+    "Q3.5-4B|t0.1|rep3": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct error type psycopg2.OperationalError",
+        "Verbatim root-cause message with all key fields",
+        "Cites db.py line 18 in connect",
+        "Correct one-sentence cause"
+      ],
+      "key_misses": [
+        "Omits secondary ConnectionError and main.py:42 frame",
+        "Omits exit code 1"
+      ],
+      "hallucinations": [],
+      "justification": "Consistent with the other t0.1 reps; verbatim message and error type are correct."
+    },
+    "Q3.5-4B|t0.1|rep4": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct error type psycopg2.OperationalError",
+        "Verbatim root-cause message with all key fields",
+        "Cites db.py line 18 in connect",
+        "Correct one-sentence cause"
+      ],
+      "key_misses": [
+        "Omits secondary ConnectionError and main.py:42 frame",
+        "Omits exit code 1"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate verbatim message and error type; missing the secondary exception and the main.py frame."
+    },
+    "Q3.5-4B|t0.4|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct error type psycopg2.OperationalError",
+        "Verbatim message (with leading 'psycopg2.OperationalError:' prefix, which is visible in the image line)",
+        "Cites db.py line 18 in connect",
+        "Correct one-sentence cause"
+      ],
+      "key_misses": [
+        "Omits secondary ConnectionError and main.py:42 frame",
+        "Omits exit code 1"
+      ],
+      "hallucinations": [],
+      "justification": "Correct error type, message, and file:line; the prefix on the message is acceptable since the image shows it."
+    },
+    "Q3.5-4B|t0.4|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct error type psycopg2.OperationalError",
+        "Verbatim root-cause message with all key fields",
+        "Cites db.py line 18 in connect",
+        "Correct one-sentence cause"
+      ],
+      "key_misses": [
+        "Omits secondary ConnectionError and main.py:42 frame",
+        "Omits exit code 1"
+      ],
+      "hallucinations": [],
+      "justification": "Correct verbatim transcription and error type; uses single quotes around app/db.internal which differs slightly from the image but semantically faithful."
+    },
+    "Q3.5-4B|t0.4|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct error type psycopg2.OperationalError",
+        "Verbatim root-cause message with all key fields",
+        "Cites db.py:18 (correct frame)",
+        "Correct one-sentence cause"
+      ],
+      "key_misses": [
+        "Omits secondary ConnectionError and main.py:42 frame",
+        "Omits exit code 1"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate verbatim message and error type; only the secondary exception context is missing."
+    },
+    "Q3.5-4B|t0.4|rep3": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Cites db.py line 18 in connect correctly",
+        "Correct one-sentence cause about mismatched password",
+        "Mentions password authentication failed for user app (partial message)"
+      ],
+      "key_misses": [
+        "Wrong error type: claims psycopg2.errors.InvalidPasswordException which is NOT in the image",
+        "Root-cause message is truncated to only 'password authentication failed for user app', missing host/IP/port/FATAL context",
+        "Omits secondary ConnectionError, main.py:42 frame, and exit code"
+      ],
+      "hallucinations": [
+        "psycopg2.errors.InvalidPasswordException as the error type (image shows psycopg2.OperationalError; this exception class is fabricated)"
+      ],
+      "justification": "Fabricates a different psycopg2 exception class and truncates the root-cause message; a significant error-type hallucination offset by correct file:line and cause."
+    },
+    "Q3.5-4B|t0.4|rep4": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct error type psycopg2.OperationalError",
+        "Verbatim root-cause message with all key fields",
+        "Cites db.py line 18",
+        "Reasonable one-sentence cause (password incorrect or user does not exist)"
+      ],
+      "key_misses": [
+        "Omits secondary ConnectionError and main.py:42 frame",
+        "Omits exit code 1",
+        "Cause's 'user does not exist' clause is speculative (image only shows auth failure)"
+      ],
+      "hallucinations": [],
+      "justification": "Correct verbatim message and error type; minor speculative aside in the cause but no fabricated facts."
+    },
+    "Q3.5-4B|t0.7|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct error type psycopg2.OperationalError",
+        "Verbatim message with all key fields (and the psycopg2.OperationalError prefix as shown in image)",
+        "Cites db.py:18 (correct frame)",
+        "Correct one-sentence cause"
+      ],
+      "key_misses": [
+        "Omits secondary ConnectionError and main.py:42 frame",
+        "Omits exit code 1"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate verbatim message and error type; missing only the secondary exception context."
+    },
+    "Q3.5-4B|t0.7|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct error type psycopg2.OperationalError",
+        "Verbatim root-cause message with all key fields",
+        "Cites db.py line 18 in connect and quotes the raise ConnectionError line accurately",
+        "Correct one-sentence cause"
+      ],
+      "key_misses": [
+        "Does not explicitly give the ConnectionError's own message as the secondary exception (though it quotes the raise line)",
+        "Omits main.py:42 frame and exit code",
+        "Trailing boilerplate disclaimer adds noise but is not factually wrong"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate verbatim message and error type, and uniquely quotes the raise ConnectionError line; docked slightly for an unnecessary boilerplate disclaimer."
+    },
+    "Q3.5-4B|t0.7|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly lists both psycopg2.OperationalError and ConnectionError (the secondary exception IS in the image)",
+        "Verbatim root-cause message with all key fields",
+        "Cites db.py line 18",
+        "Correct one-sentence cause"
+      ],
+      "key_misses": [
+        "Omits main.py:42 frame",
+        "Omits exit code 1"
+      ],
+      "hallucinations": [],
+      "justification": "Uniquely captures both exceptions in the image plus a verbatim root-cause message; a strong response."
+    },
+    "Q3.5-4B|t0.7|rep3": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct error type psycopg2.OperationalError",
+        "Verbatim root-cause message with all key fields",
+        "Cites db.py line 18 in connect",
+        "Reasonable one-sentence cause"
+      ],
+      "key_misses": [
+        "Omits secondary ConnectionError and main.py:42 frame",
+        "Omits exit code 1",
+        "Cause's 'credentials not properly configured' is mildly speculative"
+      ],
+      "hallucinations": [],
+      "justification": "Correct verbatim message and error type with clean formatting; minor speculative wording in the cause."
+    },
+    "Q3.5-4B|t0.7|rep4": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly lists both psycopg2.OperationalError and ConnectionError (both present in image)",
+        "Verbatim root-cause message with all key fields",
+        "Cites db.py line 18 in connect",
+        "Correct one-sentence cause"
+      ],
+      "key_misses": [
+        "Omits main.py:42 frame",
+        "Omits exit code 1"
+      ],
+      "hallucinations": [],
+      "justification": "Captures both visible exceptions and the verbatim root-cause message; strong and faithful."
+    }
+  },
+  "ranking": [
+    "Q3.5-4B|t0.7|rep2",
+    "Q3.5-4B|t0.7|rep4",
+    "Q3.5-4B|t0.7|rep1",
+    "Q3.5-4B|t0.1|rep0",
+    "Q3.5-4B|t0.1|rep1",
+    "Q3.5-4B|t0.1|rep2",
+    "Q3.5-4B|t0.1|rep3",
+    "Q3.5-4B|t0.1|rep4",
+    "Q3.5-4B|t0.4|rep0",
+    "Q3.5-4B|t0.4|rep1",
+    "Q3.5-4B|t0.4|rep2",
+    "Q3.5-4B|t0.4|rep4",
+    "Q3.5-4B|t0.7|rep0",
+    "Q3.5-4B|t0.7|rep3",
+    "Q3.5-4B|t0.4|rep3"
+  ],
+  "notes": "All 15 responses correctly identified the root cause as a DB password authentication failure for user 'app' and the correct file:line (db.py:18). 14/15 give the correct error type (psycopg2.OperationalError) and a near-verbatim root-cause message. The single outlier is t0.4|rep3, which fabricates psycopg2.errors.InvalidPasswordException (not in the image) and truncates the message — the only response with a real hallucination. Two responses (t0.7|rep2, t0.7|rep4) uniquely capture BOTH exceptions visible in the image (psycopg2.OperationalError + ConnectionError), making them the strongest. None of the responses mention the main.py:42 frame or the exit code 1; the model consistently treats db.py:18 as 'most relevant,' which is defensible since that is where the error surfaces."
+}

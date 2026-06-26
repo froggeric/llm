@@ -1,0 +1,112 @@
+{
+  "image": "26-graph-ocean-acidification-hawaii.jpg",
+  "image_path": "test-images/26-graph-ocean-acidification-hawaii.jpg",
+  "ground_truth": "**Multi-series line chart** showing ocean acidification trends from **1958 to 2018**.\n\n**Title**: \"Ocean acidification\"\n\n**Axes (verified 2026-06-19)**:\n- X: \"Year\" — range **1958 to 2018**\n- Left Y: \"CO₂\" — range **275 to 425** (ppm)\n- Right Y: \"pH\" — range **8.03 to 8.33**\n\n**Data series** (with discrete dots):\n- **Atmospheric CO₂** (red): measured at Station Mauna Loa — 1958: ~315 ppm, 2018: ~415 ppm\n- **Ocean pCO₂** (green): measured at Station ALOHA — starts 1990 at ~325 ppm, 2018: ~380 ppm\n- **Ocean pH** (blue): measured at Station ALOHA — drops from **~8.12 to ~8.06** (taking rough averages; acidification trend)\n\n**Inset map**: Hawaiian Islands with two stations marked (Mauna Loa as red triangle, ALOHA as red dot).\n\n**Source context**: Data aligns with NOAA Mauna Loa Observatory (Keeling Curve) + Hawaii Ocean Time-series (HOT) program at Station ALOHA (running since 1988), but **no source citation is printed on the chart**.\n\n---",
+  "responses": [
+    {
+      "key": "Q3VL-8B-Q8|t0.1|rep0",
+      "model": "Q3VL-8B-Q8",
+      "temp": 0.1,
+      "rep": 0,
+      "content": "# Chart Description\n\n## (1) Chart type\nLine chart with three data series.\n\n## (2) Axes\n- X-axis: Year (1958–2018)\n- Left Y-axis: CO₂ (ppm), range 275–425\n- Right Y-axis: pH, range 8.03–8.33\n\n## (3) Data series\n- Red: Atmospheric CO₂ (measured at Station Mauna Loa)\n- Green: Ocean pCO₂ (measured at Station Aloha)\n- Blue: Ocean pH (measured at Station Aloha)\n\n## (4) Notable values, outliers, inflection points\n- Atmospheric CO₂: Starts ~315 ppm (1958), rises to ~415 ppm (2018)\n- Ocean pH: Starts ~8.20 (1990s), declines to ~8.05 (2018)\n- Ocean pCO₂: Starts ~350 ppm (1990s), rises to ~410 ppm (2018)\n- Inflection point: ~1990s, where ocean pH begins steep decline after atmospheric CO₂ rise\n\n## (5) Overall trend\nAtmospheric CO₂ and ocean pCO₂ steadily increase. Ocean pH steadily decreases, indicating ocean acidification."
+    },
+    {
+      "key": "Q3VL-8B-Q8|t0.1|rep1",
+      "model": "Q3VL-8B-Q8",
+      "temp": 0.1,
+      "rep": 1,
+      "content": "# Chart Description\n\n## (1) Chart type\nLine chart with multiple series.\n\n## (2) Axes\n- X-axis: Year (1958–2018)\n- Left Y-axis: CO₂ (ppm), range 275–425\n- Right Y-axis: pH, range 8.03–8.33\n\n## (3) Data series\n- Red: Atmospheric CO₂ (measured at Station Mauna Loa)\n- Green: Ocean pCO₂ (measured at Station Aloha)\n- Blue: Ocean pH (measured at Station Aloha)\n\n## (4) Notable values, outliers, inflection points\n- Atmospheric CO₂: Starts ~315 ppm (1958), rises to ~415 ppm (2018)\n- Ocean pH: Starts ~8.20 (1990s), declines to ~8.05 (2018)\n- Ocean pCO₂: Starts ~350 ppm (1990s), rises to ~400 ppm (2018)\n- Inflection point: ~1990s, where ocean pH begins steep decline after atmospheric CO₂ rise\n\n## (5) Overall trend\nAtmospheric CO₂ and ocean pCO₂ steadily increase. Ocean pH steadily decreases, indicating ocean acidification."
+    },
+    {
+      "key": "Q3VL-8B-Q8|t0.1|rep2",
+      "model": "Q3VL-8B-Q8",
+      "temp": 0.1,
+      "rep": 2,
+      "content": "# Chart Description\n\n## (1) Chart type\nLine chart with three data series.\n\n## (2) Axes\n- X-axis: Year (1958–2018)\n- Left Y-axis: CO₂ (ppm), range 275–425\n- Right Y-axis: pH, range 8.03–8.33\n\n## (3) Data series\n- Red: Atmospheric CO₂ (measured at Station Mauna Loa)\n- Green: Ocean pCO₂ (measured at Station Aloha)\n- Blue: Ocean pH (measured at Station Aloha)\n\n## (4) Notable values, outliers, inflection points\n- Atmospheric CO₂: Starts ~315 ppm (1958), rises to ~415 ppm (2018)\n- Ocean pH: Starts ~8.20 (1990s), declines to ~8.05 (2018)\n- Ocean pCO₂: Starts ~350 ppm (1990s), rises to ~410 ppm (2018)\n- Inflection point: ~1990s, where ocean pH begins steep decline after atmospheric CO₂ rise\n\n## (5) Overall trend\nAtmospheric CO₂ and ocean pCO₂ steadily increase. Ocean pH steadily decreases, indicating ocean acidification."
+    },
+    {
+      "key": "Q3VL-8B-Q8|t0.1|rep3",
+      "model": "Q3VL-8B-Q8",
+      "temp": 0.1,
+      "rep": 3,
+      "content": "# Chart Description\n\n## (1) Chart type\nLine chart with three data series.\n\n## (2) Axes\n- X-axis: Year (1958–2018)\n- Left Y-axis: CO₂ (ppm), range 275–425\n- Right Y-axis: pH, range 8.03–8.33\n\n## (3) Data series\n- Red: Atmospheric CO₂ (measured at Station Mauna Loa)\n- Green: Ocean pCO₂ (measured at Station Aloha)\n- Blue: Ocean pH (measured at Station Aloha)\n\n## (4) Notable values, outliers, inflection points\n- Atmospheric CO₂: Starts ~315 ppm (1958), rises to ~415 ppm (2018)\n- Ocean pH: Starts ~8.20 (1990s), declines to ~8.05 (2018)\n- Ocean pCO₂: Starts ~350 ppm (1990s), rises to ~410 ppm (2018)\n- Inflection point: ~1990s, where ocean pH begins steep decline coinciding with rising atmospheric CO₂\n\n## (5) Overall trend\nAtmospheric CO₂ and ocean pCO₂ show consistent upward trends. Ocean pH shows a consistent downward trend, indicating ocean acidification."
+    },
+    {
+      "key": "Q3VL-8B-Q8|t0.1|rep4",
+      "model": "Q3VL-8B-Q8",
+      "temp": 0.1,
+      "rep": 4,
+      "content": "# Chart Description\n\n## (1) Chart type\nLine chart with multiple series.\n\n## (2) Axes\n- X-axis: Year (1958–2018)\n- Left Y-axis: CO₂ (ppm), range 275–425\n- Right Y-axis: pH, range 8.03–8.33\n\n## (3) Data series\n- Red: Atmospheric CO₂ (measured at Station Mauna Loa)\n- Green: Ocean pCO₂ (measured at Station Aloha)\n- Blue: Ocean pH (measured at Station Aloha)\n\n## (4) Notable values, outliers, inflection points\n- Atmospheric CO₂: Starts ~315 ppm (1958), rises to ~415 ppm (2018)\n- Ocean pH: Starts ~8.20 (1990s), declines to ~8.05 (2018)\n- Inflection point: ~1990s, where ocean pH begins steep decline after atmospheric CO₂ rise\n- Outliers: Ocean pCO₂ shows high variability (green line), especially post-2000\n\n## (5) Overall trend\nAtmospheric CO₂ and ocean pCO₂ steadily increase. Ocean pH steadily decreases, indicating ocean acidification."
+    },
+    {
+      "key": "Q3VL-8B-Q8|t0.4|rep0",
+      "model": "Q3VL-8B-Q8",
+      "temp": 0.4,
+      "rep": 0,
+      "content": "# Chart Description\n\n## (1) Chart type\nLine chart (with multiple series).\n\n## (2) Axes\n- X-axis: Year (1958–2018)\n- Left Y-axis: CO₂ (ppm), range 275–425\n- Right Y-axis: pH, range 8.03–8.33\n\n## (3) Data series\n- Red: Atmospheric CO₂ (measured at Station Mauna Loa)\n- Green: Ocean pCO₂ (measured at Station Aloha)\n- Blue: Ocean pH (measured at Station Aloha)\n\n## (4) Notable values, outliers, inflection points\n- Atmospheric CO₂: Starts ~315 ppm (1958), rises to ~415 ppm (2018)\n- Ocean pH: Starts ~8.20 (1990s), declines to ~8.07 (2018)\n- Ocean pCO₂: Starts ~350 ppm (1990s), rises to ~410 ppm (2018)\n- Inflection point: ~1990s, where ocean pH begins steep decline coinciding with rising ocean pCO₂ and atmospheric CO₂.\n\n## (5) Overall trend\nAtmospheric CO₂ and ocean pCO₂ are increasing steadily. Ocean pH is decreasing steadily, indicating ocean acidification."
+    },
+    {
+      "key": "Q3VL-8B-Q8|t0.4|rep1",
+      "model": "Q3VL-8B-Q8",
+      "temp": 0.4,
+      "rep": 1,
+      "content": "# Chart Description\n\n## (1) Chart type\nLine chart with dual y-axes.\n\n## (2) Axes with units and ranges\n- X-axis: Year (1958–2018)\n- Left Y-axis: CO₂ (ppm), range 275–425\n- Right Y-axis: pH, range 8.03–8.33\n\n## (3) Data series with names\n- Red line: Atmospheric CO₂ (measured at Station Mauna Loa)\n- Green line: Ocean pCO₂ (measured at Station Aloha)\n- Blue line: Ocean pH (measured at Station Aloha)\n\n## (4) Notable values, outliers, and inflection points\n- Atmospheric CO₂: Starts ~315 ppm (1958), rises to ~415 ppm (2018)\n- Ocean pH: Starts ~8.20 (1958), declines to ~8.05 (2018)\n- Ocean pCO₂: Starts ~350 ppm (1958), rises to ~415 ppm (2018)\n- Inflection point: Around 1990, ocean pH begins accelerating downward; ocean pCO₂ begins accelerating upward.\n\n## (5) Overall trend\nAtmospheric CO₂ and ocean pCO₂ show consistent, steep increases over time. Ocean pH shows a consistent, steep decline, indicating ocean acidification. The decline in ocean pH is strongly correlated with the rise in atmospheric CO₂ and ocean pCO₂."
+    },
+    {
+      "key": "Q3VL-8B-Q8|t0.4|rep2",
+      "model": "Q3VL-8B-Q8",
+      "temp": 0.4,
+      "rep": 2,
+      "content": "# Chart Description\n\n## (1) Chart type\nLine chart with multiple series.\n\n## (2) Axes\n- X-axis: Year (1958–2018)\n- Left Y-axis: CO₂ (ppm, range 275–425)\n- Right Y-axis: pH (range 8.03–8.33)\n\n## (3) Data series\n- Red: Atmospheric CO₂ (measured at Station Mauna Loa)\n- Green: Ocean pCO₂ (measured at Station Aloha)\n- Blue: Ocean pH (measured at Station Aloha)\n\n## (4) Notable values, outliers, inflection points\n- Atmospheric CO₂: ~315 ppm (1958) → ~415 ppm (2018)\n- Ocean pH: ~8.25 (1990s) → ~8.05 (2018)\n- Inflection point: ~1990s, where ocean pH begins steep decline despite rising atmospheric CO₂\n- Outliers: Ocean pH shows significant year-to-year variability (±0.05 units)\n\n## (5) Overall trend\nAtmospheric CO₂ and ocean pCO₂ show strong upward trends. Ocean pH shows a consistent downward trend, indicating ocean acidification."
+    },
+    {
+      "key": "Q3VL-8B-Q8|t0.4|rep3",
+      "model": "Q3VL-8B-Q8",
+      "temp": 0.4,
+      "rep": 3,
+      "content": "# Chart Description\n\n## (1) Chart type\nLine chart with dual y-axes.\n\n## (2) Axes\n- X-axis: Year (1958–2018)\n- Left Y-axis: CO₂ (ppm), range 275–425\n- Right Y-axis: pH, range 8.03–8.33\n\n## (3) Data series\n- Red: Atmospheric CO₂ (Station Mauna Loa)\n- Green: Ocean pCO₂ (Station Aloha)\n- Blue: Ocean pH (Station Aloha)\n\n## (4) Notable values\n- Atmospheric CO₂: ~315 ppm (1958) → ~415 ppm (2018)\n- Ocean pH: ~8.20 (early 1990s) → ~8.05 (2018)\n- Ocean pCO₂: ~350 ppm (1990s) → ~410 ppm (2018)\n- Inflection point: ~1990s, where ocean pH begins steep decline after atmospheric CO₂ rise.\n\n## (5) Overall trend\nAtmospheric CO₂ and ocean pCO₂ show consistent upward trends. Ocean pH shows a consistent downward trend, indicating ocean acidification."
+    },
+    {
+      "key": "Q3VL-8B-Q8|t0.4|rep4",
+      "model": "Q3VL-8B-Q8",
+      "temp": 0.4,
+      "rep": 4,
+      "content": "# Chart Description\n\n## (1) Chart Type\nLine chart with dual y-axes.\n\n## (2) Axes\n- **X-axis**: Year (1958–2018)\n- **Left Y-axis**: CO₂ (ppm), range 275–425\n- **Right Y-axis**: pH, range 8.03–8.33\n\n## (3) Data Series\n- Red: Atmospheric CO₂ (Station Mauna Loa)\n- Green: Ocean pCO₂ (Station Aloha)\n- Blue: Ocean pH (Station Aloha)\n\n## (4) Notable Values & Trends\n- Atmospheric CO₂: Started ~315 ppm in 1958, rose to >415 ppm by 2018.\n- Ocean pH: Declined from ~8.22 to ~8.08 between 1994–2018.\n- Ocean pCO₂: Increased from ~350 ppm to ~400 ppm between 1994–2018.\n- No clear outliers; all series show consistent trends.\n\n## (5) Overall Trend\nAll three variables show a clear upward trend in CO₂ and downward trend in pH, indicating ocean acidification."
+    },
+    {
+      "key": "Q3VL-8B-Q8|t0.7|rep0",
+      "model": "Q3VL-8B-Q8",
+      "temp": 0.7,
+      "rep": 0,
+      "content": "# Chart Description\n\n## (1) Chart Type\nLine chart with dual y-axes.\n\n## (2) Axes with Units and Ranges\n- X-axis: Year (1958–2018)\n- Left Y-axis: CO₂ (ppm) (275–425)\n- Right Y-axis: pH (8.03–8.33)\n\n## (3) Data Series with Names\n- Red line: Atmospheric CO₂ (measured at Station Mauna Loa)\n- Green line: Ocean pCO₂ (measured at Station Aloha)\n- Blue line: Ocean pH (measured at Station Aloha)\n\n## (4) Notable Values, Outliers, and Inflection Points\n- Atmospheric CO₂: Starts ~315 ppm in 1958, rises steadily to ~415 ppm by 2018.\n- Ocean pH: Starts ~8.2, declines steadily to ~8.0 by 2018.\n- Inflection point: Around 1994, ocean pH begins its steeper decline.\n- Outliers: No extreme outliers, but ocean pH shows high variability (error bars) from 1994 onward.\n\n## (5) Overall Trend\nAtmospheric CO₂ and ocean pCO₂ increase steadily over time. Ocean pH declines steadily, indicating ocean acidification. The decline in ocean pH correlates directly with the rise in atmospheric CO₂."
+    },
+    {
+      "key": "Q3VL-8B-Q8|t0.7|rep1",
+      "model": "Q3VL-8B-Q8",
+      "temp": 0.7,
+      "rep": 1,
+      "content": "# Chart Description\n\n## (1) Chart type\nLine chart with three data series.\n\n## (2) Axes\n- X-axis: Year (1958–2018)\n- Left Y-axis: CO₂ (ppm), range 275–425\n- Right Y-axis: pH, range 8.03–8.33\n\n## (3) Data series\n- Red: Atmospheric CO₂ (measured at Station Mauna Loa)\n- Green: Ocean pCO₂ (measured at Station Aloha)\n- Blue: Ocean pH (measured at Station Aloha)\n\n## (4) Notable values\n- Atmospheric CO₂: ~315 ppm (1958) → ~415 ppm (2018)\n- Ocean pH: ~8.22 (1990s) → ~8.06 (2018)\n- Ocean pCO₂: ~350 ppm (1990s) → ~380 ppm (2018)\n\n## (5) Overall trend\nAll three metrics show a consistent downward trend in ocean pH and upward trend in CO₂ over time, indicating increasing ocean acidification."
+    },
+    {
+      "key": "Q3VL-8B-Q8|t0.7|rep2",
+      "model": "Q3VL-8B-Q8",
+      "temp": 0.7,
+      "rep": 2,
+      "content": "# Chart Description\n\n## (1) Chart type\nLine chart with two y-axes.\n\n## (2) Axes with units and ranges\n- X-axis: Year (1958–2018)\n- Left Y-axis: CO₂ (parts per million, ppm) — 275 to 425\n- Right Y-axis: pH — 8.03 to 8.33\n\n## (3) Data series with names\n- Red line: Atmospheric CO₂ measured at Station Mauna Loa\n- Green line: Ocean pCO₂ measured at Station Aloha\n- Blue line: Ocean pH measured at Station Aloha\n\n## (4) Notable values, outliers, and inflection points\n- Atmospheric CO₂: Started ~315 ppm in 1958, rose to ~415 ppm by 2018.\n- Ocean pH: Started ~8.20, declined to ~8.06 by 2018 (steady decline with no major inflection points).\n- Ocean pCO₂: Started ~350 ppm, rose to ~400 ppm by 2018.\n- No major outliers; all series show consistent trends.\n\n## (5) Overall trend\nAll three measurements show a clear upward trend in CO₂ and a downward trend in pH from 1958 to 2018, indicating ocean acidification."
+    },
+    {
+      "key": "Q3VL-8B-Q8|t0.7|rep3",
+      "model": "Q3VL-8B-Q8",
+      "temp": 0.7,
+      "rep": 3,
+      "content": "# Chart Description\n\n## (1) Chart Type\nLine chart with dual y-axes.\n\n## (2) Axes\n- X-axis: Year (1958–2018)\n- Left Y-axis: CO₂ (ppm), range 275–425\n- Right Y-axis: pH, range 8.03–8.33\n\n## (3) Data Series\n- Red: Atmospheric CO₂ (Station Mauna Loa)\n- Green: Ocean pCO₂ (Station Aloha)\n- Blue: Ocean pH (Station Aloha)\n\n## (4) Notable Values & Trends\n- Atmospheric CO₂: Starts ~315 ppm (1958), rises to ~415 ppm (2018).\n- Ocean pH: Starts ~8.20, declines to ~8.05 (2018).\n- Ocean pCO₂: Starts ~350 ppm, rises to ~400 ppm.\n- Inflection point: ~1990, where ocean pH begins steep decline.\n\n## (5) Overall Trend\nAtmospheric CO₂ and ocean pCO₂ steadily increase; ocean pH steadily decreases, indicating ocean acidification."
+    },
+    {
+      "key": "Q3VL-8B-Q8|t0.7|rep4",
+      "model": "Q3VL-8B-Q8",
+      "temp": 0.7,
+      "rep": 4,
+      "content": "# Chart Description\n\n## (1) Chart Type\nLine chart with multiple series.\n\n## (2) Axes\n- X-axis: Year (1958–2018)\n- Left Y-axis: CO₂ (ppm), range 275–425\n- Right Y-axis: pH, range 8.03–8.33\n\n## (3) Data Series\n- Red: Atmospheric CO₂ (measured at Station Mauna Loa)\n- Green: Ocean pCO₂ (measured at Station Aloha)\n- Blue: Ocean pH (measured at Station Aloha)\n\n## (4) Notable Values & Trends\n- Atmospheric CO₂: Starts ~315 ppm (1958), rises to ~415 ppm (2018)\n- Ocean pH: Starts ~8.18 (1990s), declines to ~8.05 (2018)\n- Ocean pCO₂: Rises with atmospheric CO₂, peaking ~400 ppm (2010s)\n- No clear outliers; consistent downward trend in ocean pH\n\n## (5) Overall Trend\nAtmospheric CO₂ and ocean pCO₂ increase steadily. Ocean pH decreases steadily, indicating ocean acidification."
+    }
+  ]
+}

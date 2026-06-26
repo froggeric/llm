@@ -1,0 +1,166 @@
+{
+  "image": "30-where-is-waldo.webp",
+  "judgments": {
+    "GLM-9B|t0.1|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Blue-and-white striped beach huts on left and right correctly identified",
+        "Umbrella colors (red-and-white, blue-and-white, green-and-white) correct",
+        "Sailboat sail colors (yellow, white) and motorboats + large blue-and-white ferry correct",
+        "Correctly notes a horse near the water with people"
+      ],
+      "key_misses": [
+        "Misses pink sail entirely (only lists yellow and white sails)",
+        "Does not mention the red-and-white striped Punch and Judy booth",
+        "Misses distant land/hills on horizon"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate high-level beach description with correct hut/umbrella/sail colors and a notable catch (horses); minor omissions of pink sail and Punch-and-Judy booth but no fabrications."
+    },
+    "GLM-9B|t0.1|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct blue-and-white striped beach huts on both sides",
+        "Accurate umbrella colors (red/blue/green-and-white)",
+        "Sail colors yellow, white, and pink all correctly captured",
+        "Correctly notes steamships with smoke and large blue-and-white passenger boat on right"
+      ],
+      "key_misses": [
+        "Does not mention the red-and-white Punch and Judy booth",
+        "Misses horses and distant land/hills on horizon"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, error-free description with all three sail colors right; slightly less detailed on distinctive shore elements (no booth/horses) but nothing fabricated."
+    },
+    "GLM-9B|t0.1|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Blue-and-white striped huts on both sides correct",
+        "Umbrella colors (red/blue/green-and-white) correct",
+        "Sail colors pink, white, yellow all captured",
+        "Correctly identifies steamships emitting smoke on left, middle, right"
+      ],
+      "key_misses": [
+        "Misses the red-and-white Punch and Judy booth",
+        "No mention of horses or horizon land/hills"
+      ],
+      "hallucinations": [],
+      "justification": "Solid and consistent with the other low-temp reps; accurate sail colors and steamship placement, no hallucinations, just modest detail on distinctive shore features."
+    },
+    "GLM-9B|t0.4|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct blue-and-white striped huts on both sides",
+        "Sail colors pink, white, yellow all captured",
+        "Mentions a white cooler (a real element)",
+        "Lists red-and-yellow umbrellas (present) alongside red/blue-and-white"
+      ],
+      "key_misses": [
+        "Misses the red-and-white Punch and Judy booth",
+        "Does not mention horses or horizon land/hills"
+      ],
+      "hallucinations": [
+        "Describes 'a red boat' and 'a yellow boat' as separate distinct vessels beyond the sailboats/steamboats/ferry - the red boat is plausible but the extra yellow boat is unverified given dense scene (not flagged as severe)"
+      ],
+      "justification": "Mostly accurate with good sail-color coverage; the enumerated extra red/yellow boats are at the edge of what's verifiable but are minor, and no impossible inventions appear."
+    },
+    "GLM-9B|t0.4|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly notes 'a distant landmass' on the horizon (verified present)",
+        "Blue-and-white striped huts on both sides correct",
+        "Sail colors pink, white, yellow captured",
+        "Correctly identifies red-and-white/yellow-and-red umbrellas and steamships + large blue-and-white ferry"
+      ],
+      "key_misses": [
+        "Calls the red-and-white striped structure just part of umbrellas context, not the Punch and Judy booth",
+        "Misses horses"
+      ],
+      "hallucinations": [],
+      "justification": "Strongest rep - uniquely catches the distant landmass on the horizon, accurate huts/sails/umbrellas, no fabrications."
+    },
+    "GLM-9B|t0.4|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Blue-and-white striped huts on both sides correct",
+        "Sail colors yellow (with red flag), pink, white captured",
+        "Steamboats with smoke and large blue-and-white ferry correct",
+        "Mentions a white cooler with blue details (a real element)"
+      ],
+      "key_misses": [
+        "Misses the red-and-white Punch and Judy booth",
+        "No mention of horses or horizon land/hills"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate core description with a nice detail (cooler); the 'yellow sailboat with red flag' is a minor color embellishment but not impossible, and nothing clearly fabricated."
+    },
+    "GLM-9B|t0.7|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Blue-and-white striped huts on left/right AND a red-and-white striped structure center-right correctly distinguished",
+        "Umbrella colors (red/blue/green-and-white, yellow-and-red) all captured",
+        "Sail colors pink, white, yellow captured",
+        "Steamboats with smoke on left and right correct"
+      ],
+      "key_misses": [
+        "Misses horses and horizon land/hills",
+        "Slightly misattributes the red-and-white structure (it's the Punch and Judy booth, not described as such)"
+      ],
+      "hallucinations": [],
+      "justification": "Uniquely flags the red-and-white striped center-right structure (the Punch and Judy booth) that most reps missed, plus full umbrella/sail color coverage; no fabrications."
+    },
+    "GLM-9B|t0.7|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Blue-and-white striped huts and a red-and-white striped structure both noted",
+        "Sail colors yellow, red, white captured",
+        "Correctly identifies the large blue/white passenger boat on the far right",
+        "Notes smoke trails from boats on left and middle"
+      ],
+      "key_misses": [
+        "Misses pink sail",
+        "Misses horses and horizon land/hills"
+      ],
+      "hallucinations": [
+        "Describes the large blue-and-white vessel on the right as having 'a cross on top' - the fans/propellers of the hovercraft can resemble crosses but calling it a 'cross' is a mischaracterization"
+      ],
+      "justification": "Captures the red-and-white structure and sail variety but introduces the 'cross on top' on the right vessel - the hovercraft's fans are being misread as a cross, a minor hallucination/mischaracterization."
+    },
+    "GLM-9B|t0.7|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Blue-and-white striped huts on both sides correct",
+        "Umbrella colors (red/blue/green-and-white) captured",
+        "Mentions yellow AND red sailboats (red sail plausible in dense scene)",
+        "White cooler on the sand noted"
+      ],
+      "key_misses": [
+        "Misses pink sail and white sail distinctions",
+        "Misses the red-and-white Punch and Judy booth, horses, horizon land/hills"
+      ],
+      "hallucinations": [],
+      "justification": "Reasonable high-temp description with accurate huts/umbrellas and a real cooler detail; red sailboat is plausible given dense scene, nothing clearly fabricated."
+    }
+  },
+  "ranking": [
+    "GLM-9B|t0.4|rep1",
+    "GLM-9B|t0.1|rep1",
+    "GLM-9B|t0.1|rep2",
+    "GLM-9B|t0.1|rep0",
+    "GLM-9B|t0.7|rep0",
+    "GLM-9B|t0.4|rep0",
+    "GLM-9B|t0.4|rep2",
+    "GLM-9B|t0.7|rep2",
+    "GLM-9B|t0.7|rep1"
+  ],
+  "notes": "All 9 GLM-9B responses are normal-mode, non-hallucinatory scene descriptions (no Waldo characters located). They consistently nail the blue-and-white striped huts, umbrella colors, sailboat sail colors, steamships, and the large blue-and-white vessel on the right. Common omissions across reps: the red-and-white Punch-and-Judy booth (only t0.7|rep0 and t0.7|rep1 flag it), horses near water (only t0.1|rep0), and the distant land/hills on the horizon (only t0.4|rep1). The single notable hallucination is t0.7|rep1's 'cross on top' of the right vessel (a misread of the hovercraft's lift fans). t0.4|rep1 ranks highest for uniquely catching the verified horizon landmass."
+}

@@ -1,0 +1,159 @@
+{
+  "image": "ui-test-1.png",
+  "judgments": {
+    "Q3.5-9B|t0.1|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct three-column layout and full middle-column taxonomy (General through Groq, INTEGRATIONS/MODEL PROVIDERS/LOCAL/REMOTE headers)",
+        "Right panel v0.8.2, data path, Jan CLI path, Reset warning all captured verbatim",
+        "Identifies download/grid top-right icons and ON update toggle"
+      ],
+      "key_misses": [
+        "Omits the ⌘N/⌘P/⌘K keyboard shortcuts shown beside New Chat/New Projects/Search",
+        "Right-panel listing drops Change Location, Show in Finder, Open Logs, Uninstall buttons (mentioned only later in interactive section)",
+        "Misreads 'Anthropic' as 'Anthropi' (OCR error)"
+      ],
+      "hallucinations": [],
+      "justification": "Thorough and largely accurate, but misses the visible keyboard shortcuts and truncates the right-panel button listing."
+    },
+    "Q3.5-9B|t0.1|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Three-column layout and full middle/settings taxonomy correct through Groq",
+        "Right-panel General/Data Folder/Advanced content captured including version and paths",
+        "Notes ON toggle and Experimental badge"
+      ],
+      "key_misses": [
+        "Does not capture ⌘N/⌘P/⌘K keyboard shortcuts",
+        "Stops provider list at Groq without noting the truncated x.AI entry",
+        "Misreads 'Anthropic' as 'Anthropi'"
+      ],
+      "hallucinations": [],
+      "justification": "Solid coverage parallel to rep0 but slightly lighter (no x.AI mention)."
+    },
+    "Q3.5-9B|t0.1|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Captures ⌘N/⌘P/⌘K shortcuts beside New Chat/New Projects/Search",
+        "Full middle taxonomy with 'Anthropic' spelled correctly and xAI partially visible noted",
+        "Complete right-panel breakdown including all buttons (Change Location, Show in Finder, Open Logs, Uninstall, Reset)"
+      ],
+      "key_misses": [
+        "Slightly lighter on per-provider colored-icon detail than t0.4 reps",
+        "Describes top-right icons as only 'download, grid' (correct count) without elaboration"
+      ],
+      "hallucinations": [],
+      "justification": "Best of the t0.1 set: includes the keyboard shortcuts and a complete, correctly-spelled taxonomy."
+    },
+    "Q3.5-9B|t0.4|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Most detailed response: captures ⌘N/⌘P/⌘K shortcuts AND per-provider colored icons (orange Llama.cpp, green OpenAI, blue Azure, red Groq, etc.)",
+        "'Anthropic' spelled correctly; xAI partial noted; all right-panel buttons enumerated",
+        "Identifies Settings/General as selected with highlighted background"
+      ],
+      "key_misses": [
+        "Content cuts off mid-sentence ('Folder icons next') in the interactive-elements section",
+        "Describes MLX icon as black (GT/image shows gray) — minor color nuance"
+      ],
+      "hallucinations": [],
+      "justification": "Richest correct detail (shortcuts, colored icons, full taxonomy) but the response is truncated before finishing the interactive-element list."
+    },
+    "Q3.5-9B|t0.4|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Clean three-column description with correct full taxonomy through Groq",
+        "Right-panel content (version, paths, Reset warning) captured verbatim and 'Anthropic' spelled correctly",
+        "ON update toggle and all six right-panel buttons listed under interactive elements"
+      ],
+      "key_misses": [
+        "Does not capture the ⌘N/⌘P/⌘K keyboard shortcuts",
+        "Provider list stops at Groq with no mention of the truncated x.AI entry",
+        "Lighter on per-provider colored-icon detail"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and well-organized but omits the visible keyboard shortcuts and the x.AI row."
+    },
+    "Q3.5-9B|t0.4|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Three-column layout and middle taxonomy correct, lists xAI as final provider",
+        "Right-panel sections and version/path details captured",
+        "ON toggle, Change Location, Show in Finder, Open Logs, Uninstall, Reset all present in interactive list"
+      ],
+      "key_misses": [
+        "Misreads 'Anthropic' as 'Anthropie' (OCR error)",
+        "Lists xAI without noting it is partially/truncated, and omits it from a 'partially visible' caveat",
+        "Data Folder listing omits the Change Location button line (only mentioned later)"
+      ],
+      "hallucinations": [],
+      "justification": "Generally correct but contains the 'Anthropie' misread and is slightly less precise about the truncated xAI row."
+    },
+    "Q3.5-9B|t0.7|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Three-column layout and middle taxonomy correct through Groq with xAI partial noted",
+        "Right-panel sections, version v0.8.2, data path, Jan CLI path all captured",
+        "Notes ON toggle, red Reset button, Experimental badge, and selected General tab"
+      ],
+      "key_misses": [
+        "Explicitly states 'no other visible top-bar elements' — misses the download/grid icons that ARE present",
+        "Does not capture the ⌘N/⌘P/⌘K keyboard shortcuts",
+        "Places the ellipsis menu as a left-sidebar item rather than the Chats row affordance"
+      ],
+      "hallucinations": [],
+      "justification": "Good structural coverage but wrongly denies the top-right download/grid icons and omits the keyboard shortcuts."
+    },
+    "Q3.5-9B|t0.7|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Captures ⌘N/⌘P/⌘K shortcuts beside New Chat/New Projects/Search",
+        "Three-column layout and full middle taxonomy through Groq with 'Anthropic' correct",
+        "Right-panel content including version, data path, Jan CLI path, and Reset warning"
+      ],
+      "key_misses": [
+        "Calls the second top-right icon 'split view' rather than grid (minor mislabel)",
+        "Claims the 'Check for Updates' button is disabled/grayed (GT says enabled)",
+        "Provider list stops at Groq with no mention of truncated x.AI"
+      ],
+      "hallucinations": [],
+      "justification": "Captures the keyboard shortcuts and full layout but mislabels the grid icon and mis-states the Check-for-Updates button state."
+    },
+    "Q3.5-9B|t0.7|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Clean three-column layout with full middle taxonomy through Groq and 'Anthropic' correct",
+        "Right-panel General/Data Folder/Advanced content captured including version and paths",
+        "Notes ON toggle (orange), red Reset button, Experimental tag, and copy icon beside path"
+      ],
+      "key_misses": [
+        "Does not capture the ⌘N/⌘P/⌘K keyboard shortcuts",
+        "Provider list stops at Groq with no mention of the truncated x.AI entry",
+        "Lighter on top-right icon and per-provider colored-icon detail"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and tidy but omits the keyboard shortcuts and the x.AI row, putting it a step below the t0.1/rep2 and t0.4/rep0 leaders."
+    }
+  },
+  "ranking": [
+    "Q3.5-9B|t0.4|rep0",
+    "Q3.5-9B|t0.1|rep2",
+    "Q3.5-9B|t0.7|rep1",
+    "Q3.5-9B|t0.4|rep1",
+    "Q3.5-9B|t0.1|rep0",
+    "Q3.5-9B|t0.1|rep1",
+    "Q3.5-9B|t0.7|rep2",
+    "Q3.5-9B|t0.4|rep2",
+    "Q3.5-9B|t0.7|rep0"
+  ],
+  "notes": "All nine responses correctly identify the three-column Jan v0.8.2 Settings layout and the core right-panel content; none hallucinate (every error is an OCR misread like 'Anthropi(e)' or an omission of the ⌘N/⌘P/⌘K shortcuts and/or the truncated x.AI row). Only t0.4/rep0 and t0.1/rep2 and t0.7/rep1 capture the keyboard shortcuts; t0.4/rep0 alone also details the per-provider colored icons but is truncated mid-sentence. t0.7/rep0 is the weakest because it incorrectly asserts the top-right download/grid icons are absent."
+}

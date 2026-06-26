@@ -1,0 +1,278 @@
+{
+  "image": "26-graph-ocean-acidification-hawaii.jpg",
+  "judgments": {
+    "Q3.5-4B|t0.1|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies dual-axis line chart with 3 series, axes (X 1958-2018, left CO2 275-425, right pH 8.03-8.33), and all three series with correct stations and colors",
+        "Accurate atmospheric CO2 values (315 ppm 1958 to 415 ppm 2018) and correct direction of trends for all series",
+        "Correctly identifies ocean data series begin around the early 1990s as an inflection point"
+      ],
+      "key_misses": [
+        "Says ocean pCO2 'fluctuates between ~300-380 ppm until 2018' implying no rise, but it actually rises to ~380 by 2018; downplays the upward trend",
+        "Ocean pH start value (~8.13) is slightly high and end (~8.03) slightly low vs ground truth (~8.12 to ~8.06)"
+      ],
+      "hallucinations": [
+        "Claims ocean pCO2 'begins ~1994' — actually begins ~1990"
+      ],
+      "justification": "Strong, accurate structural description with minor value/timing errors; trends correctly identified."
+    },
+    "Q3.5-4B|t0.1|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type, all axis ranges, three series names/stations/colors, and atmospheric CO2 values",
+        "Correct overall directions (CO2 up, pH down) and acidification interpretation"
+      ],
+      "key_misses": [
+        "Claims ocean pCO2 begins 'around 1985' — actually ~1990",
+        "Claims ocean pH starts '1985 ~8.15' but the blue pH line actually begins around 1990"
+      ],
+      "hallucinations": [
+        "Invents 'ocean pCO2 rises sharply to ~400 ppm by 2018' — the chart shows ~380, not 400",
+        "Claims ocean pH lowest point ~8.03 around 2010-2012, contradicting its own end value"
+      ],
+      "justification": "Good structural accuracy but fabricates the pCO2 start year (1985) and overstates the final pCO2 value to ~400 ppm."
+    },
+    "Q3.5-4B|t0.1|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type, axes, all three series with stations/colors, and atmospheric CO2 values",
+        "Correctly identifies acidification trend and inflection around the early 1990s",
+        "Ocean pH end value (~8.03) and pCO2 start (~1994) roughly reasonable"
+      ],
+      "key_misses": [
+        "Says pCO2 'rises sharply to ~400 ppm by 2018' — actual end is ~380 ppm",
+        "Says pCO2 begins ~1994; actual is ~1990"
+      ],
+      "hallucinations": [
+        "Invents a sharp pCO2 spike to ~400 ppm that is not in the chart"
+      ],
+      "justification": "Mostly accurate but inflates the final ocean pCO2 value to ~400 ppm (actual ~380) and misdates the start to 1994."
+    },
+    "Q3.5-4B|t0.1|rep3": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type, axis ranges, three series names/stations/colors, and atmospheric CO2 values",
+        "Correctly captures that ocean data series begin around the early 1990s and that pH declines",
+        "Reasonable end values for ocean pH (~8.03) and pCO2 (~320-380 range)"
+      ],
+      "key_misses": [
+        "Says ocean pCO2 'fluctuates between ~300-380 ppm until 2018' implying no net rise; the series does rise to ~380",
+        "Mistimes ocean data start as ~1994 (actual ~1990)"
+      ],
+      "hallucinations": [
+        "Invents a 'sharp drop in 1994-1995' for pCO2 that does not appear in the chart"
+      ],
+      "justification": "Structurally accurate with correct trends, but fabricates a 1994-1995 sharp pCO2 drop and misdates the series start."
+    },
+    "Q3.5-4B|t0.1|rep4": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type, axis ranges, three series with stations/colors, and atmospheric CO2 values",
+        "Correct acidification interpretation and overall trend directions"
+      ],
+      "key_misses": [
+        "Says pCO2 begins ~1994 (actual ~1990)",
+        "Says pH starts ~8.13 then ends ~8.03 — start is a bit high"
+      ],
+      "hallucinations": [
+        "Fabricates 'spikes sharply to ~400+ ppm by 2018' for ocean pCO2 and speculates it is a 'sampling or measurement anomaly' — the chart shows ~380 with no such spike"
+      ],
+      "justification": "Good structure but invents a nonexistent ~400+ ppm pCO2 spike and misattributes it to a measurement anomaly."
+    },
+    "Q3.5-4B|t0.4|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type, X and left/right axis ranges, three series with stations and colors, and atmospheric CO2 values",
+        "Correctly identifies acidification trend and the early-1990s onset of ocean measurements"
+      ],
+      "key_misses": [
+        "Says right Y-axis is 'pH and pCO2 ... ~300 to 410 (pCO2)' — there is no pCO2 axis; the right axis is only pH 8.03-8.33",
+        "Says ocean pCO2 'begins ~1994 at ~300 ppm' — actual ~1990 at ~325"
+      ],
+      "hallucinations": [
+        "Fabricates a separate pCO2 scale on the right axis that does not exist in the chart",
+        "Claims ocean pCO2 fluctuates 'between ~280-390 ppm' — the lower bound 280 is unsupported"
+      ],
+      "justification": "Core structure correct but invents a nonexistent pCO2 right-axis scale and understates the pCO2 start value."
+    },
+    "Q3.5-4B|t0.4|rep1": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type, all axis ranges, inset map description with both stations correctly identified",
+        "Correct atmospheric CO2 values and overall acidification trend"
+      ],
+      "key_misses": [
+        "Says ocean pCO2 data begins ~1985 (actual ~1990)",
+        "Confuses units for ocean pCO2, reporting its values in pH scale (8.13-8.23) instead of ppm"
+      ],
+      "hallucinations": [
+        "Fabricates 'ocean pCO2 peaks at ~8.23' and '~2018 ocean pCO2 ~= 8.23' — these are pH-scale numbers applied to pCO2, total unit confusion",
+        "Claims 'ocean pH drops sharply to ~8.03' around 1994 as the 'lowest point in record' — the lowest point is at the end (~2018), not 1994"
+      ],
+      "justification": "Notable for the inset map detail, but badly confuses pCO2 units (reports ~8.23 instead of ppm) and misplaces the pH minimum at 1994."
+    },
+    "Q3.5-4B|t0.4|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type, axis ranges, all three series with stations/colors, and atmospheric CO2 values",
+        "Reasonable ocean pH (~8.13 to ~8.03) and pCO2 (~310 to ~390) values that match the chart closely",
+        "Correctly identifies acidification and inflection around 1990"
+      ],
+      "key_misses": [
+        "Says ocean pH ~8.13 in 1958 — but the blue pH line only begins around 1990, so 1958 pH is not shown",
+        "Says inflection 'starting ~1990' is roughly right but attributes pH decline start incorrectly"
+      ],
+      "hallucinations": [
+        "Attributes an ocean pH value to 1958 when no pH data exists that early in the chart"
+      ],
+      "justification": "One of the more accurate responses on values, but assigns a pH reading to 1958 despite the pH series only beginning ~1990."
+    },
+    "Q3.5-4B|t0.4|rep3": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type, X and left/right axis ranges, three series with stations/colors, and atmospheric CO2 values",
+        "Reasonable ocean pCO2 (~320 to ~380) and pH (~8.10 to ~8.03) values, and correct acidification trend"
+      ],
+      "key_misses": [
+        "Says right y-axis is 'pH and pCO2 (implied scale 8.03-8.33)' — conflates the pH axis with a pCO2 scale",
+        "Mistimes ocean data start as 1994 (actual ~1990)"
+      ],
+      "hallucinations": [
+        "Claims 'green dots: Ocean pCO2 ... right axis, lower scale' and 'blue dots ... upper scale' — fabricates distinct sub-scales on the single pH axis",
+        "Invents 'lowest point ~2016 (~8.03)' as distinct from end value"
+      ],
+      "justification": "Largely correct values but fabricates separate lower/upper sub-scales on the single pH axis and misdates the ocean series start."
+    },
+    "Q3.5-4B|t0.4|rep4": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type, axis ranges, three series with stations/colors, and atmospheric CO2 values",
+        "Correctly notes pCO2 is partial pressure (not pH), distinguishing it from the pH series",
+        "Reasonable pCO2 (~320 to ~400) and pH (~8.13 to ~8.03) values and correct acidification trend"
+      ],
+      "key_misses": [
+        "Says ocean pCO2 'starts later (~1985)' — actual ~1990",
+        "Says ocean pH ~8.13 in 1958 — pH series only begins ~1990"
+      ],
+      "hallucinations": [
+        "Invents 'ocean pH ~8.13 (1958)' — no pH data exists for 1958 in the chart"
+      ],
+      "justification": "Conceptually clear (correctly distinguishes pCO2 from pH) but misdates the pCO2 start to 1985 and fabricates a 1958 pH value."
+    },
+    "Q3.5-4B|t0.7|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type, X and left axis ranges, three series with stations/colors, and atmospheric CO2 values",
+        "Correct acidification interpretation and inflection around 1990"
+      ],
+      "key_misses": [
+        "Says right Y-axis is 'pH (and pCO2, in ppm) ... pCO2 ~310-390 ppm' — the right axis is only pH; no pCO2 scale is printed",
+        "Says ocean pH 'drops from ~8.18 (1958)' — pH series only begins ~1990, and ~8.18 is too high"
+      ],
+      "hallucinations": [
+        "Fabricates a pCO2 ppm scale on the right axis that is not in the chart",
+        "Invents a 1958 ocean pH value of ~8.18"
+      ],
+      "justification": "Core structure and trends are right, but invents a printed pCO2 axis scale and a 1958 pH reading that do not exist."
+    },
+    "Q3.5-4B|t0.7|rep1": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type, axis ranges, three series with stations/colors, and atmospheric CO2 values (~310-418)",
+        "Correct acidification interpretation"
+      ],
+      "key_misses": [
+        "Says ocean measurements begin ~1983 (actual ~1990)",
+        "Says ocean pH starts ~8.26 in 1983 — far too high and wrong year"
+      ],
+      "hallucinations": [
+        "Fabricates ocean pCO2 values 'ranging from ~800 to ~1200 μatm' — completely invented numbers not supported by the chart",
+        "Invents the 1983 start year and ~8.26 pH start value"
+      ],
+      "justification": "Major hallucination: invents a 800-1200 μatm pCO2 range that is nowhere in the chart, plus a wrong 1983 start year."
+    },
+    "Q3.5-4B|t0.7|rep2": {
+      "holistic_score": 3,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type, X and left axis ranges, three series with stations/colors, and atmospheric CO2 values",
+        "Correct acidification trend direction"
+      ],
+      "key_misses": [
+        "Massively misreads the green ocean pCO2 line as plotted on the pH axis with values ~8.15-8.28",
+        "Claims ocean pH drops to ~7.95-8.00 by 2018 and a 2017 outlier of ~7.96 — the chart's pH axis floor is 8.03"
+      ],
+      "hallucinations": [
+        "Fabricates ocean pCO2 values '8.15 to 8.28' (pH-scale) and a '30% increase in acidity' calculation",
+        "Invents a 'sharp dip around 2017 ~7.96' for ocean pH that is below the chart's axis minimum",
+        "Asserts the figure has a 'plotting error' / 'mislabeled' axis — a fabricated critique of a correct chart"
+      ],
+      "justification": "Severely misreads the chart: treats pCO2 as pH-scale values, invents pH values below the axis floor, and wrongly claims the figure is mislabeled."
+    },
+    "Q3.5-4B|t0.7|rep3": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type, axis ranges, three series with stations/colors, atmospheric CO2 values, and acidification trend",
+        "Reasonable ocean pCO2 (~320 to ~390) and pH (~8.10 to ~8.05) values"
+      ],
+      "key_misses": [
+        "Says ocean pCO2 begins 'mid-1980s' (actual ~1990)",
+        "Says ocean pH begins 1988 (actual ~1990)"
+      ],
+      "hallucinations": [
+        "Claims pCO2 'peaks around 2016 then slight decline' — the chart shows pCO2 rising to 2018, no peak/decline",
+        "Invents '30% increase in acidity' statistic not present in the chart"
+      ],
+      "justification": "Mostly accurate values but fabricates a 2016 pCO2 peak/decline and an unsupported 30%-acidity statistic."
+    },
+    "Q3.5-4B|t0.7|rep4": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type, axis ranges, three series with stations/colors, and atmospheric CO2 values (~318-418)",
+        "Reasonable ocean pCO2 (~320 to ~400) and pH (~8.15 to ~8.05) values, correct acidification trend",
+        "Correctly identifies the early-1990s onset of ocean measurements as the inflection point"
+      ],
+      "key_misses": [
+        "Says ocean pCO2 ends ~400 ppm (actual ~380)",
+        "Says 'CO2 rise accelerates visibly after 1980' — the rise is roughly linear, not accelerating"
+      ],
+      "hallucinations": [
+        "Slight overstatement of pCO2 end value (~400 vs ~380) and an unsupported 'acceleration after 1980' for CO2"
+      ],
+      "justification": "Largely accurate with correct trends and inflection, minor overstatement of the pCO2 end value and a questionable acceleration claim."
+    }
+  },
+  "ranking": [
+    "Q3.5-4B|t0.1|rep0",
+    "Q3.5-4B|t0.4|rep2",
+    "Q3.5-4B|t0.7|rep4",
+    "Q3.5-4B|t0.1|rep2",
+    "Q3.5-4B|t0.1|rep3",
+    "Q3.5-4B|t0.4|rep4",
+    "Q3.5-4B|t0.4|rep0",
+    "Q3.5-4B|t0.7|rep3",
+    "Q3.5-4B|t0.1|rep1",
+    "Q3.5-4B|t0.1|rep4",
+    "Q3.5-4B|t0.4|rep3",
+    "Q3.5-4B|t0.7|rep0",
+    "Q3.5-4B|t0.4|rep1",
+    "Q3.5-4B|t0.7|rep1",
+    "Q3.5-4B|t0.7|rep2"
+  ],
+  "notes": "All 15 reps correctly identify the chart type, axis ranges, three series (with correct stations/colors), atmospheric CO2 values, and the acidification trend — the structural baseline is strong. The recurring errors cluster in two areas: (1) misdating the ocean pCO2/pH series start (~1990) to 1983-1994, and (2) inventing final ocean pCO2 values (~400 ppm) above the chart's ~380 ppm. The worst responses (t0.4|rep1, t0.7|rep1, t0.7|rep2) confuse pCO2 units for pH-scale values (e.g., 'pCO2 ~= 8.23' or '~800-1200 μatm') and, in t0.7|rep2, wrongly accuse the figure of a labeling error. Lower temperature (0.1) reps were not reliably more accurate than 0.4/0.7 reps; t0.4|rep2 and t0.7|rep4 were among the best."
+}

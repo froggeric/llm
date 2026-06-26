@@ -1,0 +1,151 @@
+{
+  "image": "03_error_trace.png",
+  "judgments": {
+    "GLM-9B|t0.1|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies ConnectionError as the visible error type",
+        "Correct root-cause message verbatim: password authentication failed for user \"app\"",
+        "Correct most-relevant file:line: /Users/alice/app/db.py line 18",
+        "Reasonable cause sentence"
+      ],
+      "key_misses": [
+        "Does not mention the originating psycopg2.OperationalError",
+        "Root-cause message is partial - omits server 'db.internal' (10.0.0.5), port 5432 context"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, correct on the four asked fields but the verbatim message omits the connection-target detail and only the secondary ConnectionError is named."
+    },
+    "GLM-9B|t0.1|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Identifies ConnectionError as visible error type",
+        "Full verbatim root-cause message with server 'db.internal' (10.0.0.5), port 5432 and user \"app\"",
+        "Correct file:line: /Users/alice/app/db.py line 18",
+        "Accurate concise cause"
+      ],
+      "key_misses": [
+        "Does not name the originating psycopg2.OperationalError"
+      ],
+      "hallucinations": [],
+      "justification": "Best all-around: full verbatim message including connection target, correct file:line, no fabrication."
+    },
+    "GLM-9B|t0.1|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Identifies ConnectionError",
+        "Correct root-cause phrase: password authentication failed for user \"app\"",
+        "Correct file:line with function context: /Users/alice/app/db.py line 18 in connect",
+        "Sensible cause"
+      ],
+      "key_misses": [
+        "Partial message - omits server/port context",
+        "Does not mention psycopg2.OperationalError"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and concise on all four fields; message is partial but nothing fabricated."
+    },
+    "GLM-9B|t0.4|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Identifies ConnectionError",
+        "Full verbatim root-cause message with db.internal (10.0.0.5), port 5432, user \"app\"",
+        "Correct file:line: /Users/alice/app/db.py line 18",
+        "Accurate cause naming PostgreSQL"
+      ],
+      "key_misses": [
+        "Does not name the originating psycopg2.OperationalError"
+      ],
+      "hallucinations": [],
+      "justification": "Ties for best: complete verbatim message with connection target, correct location, accurate cause."
+    },
+    "GLM-9B|t0.4|rep1": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Uniquely names the originating psycopg2.OperationalError (matches ground truth root exception)",
+        "Full verbatim message with db.internal (10.0.0.5), port 5432, user \"app\"",
+        "Correct file:line: /Users/alice/app/db.py line 18",
+        "Accurate cause citing PostgreSQL and the app user"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Most complete and precise: only response naming the originating psycopg2.OperationalError plus full verbatim message and correct location."
+    },
+    "GLM-9B|t0.4|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Identifies ConnectionError",
+        "Full verbatim message with db.internal (10.0.0.5), port 5432, user \"app\"",
+        "Correct file:line: /Users/alice/app/db.py:18",
+        "Clear cause"
+      ],
+      "key_misses": [
+        "Does not name psycopg2.OperationalError"
+      ],
+      "hallucinations": [],
+      "justification": "Full verbatim message and correct location; slightly less complete than the t0.4|rep1 variant which also names psycopg2."
+    },
+    "GLM-9B|t0.7|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Identifies ConnectionError",
+        "Full verbatim message with db.internal (10.0.0.5), port 5432, user \"app\"",
+        "Correct file:line: /Users/alice/app/db.py line 18",
+        "Reasonable cause"
+      ],
+      "key_misses": [
+        "Does not name psycopg2.OperationalError"
+      ],
+      "hallucinations": [],
+      "justification": "Solid complete answer with full verbatim message and correct location."
+    },
+    "GLM-9B|t0.7|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Names psycopg2.OperationalError (the originating exception)",
+        "Correct core phrase: password authentication failed for user \"app\"",
+        "Correct file:line: /Users/alice/app/db.py line 18",
+        "Accurate cause"
+      ],
+      "key_misses": [
+        "Root-cause message is the short tail only - omits 'connection to server ... port 5432 failed: FATAL:' prefix",
+        "Does not mention the secondary ConnectionError"
+      ],
+      "hallucinations": [],
+      "justification": "Correctly identifies the originating psycopg2.OperationalError and location but the verbatim message is only the tail fragment."
+    },
+    "GLM-9B|t0.7|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Identifies ConnectionError and notes it stems from psycopg2",
+        "Full verbatim message with db.internal (10.0.0.5), port 5432, user \"app\"",
+        "Correct file:line: /Users/alice/app/db.py line 18",
+        "Accurate cause"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Comprehensive: ties ConnectionError to psycopg2, gives full verbatim message and correct location."
+    }
+  },
+  "ranking": [
+    "GLM-9B|t0.4|rep1",
+    "GLM-9B|t0.1|rep1",
+    "GLM-9B|t0.4|rep0",
+    "GLM-9B|t0.7|rep0",
+    "GLM-9B|t0.7|rep2",
+    "GLM-9B|t0.4|rep2",
+    "GLM-9B|t0.7|rep1",
+    "GLM-9B|t0.1|rep0",
+    "GLM-9B|t0.1|rep2"
+  ],
+  "notes": "All 9 responses are factually sound with zero hallucination - every one correctly names ConnectionError, the password-auth failure for user 'app', and /Users/alice/app/db.py line 18. Differentiation is mainly message completeness: responses giving the full verbatim line with server 'db.internal' (10.0.0.5) and port 5432 rank above those giving only the tail fragment. Only two responses (t0.4|rep1, t0.7|rep1) name the originating psycopg2.OperationalError; t0.7|rep2 additionally ties ConnectionError to psycopg2. The t0.4|rep1 response is uniquely best because it combines the originating exception name, full verbatim message, and correct location."
+}

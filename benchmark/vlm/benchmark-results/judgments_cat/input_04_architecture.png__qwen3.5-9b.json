@@ -1,0 +1,70 @@
+{
+  "image": "04_architecture.png",
+  "image_path": "test-images/04_architecture.png",
+  "ground_truth": "Technical diagram titled **\"System Architecture\"**. Left-to-right flow:\n- **Web Client**: light blue rounded rectangle\n- **API Gateway (FastAPI)**: yellow/orange rounded rectangle\n- **Auth Service**: green rounded rectangle (top branch)\n- **Worker Queue**: green rounded rectangle (bottom branch)\n- **Postgres**: pink oval (connected to Auth Service)\n- **Redis**: pink oval (connected to Worker Queue)\n- Protocol labels: **HTTPS** (Web Client → API Gateway), **gRPC** (API Gateway → Auth Service / Worker Queue)\n- All rectangles have rounded corners; databases are ovals\n- **Notable design quirk**: the gRPC line from API Gateway splits into 3 paths — 2 go to Auth Service and Worker Queue, but a third line in the middle goes nowhere (dangling/phantom connection)\n\n---",
+  "responses": [
+    {
+      "key": "Q3.5-9B|t0.1|rep0",
+      "model": "Q3.5-9B",
+      "temp": 0.1,
+      "rep": 0,
+      "content": "### (1) Diagram Type  \nThis is a **system architecture diagram**, illustrating the high-level structure and data flow between components in a distributed system.\n\n---\n\n### (2) All Named Components  \n- **Web Client** (blue box)  \n- **API Gateway (FastAPI)** (yellow box)  \n- **Auth Service** (green box)  \n- **Worker Queue** (green box)  \n- **Postgres** (pink oval)  \n- **Redis** (pink oval)\n\n---\n\n### (3) All Connections with Their Labels and Protocols  \n- **Web Client → API Gateway**: Labeled “HTTPS”  \n- **API Gateway → Auth Service**: Labeled “gRPC”  \n- **API Gateway → Worker Queue**: Labeled “gRPC”  \n- **Auth Service → Postgres**: No protocol label shown (assumed direct DB connection)  \n- **Worker Queue → Redis**: No protocol label shown (assumed direct cache/queue connection)\n\n---\n\n### (4) One-Sentence Summary  \nThis diagram represents a microservices-based system architecture where a web client interacts via HTTPS with an API Gateway that routes gRPC requests to an Auth Service and a Worker Queue, which in turn connect to Postgres and Redis respectively for data persistence and task queuing."
+    },
+    {
+      "key": "Q3.5-9B|t0.1|rep1",
+      "model": "Q3.5-9B",
+      "temp": 0.1,
+      "rep": 1,
+      "content": "### (1) Diagram Type  \nThis is a **system architecture diagram**, illustrating the high-level structure and data flow between components in a distributed system.\n\n---\n\n### (2) All Named Components  \n- **Web Client** (blue box)  \n- **API Gateway (FastAPI)** (yellow box)  \n- **Auth Service** (green box)  \n- **Worker Queue** (green box)  \n- **Postgres** (pink oval)  \n- **Redis** (pink oval)\n\n---\n\n### (3) All Connections with Their Labels and Protocols  \n- **Web Client → API Gateway**: Labeled “HTTPS”  \n- **API Gateway → Auth Service**: Labeled “gRPC”  \n- **API Gateway → Worker Queue**: Labeled “gRPC”  \n- **Auth Service → Postgres**: No protocol label shown (assumed direct DB connection)  \n- **Worker Queue → Redis**: No protocol label shown (assumed direct cache/queue connection)\n\n---\n\n### (4) One-Sentence Summary  \nThis diagram represents a microservices-based system architecture where a web client interacts via HTTPS with an API gateway that routes gRPC requests to authentication and worker services, which in turn connect to PostgreSQL and Redis for data persistence and queuing."
+    },
+    {
+      "key": "Q3.5-9B|t0.1|rep2",
+      "model": "Q3.5-9B",
+      "temp": 0.1,
+      "rep": 2,
+      "content": "### (1) Diagram Type  \nThis is a **system architecture diagram**, illustrating the high-level structure and data flow between components in a distributed system.\n\n---\n\n### (2) All Named Components  \n- **Web Client** (blue box)  \n- **API Gateway (FastAPI)** (yellow box)  \n- **Auth Service** (green box)  \n- **Worker Queue** (green box)  \n- **Postgres** (pink oval)  \n- **Redis** (pink oval)\n\n---\n\n### (3) All Connections with Their Labels and Protocols  \n- **Web Client → API Gateway (FastAPI)**: labeled “HTTPS”  \n- **API Gateway (FastAPI) → Auth Service**: labeled “gRPC”  \n- **API Gateway (FastAPI) → Worker Queue**: labeled “gRPC”  \n- **Auth Service → Postgres**: no protocol label shown (assumed direct DB connection)  \n- **Worker Queue → Redis**: no protocol label shown (assumed direct cache/queue connection)\n\n---\n\n### (4) One-Sentence Summary  \nThis diagram represents a microservices-based system architecture where a web client interacts via HTTPS with an API gateway that routes gRPC requests to authentication and worker services, which in turn connect to PostgreSQL and Redis databases respectively."
+    },
+    {
+      "key": "Q3.5-9B|t0.4|rep0",
+      "model": "Q3.5-9B",
+      "temp": 0.4,
+      "rep": 0,
+      "content": "### (1) Diagram Type  \nThis is a **system architecture diagram**, illustrating the high-level components and data flow of a distributed system.\n\n---\n\n### (2) All Named Components  \n\n- **Web Client** (blue box)  \n- **API Gateway (FastAPI)** (yellow box)  \n- **Auth Service** (green box)  \n- **Worker Queue** (green box)  \n- **Postgres** (pink oval)  \n- **Redis** (pink oval)\n\n---\n\n### (3) All Connections with Their Labels and Protocols  \n\n- **Web Client → API Gateway**: labeled `HTTPS`  \n- **API Gateway → Auth Service**: labeled `gRPC`  \n- **API Gateway → Worker Queue**: labeled `gRPC`  \n- **Auth Service → Postgres**: no protocol label shown (assumed direct database connection)  \n- **Worker Queue → Redis**: no protocol label shown (assumed direct cache/queue connection)\n\n---\n\n### (4) One-Sentence Summary  \nThis diagram represents a microservices-based system architecture where a web client communicates via HTTPS through an API Gateway (built with FastAPI), which routes gRPC requests to either an authentication service connected to PostgreSQL or a worker queue backed by Redis."
+    },
+    {
+      "key": "Q3.5-9B|t0.4|rep1",
+      "model": "Q3.5-9B",
+      "temp": 0.4,
+      "rep": 1,
+      "content": "### (1) Diagram Type  \nThis is a **system architecture diagram**, illustrating the high-level structure and data flow between components in a distributed application.\n\n---\n\n### (2) All Named Components  \n\n- **Web Client** (blue box) — Represents the user-facing interface or frontend.\n- **API Gateway (FastAPI)** (yellow box) — Acts as the entry point for all client requests, implemented using FastAPI framework.\n- **Auth Service** (green box) — Handles authentication logic.\n- **Worker Queue** (green box) — Manages background task processing via a queue.\n- **Postgres** (pink oval) — Relational database used by Auth Service for persistent storage.\n- **Redis** (pink oval) — In-memory data store used by Worker Queue for task queuing.\n\n---\n\n### (3) All Connections with Their Labels and Protocols  \n\n- **Web Client → API Gateway**: Labeled “HTTPS” — Secure HTTP protocol for client-to-gateway communication.\n- **API Gateway → Auth Service**: Labeled “gRPC” — High-performance RPC framework for internal service communication.\n- **API Gateway → Worker Queue**: Labeled “gRPC” — Same protocol, routing requests to background workers.\n- **Auth Service → Postgres**: No explicit label — Implies standard database connection (likely SQL over TCP/IP or similar).\n- **Worker Queue → Redis**: No explicit label — Implies Redis client protocol (typically RESP over TCP).\n\n---\n\n### (4) One-Sentence Summary  \nThis diagram represents a microservices-based system architecture where a web client interacts with an API gateway that routes authenticated requests to either an auth service (using PostgreSQL) or a worker queue (using Redis), all communicating via HTTPS and gRPC."
+    },
+    {
+      "key": "Q3.5-9B|t0.4|rep2",
+      "model": "Q3.5-9B",
+      "temp": 0.4,
+      "rep": 2,
+      "content": "### (1) Diagram Type  \n**System Architecture Diagram** — This diagram illustrates the high-level structure and data flow of a backend system, showing how different services and components interact.\n\n---\n\n### (2) All Named Components  \n\n- **Web Client** (blue box)  \n- **API Gateway (FastAPI)** (yellow box)  \n- **Auth Service** (green box)  \n- **Worker Queue** (green box)  \n- **Postgres** (pink oval)  \n- **Redis** (pink oval)  \n\n---\n\n### (3) All Connections with Their Labels and Protocols  \n\n- **Web Client → API Gateway (FastAPI)**: Labeled “HTTPS”  \n- **API Gateway (FastAPI) → Auth Service**: Labeled “gRPC”  \n- **API Gateway (FastAPI) → Worker Queue**: Labeled “gRPC”  \n- **Auth Service → Postgres**: No protocol label shown (implied database connection)  \n- **Worker Queue → Redis**: No protocol label shown (implied cache/queue connection)  \n\n---\n\n### (4) One-Sentence Summary  \nThis system architecture diagram depicts a client-server setup where a Web Client communicates via HTTPS with an API Gateway that routes gRPC requests to an Auth Service and a Worker Queue, which in turn connect to Postgres and Redis respectively for data persistence and caching."
+    },
+    {
+      "key": "Q3.5-9B|t0.7|rep0",
+      "model": "Q3.5-9B",
+      "temp": 0.7,
+      "rep": 0,
+      "content": "### (1) Diagram Type  \nThis is a **system architecture diagram**, illustrating the high-level structure and data flow between components in a distributed system.\n\n---\n\n### (2) All Named Components  \n- **Web Client** (blue box)  \n- **API Gateway (FastAPI)** (yellow box)  \n- **Auth Service** (green rounded rectangle)  \n- **Worker Queue** (green rounded rectangle)  \n- **Postgres** (pink oval)  \n- **Redis** (pink oval)  \n\n---\n\n### (3) All Connections with Their Labels and Protocols  \n- **Web Client → API Gateway (FastAPI)**: labeled `HTTPS`  \n- **API Gateway (FastAPI) → Auth Service**: labeled `gRPC`  \n- **API Gateway (FastAPI) → Worker Queue**: no protocol label shown, but implied as `gRPC` based on context (same line as above)  \n- **Auth Service → Postgres**: no label shown, typically implies synchronous DB access (e.g., SQL protocol)  \n- **Worker Queue → Redis**: no label shown, typically implies Redis client protocol for queue operations  \n\n> Note: Arrows indicate direction of communication. The line from API Gateway splits to both Auth Service and Worker Queue, suggesting parallel routing via gRPC.\n\n---\n\n### (4) One-Sentence Summary  \nThis diagram represents a microservices-based system architecture where a web client communicates with an API gateway that routes requests to either an authentication service or a worker queue, which in turn interact with PostgreSQL and Redis respectively."
+    },
+    {
+      "key": "Q3.5-9B|t0.7|rep1",
+      "model": "Q3.5-9B",
+      "temp": 0.7,
+      "rep": 1,
+      "content": "### (1) Diagram Type  \nThis is a **system architecture diagram**, illustrating the high-level structure and data flow between components of a distributed system.\n\n---\n\n### (2) All Named Components  \n\n**Blue Box (Client Side):**  \n- Web Client  \n\n**Yellow Box (Gateway Layer):**  \n- API Gateway (FastAPI)  \n\n**Green Boxes (Service/Backend Layer):**  \n- Auth Service  \n- Worker Queue  \n\n**Pink Ellipses (Data Stores):**  \n- Postgres  \n- Redis  \n\n---\n\n### (3) All Connections with Their Labels and Protocols  \n\n- **Web Client → API Gateway (FastAPI)**  \n  - Label: HTTPS  \n  - Direction: Left to right (request initiation)  \n\n- **API Gateway (FastAPI) → Auth Service**  \n  - Label: gRPC  \n  - Direction: Left to right (internal service communication)  \n\n- **API Gateway (FastAPI) → Worker Queue**  \n  - Label: gRPC  \n  - Direction: Left to right (internal service communication)  \n\n- **Auth Service → Postgres**  \n  - Label: None specified (assumed standard database connection)  \n  - Direction: Rightward (data persistence/query)  \n\n- **Worker Queue → Redis**  \n  - Label: None specified (assumed standard queue/cache connection)  \n  - Direction: Rightward (message storage/retrieval)  \n\n---\n\n### (4) One-Sentence Summary  \nThis diagram represents a layered microservices architecture where a web client interacts via HTTPS with an API Gateway, which then communicates over gRPC with backend services — an Auth Service backed by Postgres and a Worker Queue backed by Redis."
+    },
+    {
+      "key": "Q3.5-9B|t0.7|rep2",
+      "model": "Q3.5-9B",
+      "temp": 0.7,
+      "rep": 2,
+      "content": "### (1) Diagram Type  \n**System Architecture Diagram**\n\n---\n\n### (2) All Named Components  \n\n- **Web Client** (blue box)  \n- **API Gateway (FastAPI)** (yellow box)  \n- **Auth Service** (green rounded rectangle)  \n- **Worker Queue** (green rounded rectangle)  \n- **Postgres** (pink oval)  \n- **Redis** (pink oval)  \n\n---\n\n### (3) All Connections with Their Labels and Protocols  \n\n- **Web Client → API Gateway (FastAPI)**: Labeled “HTTPS”  \n- **API Gateway (FastAPI) → Auth Service**: Labeled “gRPC”  \n- **API Gateway (FastAPI) → Worker Queue**: Labeled “gRPC”  \n- **Auth Service → Postgres**: No protocol label shown  \n- **Worker Queue → Redis**: No protocol label shown  \n\n*(Note: Arrows indicate direction of data/traffic flow.)*\n\n---\n\n### (4) One-Sentence Summary  \nThis diagram represents a layered microservices architecture where a web client interacts via HTTPS through an API Gateway (built with FastAPI), which then routes gRPC requests to either an Auth Service backed by PostgreSQL or a Worker Queue backed by Redis."
+    }
+  ]
+}

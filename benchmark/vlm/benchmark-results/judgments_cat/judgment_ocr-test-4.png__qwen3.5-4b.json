@@ -1,0 +1,259 @@
+{
+  "image": "ocr-test-4.png",
+  "judgments": {
+    "Q3.5-4B|t0.1|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Registradora name 'María Isabel Cabra Rojo', Tel 928 537 272 / Fax 928 866 469, and address C/ Bajo Blanco, 2, Edificio Hubara, 35660 all correct",
+        "Applicant Joan, DNI 20041185C, phone 635889002, and all four fincas (32840/32885/32803/32871) captured; titular 'Adelina Muñoz' and DNI 50183525 captured",
+        "Nº Borrador 42/2025 correct; full GDPR/legal paragraphs reproduced accurately"
+      ],
+      "key_misses": [
+        "Website misread as 'www.registros.org' (printed: www.registradores.org)",
+        "Registry email misread as 'corralejo@registrodelaoliva.org' (printed: corralejo@registrodelapropriedad.org)",
+        "Nº Entrada misread as 11650 (printed: 11656); applicant surname misread 'Almirans Moropos' (handwritten: Almiñana Moropsa); email 'joansnobs@gmail.com' (handwritten: joansnobc@gmail.com)"
+      ],
+      "hallucinations": [],
+      "justification": "Strong faithful transcription of the bulk document with consistent OCR misreads of the domains and a few handwritten fields, all reading errors rather than fabrications."
+    },
+    "Q3.5-4B|t0.1|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Registradora, phone/fax, address, Joan, DNI, phone, and all four fincas correct",
+        "Titular 'Adelina Muñoz' with DNI 50183525 captured; Nº Borrador 42/2025 correct",
+        "Full legal/GDPR paragraphs reproduced accurately"
+      ],
+      "key_misses": [
+        "Website 'www.registros.org' and email 'corralejo@registrodelaoliva.org' both misread",
+        "Nº Entrada 11650 (printed 11656); surname 'Almirante Moropos'; applicant email 'joansnobs@gmail.com'"
+      ],
+      "hallucinations": [],
+      "justification": "Effectively identical in quality to rep0 — same recurring domain and field misreads, no fabricated content."
+    },
+    "Q3.5-4B|t0.1|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header organization, registradora, phone/fax, address all correct",
+        "All four fincas and titular Adelina Muñoz + DNI 50183525 captured; Nº Borrador 42/2025 correct",
+        "Legal/GDPR block reproduced accurately"
+      ],
+      "key_misses": [
+        "Website 'www.registros.org' and email 'corralejo@registrodelaoliva.org' misread",
+        "Nº Entrada 11650 (printed 11656); surname 'Almirans Motapés'; applicant email 'joansnob@gmail.com'; minor label typo 'Tíno Contacto'"
+      ],
+      "hallucinations": [],
+      "justification": "On par with the other t0.1 reps; same domain and handwriting misreads, no invented content."
+    },
+    "Q3.5-4B|t0.1|rep3": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Registradora, phone/fax, address, Joan, DNI, phone, and all four fincas correct",
+        "Titular Adelina Muñoz + DNI 50183525; Nº Borrador 42/2025 correct",
+        "Legal/GDPR paragraphs reproduced accurately"
+      ],
+      "key_misses": [
+        "Website 'www.registros.org' and email 'corralejo@registrodelaoliva.org' misread",
+        "Nº Entrada badly misread as 8856 (printed 11656); surname 'Almirante Moropos'; applicant email 'joansnobs@gmail.com'"
+      ],
+      "hallucinations": [],
+      "justification": "Same quality tier as the other t0.1 reps; the worse Entrada misread is balanced by otherwise faithful transcription."
+    },
+    "Q3.5-4B|t0.1|rep4": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Registradora, phone/fax, address, Joan, DNI, phone correct",
+        "Titular Adelina Muñoz + DNI 50183525; Nº Borrador 42/2025 correct",
+        "Legal/GDPR paragraphs reproduced accurately"
+      ],
+      "key_misses": [
+        "Website 'www.registros.org' and email 'corralejo@registrodelaoliva.org' misread",
+        "Fincas placed in the wrong table column (LIBRO instead of FINCA) — values correct but column mapping wrong",
+        "Nº Entrada 11650 (printed 11656); surname 'Almirante Moropos'; applicant email 'joansnobs@gmail.com'"
+      ],
+      "hallucinations": [],
+      "justification": "Slightly lower than peers because the four finca numbers were shifted into the wrong table column, a structural error beyond the usual domain misreads."
+    },
+    "Q3.5-4B|t0.4|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Registradora, phone/fax, Joan, DNI 20041185C, phone 635889002 all correct",
+        "All four fincas (32840/32885/32803/32871) correct; titular captured with DNI 50183525",
+        "Legal/GDPR block reproduced accurately"
+      ],
+      "key_misses": [
+        "Website 'www.registros.org' misread; registry email given as 'corralejo@registrodelapropiedad.org' (printed domain is registrodelapropriedad.org with an 'i')",
+        "Nº Borrador misread as 72/2025 (printed 42); Nº Entrada badly misread as 6656 (printed 11656); titular first name 'Adelin' (printed Adelina); surname 'Almirante Moropos'",
+        "Minor label/spelling errors: 'Telefón/s', 'SOLICITÓ' (printed SOLICITO)"
+      ],
+      "hallucinations": [],
+      "justification": "Captures the document structure well but introduces more numeric misreads (Borrador, Entrada) than the t0.1 set; still reading errors, not fabrications."
+    },
+    "Q3.5-4B|t0.4|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Registradora, phone/fax, address, Joan, DNI, phone correct",
+        "Three of four fincas correct (32840/32885/32803); titular Adelina Muñoz + DNI 50183525 captured",
+        "Legal/GDPR block reproduced accurately"
+      ],
+      "key_misses": [
+        "Website 'www.registros.org' misread; registry email 'corralejo@registrodelapropiedad.org' (close but domain spelling differs from printed registrodelapropriedad.org)",
+        "Fourth finca misread as 32811 (printed 32871); Nº Borrador misread as 412/2025 (printed 42); surname 'Almirante Moropos'",
+        "Inserted checkbox glyphs (☐) before interest options that are not present as printed checkboxes in the source form"
+      ],
+      "hallucinations": [],
+      "justification": "Reasonable transcription with a finca-digit error and inserted checkbox glyphs not matching the form; the checkboxes are a layout embellishment rather than invented factual content, so not flagged as hallucination."
+    },
+    "Q3.5-4B|t0.4|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Registradora, phone/fax, address, Joan, DNI, phone correct",
+        "All four finca values present (32840/32885/32803/32871); titular Adelina Muñoz + DNI 50183525 captured",
+        "Legal/GDPR block reproduced accurately"
+      ],
+      "key_misses": [
+        "Website 'www.registros.org' misread; registry email 'corralejo@registrodelapropiedad.org' (printed registrodelapropriedad.org)",
+        "Fincas placed in wrong table column (LIBRO not FINCA); Nº Entrada badly misread as '88.80' (printed 11656); applicant email 'joans.mob@gmail.com'",
+        "Inserted checkbox glyphs (☐); added dotted placeholder lines under section 2 not present in the form"
+      ],
+      "hallucinations": [],
+      "justification": "Captures most content but with a garbled Entrada number, wrong finca column, and added checkbox/placeholder decoration not in the source."
+    },
+    "Q3.5-4B|t0.4|rep3": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Phone/fax, Joan, DNI, phone, and three of four fincas (32840/32885/32803) correct",
+        "Titular Adelina Muñoz + DNI 50183525 captured; Nº Borrador 42/2025 correct",
+        "Legal/GDPR block reproduced accurately"
+      ],
+      "key_misses": [
+        "Header org name misread as 'Corrales' (printed Corralejo); website 'www.registros.org'; email 'corrales@registrodelaoliva.org' (both local-part and domain wrong)",
+        "Fourth finca misread as 32811 (printed 32871); Nº Entrada misread as '116.50' (printed 11656); surname 'Almirante Motopos'; applicant email 'joan.nob@gmail.com'",
+        "Several accent/label drifts ('Telf', 'Tño Contacto')"
+      ],
+      "hallucinations": [],
+      "justification": "More corrupted than the t0.1 set — the place name 'Corralejo' and the email local-part are both misread — but still OCR errors on visible text, not invented content."
+    },
+    "Q3.5-4B|t0.4|rep4": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Phone/fax, Joan, DNI, phone, and all four finca values present",
+        "Titular Adelina Muñoz + DNI 50183525 captured; Nº Borrador 42/2025 correct",
+        "Legal/GDPR block reproduced"
+      ],
+      "key_misses": [
+        "Header org misread 'Corralesjo' (printed Corralejo); website given as 'www.registrodelaoliva.org' and email 'corralesjo@registrodelaoliva.org' — both badly garbled",
+        "Nº Entrada misread '86.50' (printed 11656); surname 'Almirans Motapos'; applicant email 'joansmot@gmail.com'; section header 'EXPOSE' (printed EXPONE)",
+        "Multiple minor label/spelling corruptions throughout"
+      ],
+      "hallucinations": [],
+      "justification": "Heavily garbled reading of the header and email, but the corruption is consistent OCR drift on visible text rather than fabricated content."
+    },
+    "Q3.5-4B|t0.7|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Phone/fax, Joan, DNI, phone, and three of four finca values (32840/32885/32803) present",
+        "Titular Adelina Muñoz + DNI 50183525 captured; Nº Borrador 42/2025 correct",
+        "Legal/GDPR block reproduced"
+      ],
+      "key_misses": [
+        "Header org misread 'Corrajejo'; website badly truncated 'www.registrodeforg'; registry email 'corrajejo@registrodelapropiedad.org' (local-part garbled, domain close but not the printed registrodelapropriedad.org)",
+        "Fourth finca misread 32811 (printed 32871); Nº Entrada misread '66.60' (printed 11656); surname 'Almiras Moropos'; street 'Estevez' (handwritten Estevet)",
+        "Applicant email 'joansnobs@gmail.com' (handwritten joansnobc@gmail.com)"
+      ],
+      "hallucinations": [],
+      "justification": "At temp 0.7 the header and website degrade notably (truncated URL, garbled place name), but no fabricated content — all errors are misreads of visible text."
+    },
+    "Q3.5-4B|t0.7|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header org 'Corralejo' correct; registradora, phone/fax, Joan, DNI, phone correct",
+        "All four finca values present (32840/32885/32803/32871); titular Adelina Muñoz + DNI 50183525 captured",
+        "Legal/GDPR block reproduced accurately"
+      ],
+      "key_misses": [
+        "Website badly garbled 'www.registroel.org'; registry email 'corralejo@registroelpropiedad.org' (both wrong)",
+        "Nº Entrada misread 8856 (printed 11656); surname 'Almiranx Motapos'; applicant email 'joansmob@gmail.com'",
+        "Fincas placed in wrong table column (LIBRO not FINCA)"
+      ],
+      "hallucinations": [],
+      "justification": "Better than the other t0.7 reps on the header but still garbles both URL and email domains; purely OCR drift with no invented content."
+    },
+    "Q3.5-4B|t0.7|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header org 'Corralejo' correct; registradora, phone/fax, address, Joan, DNI, phone correct",
+        "All four fincas (32840/32885/32803/32871) correct; titular captured with DNI 50183525",
+        "Legal/GDPR block reproduced"
+      ],
+      "key_misses": [
+        "Website 'www.registrodelaoliva.org' and email 'corralejo@registrodelaoliva.org' both misread (printed domains are registradores.org and registrodelapropriedad.org)",
+        "Nº Entrada misread 11636 (printed 11656); titular 'Adelin Muñoz Arregas' (printed Adelina Muñoz Arenas/Archanas); surname 'Almirante Moropos'",
+        "Street 'Estevez' (handwritten Estevet); applicant email 'joansnobs@gmail.com'; label 'SOLICITÓ'"
+      ],
+      "hallucinations": [],
+      "justification": "Captures the structure and fincas but garbles both domains and the titular's surname; all reading errors on visible text, no fabrication."
+    },
+    "Q3.5-4B|t0.7|rep3": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Phone/fax, Joan, DNI, phone, and all four finca values (32840/32885/32803/32871) present",
+        "Titular Adelina Muñoz + DNI 50183525 captured (DNI with stray decimal '50183.525.D'); Nº Borrador 42/2025 correct",
+        "Legal/GDPR block reproduced"
+      ],
+      "key_misses": [
+        "Header org split/garbled 'Corra lejo'; website 'www.registros.org'; email 'corra lejo@registrodela propieda d.org' with internal spaces",
+        "Nº Entrada misread 6650 (printed 11656); surname badly garbled 'Alinara /otopos'; applicant email 'joansnobs@gmail.com'",
+        "Fincas rendered as a flat list losing the table structure; multiple spacing/accent drifts"
+      ],
+      "hallucinations": [],
+      "justification": "Significant degradation: place name and email are fragmented with internal spaces, the table structure collapses, and the surname is badly misread — all OCR corruption rather than invented content."
+    },
+    "Q3.5-4B|t0.7|rep4": {
+      "holistic_score": 2,
+      "failure_mode": "repetition_loop",
+      "key_hits": [
+        "Phone/fax, Joan, DNI, phone, and all four finca values (32840/32885/32803/32871) captured before the loop",
+        "Titular Adelina Muñoz + DNI 50183525 captured; Nº Borrador 42/2025 correct"
+      ],
+      "key_misses": [
+        "Header org split/garbled 'Corra lejo'; website 'www.registros.org'; email 'corra lejo@registrodela propiedad.org'",
+        "Nº Entrada misread '66.56' (printed 11656); surname 'Alvará Motapa'; street 'n-19' (handwritten n°19); applicant email 'joan@nobs@gmail.com'",
+        "Response terminates in a long run of repeated dot/placeholder characters instead of completing the document"
+      ],
+      "hallucinations": [],
+      "justification": "Degenerates into a repetition loop of dot characters that crowds out the closing legal paragraphs, making this the clear outlier despite an otherwise comparable opening."
+    }
+  },
+  "ranking": [
+    "Q3.5-4B|t0.1|rep0",
+    "Q3.5-4B|t0.1|rep1",
+    "Q3.5-4B|t0.1|rep2",
+    "Q3.5-4B|t0.1|rep3",
+    "Q3.5-4B|t0.4|rep1",
+    "Q3.5-4B|t0.4|rep2",
+    "Q3.5-4B|t0.1|rep4",
+    "Q3.5-4B|t0.4|rep0",
+    "Q3.5-4B|t0.7|rep1",
+    "Q3.5-4B|t0.7|rep2",
+    "Q3.5-4B|t0.4|rep3",
+    "Q3.5-4B|t0.7|rep0",
+    "Q3.5-4B|t0.4|rep4",
+    "Q3.5-4B|t0.7|rep3",
+    "Q3.5-4B|t0.7|rep4"
+  ],
+  "notes": "All 15 responses share a consistent OCR failure pattern: the website is read as 'www.registros.org' and the registry email as 'corralejo@registrodelaoliva.org' instead of the printed www.registradores.org / corralejo@registrodelapropriedad.org. Per the strict hallucination rules these are misreads of visible text and were recorded as key_misses, NOT hallucinations — no response invented content absent from the form. Quality is stable and highest at temp 0.1 (scores 6-7), degrades at 0.4 (5-6) and further at 0.7 (2-5). The single failure_mode outlier is t0.7/rep4, which collapses into a repetition loop of dot characters and truncates the closing legal paragraphs."
+}

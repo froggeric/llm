@@ -1,0 +1,163 @@
+{
+  "image": "30-where-is-waldo.webp",
+  "judgments": {
+    "Q3.6-35B-A3B|t0.1|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies dense crowded beach scene with sea, sand, sky, clouds",
+        "blue-and-white and red-and-white striped beach huts; sailboats with pink/white/yellow sails; steamships with smoke; blue-and-white ferry on right",
+        "notes horses near waterline and no visible text anywhere"
+      ],
+      "key_misses": [
+        "does not identify the scene as a Where's Waldo illustration or attempt to locate Waldo/Odlaw/Wizard Whitebeard",
+        "misses Punch and Judy booth, ice cream cart, volleyball, hovercraft, submarine, human pyramid",
+        "describes red-and-white striped structure as a beach hut rather than the Punch and Judy booth"
+      ],
+      "hallucinations": [
+        "cacti planted near right-side beach huts (desert plants, implausible on a beach)"
+      ],
+      "justification": "Strong, detailed scene description with most watercraft and structures correct, but invents cacti and treats it as a generic beach rather than a Waldo puzzle."
+    },
+    "Q3.6-35B-A3B|t0.1|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies crowded sunny beach with sea to horizon and faint green landmass",
+        "blue-and-white striped beach huts (one red-and-white), umbrellas (red/white, blue/white), sailboats with pink/white/yellow sails",
+        "steamships with smoke plumes, blue-and-white ferry on right, horses near waterline, no legible text"
+      ],
+      "key_misses": [
+        "does not recognize the Waldo theme or locate hidden characters",
+        "misses ice cream cart, Punch and Judy booth, hovercraft, submarine, volleyball, human pyramid",
+        "fabricates 'couple arguing, person feeding birds, someone reading' as narrative vignettes that cannot be verified"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and well-structured description of the scene and watercraft with no clear fabrications, but generic and misses the Waldo-specific elements."
+    },
+    "Q3.6-35B-A3B|t0.1|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "correctly identifies crowded beach with sea, distant green landmass, blue-and-white striped beach huts",
+        "sailboats with pink/white/yellow sails, motorboats and steamships with smoke, blue-and-white ferry on right",
+        "horses near waterline, no legible text"
+      ],
+      "key_misses": [
+        "calls the blue-and-white right-side vessel a 'ferry/tour boat' and misses that it is the hovercraft with fans on top",
+        "describes a 'red-and-white ferry' which is actually the Punch and Judy booth, not a boat",
+        "misses ice cream cart, volleyball, submarine, hovercraft, human pyramid; does not address hidden Waldo characters"
+      ],
+      "hallucinations": [],
+      "justification": "Mostly correct scene description but contains a notable misread (Punch and Judy booth described as a red-and-white ferry) and is truncated mid-sentence."
+    },
+    "Q3.6-35B-A3B|t0.4|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "correctly identifies Where's Waldo style crowded beach with sea, sky, clouds",
+        "blue-and-white and red-and-white striped beach huts, umbrellas, sailboats (pink/white/yellow), steamships with smoke, blue-and-white ferry on right",
+        "horses near waterline, ice cream cart near bottom center, no visible text"
+      ],
+      "key_misses": [
+        "does not attempt to locate Waldo/Odlaw/Wizard Whitebeard",
+        "misses Punch and Judy booth, hovercraft, submarine, volleyball, human pyramid",
+        "invents 'jet skis' and a 'trash can' that are not verifiable"
+      ],
+      "hallucinations": [],
+      "justification": "Good detail including the ice cream cart, but adds unverified objects (jet skis, trash can) and is truncated before completion."
+    },
+    "Q3.6-35B-A3B|t0.4|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies Where's Waldo/I Spy style crowded beach with sea, faint horizon landmass",
+        "blue-and-white striped beach huts, umbrellas (red/white, blue/white, solid green/yellow), sailboats with pink/white/yellow sails",
+        "motorboats and steamships with smoke plumes, blue-and-white ferry on right, horses near waterline, no legible text"
+      ],
+      "key_misses": [
+        "does not recognize the Waldo theme or locate hidden characters",
+        "misses ice cream cart, Punch and Judy booth, hovercraft, submarine, volleyball, human pyramid"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, accurate description of scene and watercraft with no clear fabrications, but generic and missing all Waldo-specific details."
+    },
+    "Q3.6-35B-A3B|t0.4|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "correctly identifies crowded sunny beach with sea, sky, clouds; notes elevated panoramic perspective",
+        "blue-and-white striped beach huts, red-and-white hut near center-right, umbrellas, sailboats (pink/yellow/white), steamships with smoke (at least four)",
+        "correctly identifies the far-right blue-and-white vessel as a hovercraft-like craft with propellers/fans, horses near waterline, no legible text"
+      ],
+      "key_misses": [
+        "does not locate Waldo/Odlaw/Wizard Whitebeard",
+        "misses Punch and Judy booth, ice cream cart, submarine, volleyball, human pyramid",
+        "invents 'a person in a gorilla suit' which is unverified"
+      ],
+      "hallucinations": [],
+      "justification": "Notably the only response to correctly identify the hovercraft with fans on the right; otherwise solid but generic and truncated."
+    },
+    "Q3.6-35B-A3B|t0.7|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies Where's Waldo style crowded beach with three horizontal zones (sand/shore/sea+sky)",
+        "blue-and-white striped beach cabins, umbrellas (red/white, blue/white, green/white), sailboats (pink/white/yellow), steamships with smoke, blue-and-white ferry on right",
+        "horses near waterline, ice cream cart in lower right, no visible text"
+      ],
+      "key_misses": [
+        "does not locate Waldo/Odlaw/Wizard Whitebeard",
+        "misses Punch and Judy booth, hovercraft, submarine, volleyball, human pyramid",
+        "claims 'no text anywhere' which is correct, but also misses distant land/hills on horizon that GT confirms present"
+      ],
+      "hallucinations": [],
+      "justification": "Reasonable scene description with ice cream cart noted, but generic and missing Waldo-specifics and the hovercraft."
+    },
+    "Q3.6-35B-A3B|t0.7|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "correctly identifies crowded beach with sky, sea, sand; striped beach huts and umbrellas",
+        "sailboats (pink, white, yellow), motorboats, blue-and-white hovercraft/amphibious vehicle on right, no visible text"
+      ],
+      "key_misses": [
+        "does not recognize the Waldo theme or locate hidden characters",
+        "misses ice cream cart, Punch and Judy booth, submarine, volleyball, human pyramid",
+        "describes distant ships incorrectly (a 'large red steamship' is not supported) and misses the hovercraft fans detail"
+      ],
+      "hallucinations": [
+        "a horse-drawn carriage partially submerged in shallow water near the shore (ground truth explicitly states no horse-drawn carriage is in the image)"
+      ],
+      "justification": "Contains a clear hallucination (horse-drawn carriage) which GT explicitly excludes, plus generic descriptions and truncation."
+    },
+    "Q3.6-35B-A3B|t0.7|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "correctly identifies Where's Waldo style crowded beach with sand, shore, sea, distant landforms",
+        "blue-and-white striped beach huts, umbrellas (red/white, blue/white, solid), sailboats (pink/white/yellow), steamships with smoke, blue-and-white ferry on right",
+        "ice cream cart near bottom center-right, horses near waterline, no legible text"
+      ],
+      "key_misses": [
+        "does not locate Waldo/Odlaw/Wizard Whitebeard",
+        "misses Punch and Judy booth, hovercraft, submarine, human pyramid",
+        "invents a red-and-white striped kite flying mid-air which is unverified"
+      ],
+      "hallucinations": [],
+      "justification": "Solid scene description with ice cream cart and distant land noted, but generic and adds an unverified kite; truncated."
+    }
+  },
+  "ranking": [
+    "Q3.6-35B-A3B|t0.4|rep2",
+    "Q3.6-35B-A3B|t0.1|rep1",
+    "Q3.6-35B-A3B|t0.4|rep1",
+    "Q3.6-35B-A3B|t0.1|rep0",
+    "Q3.6-35B-A3B|t0.4|rep0",
+    "Q3.6-35B-A3B|t0.7|rep2",
+    "Q3.6-35B-A3B|t0.1|rep2",
+    "Q3.6-35B-A3B|t0.7|rep0",
+    "Q3.6-35B-A3B|t0.7|rep1"
+  ],
+  "notes": "All nine responses are clearly from the same model (Q3.6-35B-A3B) and are highly consistent: every response correctly identifies the crowded beach scene, blue-and-white striped beach huts, sailboats (pink/white/yellow), steamships with smoke, the blue-and-white ferry on the right, horses near the waterline, and the absence of text. Notably, NONE of the nine responses recognize the image as a Where's Waldo puzzle or attempt to locate Waldo, Odlaw, or Wizard Whitebeard — the central purpose of the image — so all score in the 5-7 range. Only rep2@t0.4 correctly identifies the far-right vessel as a hovercraft with fans on top (a GT-verified detail). Two clear hallucinations were flagged: cacti on the beach (rep0@t0.1) and a horse-drawn carriage in the water (rep1@t0.7, which GT explicitly excludes). Five of nine responses are truncated mid-sentence. Higher temperature (0.7) did not improve quality and introduced the carriage hallucination; the best responses came from t0.4."
+}

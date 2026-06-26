@@ -1,0 +1,138 @@
+{
+  "image": "ocr-test-4.png",
+  "judgments": {
+    "G4-E4B|t0.1|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Registry name, Tel 928 537 272, Edificio Hubara 35660, form title, all four fincas (32840/32885/32803/32871), and titular DNI 50183525D all correct",
+        "GDPR section and form structure captured fully"
+      ],
+      "key_misses": [
+        "Fax wrong (928 537 269 vs 928 866 469); website domain misread as registrodelapropiedad.org (header prints registradores.org)",
+        "Address street misread as 'Bajo Llano' (is 'Bajo Blanco'); Nº Borrador 712 (is 42) and Nº Entrada 916.56 (is 11656)",
+        "Applicant surname 'Almirana Moropag' (is Almiñana Moropsa); DNI '2041185 C' (is 20041185C); email joan.samoba@gmail.com (is joansnobc@gmail.com); registry email corralejo@registrodelapropriedad.org omitted entirely"
+      ],
+      "hallucinations": [],
+      "justification": "Strong structural capture with all fincas correct, but multiple OCR misreads across header, numbers, names, and emails plus omission of the registry email."
+    },
+    "G4-E4B|t0.1|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Includes 'Isla de Fuerteventura', correct address street 'Bajo Blanco', Tel 928 537 272, all four fincas, titular DNI",
+        "Cleaner field separation (Nombre/Apellidos split)"
+      ],
+      "key_misses": [
+        "Fax '928 566 469' (is 928 866 469); website domain misread (registrodelapropiedad.org vs registradores.org)",
+        "Nº Borrador 712 (is 42), Nº Entrada 916.56 (is 11656); applicant surname 'Almiñana Moropag' (is Moropsa); DNI '2041185 C' (is 20041185C)",
+        "Address 'Estevet Martín 4-19' (is n°19); email joan.samba@gmail.com (is joansnobc@gmail.com); registry email omitted"
+      ],
+      "hallucinations": [],
+      "justification": "Better than rep0 on address/island, but same pattern of OCR misreads on numbers, surname, DNI, and applicant email; registry email still missing."
+    },
+    "G4-E4B|t0.1|rep2": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Tel correct, 'Bajo Blanco' address correct, all four fincas, titular DNI correct",
+        "Reordered checkbox options with a-e labels captured"
+      ],
+      "key_misses": [
+        "Invented 'Calle de la Oliva, 1' line not in header; fax '928 566 469' (is 928 866 469); website misread (registrodelapropiedad.org)",
+        "Nº Borrador 712 (is 42), Nº Entrada 916.56 (is 11656); applicant 'Almirana Moropag' (is Almiñana Moropsa); DNI '2041185 C' (is 20041185C)",
+        "Address '4-19' (is n°19); email joan.samba@gmail.com (is joansnobc@gmail.com); registry email omitted"
+      ],
+      "hallucinations": [],
+      "justification": "All fincas and titular correct, but inserts a fabricated 'Calle de la Oliva, 1' header line plus the usual cluster of OCR misreads."
+    },
+    "G4-E4B|t0.4|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Includes 'Isla de Fuerteventura', 'Bajo Blanco' address correct, Tel correct, all four fincas, titular DNI correct",
+        "Full GDPR section captured accurately"
+      ],
+      "key_misses": [
+        "Fax '928 536 469' (is 928 866 469); website misread (registrodelapropiedad.org vs registradores.org)",
+        "Nº Borrador 712 (is 42), Nº Entrada 916.56 (is 11656); applicant 'Almirana Moropag' (is Almiñana Moropsa); DNI '2041185 C' (is 20041185C)",
+        "Address '4-19' (is n°19); email joan.samba@gmail.com (is joansnobc@gmail.com); registry email omitted"
+      ],
+      "hallucinations": [],
+      "justification": "Solid header/address/fincas capture with the same recurring OCR errors on fax, draft/entry numbers, surname, DNI, and applicant email."
+    },
+    "G4-E4B|t0.4|rep1": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Tel and fax-prefix area correct, all four fincas, titular DNI correct, full GDPR section"
+      ],
+      "key_misses": [
+        "Address street misread 'Bajo de la Marina' (is Bajo Blanco); website misread (registrodelapropiedad.org); 'EXPLONE' typo for EXPONE",
+        "Nº Borrador 712 (is 42), Nº Entrada 916.56 (is 11656); applicant 'Almirana Moropag'; DNI '2041185 C' (is 20041185C); email joan.samba@gmail.com (is joansnobc@gmail.com)",
+        "Checkbox option (a) text truncated '...solvencia o' (drops 'responsabilidad'); registry email omitted"
+      ],
+      "hallucinations": [],
+      "justification": "Captures fincas and structure but invents a wrong street name ('Bajo de la Marina') and truncates a checkbox line on top of the standard OCR error cluster."
+    },
+    "G4-E4B|t0.4|rep2": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All four fincas correct, titular DNI correct, full GDPR section, form structure intact"
+      ],
+      "key_misses": [
+        "Address street 'Bajo Llano' (is Bajo Blanco); fax '928 536 469' (is 928 866 469); website misread (registrodelapropiedad.org)",
+        "Nº Borrador 712 (is 42), Nº Entrada 91656 (is 11656); applicant 'Almirana Moropaj' (is Almiñana Moropsa); DNI '2041185 C' (is 20041185C)",
+        "Email joan.samba@gmail.com (is joansnobc@gmail.com); registry email omitted"
+      ],
+      "hallucinations": [],
+      "justification": "All fincas and titular right, but wrong street name plus the recurring number/surname/DNI/email misreads; no fabricated content."
+    },
+    "G4-E4B|t0.7|rep0": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "'Bajo Blanco' address correct, Tel correct, all four fincas, titular DNI correct"
+      ],
+      "key_misses": [
+        "Fax '928 566 469' (is 928 866 469); 'EXPONÉ' with wrong accent; website misread (registrodelapropiedad.org vs registradores.org)",
+        "Nº Borrador 712 (is 42), Nº Entrada 916.56 (is 11656); applicant 'Almirana Moropag' (is Almiñana Moropsa); DNI '2041185 C' (is 20041185C)",
+        "Titular surname 'Muñez Areñas' (is Muñoz Archanas); email joan.samoba@gmail.com (is joansnobc@gmail.com); registry email omitted"
+      ],
+      "hallucinations": [],
+      "justification": "Address and fincas correct, but adds a titular-name misread ('Muñez Areñas') on top of the standard OCR error set; no invented content."
+    },
+    "G4-E4B|t0.7|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "'Bajo Blanco' address correct, Tel and fax-prefix correct, all four fincas, titular 'Adelina Muñoz Aranas' close, DNI correct"
+      ],
+      "key_misses": [
+        "Fax '928 566 469' (is 928 866 469); website misread (registrodelapropiedad.org vs registradores.org); 'INFORMACIÓN BÁsICA' typo",
+        "Nº Borrador 712 (is 42), Nº Entrada 916,56 (is 11656); applicant 'Almirana Moropag' (is Almiñana Moropsa); DNI '2041185 C' (is 20041185C)",
+        "Email joanapora@gmail.com (is joansnobc@gmail.com); registry email omitted"
+      ],
+      "hallucinations": [],
+      "justification": "Clean header/address with all fincas correct, but the usual number/surname/DNI/applicant-email misreads; registry email missing."
+    },
+    "G4-E4B|t0.7|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Only response to capture the registradora's name 'Dña María Isabel Cabra Rojo' and accented 'Estévez'; 'Bajo Blanco' address, Tel, all four fincas, and titular DNI correct",
+        "Roman-numeral list markers (I°/II°/III°) and GDPR section captured"
+      ],
+      "key_misses": [
+        "Registry name misspelled 'Corralajo' (is Corralejo); fax '928 566 469' (is 928 866 469); website misread (registrodelapropiedad.org vs registradores.org)",
+        "Nº Borrador 712 (is 42), Nº Entrada 916.56 (is 11656); applicant 'Almíraña Moropas' (is Almiñana Moropsa); DNI '2041185 C' (is 20041185C); address '4-19' (is n°19)",
+        "Email joansamoba@gmail.com (is joansnobc@gmail.com); registry email corralejo@registrodelapropriedad.org omitted"
+      ],
+      "hallucinations": [],
+      "justification": "Best header detail (captures registradora's name others drop) but still carries the standard OCR error cluster on numbers, surname, DNI, and emails."
+    }
+  },
+  "ranking": ["G4-E4B|t0.1|rep1", "G4-E4B|t0.4|rep0", "G4-E4B|t0.7|rep1", "G4-E4B|t0.1|rep0", "G4-E4B|t0.7|rep0", "G4-E4B|t0.1|rep2", "G4-E4B|t0.4|rep1", "G4-E4B|t0.4|rep2", "G4-E4B|t0.7|rep2"],
+  "notes": "All 9 responses share the same systematic OCR error signature: website misread as 'registrodelapropiedad.org' (header actually prints 'www.registradores.org'), Nº Borrador 712 (is 42), Nº Entrada 916.56/91656 (is 11656), applicant surname 'Almirana/Almiñana Moropag/Moropaj' (is Almiñana Moropsa), DNI '2041185 C' (is 20041185C), address '4-19' (is n°19), and applicant email joan.samoba/samba/apora@gmail.com (is joansnobc@gmail.com). None print the registry email corralejo@registrodelapropriedad.org. No genuinely fabricated content in any response — all errors are visible-text misreads (key_misses), so hallucinations are empty throughout. The only insertions of not-present text are rep2/t0.1 ('Calle de la Oliva, 1') and rep1/t0.4 ('Bajo de la Marina' street), which are misattributions of visible address lines rather than pure inventions; classified as key_misses per the misread rule."
+}

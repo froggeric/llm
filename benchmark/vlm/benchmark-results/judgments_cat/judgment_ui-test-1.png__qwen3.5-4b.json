@@ -1,0 +1,143 @@
+{
+  "image": "ui-test-1.png",
+  "judgments": {
+    "Q3.5-4B|t0.1|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": ["Correct 3-column layout", "Accurate left/middle/right item enumeration including providers", "Correct toggle (ON), version v0.8.2, Language English, Reset red"],
+      "key_misses": ["Omits ⌘N/⌘P/⌘K shortcuts (GT confirms shown)", "Omits extra top-right icons (download/grid/split-view)", "Says 'Check for Updates' disabled/grayed (GT: enabled)", "Misses App Data and Jan CLI paths"],
+      "hallucinations": [],
+      "justification": "Thorough, accurate enumeration but misses keyboard shortcuts, top-right icons, file paths, and misreads the Check-for-Updates button state."
+    },
+    "Q3.5-4B|t0.1|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": ["Notes traffic lights AND download/grid icons", "Full provider + settings enumeration", "Correct toggle ON, red Reset, English"],
+      "key_misses": ["Omits ⌘N/⌘P/⌘K shortcuts", "Marks Change Location/Show in Finder/Open Logs/Uninstall as disabled/grayed (GT: enabled)", "Misses App Data/Jan CLI paths"],
+      "hallucinations": [],
+      "justification": "One of few to note the extra top-right icons, but over-reports buttons as disabled and omits keyboard shortcuts and paths."
+    },
+    "Q3.5-4B|t0.1|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": ["Notes traffic lights + download/grid icons", "Full provider/settings enumeration", "Correctly captures App Data path and (slightly misread) Jan CLI path"],
+      "key_misses": ["Omits ⌘N/⌘P/⌘K shortcuts", "Jan CLI path '/Users/frederic/local/bin/jan' missing dot before 'local' (misread)"],
+      "hallucinations": [],
+      "justification": "Best of the t0.1 set — captures paths and top-right icons; only minor shortcut omission and a path-character misread."
+    },
+    "Q3.5-4B|t0.1|rep3": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": ["Mentions top bar traffic lights + download/upload icons", "Complete provider list with nesting", "Captures App Data path verbatim"],
+      "key_misses": ["Omits ⌘N/⌘P/⌘K shortcuts", "Says buttons inactive/grayed (GT: enabled)", "Jan CLI path misread as '/Users/frederic/local/bin/jan' (missing dot)"],
+      "hallucinations": [],
+      "justification": "Strong coverage incl. paths and top-right icons, but marks enabled buttons as inactive and omits shortcuts."
+    },
+    "Q3.5-4B|t0.1|rep4": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": ["Full provider/settings enumeration", "Captures App Data and Jan CLI paths (Jan CLI slightly misread)", "Correct toggle ON, Reset red"],
+      "key_misses": ["Omits ⌘N/⌘P/⌘K shortcuts and top-right icons", "Marks Check for Updates/Change Location/Show in Finder/Open Logs/Uninstall as disabled (GT: enabled)", "Jan CLI path '/Users/frederic/local/bin/jan' missing dot"],
+      "hallucinations": [],
+      "justification": "Good path capture but over-reports disabled buttons and omits shortcuts and top-right icons."
+    },
+    "Q3.5-4B|t0.4|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": ["Complete left/middle/right enumeration with provider nesting", "Correct toggle ON, English, version v0.8.2", "Notes warning text under Reset"],
+      "key_misses": ["Omits ⌘N/⌘P/⌘K shortcuts (only generic 'N for New Chat' note)", "Omits top-right icons", "Misses App Data/Jan CLI paths"],
+      "hallucinations": [],
+      "justification": "Clean, accurate enumeration but light on shortcuts, top-right icons, and file paths."
+    },
+    "Q3.5-4B|t0.4|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": ["Notes macOS traffic lights", "Full nested provider/settings list", "Correct toggle ON, version v0.8.2, English"],
+      "key_misses": ["Omits ⌘N/⌘P/⌘K shortcuts", "Omits top-right download/grid icons", "Misses App Data/Jan CLI paths"],
+      "hallucinations": [],
+      "justification": "Well-structured and accurate but omits shortcuts, top-right icons, and file paths."
+    },
+    "Q3.5-4B|t0.4|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": ["Three-column layout correct", "Full provider/settings enumeration", "Correct version v0.8.2, toggle enabled, English"],
+      "key_misses": ["Omits ⌘N/⌘P/⌘K shortcuts and top-right icons", "Marks all action buttons 'Active state' generically (no real state detail)", "Misses App Data/Jan CLI paths"],
+      "hallucinations": [],
+      "justification": "Accurate but generic; misses shortcuts, top-right icons, paths, and gives vague button states."
+    },
+    "Q3.5-4B|t0.4|rep3": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": ["Notes traffic lights", "Full nested provider/settings list", "Correct toggle ON, red Reset, English"],
+      "key_misses": ["Omits ⌘N/⌘P/⌘K shortcuts", "Omits top-right download/grid icons", "Says buttons disabled/grayed (GT: enabled)", "Misses App Data/Jan CLI paths", "Says Language dropdown 'is open' (not visible as open)"],
+      "hallucinations": [],
+      "justification": "Good enumeration but over-reports disabled state, claims dropdown is open, and omits shortcuts/icons/paths."
+    },
+    "Q3.5-4B|t0.4|rep4": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": ["Full provider/settings enumeration", "Notes Reset warning text", "Correct toggle enabled, version v0.8.2"],
+      "key_misses": ["Omits ⌘N/⌘P/⌘K shortcuts and top-right icons", "Marks Check for Updates disabled (GT: enabled)", "Misses App Data/Jan CLI paths"],
+      "hallucinations": [],
+      "justification": "Accurate listing but light on shortcuts, top-right icons, paths; misreads Check-for-Updates state."
+    },
+    "Q3.5-4B|t0.7|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["Notes top bar traffic lights + download/grid icons", "Full provider/settings enumeration", "Captures App Data path and Jan CLI path (Jan CLI misread)", "Correct toggle ON, Reset red, English"],
+      "key_misses": ["Omits ⌘N/⌘P/⌘K shortcuts", "Jan CLI path '/Users/frederic/local/bin/jan' missing dot", "Says Check for Updates enabled (correct) but adds speculative button purposes"],
+      "hallucinations": [],
+      "justification": "Most complete response — captures top-right icons, paths, and correct button states; only minor shortcut omission and a path misread."
+    },
+    "Q3.5-4B|t0.7|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": ["Notes macOS traffic lights + window title 'Settings'", "Full nested provider/settings list with '+' noted", "Captures App Data path verbatim and Jan CLI description"],
+      "key_misses": ["Omits ⌘N/⌘P/⌘K shortcuts", "Omits top-right download/grid icons", "Says Check for Updates disabled (GT: enabled)"],
+      "hallucinations": [],
+      "justification": "Detailed and accurate with paths, but omits shortcuts/top-right icons and misreads Check-for-Updates state."
+    },
+    "Q3.5-4B|t0.7|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": ["Three-column layout correct", "General settings list correct", "Captures App Data path and Jan CLI path (misread)"],
+      "key_misses": ["Truncated provider list (stops at Groq, omits xAI)", "Misspells 'LLaMA.cpp' (GT: Llama.cpp)", "Omits ⌘N/⌘P/⌘K shortcuts, top-right icons, INTEGRATIONS/Experimental tag"],
+      "hallucinations": [],
+      "justification": "Partial — truncates the provider list, misspells Llama.cpp, and drops several sections; weakest coverage of the set."
+    },
+    "Q3.5-4B|t0.7|rep3": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": ["Notes traffic lights, full provider/settings enumeration", "Captures App Data path, Jan CLI path verbatim including '.local'", "Correct toggle ON, Reset red, English"],
+      "key_misses": ["Omits ⌘N/⌘P/⌘K shortcuts", "Misspells last provider as 'vAI' (truncation misread of xAI)", "Misspells App Data path 'frideric' (misread)"],
+      "hallucinations": [],
+      "justification": "Strong detail incl. correct Jan CLI '.local' path and warning text, but 'vAI' and 'frideric' misreads plus shortcut omission."
+    },
+    "Q3.5-4B|t0.7|rep4": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": ["Full provider/settings enumeration with section headers", "Correct toggle ON, version v0.8.2, Reset red, English", "Notes Experimental label"],
+      "key_misses": ["Omits ⌘N/⌘P/⌘K shortcuts and top-right icons", "Marks Check for Updates/Change Location/Show in Finder/Open Logs/Uninstall disabled (GT: enabled)", "Misses App Data/Jan CLI paths"],
+      "hallucinations": [],
+      "justification": "Complete listing and correct toggle, but over-reports disabled buttons and omits shortcuts, top-right icons, and paths."
+    }
+  },
+  "ranking": [
+    "Q3.5-4B|t0.7|rep0",
+    "Q3.5-4B|t0.1|rep2",
+    "Q3.5-4B|t0.7|rep3",
+    "Q3.5-4B|t0.1|rep3",
+    "Q3.5-4B|t0.7|rep1",
+    "Q3.5-4B|t0.1|rep1",
+    "Q3.5-4B|t0.1|rep0",
+    "Q3.5-4B|t0.1|rep4",
+    "Q3.5-4B|t0.4|rep0",
+    "Q3.5-4B|t0.4|rep1",
+    "Q3.5-4B|t0.4|rep3",
+    "Q3.5-4B|t0.4|rep4",
+    "Q3.5-4B|t0.4|rep2",
+    "Q3.5-4B|t0.7|rep4",
+    "Q3.5-4B|t0.7|rep2"
+  ],
+  "notes": "All 15 responses are coherent and largely accurate; no fabrications (per strict rules, the disabled-button claims, path misreads like 'frederic/local' missing dot, 'vAI', and 'LLaMA.cpp' are key_misses, not hallucinations). Recurring weaknesses: only ~4 reps mention the extra top-right icons, none report the ⌘N/⌘P/⌘K shortcuts, several misread enabled buttons as disabled, and path capture is inconsistent. t0.7|rep0 is clearly strongest; t0.7|rep2 is the weakest (truncated provider list, misspelling)."
+}

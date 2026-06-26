@@ -1,0 +1,70 @@
+{
+  "image": "03_error_trace.png",
+  "image_path": "test-images/03_error_trace.png",
+  "ground_truth": "Terminal screenshot. Command `$ python app.py` triggers a chain of errors:\n- **psycopg2.OperationalError**: connection to server at `\"db.internal\"` (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user `\"app\"`\n- During handling, a secondary **ConnectionError** occurs: \"Failed to connect: password authentication failed for user 'app'\"\n- Stack trace references `/Users/alice/app/main.py` line 42 (`db = connect(DB_URL)`) and `/Users/alice/app/db.py` line 18 (`raise ConnectionError(...)`)\n- Process exits with code 1\n\n---",
+  "responses": [
+    {
+      "key": "GLM-9B|t0.1|rep0",
+      "model": "GLM-9B",
+      "temp": 0.1,
+      "rep": 0,
+      "content": "(1) Error type: ConnectionError  \n(2) Root-cause message verbatim: password authentication failed for user \"app\"  \n(3) Most relevant file:line: `/Users/alice/app/db.py`, line 18  \n(4) One-sentence likely cause: Incorrect or missing password for the \"app\" database user caused the connection failure."
+    },
+    {
+      "key": "GLM-9B|t0.1|rep1",
+      "model": "GLM-9B",
+      "temp": 0.1,
+      "rep": 1,
+      "content": "(1) ConnectionError  \n(2) connection to server at \"db.internal\" (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user \"app\"  \n(3) /Users/alice/app/db.py, line 18  \n(4) Password authentication failed for the database user \"app\"."
+    },
+    {
+      "key": "GLM-9B|t0.1|rep2",
+      "model": "GLM-9B",
+      "temp": 0.1,
+      "rep": 2,
+      "content": "(1) `ConnectionError`  \n(2) `password authentication failed for user \"app\"`  \n(3) `File \"/Users/alice/app/db.py\", line 18, in connect`  \n(4) Incorrect or missing password for database user \"app\" caused authentication failure during connection."
+    },
+    {
+      "key": "GLM-9B|t0.4|rep0",
+      "model": "GLM-9B",
+      "temp": 0.4,
+      "rep": 0,
+      "content": "(1) ConnectionError  \n(2) connection to server at \"db.internal\" (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user \"app\"  \n(3) `/Users/alice/app/db.py`: line 18  \n(4) Incorrect password for the \"app\" user when attempting to connect to the PostgreSQL server."
+    },
+    {
+      "key": "GLM-9B|t0.4|rep1",
+      "model": "GLM-9B",
+      "temp": 0.4,
+      "rep": 1,
+      "content": "(1) `psycopg2.OperationalError`\n(2) `connection to server at \"db.internal\" (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user \"app\"`\n(3) `/Users/alice/app/db.py`, line 18\n(4) PostgreSQL password authentication failed for the \"app\" user during database connection."
+    },
+    {
+      "key": "GLM-9B|t0.4|rep2",
+      "model": "GLM-9B",
+      "temp": 0.4,
+      "rep": 2,
+      "content": "(1) ConnectionError  \n(2) connection to server at \"db.internal\" (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user \"app\"  \n(3) /Users/alice/app/db.py:18  \n(4) Database connection failed because password authentication for user \"app\" failed."
+    },
+    {
+      "key": "GLM-9B|t0.7|rep0",
+      "model": "GLM-9B",
+      "temp": 0.7,
+      "rep": 0,
+      "content": "(1) ConnectionError  \n(2) connection to server at \"db.internal\" (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user \"app\"  \n(3) `/Users/alice/app/db.py`, line 18  \n(4) The database user \"app\" has an invalid or missing password, preventing password authentication."
+    },
+    {
+      "key": "GLM-9B|t0.7|rep1",
+      "model": "GLM-9B",
+      "temp": 0.7,
+      "rep": 1,
+      "content": "(1) psycopg2.OperationalError\n(2) password authentication failed for user \"app\"\n(3) /Users/alice/app/db.py, line 18\n(4) The database password for user \"app\" is incorrect, preventing connection."
+    },
+    {
+      "key": "GLM-9B|t0.7|rep2",
+      "model": "GLM-9B",
+      "temp": 0.7,
+      "rep": 2,
+      "content": "(1) `ConnectionError` (from `psycopg2`)\n(2) `connection to server at \"db.internal\" (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user \"app\"`\n(3) `/Users/alice/app/db.py`, line 18\n(4) The database connection attempt failed because the password for user \"app\" was incorrect."
+    }
+  ]
+}

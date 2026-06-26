@@ -1,0 +1,178 @@
+{
+  "image": "ui-test-1.png",
+  "judgments": {
+    "Q3VL-8B-Q8|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Complete verbatim transcription of all sidebar, settings, and provider entries including full button descriptions and paths",
+        "Correctly states Check for Updates button is enabled and Automatic Update Check toggle is ON",
+        "Accurately captures App Version v0.8.2, Jan CLI path, and full Reset warning text"
+      ],
+      "key_misses": [
+        "Omits the ⌘N/⌘P/⌘K keyboard shortcuts shown next to New Chat/Projects/Search",
+        "Layout description does not explicitly note the top-right extra icons (download/grid/split-view) or traffic-light dots",
+        "Lists all visible providers including Groq but omits x.AI/xAI as the last entry"
+      ],
+      "hallucinations": [],
+      "justification": "Thorough and accurate verbatim transcription with correct button states; loses points for omitting keyboard shortcuts, the top-right extra icons, and the truncated x.AI entry."
+    },
+    "Q3VL-8B-Q8|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Notes the top-right Download and window-resize icons and top-left traffic light buttons",
+        "Full verbatim transcription of sidebar, settings categories, providers, and right-panel content",
+        "Correct Automatic Update Check ON (orange) and red Reset button"
+      ],
+      "key_misses": [
+        "States Check for Updates button is Disabled (grayed out) — actually enabled",
+        "Omits the ⌘N/⌘P/⌘K keyboard shortcuts",
+        "Omits x.AI/xAI as the final truncated provider entry"
+      ],
+      "hallucinations": [],
+      "justification": "Strong coverage including the top-right icons, but incorrectly reports Check for Updates as disabled and misses the keyboard shortcuts and x.AI entry."
+    },
+    "Q3VL-8B-Q8|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Notes top-left traffic light buttons and top-right Download/window-resize icons",
+        "Complete verbatim transcription of all labels and full button/path descriptions",
+        "Correct Check for Updates enabled and Automatic Update Check ON (red/orange)"
+      ],
+      "key_misses": [
+        "Omits the ⌘N/⌘P/⌘K keyboard shortcuts",
+        "Omits x.AI/xAI as the final provider entry",
+        "Does not call out colored per-provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate transcription with correct button states and top-right icons noted; loses points for omitting keyboard shortcuts and the x.AI entry."
+    },
+    "Q3VL-8B-Q8|rep3": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Notes top-left traffic light buttons and top-right Download/window-resize icons",
+        "Complete verbatim transcription of all labels, paths, and full Reset warning",
+        "Correct Check for Updates enabled, Automatic Update Check ON, red Reset button"
+      ],
+      "key_misses": [
+        "Omits the ⌘N/⌘P/⌘K keyboard shortcuts",
+        "Omits x.AI/xAI as the final provider entry",
+        "Does not note colored per-provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and thorough with correct button states; loses points for omitting keyboard shortcuts and the x.AI entry."
+    },
+    "Q3VL-8B-Q8|rep4": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Notes top-left traffic light buttons and top-right Download/window-resize icons",
+        "Complete verbatim transcription of all labels, paths, and full Reset warning",
+        "Correct Check for Updates enabled, Automatic Update Check ON, red Reset button"
+      ],
+      "key_misses": [
+        "Omits the ⌘N/⌘P/⌘K keyboard shortcuts",
+        "Omits x.AI/xAI as the final provider entry",
+        "Does not note colored per-provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and thorough with correct button states; loses points for omitting keyboard shortcuts and the x.AI entry."
+    },
+    "Q3.5-4B|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies the three-column layout and lists the Experimental INTEGRATIONS tag",
+        "Includes xAI as the last provider entry and notes the App Version v0.8.2",
+        "Correct Automatic Update Check toggle ON (orange) and Reset button active/red"
+      ],
+      "key_misses": [
+        "Reports Check for Updates, Change Location, Show in Finder, Open Logs, and Uninstall buttons all as DISABLED/grayed out — they are actually enabled",
+        "Omits the ⌘N/⌘P/⌘K keyboard shortcuts",
+        "Describes sidebar Download/Grid icons as top-left rather than top-right"
+      ],
+      "hallucinations": [],
+      "justification": "Captures the layout, xAI entry, and toggle/reset state correctly, but systematically misreads five buttons as disabled when they are enabled — a significant accuracy failure on interactive states."
+    },
+    "Q3.5-4B|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly captures the three-column layout and full middle-sidebar category list including LOCAL/REMOTE split",
+        "Includes xAI as the last provider entry and correct App Version v0.8.2",
+        "Correct Automatic Update Check ON and Reset active/red"
+      ],
+      "key_misses": [
+        "Reports all buttons (Check for Updates, Change Location, Show in Finder, Open Logs, Uninstall) as Default/Inactive rather than enabled",
+        "Omits the ⌘N/⌘P/⌘K keyboard shortcuts",
+        "Places Download/Grid icons top-left rather than top-right"
+      ],
+      "hallucinations": [],
+      "justification": "Good structural coverage and includes xAI, but misjudges button states as inactive and omits keyboard shortcuts; no fabrications."
+    },
+    "Q3.5-4B|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly captures the ⌘N/⌘P/⌘K keyboard shortcuts next to New Chat/Projects/Search",
+        "Includes xAI as the last provider entry and full App Data path",
+        "Correct Automatic Update Check ON (orange/red) and Reset active/red"
+      ],
+      "key_misses": [
+        "Reports Check for Updates, Change Location, Show in Finder, Open Logs, and Uninstall buttons all as Inactive/grayed out — they are enabled",
+        "Places sidebar Download/Grid icons top-left rather than top-right",
+        "Does not note the colored per-provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Notably captures the keyboard shortcuts and xAI entry, but systematically misreads five enabled buttons as disabled/inactive — a major state-reading failure."
+    },
+    "Q3.5-4B|rep3": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly captures the ⌘N/⌘P/⌘K keyboard shortcuts and includes xAI as last provider",
+        "Lists full App Data path and both button paths in Advanced section",
+        "Correct Automatic Update Check ON and Reset active/red"
+      ],
+      "key_misses": [
+        "Reports Check for Updates, Change Location, Show in Finder, Open Logs, and Uninstall buttons as Disabled/Inactive — they are enabled",
+        "Misstates Jan CLI path as /Users/frederic/local/bin/jan (drops the dot before local — /Users/frederic/.local/bin/jan)",
+        "Places sidebar Download/Grid icons top-left rather than top-right"
+      ],
+      "hallucinations": [],
+      "justification": "Good on shortcuts, xAI, and paths, but misreads five button states as disabled and drops a dot in the Jan CLI path; no fabrications."
+    },
+    "Q3.5-4B|rep4": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct three-column layout, full middle-sidebar list, and includes xAI as last provider",
+        "Correct App Version v0.8.2, Automatic Update Check ON, and Reset active/red with full warning text",
+        "Lists App Data path and all button labels accurately"
+      ],
+      "key_misses": [
+        "Reports Check for Updates, Change Location, Show in Finder, Open Logs, and Uninstall buttons as Disabled/Grayed out — they are enabled",
+        "Omits the ⌘N/⌘P/⌘K keyboard shortcuts",
+        "Places sidebar Download/Grid icons top-left rather than top-right"
+      ],
+      "hallucinations": [],
+      "justification": "Good structural coverage and correct toggle/reset, but systematically misreads five enabled buttons as disabled and omits keyboard shortcuts."
+    }
+  },
+  "ranking": [
+    "Q3VL-8B-Q8|rep0",
+    "Q3VL-8B-Q8|rep2",
+    "Q3VL-8B-Q8|rep3",
+    "Q3VL-8B-Q8|rep4",
+    "Q3VL-8B-Q8|rep1",
+    "Q3.5-4B|rep1",
+    "Q3.5-4B|rep2",
+    "Q3.5-4B|rep3",
+    "Q3.5-4B|rep4",
+    "Q3.5-4B|rep0"
+  ],
+  "notes": "Q3VL-8B-Q8 reps are uniformly stronger: they get button states right (Check for Updates enabled, Reset red) but consistently omit the ⌘N/⌘P/⌘K shortcuts and the truncated x.AI entry. Q3.5-4B reps are more structurally complete (most include xAI and two reps correctly note the keyboard shortcuts) but systematically misreport the enabled buttons (Change Location / Show in Finder / Open Logs / Uninstall / Check for Updates) as disabled/grayed-out — a consistent state-reading weakness rather than hallucination. No response fabricated content; all errors are either omissions or visible-element misreads (key_misses per judge rules)."
+}

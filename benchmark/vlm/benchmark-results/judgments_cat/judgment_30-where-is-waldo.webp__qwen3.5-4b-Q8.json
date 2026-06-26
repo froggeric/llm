@@ -1,0 +1,173 @@
+{
+  "image": "30-where-is-waldo.webp",
+  "judgments": {
+    "Q3.5-4B-Q8|t0.1|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies dense Waldo-style crowded sunny beach scene",
+        "Accurate core elements: yellow sand, blue sea, boats (sailboats with pink/white/yellow sails, steamships with smoke), striped beach huts (blue/white and red/white), striped umbrellas (red/white, blue/white, green/white)",
+        "Correctly states no legible text",
+        "Notes distant landmasses on horizon (matches GT), horses near water (matches GT), human pyramid in water (matches GT)"
+      ],
+      "key_misses": [
+        "Describes the far-right blue-and-white hovercraft as a 'floating bar or restaurant' rather than a hovercraft (misreads a real object)",
+        "Does not enumerate or identify Waldo/Odlaw/Wizard Whitebeard"
+      ],
+      "hallucinations": [],
+      "justification": "Strong, accurate scene description with most verified elements present and no fabricated impossible objects; only misses the hovercraft identity and the hidden characters."
+    },
+    "Q3.5-4B-Q8|t0.1|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies dense Waldo-style beach scene with three horizontal zones",
+        "Accurate boats (sailboats pink/white/yellow, motorboats, steamships with smoke, ferry-like vessel), striped umbrellas and beach huts (red/white, blue/white, green/white)",
+        "Correctly states no legible text",
+        "Mentions volleyball and distant landmasses/hills on horizon (both match GT)"
+      ],
+      "key_misses": [
+        "Calls the far-right hovercraft a 'beach bar/pavilion' and interprets its fan-blades as 'cross symbols' indicating a religious/community space (misreads real object)",
+        "Claims 'hundreds of beach umbrellas' (overcount; GT = 8)",
+        "Claims a 'child blowing a bubble with a balloon' and a 'dog riding a unicycle' as humor (unverified but in dense scene, not flagged as hallucination)",
+        "Does not identify Waldo/Odlaw/Wizard Whitebeard"
+      ],
+      "hallucinations": [],
+      "justification": "Solid core description and correct no-text call, but overcounts umbrellas and misidentifies the hovercraft; no impossible fabrications."
+    },
+    "Q3.5-4B-Q8|t0.1|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies dense Waldo-style beach scene with sky/sea/beach zones",
+        "Accurate boats (sailboats pink/white/yellow, motorboats, rowboats, steamships with smoke, ferry/passenger ship), striped beach huts (blue/white), red-and-white striped tent-like structure (Punch and Judy booth), striped umbrellas",
+        "Correctly states no legible text",
+        "Notes horses near water (matches GT), surfing/bodyboarding"
+      ],
+      "key_misses": [
+        "Calls the far-right hovercraft a 'large white building with blue trim and crosses on its roof — possibly a chapel or pavilion' (misreads real object; the 'crosses' are hovercraft fans)",
+        "Claims 'many [people] are nude or wearing minimal attire' and 'thousands of tiny figures' (overstated)",
+        "Does not identify Waldo/Odlaw/Wizard Whitebeard"
+      ],
+      "hallucinations": [],
+      "justification": "Good scene capture with several verified elements (horses, huts, boats), but mislabels the hovercraft as a chapel and overstates crowd nudity; no impossible inventions."
+    },
+    "Q3.5-4B-Q8|t0.4|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies dense Waldo-style beach scene with three zones",
+        "Accurate boats (sailboats red/white/yellow, motorboats, steamships with smokestacks, inflatable rafts, large blue-and-white vessel), striped umbrellas and beach huts, beach balls, towels",
+        "Correctly states no legible text",
+        "Notes distant landmasses on horizon (matches GT), animals including dogs and horses (matches GT)"
+      ],
+      "key_misses": [
+        "Calls the far-right hovercraft a 'boat with crosses on its roof (possibly a funeral or religious vessel)' (misreads real object; fans mistaken for crosses)",
+        "Adds 'donkeys' and 'birds flying overhead' (donkeys unverified, but dense scene; not flagged as hallucination)",
+        "Does not identify Waldo/Odlaw/Wizard Whitebeard"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and detailed scene with many verified elements (horses, landmasses, boats, huts); the only notable miss is misreading the hovercraft's fans as religious crosses."
+    },
+    "Q3.5-4B-Q8|t0.4|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies dense Waldo-style beach scene from elevated perspective",
+        "Accurate boats (sailboats yellow/white/pink, motorboats, three steamships with smoke, lifeboats), striped umbrellas and beach huts (blue/white, red/white), red-and-white striped beach balls, surfers",
+        "Correctly states no legible text",
+        "Notes faint landmasses on horizon (matches GT)"
+      ],
+      "key_misses": [
+        "Calls the far-right hovercraft a 'large white building with blue trim and multiple windows — possibly a lifeguard station or concession stand' with 'three crosses on its roof' (misreads real object)",
+        "Claims 'three prominent steamships' (GT = 3 steamships — acceptable count) but also 'small red lifeboats' (unverified; dense scene, not flagged)",
+        "Does not identify Waldo/Odlaw/Wizard Whitebeard",
+        "Says 'possibly horses near the water's edge' (hedged correctly; GT confirms 6 horses)"
+      ],
+      "hallucinations": [],
+      "justification": "Detailed and largely accurate description including correct steamship count and landmasses; main miss is misreading the hovercraft as a land building with crosses."
+    },
+    "Q3.5-4B-Q8|t0.4|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies dense beach scene with sky/sea/shoreline/beach zones",
+        "Accurate boats (sailboats pink/white/yellow with red flag, motorboats, steamships with smoke, large white-and-blue ferry/tour boat on right), striped beach huts ('chicanees'), striped umbrellas (red/white, blue/white, green/white)",
+        "Correctly states no legible text",
+        "Notes human pyramid near waterline (matches GT)"
+      ],
+      "key_misses": [
+        "Calls the far-right hovercraft a 'large white and blue ferry or tour boat docked on the far right shore' (closest of the set, but still misidentifies it as a ferry, and claims it is docked on shore)",
+        "Invents specific characters: 'child dressed as a pirate', 'someone wearing a top hat', 'person juggling' (dense scene; not flagged as hallucination)",
+        "Does not identify Waldo/Odlaw/Wizard Whitebeard"
+      ],
+      "hallucinations": [],
+      "justification": "Strong scene capture with human pyramid and accurate boats/huts; the hovercraft is misread as a docked ferry, and several invented minor characters are in-bounds for a dense scene."
+    },
+    "Q3.5-4B-Q8|t0.7|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies dense Waldo-style beach scene with three zones",
+        "Accurate boats (sailboats including yellow-sailed boat, motorboats, steamship with tall smokestack), striped umbrellas and beach huts (blue/white, red/white), red-and-white striped beach ball",
+        "Correctly states no legible text",
+        "Notes horses along the shore (matches GT) and distant steamship on horizon"
+      ],
+      "key_misses": [
+        "Calls the far-right hovercraft a 'large blue-and-white building resembling a shipyard or service station' (misreads real object)",
+        "Estimates '800-1000 individual figures' (overcount but plausible ballpark for dense scene)",
+        "Invents 'person wearing a hat shaped like a crown', 'child dressed as a superhero' (dense scene; not flagged)",
+        "Does not identify Waldo/Odlaw/Wizard Whitebeard"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate core with horses and boats captured; the hovercraft is mislabeled as a shipyard/service station, and a few invented minor details are acceptable in this dense scene."
+    },
+    "Q3.5-4B-Q8|t0.7|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies dense Waldo-style beach scene with three zones",
+        "Accurate boats (sailboats pink/yellow/white, motorboats, small red rowboat, yellow tugboat with smoke, steamships with smokestacks), striped beach huts (blue/white, red/white, green/white), red-and-white striped beach ball, surfers and paddleboarders",
+        "Correctly states no legible text",
+        "Notes horses on the sand and a person riding a horse (matches GT), distant landmasses on horizon (matches GT)"
+      ],
+      "key_misses": [
+        "Calls the far-right hovercraft a 'large white building with blue trim and cross symbols on its roof — possibly a chapel or lifeguard station' (misreads real object; fans mistaken for crosses)",
+        "Adds 'green-and-white' beach huts (GT: only blue-and-white huts exist; the green/white is umbrellas) and 'yellow/red' umbrellas (unverified; dense scene, not flagged)",
+        "Does not identify Waldo/Odlaw/Wizard Whitebeard"
+      ],
+      "hallucinations": [],
+      "justification": "Detailed and mostly accurate with horses, landmasses, and boats captured; main miss is misreading the hovercraft as a chapel/lifeguard station with crosses."
+    },
+    "Q3.5-4B-Q8|t0.7|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies dense hand-drawn Waldo-style beach scene with three zones",
+        "Accurate boats (sailboats pink/white/yellow, motorboats, large ferry/passenger ship on right, smaller rowboats, tugboat), striped beach huts (blue/white, red/white), striped umbrellas (red/white, blue/white, green/white), red-and-white striped beach ball",
+        "Correctly states no legible text",
+        "Notes horses (some being ridden) on the beach (matches GT) and distant landmasses/hills on horizon (matches GT)"
+      ],
+      "key_misses": [
+        "Calls the far-right hovercraft a 'large white building with blue trim and cross symbols on its roof — possibly a chapel or service station' (misreads real object; fans mistaken for crosses)",
+        "Adds 'a band', 'fire hydrant', 'trash can', 'lifeguard tower', 'a donkey', 'child riding a unicycle' (dense scene; not flagged as hallucinations but adds noise)",
+        "Claims 'jumping off docks' (no docks/pier in image per GT)",
+        "Does not identify Waldo/Odlaw/Wizard Whitebeard"
+      ],
+      "hallucinations": [],
+      "justification": "Rich and largely accurate with horses and landmasses captured, but the most cluttered of the set — mislabels the hovercraft and invents docks plus many minor details; no impossible fabrications."
+    }
+  },
+  "ranking": [
+    "Q3.5-4B-Q8|t0.1|rep0",
+    "Q3.5-4B-Q8|t0.4|rep0",
+    "Q3.5-4B-Q8|t0.4|rep2",
+    "Q3.5-4B-Q8|t0.7|rep1",
+    "Q3.5-4B-Q8|t0.1|rep2",
+    "Q3.5-4B-Q8|t0.4|rep1",
+    "Q3.5-4B-Q8|t0.7|rep0",
+    "Q3.5-4B-Q8|t0.1|rep1",
+    "Q3.5-4B-Q8|t0.7|rep2"
+  ],
+  "notes": "All 9 responses correctly identify the core Waldo-style dense beach scene, the multi-color sailboats/steamships, striped beach huts and umbrellas, and correctly state there is no legible text — a strong consistent baseline at this quant/model. The single most common miss across every response is misidentifying the far-right blue-and-white hovercraft (its top lift-fans read as 'crosses' per GT) — typically as a chapel, lifeguard station, beach bar, or ferry. Per dense-scene rules, invented minor characters (juggler, unicycle, donkey, pirate child, etc.) are NOT counted as hallucinations. None of the responses identify the hidden characters (Waldo/Odlaw/Wizard Whitebeard), and none invent a wrong artist, a pier, or a lighthouse. The t0.1/rep0 response edges ahead for most cleanly enumerating verified elements (landmasses, horses, human pyramid) with the least clutter."
+}

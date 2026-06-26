@@ -260,7 +260,7 @@ Where G4-31B does win: **OCR-heavy dense compositions** (spritesheet +3, banner 
 |---|---|---|
 | `read_image` | 8B **3× @0.7 union** (40%) | **MoE 3×** ✓ (50%; finds hovercraft the small models miss) |
 | `extract_text` | 8B **3× @0.4 union** (74%, cleanest) | — MoE 70% < 8B; not better |
-| `describe_ui` | **4B-Q8 3× @0.7 union** (97%, hierarchy; faster than 8B) | MoE 3× (100%) — marginal, needs 22GB |
+| `describe_ui` | **4B-Q8 3× @0.7 union** (~100%, hierarchy; faster than 8B) | MoE 3× (100%) — marginal, needs 22GB |
 | `describe_chart` | 8B **3× @0.7 union** (92%, precise type/ranges) | — MoE ties numbers but mislabels "scatter" |
 | `extract_table` | 8B single (79%, clean) | MoE 3× majority (84%) — marginal |
 | `extract_code` | **4B-Q8 single** (98%, `createAujourdhui` ✓) | 27B — gets the `_` underscore (small models miss it) but writes the apostrophe wrong: **trade-off, not strictly better** |
@@ -286,7 +286,7 @@ Where G4-31B does win: **OCR-heavy dense compositions** (spritesheet +3, banner 
 - **extract_table**: all find all 11 classes, but **3.5-4B-Q4's table is malformed** (collapsed columns) — content score hid it. 8B clean + fast; MoE richer.
 - **describe_ui**: **MoE & 3.5-4B-Q8 are richer than the 8B** — they capture the section hierarchy (INTEGRATIONS / MODEL PROVIDERS, even shortcuts) the 8B flattens into a bare list.
 - **diagnose_error**: **3.5-4B-Q8 genuinely best (92%)** — captures the full exception chain + verbatim message the 8B truncates. The **27B gets the key `main.py:42`** nobody else does.
-- **extract_text**: **8B cleanest** (10/15 fields); **MoE clean + faster** (14.6s). ⚠️ **4B-Q4 hallucinates** (`registrodelaoliva` — invented domain) and **GLM-9B misreads + is slow** (`Corralajo`, 38s) — GLM's OCR-specialist reputation is **CJK-signage-only**, not general OCR.
+- **extract_text**: **8B cleanest** (10/15 fields); **MoE clean + faster** (14.6s). ⚠️ **4B-Q4 misreads the registry domain** (`registrodelaoliva` vs the real printed `corralejo@registrodelapropriedad.org`) and **GLM-9B misreads + is slow** (`Corralajo`, 38s) — GLM's OCR-specialist reputation is **CJK-signage-only**, not general OCR.
 - **describe_chart**: the **8B is the most precise** here — correct "line chart" type + exact ranges; the MoE ties on numbers but *mislabels it "scatter."* (A precision win for the 8B, unlike coverage where the MoE leads.)
 - **describe_diagram**: **even the 27B misses the phantom gRPC line** (all models 9/12) — so the 27B's precision doesn't extend to diagrams, and it's *wasted* here (50s for the 8B's 9s result).
 - **Synthesis**: the **MoE leads on breadth/coverage** (`read_image`, `describe_ui`); the **8B leads on precision** (`describe_chart` type/ranges); the **27B leads only on fine-extraction precision** (`extract_code` underscore, `diagnose_error` file:line); the **4B-Q8 is the quiet all-rounder value** (edges the 8B on code/ui/error, smallest+fastest). No single model wins every tool — the pick now depends on the tool.
@@ -303,7 +303,7 @@ Where G4-31B does win: **OCR-heavy dense compositions** (spritesheet +3, banner 
 
 **Avoid:** G4-12B-Q4 (hallucinates); Q3.5-4B-think (code failure); Q3.5-9B-Q8 (62% at Q8).
 
-**Caveats.** Single-image tools (n=1) are directional only. `compare_images` not evaluated. Latency on M-series.
+**Caveats.** Single-image tools (n=1) are directional only. `compare_images` not evaluated. Latency on M-series. **LLM-judge hallucination counts are soft on dense images** — an owner-verified audit (2026-06-26; see [`REPEAT-REPORT.md`](./REPEAT-REPORT.md)) found judges over-flag hallucinations on Waldo / busy screenshots / dense OCR (punishing correct details they couldn't see, and trusting an incomplete GT). After GT correction + a stricter rubric, the flagged counts collapsed on those images (e.g. `extract_text` 3–13→0–1, `describe_ui` 4–8→0–2). Since the master ranking is 60% judge-weighted, dense-image holistic scores may be marginally depressed by this effect — but it's second-order (deterministic probes + reliability/σ dominate), so no tier or per-tool pick changes.
 
 **Medical caveat** (X-ray/MRI under `read_image`): every variant missed the rib fracture (image 28). Not for clinical use.
 

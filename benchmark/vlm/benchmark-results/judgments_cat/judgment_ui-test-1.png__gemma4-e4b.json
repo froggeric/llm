@@ -1,0 +1,173 @@
+{
+  "image": "ui-test-1.png",
+  "judgments": {
+    "G4-E4B|t0.1|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies three-column layout and full middle-panel settings list",
+        "Accurately lists LOCAL (Llama.cpp, MLX) and REMOTE (OpenAI...Groq, xAI) providers with Groq spelled correctly",
+        "Captures App Version v0.8.2 and Jan CLI path with correct .local"
+      ],
+      "key_misses": [
+        "Omits the keyboard shortcuts (⌘N/⌘P/⌘K) shown next to New Chat/New Projects/Search",
+        "Misses the extra top-right icons and the Experimental tag",
+        "States Automatic Update Check toggle as Off/Disabled when it is ON",
+        "Misses Data Folder section header and Change Location / Show in Finder / Open Logs / Uninstall buttons in component list"
+      ],
+      "hallucinations": [],
+      "justification": "Strong, comprehensive structural description with accurate provider list, but drops the keyboard shortcuts and gets the toggle state wrong."
+    },
+    "G4-E4B|t0.1|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies sidebar + main content split and lists all providers including xAI",
+        "Correctly states Automatic Update Check toggle is ON and Change Location / Show in Finder / Open Logs / Uninstall buttons present",
+        "Includes App Data full path"
+      ],
+      "key_misses": [
+        "Omits the keyboard shortcuts (⌘N/⌘P/⌘K)",
+        "Misses extra top-right icons",
+        "Misspells Groq as 'Grok' (OCR error) and writes 'XAI' instead of x.AI/xAI",
+        "Misreads Jan CLI path as '/Users/frederic/local/bin/jan' (missing the dot before local)"
+      ],
+      "hallucinations": [],
+      "justification": "Good capture of toggle state and buttons, but loses the shortcuts and makes several OCR-style misreads (Grok, XAI, missing dot)."
+    },
+    "G4-E4B|t0.1|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct three-column layout and full settings category list",
+        "Includes Experimental tag and LOCAL/REMOTE grouping"
+      ],
+      "key_misses": [
+        "Lists 'vLLM' as the last REMOTE provider instead of x.AI — not visible in image",
+        "Drops Llama.cpp from the LOCAL list (only MLX shown)",
+        "Misses keyboard shortcuts and extra top-right icons",
+        "States Automatic Update Check toggle as Off when it is ON, and invents an App Logs toggle",
+        "Misreads Jan CLI path as '/Users/frederic/local/bin/jan' (missing dot)"
+      ],
+      "hallucinations": [
+        "vLLM listed as a REMOTE model provider — not present in the image"
+      ],
+      "justification": "Reasonable structure but invents vLLM as the final REMOTE provider (the actual truncated entry is x.AI) and loses Llama.cpp, plus toggle state wrong."
+    },
+    "G4-E4B|t0.4|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Identifies three-panel layout and core left-sidebar items",
+        "Captures App Version v0.8.2 and Jan CLI path with correct .local"
+      ],
+      "key_misses": [
+        "Stops the middle panel at 'Model Providers' without listing any LOCAL/REMOTE providers",
+        "Misses the Experimental tag, keyboard shortcuts, and extra top-right icons",
+        "Treats Automatic Update Check toggle as off",
+        "Invents a 'Change for Updates' button (not present) — likely a misread of 'Check for Updates'"
+      ],
+      "hallucinations": [
+        "'Change for Updates' button — no such label exists; the actual button is 'Check for Updates'"
+      ],
+      "justification": "Lacks the entire provider list and fabricates a 'Change for Updates' button, making it one of the weaker responses despite correct layout."
+    },
+    "G4-E4B|t0.4|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Full three-column layout with complete LOCAL/REMOTE provider list including xAI",
+        "Correctly states Automatic Update Check is ON and lists all buttons (Change Location, Show in Finder, Open Logs, Uninstall, Reset)",
+        "Includes App Data full path and App Version v0.8.2"
+      ],
+      "key_misses": [
+        "Misspells Groq as 'Grok' (OCR error)",
+        "Misreads Jan CLI path as '/Users/frederic/local/bin/jan' (missing the dot)",
+        "Omits keyboard shortcuts and extra top-right icons"
+      ],
+      "hallucinations": [],
+      "justification": "One of the most complete responses — accurate toggle state, full provider list, all buttons — with only minor OCR errors (Grok, missing dot)."
+    },
+    "G4-E4B|t0.4|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct three-column layout with full provider list including Llama.cpp, MLX, and xAI",
+        "Includes Experimental tag, Data Folder header, and all section structure"
+      ],
+      "key_misses": [
+        "States Automatic Update Check toggle is Off when it is ON",
+        "Misreads Jan CLI path as '/Users/frederic/local/bin/jan' (missing the dot)",
+        "Misspells Llama.cpp as 'LLama.cpp' (capitalization OCR error)",
+        "Omits keyboard shortcuts and extra top-right icons"
+      ],
+      "hallucinations": [],
+      "justification": "Good structural completeness with correct provider list, but toggle state is wrong and the Jan CLI path loses the dot."
+    },
+    "G4-E4B|t0.7|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Identifies the sidebar and main panel with full settings categories",
+        "Includes Experimental tag and App Version v0.8.2"
+      ],
+      "key_misses": [
+        "Describes layout as two-column rather than the actual three-column",
+        "Lists 'vLLM' as the last REMOTE provider instead of x.AI",
+        "States Automatic Update Check is Off when it is ON",
+        "Misreads Jan CLI path as '/Users/frederic/local/bin/jan' (missing dot)",
+        "Misses keyboard shortcuts and extra top-right icons"
+      ],
+      "hallucinations": [
+        "vLLM listed as a REMOTE model provider — not present in the image"
+      ],
+      "justification": "Collapses the layout to two columns and invents vLLM as the final provider; toggle state and CLI path are also wrong."
+    },
+    "G4-E4B|t0.7|rep1": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct three-column layout and full settings category list",
+        "Includes Experimental tag and App Version v0.8.2"
+      ],
+      "key_misses": [
+        "Lists 'XL' as the last REMOTE provider instead of x.AI — fabricated label",
+        "States Automatic Update Check is Off when it is ON",
+        "Misses keyboard shortcuts and extra top-right icons",
+        "Drops the Groq provider (lists Mistral then XL)"
+      ],
+      "hallucinations": [
+        "'XL' listed as a REMOTE model provider — no such provider exists in the image (likely a garbled read of x.AI)"
+      ],
+      "justification": "Invents an 'XL' provider and drops Groq; toggle state wrong, making this the weakest of the set."
+    },
+    "G4-E4B|t0.7|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct three-column layout and most settings categories",
+        "Captures App Version v0.8.2, App Data path, and Jan CLI description"
+      ],
+      "key_misses": [
+        "Stops the REMOTE provider list at Grok (i.e. omits the truncated x.AI entry) and places an 'Advanced (Header)' inside the middle panel where it does not belong",
+        "Misspells Groq as 'Grok' (OCR error)",
+        "Misreads Jan CLI path as '/Users/frederic/local/bin/jan' (missing dot)",
+        "Omits keyboard shortcuts, extra top-right icons, and toggle state detail"
+      ],
+      "hallucinations": [],
+      "justification": "Decent structure but truncates the provider list early and inserts a misplaced 'Advanced' header in the middle panel; minor OCR errors throughout."
+    }
+  },
+  "ranking": [
+    "G4-E4B|t0.4|rep1",
+    "G4-E4B|t0.1|rep0",
+    "G4-E4B|t0.1|rep1",
+    "G4-E4B|t0.4|rep2",
+    "G4-E4B|t0.1|rep2",
+    "G4-E4B|t0.7|rep2",
+    "G4-E4B|t0.4|rep0",
+    "G4-E4B|t0.7|rep0",
+    "G4-E4B|t0.7|rep1"
+  ],
+  "notes": "All 9 responses correctly capture the three-column layout and most of the settings category list. Recurrent weaknesses: (1) none mention the keyboard shortcuts (⌘N/⌘P/⌘K) or the extra top-right icons; (2) the Jan CLI path is frequently misread as '/Users/frederic/local/bin/jan' (missing the dot before 'local'); (3) 'Groq' is often misspelled 'Grok'; (4) the Automatic Update Check toggle state is frequently wrong (stated Off when it is ON). The most serious errors are provider-list fabrications at higher temperatures: t0.1|rep2 and t0.7|rep0 invent 'vLLM', and t0.7|rep1 invents 'XL' as the last REMOTE entry (the actual truncated entry is x.AI). No response was empty, truncated, or in a repetition loop."
+}

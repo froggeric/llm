@@ -1,0 +1,148 @@
+{
+  "image": "ocr-test-4.png",
+  "judgments": {
+    "GLM-9B|t0.1|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header structure, registradora name, phone/fax, address, website all correct",
+        "All four finca numbers (32840, 32885, 32803, 32871) exact",
+        "Full GDPR/legal body text transcribed cleanly with no fabrication"
+      ],
+      "key_misses": [
+        "Email domain written as registradores.org instead of printed registrodelapropriedad.org (visible-text misread)",
+        "Nº Entrada '8656' vs actual 11656; DNI '2004185C' vs 20041185C; surname 'Moropos' vs Moropsa",
+        "Street '4-19' vs n°19; applicant email 'joansnobs' vs joansnobc; titular 'Archas'/'50183.525.D' vs Archanas/50183525D"
+      ],
+      "hallucinations": [],
+      "justification": "Strong clean transcription of the printed form body but reproduces the same cluster of OCR misreads (email domain, DNI digit, entrada number, handwritten surname/address/email) shared by all reps."
+    },
+    "GLM-9B|t0.1|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Identical correct header structure, contact lines, address, website",
+        "All four finca numbers exact; legal/GDPR body complete"
+      ],
+      "key_misses": [
+        "Email domain registradores.org vs registrodelapropriedad.org",
+        "Entrada 8656 vs 11656; DNI 2004185C vs 20041185C; Moropos vs Moropsa; 4-19 vs n°19; joansnobs vs joansnobc; titular Archas/50183.525.D"
+      ],
+      "hallucinations": [],
+      "justification": "Near-duplicate of rep0 with the same consistent OCR error set; minor wording drift ('financiamiento') but no invented content."
+    },
+    "GLM-9B|t0.1|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header, contact, address, website all correct; four fincas exact",
+        "Legal body complete; 'SOLICITÓ' typo is a faithful misread of printed text"
+      ],
+      "key_misses": [
+        "Email domain registradores.org vs registrodelapropriedad.org",
+        "Entrada 8656 vs 11656; DNI 2004185C vs 20041185C; Moropos vs Moropsa; 4-19 vs n°19; joansnobs vs joansnobc; titular Archas/50183.525.D"
+      ],
+      "hallucinations": [],
+      "justification": "Same reliable printed-form capture with the same shared OCR-error cluster; no fabricated elements."
+    },
+    "GLM-9B|t0.4|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Registradora name, phone/fax, address, website correct; four fincas exact",
+        "Legal/GDPR body fully transcribed"
+      ],
+      "key_misses": [
+        "City repeatedly misspelled 'Corralajo' (vs Corralejo) in header and section title — visible-text misread",
+        "Email written corralajo@registradores.org (double misspell); entrada 8656 vs 11656; DNI 2004185C vs 20041185C; Moropos vs Moropsa; 4-19 vs n°19; joansnobs vs joansnobc; titular Archas/50183.525.D",
+        "Inserted extra word 'se' ('Que le interesa se sea librada') — minor"
+      ],
+      "hallucinations": [],
+      "justification": "Slightly noisier than the t0.1 runs: the city name is consistently misread as 'Corralajo' and the email inherits that misspelling, but all errors are OCR misreads of visible text, not fabrications."
+    },
+    "GLM-9B|t0.4|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "City 'Corralejo' spelled correctly in header; registradora, phone/fax, address, website correct",
+        "Four fincas exact; legal body complete with 'tutotarios' a faithful misread"
+      ],
+      "key_misses": [
+        "Applicant first name read as 'Joa' (vs Joan) — visible-text misread",
+        "Email domain registradores.org vs registrodelapropriedad.org; entrada 8656 vs 11656; DNI 2004185C vs 20041185C; Moropos vs Moropsa; 4-19 vs n°19; joansnobs vs joansnobc; titular Archas/50183.525.D",
+        "Changed 'SOLICITAR LA INFORMACIÓN' to 'SOLICITUD DE LA INFORMACIÓN' (substitution of visible word)"
+      ],
+      "hallucinations": [],
+      "justification": "Captures the form well but introduces a first-name misread ('Joa') and a word substitution; all errors remain OCR/reading mistakes rather than inventions."
+    },
+    "GLM-9B|t0.4|rep2": {
+      "holistic_score": 0,
+      "failure_mode": "empty",
+      "key_hits": [],
+      "key_misses": [
+        "No content produced — entire form omitted"
+      ],
+      "hallucinations": [],
+      "justification": "Empty response; nothing was transcribed, so it is a complete miss scored 0."
+    },
+    "GLM-9B|t0.7|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Registradora, phone/fax, address, website correct; four fincas exact",
+        "Legal/GDPR body complete"
+      ],
+      "key_misses": [
+        "City 'Corralajo' misspelled in header and section title (vs Corralejo)",
+        "Email corralajo@registradores.org (double misspell); applicant email 'joansnovis' vs joansnobc; entrada 8656 vs 11656; DNI 2004185 C (split) vs 20041185C; Moropos vs Moropsa; 4-19 vs n°19; titular Archas/50183 525 D",
+        "Dropped leading 'R' in 'egistro de la Propiedad' (truncation of printed word)"
+      ],
+      "hallucinations": [],
+      "justification": "Solid transcription but with the higher-temp cluster of misreads (Corralajo, joansnovis, split DNI, dropped leading R); all are visible-text OCR errors, no fabrication."
+    },
+    "GLM-9B|t0.7|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Registradora, phone/fax, address, website correct; four fincas exact",
+        "Legal body complete"
+      ],
+      "key_misses": [
+        "City 'Corralleo' misspelled (vs Corralejo) — a different misspelling than other reps",
+        "Nº Borrador read as '12' vs 42; email domain registradores.org vs registrodelapropriedad.org; entrada 8656 vs 11656; DNI 2004185C vs 20041185C; Moropos vs Moropsa; 4-19 vs n°19; joansnobs vs joansnobc; titular Archas/50183.525.D",
+        "Inserted 'se' ('Que le interesa se sea librada'); dropped leading 'R' in 'egistro'"
+      ],
+      "hallucinations": [],
+      "justification": "Transcription is largely correct on the printed body but the city is misread as 'Corralleo' and the Borrador number as '12' — visible-text OCR errors, no invented content."
+    },
+    "GLM-9B|t0.7|rep2": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Registradora, phone/fax, address correct; four fincas exact",
+        "Legal body complete"
+      ],
+      "key_misses": [
+        "City 'Corralajo' misspelled in header and section title (vs Corralejo)",
+        "OMITTED the website line entirely (only email printed); email corralajo@registralopropiedad.org — a fabricated-looking hybrid domain not matching either printed domain",
+        "Entrada 8656 vs 11656; DNI 2004185C vs 20041185C; Moropos vs Moropsa; 4-19 vs n°19; joansnobs vs joansnobc; titular Arcas/50183.525.D; trailing dotted line artifact"
+      ],
+      "hallucinations": [
+        "Email 'corralajo@registralopropiedad.org' blends fragments of both printed domains into a string that matches neither the printed website (registradores.org) nor the printed email (registrodelapropriedad.org) — treated as a fabricated hybrid rather than a clean misread"
+      ],
+      "justification": "Weakest non-empty response: drops the website line and produces a hybrid email domain that matches neither printed value, on top of the usual city/entrada/DNI misreads."
+    }
+  },
+  "ranking": [
+    "GLM-9B|t0.1|rep0",
+    "GLM-9B|t0.1|rep2",
+    "GLM-9B|t0.1|rep1",
+    "GLM-9B|t0.4|rep1",
+    "GLM-9B|t0.7|rep0",
+    "GLM-9B|t0.4|rep0",
+    "GLM-9B|t0.7|rep1",
+    "GLM-9B|t0.7|rep2",
+    "GLM-9B|t0.4|rep2"
+  ],
+  "notes": "All non-empty responses share a consistent OCR-error cluster (email domain registradores.org vs printed registrodelapropriedad.org, DNI 2004185C vs 20041185C, entrada 8656 vs 11656, surname Moropos vs Moropsa, street 4-19 vs n°19, applicant email joansnobs vs joansnobc, titular Archas/Arcas vs Archanas) — these are treated as key_misses per the visible-text-misread rule, not hallucinations. The email-domain error is NOT a hallucination because the email line IS visible and the model read it wrong (substituting the website's domain). t0.1 reps are cleanest and most stable; t0.7|rep2 is the only response flagged for a genuine fabrication (hybrid domain 'registralopropiedad.org' matching neither printed value) plus a dropped website line; t0.4|rep2 returned empty. City-name misspellings (Corralajo/Corralleo) appear only at t>=0.4."
+}

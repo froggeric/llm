@@ -1,0 +1,208 @@
+{
+  "image": "extract-code-test-1.png",
+  "judgments": {
+    "Q3VL-8B-Q8|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Escaped apostrophes in name string ('La playlist d\\'aujourd\\'hui') correct",
+        "Combiner.push identifier correct",
+        "Most constants and playlist-size/history-days values correct"
+      ],
+      "key_misses": [
+        "Function name transcribed as createAujourd'hui (added apostrophe; should be createAujourdhui)",
+        "validatePlaylistKeys missing the trailing underscore (should be validatePlaylistKeys_)",
+        "historyFile value rendered as 'aujourd'hui.json' (introduced apostrophe + broke escaping; should be 'aujourdhui.json')",
+        "500 placed inside Combiner.push as a third argument instead of being the third argument to rateLimitedForEach"
+      ],
+      "hallucinations": [
+        "Appended a catch (e) { Logger.log(e); } block that is not present in the visible image (the screenshot is truncated mid-function with no catch)"
+      ],
+      "justification": "Captures the escaped name string but misses several hard discriminators (function-name apostrophe, trailing underscore, historyFile apostrophe, 500 placement) and fabricates a catch block."
+    },
+    "Q3VL-8B-Q8|rep1": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Escaped apostrophes in name string ('La playlist d\\'aujourd\\'hui') correct",
+        "Combiner.push identifier correct",
+        "Most constants and values correct"
+      ],
+      "key_misses": [
+        "Function name transcribed as createAujourd'hui (added apostrophe; should be createAujourdhui)",
+        "validatePlaylistKeys missing the trailing underscore",
+        "historyFile value rendered as 'aujourd'hui.json' (apostrophe + broken escaping; should be 'aujourdhui.json')",
+        "rateLimitedForEach call is missing its closing parenthesis — 500 is stranded inside the arrow function with no valid close, a syntax-breaking error"
+      ],
+      "hallucinations": [
+        "Appended a catch (e) block not present in the visible image"
+      ],
+      "justification": "Same identifier errors as rep0 plus a parenthesis-omission that breaks the rateLimitedForEach call; escaped name string is the only hard discriminator captured."
+    },
+    "Q3VL-8B-Q8|rep2": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Escaped apostrophes in name string correct",
+        "Combiner.push identifier correct",
+        "Most constants and values correct"
+      ],
+      "key_misses": [
+        "Function name transcribed as createAujourd'hui (added apostrophe)",
+        "validatePlaylistKeys missing the trailing underscore",
+        "historyFile value rendered as 'aujourd'hui.json' (wrong; should be 'aujourdhui.json')",
+        "rateLimitedForEach missing its closing parenthesis — 500 stranded inside arrow function, syntax-breaking"
+      ],
+      "hallucinations": [
+        "Appended a catch (e) block not present in the visible image"
+      ],
+      "justification": "Identical to rep1 — correct name-string escaping but four identifier/structure errors including a missing closing parenthesis."
+    },
+    "Q3VL-8B-Q8|rep3": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Escaped apostrophes in name string correct",
+        "Combiner.push identifier correct",
+        "Most constants and values correct"
+      ],
+      "key_misses": [
+        "Function name transcribed as createAujourd'hui (added apostrophe)",
+        "validatePlaylistKeys missing the trailing underscore",
+        "historyFile value rendered as 'aujourd'hui.json' (wrong)",
+        "rateLimitedForEach missing its closing parenthesis — 500 stranded inside arrow function"
+      ],
+      "hallucinations": [
+        "Appended a catch (e) block not present in the visible image"
+      ],
+      "justification": "Identical identifier and structure errors to rep1/rep2; only the escaped name string is captured correctly."
+    },
+    "Q3VL-8B-Q8|rep4": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Escaped apostrophes in name string correct",
+        "Combiner.push identifier correct",
+        "Most constants and values correct"
+      ],
+      "key_misses": [
+        "Function name transcribed as createAujourd'hui (added apostrophe)",
+        "validatePlaylistKeys missing the trailing underscore",
+        "historyFile value rendered as 'aujourd'hui.json' (wrong)",
+        "rateLimitedForEach missing its closing parenthesis — 500 stranded inside arrow function"
+      ],
+      "hallucinations": [
+        "Appended a catch (e) block not present in the visible image"
+      ],
+      "justification": "Same error profile as rep1-rep3 — the four reps are essentially identical variants of one flawed transcription."
+    },
+    "Q3.5-4B|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Function name createAujourdhui correct (no apostrophe) — a hard discriminator",
+        "validatePlaylistKeys_ with trailing underscore correct — a hard discriminator",
+        "historyFile = 'aujourdhui.json' correct (no apostrophe)",
+        "rateLimitedForEach(..., 500) with 500 as the third argument OUTSIDE the arrow function correct — a hard discriminator",
+        "Combiner.push identifier correct"
+      ],
+      "key_misses": [
+        "Name string rendered as 'La playlist d\\'aujour\\'hui' — the word is split 'aujour'hui' instead of 'aujourd'hui' (missing the d)",
+        "Appended a catch (e) { Logger.log(e); } block not present in the visible image"
+      ],
+      "hallucinations": [
+        "catch (e) { Logger.log(e); } block fabricated — the screenshot ends mid-function with no catch"
+      ],
+      "justification": "Captures all four hard identifier discriminators (function name, trailing underscore, historyFile, 500 placement) that Q3VL misses, with only a single-character word error in the name string and a fabricated catch block."
+    },
+    "Q3.5-4B|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Function name createAujourdhui correct (no apostrophe)",
+        "validatePlaylistKeys_ with trailing underscore correct",
+        "historyFile = 'aujourdhui.json' correct",
+        "rateLimitedForEach(..., 500) with 500 outside the arrow function correct",
+        "Combiner.push identifier correct"
+      ],
+      "key_misses": [
+        "Name string rendered as 'La playlist d\\'aujour\\'hui' (aujour'hui, missing the d)",
+        "Reorders code: moved the Cache.compressTracks(tracks) call and its comments OUTSIDE/after the try-catch block, altering the structure from the visible image"
+      ],
+      "hallucinations": [
+        "catch (e) { Logger.log(e); } block fabricated (not in visible image)"
+      ],
+      "justification": "Same correct hard discriminators as rep0, but additionally reorders the trailing Cache.compressTracks block outside the try, a structural deviation beyond the simple word error."
+    },
+    "Q3.5-4B|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Function name createAujourdhui correct (no apostrophe)",
+        "validatePlaylistKeys_ with trailing underscore correct",
+        "historyFile = 'aujourdhui.json' correct",
+        "rateLimitedForEach(..., 500) with 500 outside the arrow function correct",
+        "Combiner.push identifier correct",
+        "Keeps Cache.compressTracks(tracks) in its correct position inside the function flow"
+      ],
+      "key_misses": [
+        "Name string rendered as 'La playlist d\\'aujour\\'hui' (aujour'hui, missing the d)"
+      ],
+      "hallucinations": [
+        "catch (e) { Logger.log(\"Error: \" + e); } block fabricated (not in visible image)"
+      ],
+      "justification": "Best of the Q3.5-4B variants — all hard discriminators correct, correct structural ordering, with only the single aujour'hui word error and an invented catch block."
+    },
+    "Q3.5-4B|rep3": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Function name createAujourdhui correct (no apostrophe)",
+        "validatePlaylistKeys_ with trailing underscore correct",
+        "historyFile = 'aujourdhui.json' correct",
+        "rateLimitedForEach(..., 500) with 500 outside the arrow function correct",
+        "Combiner.push identifier correct",
+        "Cache.compressTracks placement correct"
+      ],
+      "key_misses": [
+        "Name string rendered as 'La playlist d\\'aujour\\'hui' (aujour'hui, missing the d)"
+      ],
+      "hallucinations": [
+        "catch (e) { Logger.log(\"Error: \" + e); } block fabricated"
+      ],
+      "justification": "Ties rep2 for best — all hard discriminators and structure correct, only the aujour'hui word error and invented catch block."
+    },
+    "Q3.5-4B|rep4": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Function name createAujourdhui correct (no apostrophe)",
+        "validatePlaylistKeys_ with trailing underscore correct",
+        "historyFile = 'aujourdhui.json' correct",
+        "rateLimitedForEach(..., 500) with 500 outside the arrow function correct",
+        "Combiner.push identifier correct",
+        "Cache.compressTracks placement correct"
+      ],
+      "key_misses": [
+        "Name string rendered as 'La playlist d\\'aujour\\'hui' (aujour'hui, missing the d)"
+      ],
+      "hallucinations": [
+        "catch (e) { Logger.log(\"Error: \" + e); } block fabricated"
+      ],
+      "justification": "Identical quality to rep2/rep3 — captures every hard discriminator, with only the aujour'hui word slip and invented catch block."
+    }
+  },
+  "ranking": [
+    "Q3.5-4B|rep2",
+    "Q3.5-4B|rep3",
+    "Q3.5-4B|rep4",
+    "Q3.5-4B|rep0",
+    "Q3.5-4B|rep1",
+    "Q3VL-8B-Q8|rep0",
+    "Q3VL-8B-Q8|rep1",
+    "Q3VL-8B-Q8|rep2",
+    "Q3VL-8B-Q8|rep3",
+    "Q3VL-8B-Q8|rep4"
+  ],
+  "notes": "Two cleanly separated clusters. Q3.5-4B captures all four hard discriminators flagged in the ground truth (function-name apostrophe, trailing underscore on validatePlaylistKeys_, no apostrophe in aujourdhui.json, 500 as the third arg to rateLimitedForEach outside the arrow fn) but systematically misreads the escaped name string as 'aujour'hui' (dropping the d). Q3VL-8B-Q8 captures the escaped name string correctly but misses every other hard discriminator (adds an apostrophe to the function name, drops the trailing underscore, inserts an apostrophe into aujourdhui.json breaking its escaping, and misplaces/strands the 500 — rep1-rep4 omit the closing paren for rateLimitedForEach entirely, which is syntax-breaking). Both models consistently fabricate a catch block that is absent from the truncated screenshot (over-completion). rep0 of Q3VL is the weakest of its cluster because it additionally places 500 inside Combiner.push rather than rateLimitedForEach. Ground truth was treated as authoritative on the trailing underscore and backslash escaping, both of which are visually subtle and that two OCR passes tended to drop."
+}

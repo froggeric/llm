@@ -1,0 +1,89 @@
+{
+  "image": "08-poster-class-schedule.jpg",
+  "judgments": {
+    "G4-E4B|t0.1|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes present with correct days/times", "OSTEOPOROSIS Prevention at correct 13:10-14:00 slot", "Wed and Thu YOGA correctly shown without 'Embassy of India' detail", "Monday YOGA with Embassy of India correct"],
+      "key_misses": ["Tuesday entry spelled 'TAJI' instead of 'TAIJI'", "Missing 'with Gabi' instructor detail on Tuesday Taiji"],
+      "hallucinations": [],
+      "justification": "Excellent near-complete transcription of all 11 classes; only a minor spelling slip on TAIJI and a dropped instructor name."
+    },
+    "G4-E4B|t0.1|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes present", "Tuesday TAIJI (24 forms) with Gabi correctly captured", "OSTEOPOROSIS Prevention at correct 13:10 slot"],
+      "key_misses": ["Wednesday YOGA wrongly annotated 'with the Embassy of India'", "Thursday YOGA wrongly annotated 'with the Embassy of India'"],
+      "hallucinations": ["'with the Embassy of India' falsely added to Wed and Thu Yoga (only Mon/Tue lunch Yoga carries it)"],
+      "justification": "Complete schedule with the rare Gabi detail captured, but two fabricated 'Embassy of India' annotations on classes that lack it."
+    },
+    "G4-E4B|t0.1|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes present in a compact per-day layout", "Tuesday TAIJI (24 forms) correctly named", "OSTEOPOROSIS Prevention at correct 13:10 slot"],
+      "key_misses": ["Missing 'with Gabi' on Tuesday Taiji", "Wednesday YOGA wrongly annotated 'with the Embassy of India'", "Thursday YOGA wrongly annotated 'with the Embassy of India'"],
+      "hallucinations": ["'with the Embassy of India' falsely added to Wed and Thu Yoga"],
+      "justification": "All entries captured but two fabricated Embassy annotations and a dropped instructor name lower accuracy."
+    },
+    "G4-E4B|t0.4|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes present with correct days/times", "OSTEOPOROSIS Prevention at correct 13:10 slot", "Wed and Thu YOGA correctly shown without Embassy detail"],
+      "key_misses": ["Tuesday entry spelled 'TAJI' instead of 'TAIJI'", "Missing 'with Gabi' instructor detail on Tuesday Taiji"],
+      "hallucinations": ["Fabricated '(Fitness)' category labels attached to Shaolin Qigong, Yogasthenics, Taiji, Calisthenics, and Kung Fu (poster color-codes Shaolin/Fitness separately, and these details are not on the pills)"],
+      "justification": "Schedule is complete and well-timed, but five invented '(Fitness)' category tags are fabricated content the poster does not state."
+    },
+    "G4-E4B|t0.4|rep1": {
+      "holistic_score": 3,
+      "failure_mode": "normal",
+      "key_hits": ["Captures most day/time/class triples that remain", "Friday PRANAYAMA correct"],
+      "key_misses": ["OSTEOPOROSIS Prevention class entirely omitted (drops Mon 13:10 entry)", "Tuesday TAIJI class entirely omitted (drops Tue 13:00 second entry)", "YOGASTHENICS misspelled 'YOGATHENICS'", "Only 9 of 11 classes transcribed"],
+      "hallucinations": ["'with the Embassy of India (Osteoporosis)' falsely conflated onto Mon and Tue Yoga", "'with the Embassy of India' falsely added to Wed and Thu Yoga"],
+      "justification": "Two classes dropped (only 9/11) plus multiple fabricated Embassy annotations and a misspelling — the weakest response."
+    },
+    "G4-E4B|t0.4|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes present", "Monday YOGA with Embassy of India correct", "OSTEOPOROSIS Prevention at correct 13:10 slot"],
+      "key_misses": ["Tuesday entry spelled 'TAJI' instead of 'TAIJI'", "Missing 'with Gabi' on Tuesday Taiji", "Wednesday YOGA wrongly annotated 'with the Embassy of India'", "Thursday YOGA wrongly annotated 'with the Embassy of India'"],
+      "hallucinations": ["'with the Embassy of India' falsely added to Wed and Thu Yoga"],
+      "justification": "Complete schedule but TAIJI misspelled, Gabi dropped, and two fabricated Embassy annotations."
+    },
+    "G4-E4B|t0.7|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes present", "TAIJI spelled correctly with (24 forms)", "OSTEOPOROSIS Prevention at correct 13:10 slot"],
+      "key_misses": ["Missing 'with Gabi' instructor detail on Tuesday Taiji", "Wednesday YOGA wrongly annotated 'with the Embassy of India'", "Thursday YOGA wrongly annotated 'with the Embassy of India'"],
+      "hallucinations": ["'with the Embassy of India' falsely added to Wed and Thu Yoga"],
+      "justification": "Complete with correct TAIJI spelling, but two fabricated Embassy annotations and a dropped instructor name."
+    },
+    "G4-E4B|t0.7|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes present", "OSTEOPOROSIS Prevention at correct 13:10 slot", "Monday YOGA with Embassy of India correct"],
+      "key_misses": ["YOGASTHENICS misspelled 'YOGA STHENICS'", "Tuesday entry spelled 'TAJI' instead of 'TAIJI'", "Missing 'with Gabi' on Tuesday Taiji", "Wednesday and Thursday YOGA wrongly annotated 'with the Embassy of India'"],
+      "hallucinations": ["'with the Embassy of India' falsely added to Wed and Thu Yoga"],
+      "justification": "Complete schedule but two spelling errors and two fabricated Embassy annotations accumulate."
+    },
+    "G4-E4B|t0.7|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes present", "Tuesday Taiji correctly carries 'with Gabi'", "Wednesday YOGA correctly shown without Embassy detail", "Friday PRANAYAMA correct"],
+      "key_misses": ["Monday OSTEOPOROSIS time wrong: shown 13:00-14:00 instead of correct 13:10-14:00", "Tuesday entry spelled 'TAJI' instead of 'TAIJI'", "Thursday YOGA wrongly annotated 'with the Embassy of India'"],
+      "hallucinations": ["'with the Embassy of India' falsely added to Thu Yoga"],
+      "justification": "Captures the rare Gabi detail and all entries, but gets the OSTEOPOROSIS start time wrong and fabricates one Embassy annotation."
+    }
+  },
+  "ranking": [
+    "G4-E4B|t0.1|rep0",
+    "G4-E4B|t0.7|rep0",
+    "G4-E4B|t0.1|rep1",
+    "G4-E4B|t0.1|rep2",
+    "G4-E4B|t0.4|rep2",
+    "G4-E4B|t0.7|rep2",
+    "G4-E4B|t0.4|rep0",
+    "G4-E4B|t0.7|rep1",
+    "G4-E4B|t0.4|rep1"
+  ],
+  "notes": "All nine responses are well-structured tables that get the 11-class skeleton largely right; the dominant error pattern is falsely appending 'with the Embassy of India' to the Wed/Thu Yoga entries (which actually carry no such annotation) — present in 7 of 9 responses. The recurring 'TAJI' vs 'TAIJI' spelling slip appears in 6 of 9, and the 'with Gabi' instructor detail is captured only twice (t0.1|rep1, t0.7|rep2). The single dropped-class failure (t0.4|rep1 omits both OSTEOPOROSIS and Tuesday Taiji) is the clear outlier. The t0.4|rep0 '(Fitness)' category tags are the only invented-content pattern beyond the Embassy annotations. None of the responses mention the color-coding (blue/orange/green), icons, footer URL, or VIC Health Club branding."
+}

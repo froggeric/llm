@@ -138,6 +138,17 @@ These aren't suffering from sampling noise — their errors are **systematic**, 
 - **Known-wrong facts were never hallucinated**, even at temp 0.7 union (0/4 `pier`/`jetty`/`lighthouse`/`Dick Bruna` on Waldo across all temps). Higher temp does **not** invent the specific "NOT in image" objects in this set.
 - **But high-temp extraction adds spurious tokens.** On `extract_table`, union@0.7 carries 10 tokens not in the GT (e.g. an invented `fitness`/`type` row label plus Markdown scaffolding) vs 8 at temp 0.1. This is the real precision risk — and it's why tables need majority, not union.
 
+### LLM-judge holistic (0–10) — corroboration across 600 responses
+
+A full LLM-judge pass (one Claude subagent per image × model, all reps × temps; outputs in `judgments_cat/`, aggregated by `code/aggregate_judgments.py`) scored every one of the 600 cat responses 0–10 for holistic quality plus free-form hallucinations. It **corroborates the deterministic picture** and sharpens two points:
+
+- **Holistic rankings track the deterministic ones.** `extract_table` (8.6–10), `diagnose_error` (7.3–9.7) and `describe_diagram` (7–9) score high and stay flat across temps; the harder categories (`read_image`, `extract_text`, `extract_code`, `describe_ui`, `describe_chart`) sit at ~3–7 and degrade with temperature on the smaller models.
+- **Hallucinations concentrate on `read_image` (Waldo), `extract_code`, and `describe_chart` — and are ~0 elsewhere.** `read_image` is the real hotspot (0–8/model, rising with temp — genuine fabrications: fake artists, a "HALLOWEEN" sign, a horse-carriage, hovercraft-as-building); `extract_code` invents APIs (G4-E4B: 9–12/model); `describe_chart` invents values (Q3.5-4B: 6–10). `extract_table`, `diagnose_error`, `describe_diagram`, and (after correction) `extract_text`/`describe_ui` are essentially hallucination-free (0–1). Independent confirmation that the union-collapse risk is real on the noisy coverage/code/chart categories and negligible on the clean ones.
+
+> ⚠️ **Judge-reliability caveat (owner-verified 2026-06-26):** a first pass massively over-flagged hallucinations on the densest images (`read_image`, `describe_ui`, `extract_text`) — punishing details it couldn't see (Waldo's distant land/umbrellas; ui-test-1's shortcuts/icons/3-column; the OCR form's real printed email/URL) and trusting an incomplete ground truth. Every flagged claim was owner-verified; the GT was corrected, the rubric tightened ("only flag if verifiably absent; dense scenes: don't flag minor details; misreads ≠ hallucinations"), and those three categories re-judged. The corrected counts above are the result. **Treat LLM-judge hallucination counts as soft; deterministic scorers remain authoritative.**
+
+> Full per-(model × category × temp) holistic + hallucination table: `python3 code/aggregate_judgments.py cat`.
+
 ## Model size matters — the Q3.5-4B comparison
 
 Running the same sweep on the small/fast recommendation (Q3.5-4B-nothink) confirms the category shape **and adds a model-size dimension**. Below: best correlated result @ temp 0.7 vs single @ 0.1, using **majority** for extraction and **union** for coverage (see Lever 2):

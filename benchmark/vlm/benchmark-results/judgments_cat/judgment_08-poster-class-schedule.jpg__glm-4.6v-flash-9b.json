@@ -1,0 +1,127 @@
+{
+  "image": "08-poster-class-schedule.jpg",
+  "judgments": {
+    "GLM-9B|t0.1|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct days, times, and titles",
+        "Captures optional notes: 'with the Embassy of India', 'TAIJI (24 forms) with Gabi', 'w/ VIC Runners'",
+        "Single clean markdown table"
+      ],
+      "key_misses": [
+        "Monday OSTEOPOROSIS time shows 13:10-14:00 (matches GT/image)"
+      ],
+      "hallucinations": [],
+      "justification": "Flawless single-table transcription of all 11 classes with correct notes; only the category/color coding is omitted, which was not required."
+    },
+    "GLM-9B|t0.1|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes correct with days, times, titles, and notes",
+        "Each day grouped in its own table block"
+      ],
+      "key_misses": [
+        "Day label repeats only in header row of each block (acceptable)"
+      ],
+      "hallucinations": [],
+      "justification": "Complete and accurate across five day-block tables; content matches GT exactly, just with more fragmented formatting."
+    },
+    "GLM-9B|t0.1|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes in one table with correct days, times, titles, and notes",
+        "Notes including Embassy of India, Gabi, and VIC Runners all present"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Clean single-table transcription, fully accurate with all optional notes captured."
+    },
+    "GLM-9B|t0.4|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes correct with a dedicated Description column",
+        "Notes (Embassy of India, Gabi, VIC Runners) placed correctly"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Accurate and well-structured; adds a notes column that holds all the optional info correctly."
+    },
+    "GLM-9B|t0.4|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes correct with an inferred Category column (Shaolin/Yoga/Fitness)",
+        "Category assignments align with the GT color groups"
+      ],
+      "key_misses": [
+        "Category inference is reasonable but not textually stated on the poster"
+      ],
+      "hallucinations": [],
+      "justification": "Adds a Category column whose assignments match the GT color groups exactly; content is otherwise fully accurate."
+    },
+    "GLM-9B|t0.4|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes correct with a Type column matching color groups",
+        "All notes and titles accurate"
+      ],
+      "key_misses": [
+        "Type inference is reasonable but not literal poster text"
+      ],
+      "hallucinations": [],
+      "justification": "Equivalent to t0.4|rep1 with the Type column; content is complete and correct."
+    },
+    "GLM-9B|t0.7|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct times, titles, and notes",
+        "Five separate day-grouped blocks"
+      ],
+      "key_misses": [
+        "Day column dropped entirely; only inferred from block ordering"
+      ],
+      "hallucinations": [],
+      "justification": "Content is fully accurate but the Day column is omitted, making day mapping implicit rather than explicit."
+    },
+    "GLM-9B|t0.7|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes in one table with correct days, times, titles, and notes",
+        "Notes including Embassy of India, Gabi, VIC Runners present"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Clean single-table transcription, fully accurate with all optional notes captured."
+    },
+    "GLM-9B|t0.7|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes split into five day tables with an Additional Info column",
+        "Notes (Embassy of India, Gabi, VIC Runners) correctly attributed"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Complete and accurate across five day-block tables with notes correctly placed in an info column."
+    }
+  },
+  "ranking": [
+    "GLM-9B|t0.1|rep0",
+    "GLM-9B|t0.1|rep2",
+    "GLM-9B|t0.7|rep1",
+    "GLM-9B|t0.4|rep0",
+    "GLM-9B|t0.1|rep1",
+    "GLM-9B|t0.7|rep2",
+    "GLM-9B|t0.4|rep1",
+    "GLM-9B|t0.4|rep2",
+    "GLM-9B|t0.7|rep0"
+  ],
+  "notes": "GLM-9B is remarkably consistent: all 9 responses transcribe all 11 classes with correct days, times, titles, and notes (Embassy of India x2, Gabi on Taiji, VIC Runners on Calisthenics). No hallucinated classes or times anywhere. Differences are purely formatting (single table vs day-block tables, optional Category/Description columns). The only structural flaw is rep0/t0.7 dropping the Day column. The single-table variants (t0.1|rep0, t0.1|rep2, t0.7|rep1) rank highest for clean, complete, readily usable output."
+}

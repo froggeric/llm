@@ -1,0 +1,290 @@
+{
+  "image": "30-where-is-waldo.webp",
+  "judgments": {
+    "Q3VL-8B-Q8|t0.1|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly identifies crowded beach + ocean + sky layout, yellow sand, light blue sky with clouds",
+        "spots pink and white sails, steamboats with smoke, human pyramid in ocean on the right",
+        "notes blue-and-white striped beach huts and various colored umbrellas"
+      ],
+      "key_misses": [
+        "misses half-yellow/half-white sail and undercounts watercraft diversity (no hovercraft, submarine, cargo ships)",
+        "does not mention Punch and Judy booth, ice cream cart, horses, or land on the horizon",
+        "fails to identify the scene as a Where's Waldo illustration or any hidden characters"
+      ],
+      "hallucinations": [
+        "claims 'a group of people is playing with a large beach ball' center-right and 'beach balls, buckets, shovels' as beach equipment - plausible but unverified in dense scene, not flagged as firm hallucination"
+      ],
+      "justification": "Solid structural description of the beach/ocean layout and spots key features (pink/white sails, steamboats, human pyramid, blue/white huts) but misses much of the watercraft and shore-element diversity and never identifies the Waldo context."
+    },
+    "Q3VL-8B-Q8|t0.1|rep1": {
+      "holistic_score": 0,
+      "failure_mode": "empty",
+      "key_hits": [],
+      "key_misses": [
+        "completely empty response - no description at all"
+      ],
+      "hallucinations": [],
+      "justification": "Empty output; the model produced no content for this repeat."
+    },
+    "Q3VL-8B-Q8|t0.1|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly notes blue-and-white vertical striped beach huts plus one red-and-white striped hut, and various colored umbrellas including green-and-white",
+        "spots sailboats with white and pink sails, a large blue/white ferry on the right, and steamships in the distance",
+        "correctly observes 'a few horses are visible on the beach, near the water's edge'"
+      ],
+      "key_misses": [
+        "misses the hovercraft (the most distinctive large right-side vessel), submarine, dinghy, cargo ships, waterskier",
+        "calls the red-and-white structure a 'beach hut' rather than the Punch and Judy booth",
+        "no mention of land/hills on the horizon, ice cream cart, or Waldo/hidden characters"
+      ],
+      "hallucinations": [
+        "claims a 'red-and-white striped beach ball near the center-right' - unverified in dense scene, not a firm hallucination"
+      ],
+      "justification": "One of the stronger responses: gets the hut colors right, spots horses, sailboat colors, the ferry, and umbrellas including green/white, though it undercounts watercraft and mislabels the Punch and Judy booth."
+    },
+    "Q3VL-8B-Q8|t0.1|rep3": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correct layout (yellow sand beach, blue ocean, light blue sky with clouds), low horizon line",
+        "spots pink and white sails, steamboats emitting smoke, human pyramid in ocean on the right",
+        "notes blue-and-white striped beach huts and red/white, blue/white, green/white umbrellas"
+      ],
+      "key_misses": [
+        "misses hovercraft, submarine, dinghy, cargo ships, waterskier - narrow watercraft list",
+        "no Punch and Judy booth, ice cream cart, horses, or land-on-horizon mention",
+        "does not identify the Waldo context or any hidden characters"
+      ],
+      "hallucinations": [
+        "claims a 'red-and-white striped beach ball is visible in the center of the beach' - unverified in dense scene"
+      ],
+      "justification": "Competent structural description matching rep0 closely; captures sails, steamboats, pyramid, and hut/umbrella colors but is thin on watercraft diversity and shore details."
+    },
+    "Q3VL-8B-Q8|t0.1|rep4": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correct panoramic beach/ocean/sky layout with low horizon, yellow sand, pale blue sky with white clouds",
+        "notes blue-and-white striped beach huts and red/white, blue/white, green/white umbrellas",
+        "spots sailboats, motorboats, a large ferry on the right, and distant steamboats emitting smoke"
+      ],
+      "key_misses": [
+        "misses the hovercraft, submarine, dinghy, cargo ships, waterskier",
+        "no mention of horses, Punch and Judy booth, ice cream cart, or land on the horizon",
+        "does not identify the Where's Waldo context"
+      ],
+      "hallucinations": [
+        "claims 'sailboats with red and white sails' - sails are white/pink/half-yellow-white per ground truth, likely a sail-color misread (key_miss not hallucination) but listed as it asserts red sails",
+        "claims 'a few sandcastles can be seen in the lower right corner' - unverified in dense scene"
+      ],
+      "justification": "Good layout and hut/umbrella coverage and notes the ferry plus distant steamers, but invents red sails and sandcastles and misses the distinctive hovercraft and shore elements."
+    },
+    "Q3VL-8B-Q8|t0.4|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly describes blue-and-white vertical striped beach huts plus a red-and-white striped hut near center-right, and red/blue/green-and-white umbrellas",
+        "spots sailboats with white and pink sails, steamboats emitting white smoke, and a large blue/white boat on the right",
+        "notes 'faint outlines of land and more ships' in the far distance - correctly observes land on the horizon"
+      ],
+      "key_misses": [
+        "misses the hovercraft as a distinct vessel (folds it into 'large blue and white boat'), submarine, dinghy, cargo ships",
+        "calls the red-and-white structure a beach hut rather than the Punch and Judy booth",
+        "no horses, ice cream cart, or Waldo identification"
+      ],
+      "hallucinations": [
+        "claims 'a man in the lower right is pushing a cart with a large cooler' - unverified specific figure in dense scene"
+      ],
+      "justification": "Strong response: gets hut colors, umbrellas, sail colors, steamboats, and notably the land-on-horizon detail right; main gaps are the hovercraft/submarine and mislabeling the Punch and Judy booth."
+    },
+    "Q3VL-8B-Q8|t0.4|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correct two-section layout (beach lower two-thirds, ocean/sky upper third), yellow sand, blue ocean, light blue sky with clouds",
+        "notes blue/white and one red/white striped beach hut, plus red/blue/green-and-white umbrellas",
+        "spots human pyramid, a horse being ridden near the water, sailboats, steamships, and a large blue/white boat on the right"
+      ],
+      "key_misses": [
+        "misses hovercraft, submarine, dinghy, cargo ships, waterskier",
+        "places the human pyramid 'on the beach near the water's edge' rather than in the water",
+        "no Punch and Judy booth, ice cream cart, land-on-horizon, or Waldo identification"
+      ],
+      "hallucinations": [
+        "claims 'a large ocean liner in the distance' - the largest distant vessels are steamships/cargo ships, not an ocean liner; borderline",
+        "claims 'a vendor is pushing a cart with an ice cream machine' - an ice cream cart exists but 'machine' is an embellishment",
+        "claims 'a man is riding a horse on the beach, near the water' AND separately 'a horse is seen being ridden' - duplicate/uncertain horse claim"
+      ],
+      "justification": "Captures layout, huts, umbrellas, pyramid and a horse but is loose with specifics (ocean liner, ice cream machine, duplicate horse) and misses the hovercraft and Punch and Judy booth."
+    },
+    "Q3VL-8B-Q8|t0.4|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly notes blue/white and red/white striped beach huts with a standout red/white hut center-right, plus red/white and blue/white umbrellas",
+        "spots a steamboat on the far left emitting smoke, pink and white sails, a small motorboat, a larger steamship, and a large blue/white ferry on the far right",
+        "correctly observes 'faint outlines of land or hills are visible along the horizon' and people riding horses at the water's edge"
+      ],
+      "key_misses": [
+        "misses the hovercraft as a distinct vessel, submarine, dinghy, cargo ships, waterskier",
+        "calls the red-and-white structure a beach hut rather than the Punch and Judy booth",
+        "claims a 'red and white lifeboat' which is not in ground truth - minor",
+        "no Waldo/hidden-character identification"
+      ],
+      "hallucinations": [
+        "claims 'a red and white lifeboat' - not corroborated; minor invention"
+      ],
+      "justification": "One of the better responses: detailed and accurate on watercraft distribution (left steamboat, pink/white sails, right ferry), huts, umbrellas, land-on-horizon, and horses; loses points for the invented lifeboat and missing the hovercraft/submarine."
+    },
+    "Q3VL-8B-Q8|t0.4|rep3": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correct panoramic layout with low horizon, yellow sand, light blue ocean, pale blue sky with white clouds",
+        "notes blue/white vertical stripe huts and one red/white vertical stripe hut, plus striped and solid-color umbrellas (red/white, green/white)",
+        "spots sailboats with pink/white/yellow sails, steamships emitting smoke, a large blue/white ferry on the right, and 'faint outlines of land... on the horizon'"
+      ],
+      "key_misses": [
+        "misses the hovercraft, submarine, dinghy, cargo ships, waterskier",
+        "calls the red-and-white structure a beach hut rather than the Punch and Judy booth",
+        "no horses, ice cream cart, or Waldo identification"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, accurate description of layout, huts, umbrellas, sails (including yellow), steamships, ferry, and land-on-horizon; gaps are the missing distinctive watercraft and Punch and Judy booth."
+    },
+    "Q3VL-8B-Q8|t0.4|rep4": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correct layout (top ocean/horizon, bottom crowded yellow beach), light blue ocean with whitecaps, pale blue sky with clouds",
+        "notes striped beach huts (blue/white, red/white) and umbrellas (red/white, blue/white)",
+        "spots human pyramid near the water's edge, a person riding a horse along the shore, sailboats with pink/white sails, motorboats/steamships, a large blue/white ferry on the right, and an inflatable raft"
+      ],
+      "key_misses": [
+        "misses the hovercraft as distinct from the ferry, submarine, dinghy, cargo ships, waterskier",
+        "places the human pyramid 'near the water's edge' rather than in the water",
+        "no Punch and Judy booth, ice cream cart, land-on-horizon, or Waldo identification"
+      ],
+      "hallucinations": [
+        "claims 'a group of people gathered around a small ice cream cart' - an ice cream cart is present, so this is essentially correct, not a hallucination"
+      ],
+      "justification": "Good coverage of layout, huts, umbrellas, pyramid, horse, sails, ferry, and raft; main gaps are the distinctive hovercraft/submarine and the Punch and Judy booth, and pyramid placement is slightly off."
+    },
+    "Q3VL-8B-Q8|t0.7|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correct layout (yellow beach foreground, blue ocean background, pale blue sky with white clouds), dense crowd in summer attire",
+        "notes blue/white vertical stripe beach huts plus one red/white vertical stripe hut, and red/blue/green-and-white striped umbrellas",
+        "spots pink, white, and yellow sails, motorboats/steamboats emitting white smoke, a large blue/white multi-deck boat on the right, an inflatable raft, and 'landforms or hills... on the far right' horizon"
+      ],
+      "key_misses": [
+        "misses the hovercraft as a distinct vessel (folds into 'large blue-and-white boat with multiple decks'), submarine, dinghy, cargo ships, waterskier",
+        "calls the red-and-white structure a beach hut rather than the Punch and Judy booth",
+        "claims a 'group... climbing or jumping off a large object in the water, possibly a boat or raft' - vague, and no horses/ice cream cart/Waldo"
+      ],
+      "hallucinations": [
+        "claims 'a few individuals are holding cameras or appear to be eating ice cream' - unverified specific actions in dense scene"
+      ],
+      "justification": "Strong, detailed response: correctly captures hut colors, umbrella colors, three sail colors (pink/white/yellow), steamboats, the right-side large boat, raft, and land-on-horizon; loses points only for missing the hovercraft/submarine and Punch and Judy booth."
+    },
+    "Q3VL-8B-Q8|t0.7|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correct layout (crowded yellow beach lower two-thirds, blue ocean with boats upper third), panoramic composition",
+        "notes blue/white and one red/white striped beach hut, plus red/blue/green-and-white striped umbrellas",
+        "spots sailboats with white and pink sails, motorboats, larger distant ships, a large blue/white boat in the upper right with people and chimney smoke"
+      ],
+      "key_misses": [
+        "misses the hovercraft as distinct, submarine, dinghy, cargo ships, waterskier",
+        "calls the red-and-white structure a beach hut rather than the Punch and Judy booth",
+        "no horses, land-on-horizon, ice cream cart (despite mentioning people 'carrying ice cream carts'), or Waldo identification"
+      ],
+      "hallucinations": [
+        "explicitly says 'The image is highly detailed... that could be part of a Where's Waldo?-style puzzle' - correctly hints at the genre but does not commit",
+        "claims 'people are carrying items such as ice cream carts, bags, and beach chairs' - people do not carry ice cream carts; minor embellishment"
+      ],
+      "justification": "Decent coverage of layout, huts, umbrellas, sails, and the right-side smoking boat, and uniquely hints at the Waldo genre, but is loose with details (carrying ice cream carts) and misses the hovercraft, horses, and Punch and Judy booth."
+    },
+    "Q3VL-8B-Q8|t0.7|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correctly notes blue-and-white striped huts on the left and red-and-white striped huts on the right, plus red/blue/green-and-white umbrellas",
+        "spots a pink-sailed and a white-sailed sailboat, steamboats emitting white smoke, a large blue/white ferry on the far right, smaller motorboats and inflatable rafts",
+        "notes 'a small ice cream cart, and a person riding a horse on the beach' and 'faint outlines of land and more ships' on the horizon"
+      ],
+      "key_misses": [
+        "misses the hovercraft as distinct from the ferry, submarine, dinghy, cargo ships, waterskier",
+        "calls the red-and-white structure a beach hut rather than the Punch and Judy booth",
+        "does not identify Waldo or hidden characters despite the Waldo-style remark"
+      ],
+      "hallucinations": [
+        "explicitly compares style to 'a Where's Waldo? style puzzle' - correctly hints at genre"
+      ],
+      "justification": "Strong response: accurate on hut distribution, umbrellas, sail colors, steamboats, ferry, and uniquely mentions the ice cream cart, a horse, and land-on-horizon; main gaps are the distinctive hovercraft/submarine and Punch and Judy booth."
+    },
+    "Q3VL-8B-Q8|t0.7|rep3": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correct layout (yellow beach foreground, blue ocean, light blue sky with clouds), busy seaside impression",
+        "notes striped beach huts (blue/white, red/white, green/white) and striped plus solid-color umbrellas (red/white, blue/white)",
+        "spots sailboats with pink/white/yellow sails, motorboats/yachts, a large blue/white ferry on the right, distant steamships/cargo ships emitting smoke, inflatable rafts, and a human pyramid near the shore"
+      ],
+      "key_misses": [
+        "claims green/white striped beach huts - there are NO green/white huts (only umbrellas); factual error",
+        "misses the hovercraft as distinct, submarine, dinghy, waterskier",
+        "calls the red-and-white structure a beach hut rather than the Punch and Judy booth; no horses, ice cream cart, or Waldo ID"
+      ],
+      "hallucinations": [
+        "claims beach huts 'including... green and white' - the ground truth explicitly states there are no green/white huts (only umbrellas); this is a fabrication of hut colors",
+        "claims 'land is visible as a faint greenish silhouette on the horizon' - land is present so directionally correct, but 'greenish' is an embellishment"
+      ],
+      "justification": "Good coverage of sails, ships, ferry, pyramid, and umbrellas, and correctly notes land on the horizon, but fabricates green/white beach huts (a verified error) and misses the hovercraft and Punch and Judy booth."
+    },
+    "Q3VL-8B-Q8|t0.7|rep4": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "correct two-section layout (upper ocean, lower crowded yellow beach), straight horizon, light blue sky with clouds",
+        "notes striped beach huts (blue/white, red/white) and umbrellas (red/white, blue/white, green/white)",
+        "spots sailboats, steamboats, smaller rowboats, people on inflatable rafts, and 'riding horses in the water'"
+      ],
+      "key_misses": [
+        "misses the hovercraft, submarine, dinghy, cargo ships, ferry, waterskier - the most distinctive right-side vessel is absent",
+        "calls the red-and-white structure a beach hut rather than the Punch and Judy booth",
+        "no ice cream cart, land-on-horizon, or Waldo identification"
+      ],
+      "hallucinations": [
+        "claims distinctive figures 'such as a pregnant woman, a man with a dog, or a person carrying a surfboard' - unverified specific figures in dense scene, presented as definite",
+        "claims 'sailboats with red and white sails' - sails are white/pink/half-yellow-white; sail-color misread asserted as fact"
+      ],
+      "justification": "Weakest of the substantive responses: invents specific figures (pregnant woman, red sails) and omits the large right-side hovercraft/ferry entirely, though it does get huts, umbrellas, and horses roughly right."
+    }
+  },
+  "ranking": [
+    "Q3VL-8B-Q8|t0.4|rep2",
+    "Q3VL-8B-Q8|t0.7|rep0",
+    "Q3VL-8B-Q8|t0.4|rep0",
+    "Q3VL-8B-Q8|t0.7|rep2",
+    "Q3VL-8B-Q8|t0.1|rep2",
+    "Q3VL-8B-Q8|t0.4|rep3",
+    "Q3VL-8B-Q8|t0.1|rep0",
+    "Q3VL-8B-Q8|t0.1|rep3",
+    "Q3VL-8B-Q8|t0.4|rep4",
+    "Q3VL-8B-Q8|t0.1|rep4",
+    "Q3VL-8B-Q8|t0.4|rep1",
+    "Q3VL-8B-Q8|t0.7|rep1",
+    "Q3VL-8B-Q8|t0.7|rep3",
+    "Q3VL-8B-Q8|t0.7|rep4",
+    "Q3VL-8B-Q8|t0.1|rep1"
+  ],
+  "notes": "All 15 responses describe a generic crowded beach scene; NONE identify it as a Martin Handford 'Where's Waldo' illustration or locate any hidden characters (Waldo/Odlaw/Wizard Whitebeard) - the central task of the image is universally missed. Common cross-response patterns: (1) the large blue/white hovercraft on the right is never named as a hovercraft - it is either ignored or folded into 'a large blue/white ferry/boat'; (2) every response mislabels the red-and-white Punch and Judy booth as a 'beach hut'; (3) the submarine, inflatable dinghy, cargo ships, and waterskier are never mentioned; (4) t0.7|rep1 and t0.7|rep2 uniquely (and correctly) hint at the 'Where's Waldo' genre but do not commit or find characters. The empty t0.1|rep1 is a clear generation failure. Higher-temperature reps (t0.4, t0.7) tend to be slightly richer (more often mention horses, ice cream cart, land-on-horizon) but also more prone to embellishments (ocean liner, ice cream machine, pregnant woman, red sails, green/white huts). Per the dense-scene rule, minor unverified figures (beach balls, sandcastles, individuals with cameras) were NOT treated as firm hallucinations unless clearly wrong (green/white huts, red sails)."
+}

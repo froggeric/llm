@@ -1,0 +1,152 @@
+{
+  "image": "04_architecture.png",
+  "judgments": {
+    "G4-E4B|t0.1|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified (Web Client, API Gateway/FastAPI, Auth Service, Worker Queue, Postgres, Redis)",
+        "Protocols correct: HTTPS to gateway, gRPC to both backend services",
+        "Correct Auth→Postgres and Worker Queue→Redis connections with sensible role descriptions"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line going nowhere",
+        "Did not note box colors or that databases are ovals vs rounded rectangles"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate, well-structured capture of all components and protocols with no fabrication; minor omission of the diagram's design quirk."
+    },
+    "G4-E4B|t0.1|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified",
+        "HTTPS and gRPC protocols labeled correctly on the right edges",
+        "Correct pairing of Auth→Postgres and Worker Queue→Redis"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line",
+        "No mention of shapes/colors"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, correct architecture description matching the diagram exactly; only misses the dangling-line quirk."
+    },
+    "G4-E4B|t0.1|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified",
+        "HTTPS and gRPC protocols correct",
+        "Correct database connections per service"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line",
+        "No mention of shapes/colors"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and concise; captures the full architecture with no hallucination, omitting only the design quirk."
+    },
+    "G4-E4B|t0.4|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified",
+        "HTTPS and gRPC protocols correct",
+        "Correct Auth→Postgres and Worker Queue→Redis connections"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line",
+        "No mention of shapes/colors"
+      ],
+      "hallucinations": [],
+      "justification": "Solid correct description of the architecture; no fabrication, minor omission of the dangling line."
+    },
+    "G4-E4B|t0.4|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified (notes API Gateway implemented using FastAPI)",
+        "HTTPS and gRPC protocols correct",
+        "Correct database connections"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line",
+        "No mention of shapes/colors"
+      ],
+      "hallucinations": [],
+      "justification": "Correct and clear; captures all components and protocols faithfully with no fabrication."
+    },
+    "G4-E4B|t0.4|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified",
+        "HTTPS and gRPC protocols correct with expansions",
+        "Correct Auth→Postgres and Worker Queue→Redis connections"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line",
+        "No mention of shapes/colors"
+      ],
+      "hallucinations": [],
+      "justification": "Thorough, accurate description of the architecture; omits only the design quirk."
+    },
+    "G4-E4B|t0.7|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with detailed role descriptions",
+        "HTTPS and gRPC protocols correct",
+        "Correct Auth→Postgres and Worker Queue→Redis connections"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line (explicitly says 'five distinct connections')",
+        "No mention of shapes/colors"
+      ],
+      "hallucinations": [],
+      "justification": "Detailed and accurate; explicitly enumerates 5 connections but misses the dangling 3rd gRPC line."
+    },
+    "G4-E4B|t0.7|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified",
+        "HTTPS and gRPC protocols correct",
+        "Correct database connections"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line",
+        "No mention of shapes/colors"
+      ],
+      "hallucinations": [],
+      "justification": "Clean and correct capture of the full architecture; minor omission of the design quirk."
+    },
+    "G4-E4B|t0.7|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified",
+        "HTTPS and gRPC protocols correct",
+        "Correct Auth→Postgres and Worker Queue→Redis connections"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line",
+        "No mention of shapes/colors"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate, well-organized description with no fabrication; omits only the dangling-line quirk."
+    }
+  },
+  "ranking": [
+    "G4-E4B|t0.1|rep0",
+    "G4-E4B|t0.7|rep2",
+    "G4-E4B|t0.4|rep1",
+    "G4-E4B|t0.1|rep2",
+    "G4-E4B|t0.4|rep2",
+    "G4-E4B|t0.7|rep0",
+    "G4-E4B|t0.1|rep1",
+    "G4-E4B|t0.4|rep0",
+    "G4-E4B|t0.7|rep1"
+  ],
+  "notes": "All 9 responses are essentially equivalent in quality: each correctly identifies the 6 components, the HTTPS/gRPC protocols, and the 5 service-to-database connections, with zero hallucination. The single shared weakness across every rep and temperature is the failure to notice the dangling/phantom third gRPC line that splits off from the API Gateway but goes nowhere — the diagram's defining design quirk. No response noted colors or shapes either. Responses are remarkably stable across temperatures 0.1-0.7, indicating the model is highly reliable on this image. Rankings are near-arbitrary since all score 8; the top-ranked ones phrase the connections most precisely."
+}

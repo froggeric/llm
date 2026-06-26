@@ -1,0 +1,164 @@
+{
+  "image": "ui-test-1.png",
+  "judgments": {
+    "GLM-9B|t0.1|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Comprehensive enumeration of all three columns: nav items, settings categories, and right-panel General/Data Folder/Advanced sections",
+        "Correctly captures shortcuts ⌘N/⌘P/⌘K, version v0.8.2, English dropdown, App Data path, and the update toggle as enabled/on",
+        "Identifies both top-right extra icons (Download icon + Minimize/window icon) alongside the traffic-light dots"
+      ],
+      "key_misses": [
+        "Jan CLI path rendered as /Users/frederic/local/bin/jan (missing the dot before 'local')",
+        "Lists 'Check for Updates' twice (once as label, once as button) without noting the toggle/button distinction clearly",
+        "Calls the second top-right icon 'Minimize window icon' which is imprecise"
+      ],
+      "hallucinations": [],
+      "justification": "Thorough, accurate enumeration of the full UI with only minor OCR slips on the jan CLI path; no fabricated content."
+    },
+    "GLM-9B|t0.1|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Covers all sections across three columns including version, language, paths, and all buttons",
+        "Correctly notes Automatic Update Check toggle enabled, General selected/highlighted, Language dropdown closed",
+        "Captures shortcuts ⌘N/⌘P/⌘K and the Experimental tag under INTEGRATIONS"
+      ],
+      "key_misses": [
+        "Jan CLI path written as /Users/frederic/local/bin/jan (missing dot before 'local')",
+        "Second top-right icon generically labeled 'Window icon' rather than identified",
+        "Describes layout as 'Two-panel' then mentions a sub-left navigation — slightly inconsistent framing of the 3-column structure"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and complete coverage; only minor OCR/path slips and slightly muddled layout framing."
+    },
+    "GLM-9B|t0.1|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Enumerates all nav items, settings categories, providers (LOCAL/REMOTE), and right-panel sections with labels verbatim",
+        "Captures shortcuts, version v0.8.2, toggle on, English dropdown, full App Data path, and reset warning text",
+        "Notes the '+' button under MODEL PROVIDERS and the 'Chats' header with three dots"
+      ],
+      "key_misses": [
+        "Jan CLI path written as /Users/frederic/local/bin/jan (missing dot before 'local')",
+        "Labels 'App Logs' as a section header when it's a label within Data Folder area",
+        "Second top-right icon labeled generically as 'Window icon'"
+      ],
+      "hallucinations": [],
+      "justification": "Comprehensive and accurate listing with only a path OCR slip and minor structural mislabeling."
+    },
+    "GLM-9B|t0.4|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Full coverage of nav, settings categories, providers, and right-panel General/Data Folder/Advanced sections",
+        "Correctly captures shortcuts, version v0.8.2, toggle on, English dropdown, App Data path, and reset button as red",
+        "Identifies the Download icon and a second window icon at top-right"
+      ],
+      "key_misses": [
+        "Jan CLI path written as /Users/frederic/local/bin/jan (missing dot before 'local')",
+        "Second top-right icon only generically labeled 'Window icon'",
+        "'Check for Updates' appears both as a label and button without clear distinction"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate, well-structured enumeration of the entire UI; only a path OCR slip and minor labeling imprecision."
+    },
+    "GLM-9B|t0.4|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Most detailed icon attributions: assigns specific icons (eye, pencil, paperclip, globe, keyboard, lock, etc.) to each settings category and provider",
+        "Correctly renders last provider as 'xAI' (not 'xAl') and notes it as partially visible",
+        "Captures all sections, labels, version, paths, and toggle/button states accurately"
+      ],
+      "key_misses": [
+        "Jan CLI path written as /Users/frederic/local/bin/jan (missing dot before 'local')",
+        "Invents specific per-item icons (eye for Appearance, pencil for Assistants, star for Claude Code, etc.) that cannot all be verified from the image — plausible but unconfirmed",
+        "Response cuts off mid-sentence in section (4) ('Button: \"Check for Updates\" (normal')"
+      ],
+      "hallucinations": [
+        "Specific icon assignments for individual menu items (e.g., 'eye icon' for Appearance, 'pencil icon' for Assistants, 'star icon' for Claude Code) are invented detail not verifiable in the screenshot"
+      ],
+      "justification": "Most thorough and correct on provider naming, but over-specifies unverifiable per-item icons and the output is truncated mid-section."
+    },
+    "GLM-9B|t0.4|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Enumerates nav items, settings categories, providers, and right-panel sections with verbatim labels",
+        "Captures shortcuts, version v0.8.2, toggle enabled, English dropdown, full App Data path",
+        "Notes 'Settings' and 'General' both selected/highlighted"
+      ],
+      "key_misses": [
+        "Jan CLI path written as /Users/frederic/local/bin/jan (missing dot before 'local')",
+        "Second top-right icon labeled generically as 'window icon'",
+        "Response is truncated mid-list in section (4) at 'Anthrop' — incomplete final section"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate content but the response is cut off partway through the interactive-elements list, losing completeness."
+    },
+    "GLM-9B|t0.7|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Covers all nav items, settings categories, providers, and right-panel General/Data Folder/Advanced sections",
+        "Captures version v0.8.2, toggle enabled (red/orange), English dropdown, App Data path, and reset warning text",
+        "Identifies the Experimental badge, '+' add button, and '...' dropdown button"
+      ],
+      "key_misses": [
+        "Jan CLI path written as /Users/frederic/local/bin/jan (missing dot before 'local')",
+        "Misses the keyboard shortcuts (⌘N/⌘P/⌘K) entirely in the component list",
+        "Calls the traffic-light dots 'app icon' and does not mention the extra top-right icons (download/grid)"
+      ],
+      "hallucinations": [],
+      "justification": "Solid section coverage but omits the keyboard shortcuts and the extra top-right icons, and slips on the jan CLI path."
+    },
+    "GLM-9B|t0.7|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Lists all nav items, settings categories, providers, and right-panel sections with labels",
+        "Captures version v0.8.2, toggle on, English dropdown, App Data path, reset warning text",
+        "Notes Automatic Update Check toggle is on and the Experimental badge"
+      ],
+      "key_misses": [
+        "Jan CLI path written as /Users/frederic/local/bin/jan (missing dot before 'local')",
+        "Shortcuts listed only as bare letters 'N', 'P', 'K' rather than ⌘N/⌘P/⌘K — partial capture",
+        "Calls 'Check for Updates' a 'toggle' in section (2), mislabeling a button as a toggle",
+        "Does not mention the extra top-right icons (download/grid)"
+      ],
+      "hallucinations": [],
+      "justification": "Generally complete but with several labeling errors (Check for Updates called a toggle, shortcuts reduced to bare letters) and the jan CLI path slip."
+    },
+    "GLM-9B|t0.7|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Clearly describes the three-column layout (left sidebar, settings sub-sidebar, right content)",
+        "Enumerates all nav items, categories, providers, and right-panel sections with verbatim labels",
+        "Captures shortcuts ⌘N/⌘P/⌘K, version v0.8.2, toggle enabled, English dropdown, App Data path, reset warning"
+      ],
+      "key_misses": [
+        "Jan CLI path written as /Users/frederic/local/bin/jan (missing dot before 'local')",
+        "Omits the last provider entry (xAI) from the provider list entirely — stops at Groq",
+        "Second top-right icon labeled generically as 'Window icon'"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and well-structured, but drops the xAI provider entry and repeats the jan CLI path OCR slip."
+    }
+  },
+  "ranking": [
+    "GLM-9B|t0.1|rep0",
+    "GLM-9B|t0.4|rep0",
+    "GLM-9B|t0.1|rep2",
+    "GLM-9B|t0.1|rep1",
+    "GLM-9B|t0.7|rep2",
+    "GLM-9B|t0.4|rep1",
+    "GLM-9B|t0.4|rep2",
+    "GLM-9B|t0.7|rep0",
+    "GLM-9B|t0.7|rep1"
+  ],
+  "notes": "All 9 responses are strong and consistent (a couple truncated mid-list at higher temps). Common to every response: the Jan CLI path is misrendered as /Users/frederic/local/bin/jan (missing the dot before 'local') — this is a systematic OCR slip, not a hallucination, so it is recorded under key_misses only. Provider 'xAI' is variously written 'xAl' (lowercase-L) — also an OCR misread, not flagged as hallucination per the strict rules. Only t0.4|rep1 invented specific per-item icons (eye/pencil/star/etc.) that cannot be verified, the sole hallucination flagged. Lower temperatures (0.1) produced the most complete, least truncated outputs."
+}

@@ -1,0 +1,153 @@
+{
+  "image": "extract-code-test-1.png",
+  "judgments": {
+    "Q3.5-4B-Q8|t0.1|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct function name createAujourdhui (no apostrophe)",
+        "Combiner.push spelled correctly",
+        "French string 'La playlist d\\'aujourd\\'hui' with escaped apostrophes correct",
+        "aujourdhui.json, CHANSONS_FRANCAISES, getPlaylistTracksLightweight(id)), 500 arg placement all correct; Logger.log(e) in catch matches"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing the trailing underscore (should be validatePlaylistKeys_)"
+      ],
+      "hallucinations": [],
+      "justification": "Near-perfect transcription; only the trailing underscore on validatePlaylistKeys is wrong (an error shared by every response in this set)."
+    },
+    "Q3.5-4B-Q8|t0.1|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct function name createAujourdhui (no apostrophe)",
+        "Combiner.push spelled correctly",
+        "French string with escaped apostrophes correct",
+        "aujourdhui.json, CHANSONS_FRANCAISES, arg placement, and Logger.log(e) all match ground truth"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing the trailing underscore"
+      ],
+      "hallucinations": [],
+      "justification": "Identical to rep0; only the missing trailing underscore on validatePlaylistKeys differs from ground truth."
+    },
+    "Q3.5-4B-Q8|t0.1|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct function name createAujourdhui (no apostrophe)",
+        "Combiner.push spelled correctly",
+        "French string with escaped apostrophes correct",
+        "aujourdhui.json, CHANSONS_FRANCAISES, arg placement, and Logger.log(e) all match"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing the trailing underscore"
+      ],
+      "hallucinations": [],
+      "justification": "Identical to rep0/rep1; only the missing trailing underscore on validatePlaylistKeys differs from ground truth."
+    },
+    "Q3.5-4B-Q8|t0.4|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Combiner.push spelled correctly",
+        "French string with escaped apostrophes correct",
+        "Overall structure and most lines reproduced"
+      ],
+      "key_misses": [
+        "Function name written createAujourd'hui with an apostrophe (should be createAujourdhui)",
+        "CHANSONS_FRAICAISES typo (missing N, should be CHANSONS_FRANCAISES)",
+        "aujourd'hui.json has unescaped apostrophe breaking the filename literal (should be aujourdhui.json)",
+        "rateLimitedForEach arg placement wrong: getPlaylistTracksLightweight(id), 500 instead of getPlaylistTracksLightweight(id)), 500"
+      ],
+      "hallucinations": [],
+      "justification": "Captures the structure but introduces four distinct character-level OCR errors, including a broken string literal."
+    },
+    "Q3.5-4B-Q8|t0.4|rep1": {
+      "holistic_score": 0,
+      "failure_mode": "normal",
+      "key_hits": [],
+      "key_misses": [
+        "Did not transcribe any of the visible JavaScript function at all"
+      ],
+      "hallucinations": [
+        "Fabricated an entire HTML/CSS Spotify web-UI mockup (DOCTYPE, browser chrome, sidebar, color variables) that is not present in the image"
+      ],
+      "justification": "Total task failure: ignored the visible code and hallucinated an unrelated HTML/CSS document."
+    },
+    "Q3.5-4B-Q8|t0.4|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct function name createAujourdhui (no apostrophe)",
+        "Combiner.push spelled correctly",
+        "French string with escaped apostrophes correct",
+        "aujourdhui.json, CHANSONS_FRANCAISES, and arg placement all correct"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing the trailing underscore",
+        "Catch block writes Logger.log('Error: ' + e) instead of the ground-truth Logger.log(e)"
+      ],
+      "hallucinations": [],
+      "justification": "Strong transcription with the same shared underscore miss plus a minor paraphrase of the catch-block log message."
+    },
+    "Q3.5-4B-Q8|t0.7|rep0": {
+      "holistic_score": 0,
+      "failure_mode": "normal",
+      "key_hits": [],
+      "key_misses": [
+        "Did not transcribe any of the visible JavaScript function at all"
+      ],
+      "hallucinations": [
+        "Fabricated an entire HTML/CSS Apps Script web-UI mockup (Safari top bar, browser toolbar, sidebar) not present in the image"
+      ],
+      "justification": "Total task failure: produced an unrelated HTML/CSS UI mockup instead of the visible JavaScript code."
+    },
+    "Q3.5-4B-Q8|t0.7|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct function name createAujourdhui (no apostrophe)",
+        "Combiner.push spelled correctly",
+        "French string with escaped apostrophes correct",
+        "aujourdhui.json, CHANSONS_FRANCAISES, and arg placement all correct"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing the trailing underscore",
+        "Catch block writes Logger.log(\"Error: \" + e) instead of Logger.log(e)"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate transcription with extra blank lines (cosmetic) and a minor paraphrase of the catch log message."
+    },
+    "Q3.5-4B-Q8|t0.7|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct function name createAujourdhui (no apostrophe)",
+        "Combiner.push spelled correctly",
+        "French string with escaped apostrophes correct",
+        "aujourdhui.json, CHANSONS_FRANCAISES, and arg placement all correct"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing the trailing underscore",
+        "Catch block invents Logger.log(\"Error creating playlist: \" + e) which is not the ground-truth message"
+      ],
+      "hallucinations": [
+        "Catch-block log message text 'Error creating playlist: ' is fabricated (not in source)"
+      ],
+      "justification": "Mostly accurate but the catch block fabricates a descriptive error message string not present in the image."
+    }
+  },
+  "ranking": [
+    "Q3.5-4B-Q8|t0.1|rep0",
+    "Q3.5-4B-Q8|t0.1|rep1",
+    "Q3.5-4B-Q8|t0.1|rep2",
+    "Q3.5-4B-Q8|t0.4|rep2",
+    "Q3.5-4B-Q8|t0.7|rep1",
+    "Q3.5-4B-Q8|t0.7|rep2",
+    "Q3.5-4B-Q8|t0.4|rep0",
+    "Q3.5-4B-Q8|t0.4|rep1",
+    "Q3.5-4B-Q8|t0.7|rep0"
+  ],
+  "notes": "Temperature strongly affects fidelity: all three t0.1 reps are near-perfect (only the validatePlaylistKeys_ trailing underscore is missed, an error common to every response). At t0.4/t0.7, two reps (t0.4|rep1, t0.7|rep0) completely fail by hallucinating an unrelated HTML/CSS Spotify web UI, and t0.4|rep0 accumulates four character-level OCR errors (apostrophe in function name, CHANSONS_FRAICAISES typo, broken aujourdhui.json literal, wrong arg placement). All responses miss the trailing underscore on validatePlaylistKeys_, suggesting this discriminator is hard for this model."
+}

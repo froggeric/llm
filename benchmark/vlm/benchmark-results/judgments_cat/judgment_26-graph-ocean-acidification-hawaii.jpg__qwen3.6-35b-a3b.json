@@ -1,0 +1,146 @@
+{
+  "image": "26-graph-ocean-acidification-hawaii.jpg",
+  "judgments": {
+    "Q3.6-35B-A3B|t0.1|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct title, axes (X 1958-2018, left CO2 275-425, right pH 8.03-8.33) and all three series with correct colors/stations",
+        "Atmospheric CO2 ~315 to ~415 ppm and ocean pCO2 starting 1990 are accurate",
+        "Correctly identifies declining ocean pH and acidification trend tied to rising CO2"
+      ],
+      "key_misses": [
+        "pCO2 2018 ~390 ppm slightly high (closer to ~380); pH end ~8.05 marginally low (~8.06)",
+        "Calls it a 'scatter plot with connecting lines' rather than a line chart"
+      ],
+      "hallucinations": [],
+      "justification": "Highly accurate extraction of all axes, series, stations, and trends with only minor numeric imprecision on pCO2 end value."
+    },
+    "Q3.6-35B-A3B|t0.1|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct axes, ranges, all three series with proper stations and colors",
+        "Atmospheric CO2 ~315 to ~415 ppm accurate"
+      ],
+      "key_misses": [
+        "Ocean pCO2 ~400 ppm in 2018 is ~20 ppm high (GT ~380)",
+        "Ocean pH start ~8.15 is high (GT ~8.12); 'pH drops ~0.1 units over 30 years' is roughly right but end value slightly off"
+      ],
+      "hallucinations": [],
+      "justification": "Solid and well-structured but pCO2 end value inflated to ~400 ppm and pH start a touch high."
+    },
+    "Q3.6-35B-A3B|t0.1|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct axes, ranges, series, stations, and colors",
+        "Atmospheric CO2 values and trend accurate"
+      ],
+      "key_misses": [
+        "Ocean pCO2 ~400 ppm in 2018 is ~20 ppm high",
+        "pH start ~8.15 high and 'lowest point ~8.03 in 2018' is plausible but unstated on chart"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate structure and trends; pCO2 end value overstated and pH specifics slightly off."
+    },
+    "Q3.6-35B-A3B|t0.4|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct axes, ranges, series, and stations",
+        "Atmospheric CO2 ~315 to ~415 ppm accurate"
+      ],
+      "key_misses": [
+        "Ocean pCO2 ~400 ppm in 2018 ~20 ppm high",
+        "pH start ~8.15 high; lowest ~8.04 is plausible but not verifiable from chart"
+      ],
+      "hallucinations": [],
+      "justification": "Consistent with the other reps; same pCO2 end-value overstatement and slightly elevated pH start."
+    },
+    "Q3.6-35B-A3B|t0.4|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct axes, ranges, series, stations, and colors",
+        "Atmospheric CO2 ~315 to ~415 ppm; ocean pCO2 ~390 in 2018 close to GT ~380",
+        "pH ~8.10 to ~8.05 very close to ground truth (~8.12 to ~8.06)"
+      ],
+      "key_misses": [
+        "Slightly overstates post-2000 volatility claims, but directionally correct"
+      ],
+      "hallucinations": [],
+      "justification": "Among the most accurate reps; pH values closely match ground truth and pCO2 only marginally high."
+    },
+    "Q3.6-35B-A3B|t0.4|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly notes the inset map (only rep besides t0.7|rep1 to mention it)",
+        "Correct axes, ranges, series, and stations",
+        "pH start ~8.12 and end ~8.07 very close to ground truth; quantifies seasonal amplitudes reasonably"
+      ],
+      "key_misses": [
+        "pCO2 end ~390 ppm marginally above GT ~380"
+      ],
+      "hallucinations": [],
+      "justification": "Best-rounded answer: mentions the inset map and gives pH values closest to ground truth."
+    },
+    "Q3.6-35B-A3B|t0.7|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct axes, ranges, units, and series with stations",
+        "Atmospheric CO2 ~315 to ~415 ppm and pCO2 ~390 in 2018 are accurate",
+        "Provides explicit delta calculations (+100 ppm CO2, -0.11 pH)"
+      ],
+      "key_misses": [
+        "Ocean pH ~8.18 in early 1990s is high (GT ~8.12); -0.11 unit delta slightly overstated",
+        "Claims 'no outliers or inflection points' though ~1990 data onset is a real inflection"
+      ],
+      "hallucinations": [],
+      "justification": "Strong quantitative framing but pH start value inflated and dismissal of the 1990 inflection is a minor miss."
+    },
+    "Q3.6-35B-A3B|t0.7|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies the inset map and which axis each series uses",
+        "Correct axes, ranges, and labels quoted verbatim",
+        "Atmospheric CO2 ~315 to ~415 ppm accurate"
+      ],
+      "key_misses": [
+        "Ocean pCO2 'began ~300 ppm (~1990)' is low (GT ~325) and start year slightly early",
+        "Ocean pH ~8.18 start is high (GT ~8.12)"
+      ],
+      "hallucinations": [],
+      "justification": "Notable for explicitly mapping each series to its axis and noting the inset map, but pCO2 start value understated and pH start overstated."
+    },
+    "Q3.6-35B-A3B|t0.7|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct axes, ranges, units, series, and stations",
+        "Atmospheric CO2 ~315 to ~415 ppm accurate; correctly notes ocean series begin ~1990"
+      ],
+      "key_misses": [
+        "Ocean pCO2 ~400 ppm in 2018 ~20 ppm high; start ~330 slightly high (~325)",
+        "pH start ~8.15 high (GT ~8.12)"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate overall structure and trends with the common pCO2 end-value overstatement and elevated pH start."
+    }
+  },
+  "ranking": [
+    "Q3.6-35B-A3B|t0.4|rep2",
+    "Q3.6-35B-A3B|t0.4|rep1",
+    "Q3.6-35B-A3B|t0.1|rep0",
+    "Q3.6-35B-A3B|t0.7|rep0",
+    "Q3.6-35B-A3B|t0.7|rep1",
+    "Q3.6-35B-A3B|t0.1|rep1",
+    "Q3.6-35B-A3B|t0.1|rep2",
+    "Q3.6-35B-A3B|t0.4|rep0",
+    "Q3.6-35B-A3B|t0.7|rep2"
+  ],
+  "notes": "All 9 responses are highly accurate and mutually consistent: every rep correctly extracted the title, dual axes (X 1958-2018, CO2 275-425 ppm, pH 8.03-8.33), three series with correct colors/stations, the atmospheric CO2 values (~315 to ~415 ppm), and the acidification narrative. No hallucinations in any response. The only recurring errors are a pCO2 2018 end value of ~400 ppm (GT ~380; only t0.4|rep1 and t0.7|rep0 got it closer at ~390) and an ocean pH start value of ~8.15 (GT ~8.12). Two reps (t0.4|rep2, t0.7|rep1) were the only ones to mention the inset map of Hawaii, which the others omitted without error."
+}

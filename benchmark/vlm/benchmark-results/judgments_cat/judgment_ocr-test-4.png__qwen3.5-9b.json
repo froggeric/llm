@@ -1,0 +1,155 @@
+{
+  "image": "ocr-test-4.png",
+  "judgments": {
+    "Q3.5-9B|t0.1|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct registry header, registrar name, phone/fax, address, and website www.registradores.org",
+        "All four fincas (32840, 32885, 32803, 32871) and titular Adelina Muñoz + DNI 50183525D captured",
+        "Nº Entrada 11656/2025 and applicant first name Joan correct; full legal/GDPR boilerplate transcribed"
+      ],
+      "key_misses": [
+        "Surname misread as 'Almirante Moropos' (GT: Almiñana Moropsa)",
+        "Nº Borrador misread as 412/2025 (GT: 42/2025); DNI as 30041185C (GT: 20041185C); phone as 6358891002 (GT: 635889002)",
+        "Email domains misread: corralejo@registrodelapropiedad.org (GT: registrodelapropriedad.org) and invented joan.moropos@gmail.com (GT: joansnobc@gmail.com)"
+      ],
+      "hallucinations": [],
+      "justification": "Strong structural transcription with all key fields present, but consistent OCR slips on handwritten fields (surname, DNI digit, borrador number, email) and the registry-email domain spelling."
+    },
+    "Q3.5-9B|t0.1|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header block fully correct including www.registradores.org; Nº Entrada 11656/2025 right",
+        "All four fincas and titular Adelina Muñoz Arenas 50183525D captured",
+        "Applicant first name Joan and the full GDPR/legal text transcribed"
+      ],
+      "key_misses": [
+        "Surname 'Almirante Moropos' vs GT Almiñana Moropsa; DNI 30041185C vs 20041185C; phone 6358891002 vs 635889002",
+        "Nº Borrador 412/2025 vs GT 42/2025; address '4-19' vs GT n°19; email invented as joan.almirante@gmail.com (GT: joansnobc@gmail.com)",
+        "Registry email misread: registrodelapropiedad.org vs GT registrodelapropriedad.org"
+      ],
+      "hallucinations": [],
+      "justification": "Nearly identical quality to rep0 — solid layout/boilerplate capture with the same recurring handwritten-field OCR errors and an invented applicant email."
+    },
+    "Q3.5-9B|t0.1|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header fully correct (www.registradores.org); Nº Entrada 11656/2025; all four fincas; titular correct",
+        "Applicant first name Joan and complete GDPR boilerplate transcribed"
+      ],
+      "key_misses": [
+        "Surname 'Almirante Moropos' vs GT Almiñana Moropsa; DNI 30041185C vs 20041185C; phone 6358891002 vs 635889002",
+        "Nº Borrador 412/2025 vs 42/2025; address '4-19' vs n°19; applicant email joan.moropos@gmail.com vs GT joansnobc@gmail.com",
+        "Registry email registrodelapropiedad.org vs GT registrodelapropriedad.org"
+      ],
+      "hallucinations": [],
+      "justification": "Same pattern as the other t0.1 reps — accurate printed text, recurring slips on the handwritten surname/DNI/phone/email and the registry email domain."
+    },
+    "Q3.5-9B|t0.4|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header fully correct (www.registradores.org); Nº Entrada 11656/2025; all four fincas; titular captured",
+        "DNI closest to GT among reps: '20 04 1185 C' (digits match 20041185C); address 'n.19' matches GT n°19 better than other reps",
+        "Full GDPR boilerplate transcribed; applicant first name Joan"
+      ],
+      "key_misses": [
+        "Surname 'Almirang Moropos' vs GT Almiñana Moropsa; phone 6358891002 vs 635889002",
+        "Nº Borrador 412/2025 vs GT 42/2025; applicant email joan.moropos@gmail.com vs GT joansnobc@gmail.com",
+        "Titular DNI rendered '50183525.D' with a stray dot; registry email registrodelapropiedad.org vs GT registrodelapropriedad.org"
+      ],
+      "hallucinations": [],
+      "justification": "Slightly better OCR on the DNI digits and address number than the t0.1 reps, though surname and email still slip; overall comparable quality."
+    },
+    "Q3.5-9B|t0.4|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header fully correct (www.registradores.org); Nº Entrada 11656/2025; all four fincas; titular Adelina Muñoz Arenas 50183525D",
+        "Applicant first name Joan; full GDPR boilerplate transcribed"
+      ],
+      "key_misses": [
+        "Nº Borrador 712/2025 (worst borrador read, GT 42/2025); surname 'Almirante Moropos' vs GT Almiñana Moropsa",
+        "DNI 30041185C vs 20041185C; phone 6358891002 vs 635889002; address '4-19' vs n°19",
+        "Applicant email invented as joan.almirante@gmail.com (GT joansnobc@gmail.com); registry email registrodelapropiedad.org vs GT registrodelapropriedad.org"
+      ],
+      "hallucinations": [],
+      "justification": "Same structure as peers but a worse Nº Borrador read (712 vs 42) and an invented applicant email; slightly below the t0.1 cluster."
+    },
+    "Q3.5-9B|t0.4|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header fully correct; Nº Entrada 11656/2025; all four fincas; titular Adelina Muñoz Arenas captured",
+        "Accented surname rendering 'Estévez Martín' and complete GDPR boilerplate; applicant first name Joan"
+      ],
+      "key_misses": [
+        "Surname 'Almirante Moropos' vs GT Almiñana Moropsa; DNI 30041185C vs 20041185C; phone 6358891002 vs 635889002",
+        "Nº Borrador 412/2025 vs GT 42/2025; address '4-19' vs n°19; applicant email joan.moropos@gmail.com vs GT joansnobc@gmail.com",
+        "Titular DNI '50183525.D' with stray dot; registry email registrodelapropiedad.org vs GT registrodelapropriedad.org"
+      ],
+      "hallucinations": [],
+      "justification": "On par with the t0.1 reps — accurate printed text and fincas, same recurring handwritten-field OCR errors."
+    },
+    "Q3.5-9B|t0.7|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header mostly correct (phone/fax, address); all four fincas captured; titular Adelina Muñoz Arenas",
+        "Nº Borrador 412/2025 and full GDPR boilerplate; applicant first name Joan"
+      ],
+      "key_misses": [
+        "Website misread 'www.registadores.org' (missing 'r', GT www.registradores.org); Nº Entrada 08656/2025 vs GT 11656/2025",
+        "Surname 'Almirang Moropos' vs GT Almiñana Moropsa; address 'C/ Gerardo esdevez Martin n-19' badly garbled vs GT n°19",
+        "Applicant email invented as joans.mor@gnail.com (gmail misspelled, GT joansnobc@gmail.com); phone 635891002 vs GT 635889002"
+      ],
+      "hallucinations": [],
+      "justification": "More OCR degradation at t0.7 — wrong Entrada digit, garbled address, misspelled website/gmail — but no fabricated content, so failures are key_misses not hallucinations."
+    },
+    "Q3.5-9B|t0.7|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header correct (www.registradores.org); Nº Entrada 11656/2025; all four fincas; titular Adelina Muñoz Arenas 50183525D",
+        "Applicant first name Joan; full GDPR boilerplate transcribed"
+      ],
+      "key_misses": [
+        "Surname 'Almirante Toropos' vs GT Almiñana Moropsa; DNI 30041185C vs 20041185C; phone 6358891002 vs 635889002",
+        "Nº Borrador 412/2025 vs GT 42/2025; address '4-19' vs n°19; registry email 'registrodela propriedad.org' split with a space",
+        "Applicant email joan.snobc@gmail.com vs GT joansnobc@gmail.com (close but missing 's')"
+      ],
+      "hallucinations": [],
+      "justification": "Printed text and fincas accurate; applicant email is the closest of all reps (joan.snobc vs joansnobc) but surname and DNI still slip."
+    },
+    "Q3.5-9B|t0.7|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header correct (www.registradores.org); Nº Entrada 11656/2025; all four fincas; titular Adelina Muñoz Arenas 50183525D",
+        "Applicant first name Joan; GDPR boilerplate complete"
+      ],
+      "key_misses": [
+        "Surname 'Almirante Moragas' vs GT Almiñana Moropsa; DNI 20041185C correct digits; phone 635891002 vs GT 635889002",
+        "Nº Borrador 412/2025 vs GT 42/2025; address '4-19' vs n°19; applicant email joans.moragas@gmail.com vs GT joansnobc@gmail.com",
+        "'Dofia' for Doña (OCR slip); registry email registrodelapropiedad.org vs GT registrodelapropriedad.org"
+      ],
+      "hallucinations": [],
+      "justification": "Printed text and fincas accurate with correct DNI digits, but a badly wrong surname (Moragas) and invented email pull it below the t0.1/t0.4 cluster."
+    }
+  },
+  "ranking": [
+    "Q3.5-9B|t0.4|rep0",
+    "Q3.5-9B|t0.1|rep0",
+    "Q3.5-9B|t0.1|rep2",
+    "Q3.5-9B|t0.1|rep1",
+    "Q3.5-9B|t0.4|rep2",
+    "Q3.5-9B|t0.7|rep1",
+    "Q3.5-9B|t0.4|rep1",
+    "Q3.5-9B|t0.7|rep2",
+    "Q3.5-9B|t0.7|rep0"
+  ],
+  "notes": "All 9 reps are structurally faithful — they transcribe the full form including the GDPR boilerplate with no fabricated/invented content, so hallucination lists are empty throughout. Quality differences are purely OCR accuracy on handwritten fields (surname Almiñana Moropsa, DNI 20041185C, phone 635889002, applicant email joansnobc@gmail.com) and two printed-text slips that recur across reps: Nº Borrador read as 412 instead of 42, and the registry-email domain 'registrodelapropiedad.org' instead of the printed 'registrodelapropriedad.org' — per judging rules these are misreads (key_misses), not hallucinations. Lower temperatures (0.1/0.4) are more stable; t0.7 shows more garbled reads (wrong Entrada digit, 'gnail.com', 'Moragas'). t0.4|rep0 edges ahead on the closest DNI/address reads."
+}

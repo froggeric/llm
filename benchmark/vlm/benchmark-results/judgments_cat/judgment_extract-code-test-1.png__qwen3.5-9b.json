@@ -1,0 +1,181 @@
+{
+  "image": "extract-code-test-1.png",
+  "judgments": {
+    "Q3.5-9B|t0.1|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "function name createAujourdhui (no apostrophe) correct",
+        "name string 'La playlist d\\'aujourd\\'hui' with both apostrophes correctly escaped",
+        "historyFile 'aujourdhui.json' correct (no apostrophe)",
+        "Combiner.push (not Combine), Filter/Selector/Cache/Playlist classes all correct; overall structure and comments faithfully reproduced"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys( written WITHOUT the trailing underscore (image/GT: validatePlaylistKeys_)",
+        "rateLimitedForEach structure wrong: 500 placed inside Combiner.push(tracks, getPlaylistTracksLightweight(id), 500) instead of being the 3rd argument to rateLimitedForEach"
+      ],
+      "hallucinations": [
+        "appended a full try/catch + closing braces not visible in the (bottom-truncated) image"
+      ],
+      "justification": "Faithful overall OCR with both hard string literals exactly right, but drops the trailing underscore on validatePlaylistKeys_ and mis-nests the 500 argument."
+    },
+    "Q3.5-9B|t0.1|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "createAujourdhui function name correct",
+        "name string with both escaped apostrophes correct",
+        "historyFile 'aujourdhui.json' correct",
+        "all class names and overall body reproduced accurately"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys( missing trailing underscore",
+        "500 mis-nested inside Combiner.push rather than as 3rd arg to rateLimitedForEach"
+      ],
+      "hallucinations": [
+        "appended try/catch + closing braces beyond the truncated image bottom"
+      ],
+      "justification": "Identical in quality to rep0: both string literals exact, same two structural identifier/arity errors."
+    },
+    "Q3.5-9B|t0.1|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "createAujourdhui function name correct",
+        "historyFile 'aujourdhui.json' correct",
+        "class names and overall body correct"
+      ],
+      "key_misses": [
+        "name string misspelled 'La playlist d\\'aujord\\'hui' (dropped a 'd' in aujourd'hui)",
+        "validatePlaylistKeys( missing trailing underscore",
+        "500 mis-nested inside Combiner.push"
+      ],
+      "hallucinations": [
+        "appended try/catch + closing braces beyond the truncated image"
+      ],
+      "justification": "Same structural errors as the t0.1 rep0/1 pair plus a spelling corruption in the aujourd'hui string."
+    },
+    "Q3.5-9B|t0.4|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "createAujourdhui function name correct",
+        "historyFile 'aujourdhui.json' correct",
+        "class names and body otherwise accurate"
+      ],
+      "key_misses": [
+        "name string collapsed to 'La playlist d\\'aujourdhui' (lost the second escaped apostrophe)",
+        "validatePlaylistKeys( missing trailing underscore",
+        "500 mis-nested inside Combiner.push"
+      ],
+      "hallucinations": [
+        "appended try/catch + closing braces beyond the truncated image"
+      ],
+      "justification": "historyFile right but the today's-playlist name lost its second apostrophe escape on top of the shared errors."
+    },
+    "Q3.5-9B|t0.4|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "createAujourdhui function name correct",
+        "historyFile 'aujourdhui.json' correct",
+        "class names and body otherwise accurate"
+      ],
+      "key_misses": [
+        "name string collapsed to 'La playlist d\\'aujourdhui' (lost the second escaped apostrophe)",
+        "validatePlaylistKeys( missing trailing underscore",
+        "500 mis-nested inside Combiner.push"
+      ],
+      "hallucinations": [
+        "appended try/catch + closing braces beyond the truncated image"
+      ],
+      "justification": "Same profile as t0.4|rep0: correct historyFile, corrupted name string, shared underscore/arity errors."
+    },
+    "Q3.5-9B|t0.4|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "createAujourdhui function name correct",
+        "name string 'La playlist d\\'aujourd\\'hui' with both escaped apostrophes correct",
+        "class names and body otherwise accurate"
+      ],
+      "key_misses": [
+        "historyFile written 'aujourd'hui.json' WITH an unescaped apostrophe — breaks the JS string literal (real syntax error), image shows 'aujourdhui.json'",
+        "validatePlaylistKeys( missing trailing underscore",
+        "500 mis-nested inside Combiner.push"
+      ],
+      "hallucinations": [
+        "appended try/catch + closing braces beyond the truncated image"
+      ],
+      "justification": "Introduces a JS-breaking unescaped apostrophe in the historyFile string literal, a more serious OCR failure than a dropped escape."
+    },
+    "Q3.5-9B|t0.7|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "createAujourdhui function name correct",
+        "name string with both escaped apostrophes correct",
+        "historyFile 'aujourdhui.json' correct",
+        "class names and body otherwise accurate"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys( missing trailing underscore",
+        "500 mis-nested inside Combiner.push (closing as 500)); merging the two calls)",
+        "catch body simplified to Logger.log(e), losing the 'Error creating playlist: ' prefix"
+      ],
+      "hallucinations": [
+        "appended try/catch + closing braces beyond the truncated image"
+      ],
+      "justification": "Both hard string literals exact, but the catch log message is truncated relative to the image and the shared underscore/arity errors remain."
+    },
+    "Q3.5-9B|t0.7|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "createAujourdhui function name correct",
+        "name string with both escaped apostrophes correct",
+        "historyFile 'aujourdhui.json' correct",
+        "catch body 'Logger.log(\"Error creating playlist: \" + e)' matches the image's intent",
+        "class names and body otherwise accurate"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys( missing trailing underscore",
+        "500 mis-nested inside Combiner.push (closing as 500)); rather than as 3rd arg to rateLimitedForEach)"
+      ],
+      "hallucinations": [
+        "appended try/catch + closing braces beyond the truncated image"
+      ],
+      "justification": "Both string literals exact and the most internally consistent catch handling of the group; only the shared underscore and 500-arity errors hold it back."
+    },
+    "Q3.5-9B|t0.7|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "createAujourdhui function name correct",
+        "name string with both escaped apostrophes correct",
+        "class names and body otherwise accurate"
+      ],
+      "key_misses": [
+        "historyFile written 'aujourd'hui.json' WITH an unescaped apostrophe — breaks the JS string literal, image shows 'aujourdhui.json'",
+        "validatePlaylistKeys( missing trailing underscore",
+        "500 mis-nested inside Combiner.push"
+      ],
+      "hallucinations": [
+        "appended try/catch + closing braces beyond the truncated image"
+      ],
+      "justification": "Same JS-breaking historyFile apostrophe error as t0.4|rep2; a syntax-corrupting OCR miss despite a correct name string."
+    }
+  },
+  "ranking": [
+    "Q3.5-9B|t0.7|rep1",
+    "Q3.5-9B|t0.1|rep0",
+    "Q3.5-9B|t0.1|rep1",
+    "Q3.5-9B|t0.7|rep0",
+    "Q3.5-9B|t0.1|rep2",
+    "Q3.5-9B|t0.4|rep0",
+    "Q3.5-9B|t0.4|rep1",
+    "Q3.5-9B|t0.4|rep2",
+    "Q3.5-9B|t0.7|rep2"
+  ],
+  "notes": "All 9 responses are structurally near-identical and share two consistent OCR errors: (1) validatePlaylistKeys written without the required trailing underscore (validatePlaylistKeys_), and (2) the literal 500 misplaced as a 3rd argument to Combiner.push instead of as the 3rd argument to rateLimitedForEach. The image is truncated at the bottom (ends at Cache.compressTracks), so every response hallucinates an appended try/catch and closing braces that are not visible. Differentiation comes down to the two hard French-string literals: the 6 reps that keep BOTH the escaped name string 'La playlist d\\'aujourd\\'hui' AND the apostrophe-free historyFile 'aujourdhui.json' score 7; reps that corrupt the name string (drop a 'd' or collapse the second escape) score 6; reps that introduce an unescaped apostrophe in historyFile (breaking JS syntax) score 5. Higher temperature (0.7) produced the single best response (t0.7|rep1, most coherent catch block) but also tied for the worst (t0.7|rep2, syntax-breaking historyFile)."
+}

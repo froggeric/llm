@@ -1,0 +1,169 @@
+{
+  "image": "ui-test-2.png",
+  "judgments": {
+    "Q3VL-8B-Q8|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct three-pane layout and all major labels (Projects, Default Project History, 20 edits found, Configuration, Image/Text tabs)",
+        "Correctly captures all error messages, FAILED badges, queue issues, and the full projected-cost table ($0.0011 each, $0.240 each, Standard tier, gemini-3-pro-image-preview)",
+        "Correctly notes Estimated: $0.00 and the two FAILED history items with their models"
+      ],
+      "key_misses": [
+        "Reads history-item cost as '$9.00' — actual visible value is $0.00 (OCR misread of the digit)",
+        "States 'Generate Image' button is 'enabled' — it is faded/disabled per ground truth",
+        "PROJECTED COST value: lists only 'Estimated only', omits the '≈ $0.00' figure"
+      ],
+      "hallucinations": [],
+      "justification": "Comprehensive and well-structured transcription, but misreads the cost digit ($9.00 vs $0.00) and the disabled Generate Image button state."
+    },
+    "Q3VL-8B-Q8|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct layout, all section labels, FAILED statuses, queue issues, and full projected-cost breakdown",
+        "Captures the partial third history entry ('A hand-drawn felt marker') and the Gemini_Generated_Image filename"
+      ],
+      "key_misses": [
+        "Reads history-item cost as '$9.00' — actual value is $0.00",
+        "Calls 'Generate Image' button '(blue, active state)' — it is faded/disabled",
+        "PROJECTED COST value: lists only 'Estimated only', omits '≈ $0.00'"
+      ],
+      "hallucinations": [],
+      "justification": "Same accurate structure as rep0 with the same two key OCR/state errors (cost digit and button state)."
+    },
+    "Q3VL-8B-Q8|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct layout and History-tab-active detection; captures Staging/Results/History tab states accurately",
+        "Full projected-cost table and all FAILED/queue error messages transcribed"
+      ],
+      "key_misses": [
+        "Reads history-item cost as '$9.00' — actual value is $0.00",
+        "States 'Generate Image — button, enabled, blue' — it is faded/disabled",
+        "PROJECTED COST value: lists only 'Estimated only', omits '≈ $0.00'"
+      ],
+      "hallucinations": [],
+      "justification": "Equally thorough transcription; same cost-digit and button-state misreads as the other Q3VL-8B reps."
+    },
+    "Q3VL-8B-Q8|rep3": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct layout, all labels, FAILED statuses, queue, and full projected-cost table",
+        "Notes OUTPUT LOCATION expanded showing the full path"
+      ],
+      "key_misses": [
+        "Reads history-item cost as '$9.00' — actual value is $0.00",
+        "States 'Generate Image' button is 'enabled' — it is faded/disabled",
+        "PROJECTED COST value: lists only 'Estimated only', omits '≈ $0.00'"
+      ],
+      "hallucinations": [],
+      "justification": "Identical accuracy profile to the other Q3VL-8B reps: strong transcription weakened by the recurring cost-digit and button-state errors."
+    },
+    "Q3VL-8B-Q8|rep4": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct layout with accurate History-active tab detection; full projected-cost table",
+        "Captures all FAILED statuses, queue issues, and the Gemini filename"
+      ],
+      "key_misses": [
+        "Reads history-item cost as '$9.00' — actual value is $0.00",
+        "States 'Generate Image — button, enabled, blue' — it is faded/disabled",
+        "PROJECTED COST value: lists only 'Estimated only', omits '≈ $0.00'"
+      ],
+      "hallucinations": [],
+      "justification": "Consistent with the Q3VL-8B cluster: thorough and structured, but uniformly misreads the cost digit and the disabled button."
+    },
+    "Q3.5-4B|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly reads the history-item cost as '$0.00' (the only rep to get this right)",
+        "Correctly notes 'PROJECTED COST ≈ $0.00' with the ≈ symbol and the full breakdown",
+        "Well-organized prose layout covering all three panes, tabs, FAILED statuses, and queue issues"
+      ],
+      "key_misses": [
+        "Calls 'Generate Image' a 'blue pill button' in default state — it is faded/disabled",
+        "Reads input cost as '$0.001 each' instead of '$0.0011 each' (dropped a digit)",
+        "Describes history icons as 'lock → warning triangle' and a 'Refresh icon (retry)' and model icon as 'blue circle with G' — these specific icon interpretations are unverified"
+      ],
+      "hallucinations": [],
+      "justification": "Best of the Q3.5-4B reps: only one to correctly read $0.00 cost and the ≈ $0.00 projected cost; minor icon embellishments and the button-state miss keep it from higher."
+    },
+    "Q3.5-4B|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Most thorough icon/element enumeration of any response; correct layout, tabs, and projected-cost table including '≈ $0.00'",
+        "Correctly identifies 'Generate Image' button as 'Disabled (grayed out)' — the only response to get the button state right"
+      ],
+      "key_misses": [
+        "Reads history-item cost as '$0.00' in the verbatim list but elsewhere the value is consistent — however it then labels the model icons ('G' globe) and a 'Progress bar (gray, partially filled)' on FAILED items that may not exist",
+        "Response is truncated mid-sentence at 'Placeholder text pre' — incomplete (4) section"
+      ],
+      "hallucinations": [],
+      "justification": "Mostly accurate and notably catches the disabled Generate Image button, but truncated before finishing and includes some unverified icon/progress-bar detail."
+    },
+    "Q3.5-4B|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct layout, tabs, FAILED statuses, queue issues, and the projected-cost breakdown including '≈ $0.00'",
+        "Correctly states 'Generate Image — disabled or inactive (no prompt selected)'"
+      ],
+      "key_misses": [
+        "Reads history-item cost as '$8.00' — actual value is $0.00",
+        "Reads input cost as '$0.001 each' instead of '$0.0011 each'",
+        "Adds an unverified 'Refresh/cycle icon near failed entries' and 'lock icon' interpretations"
+      ],
+      "hallucinations": [],
+      "justification": "Good structure and correctly reads the disabled button, but misreads the cost digit ($8.00) and includes some speculative icon detail."
+    },
+    "Q3.5-4B|rep3": {
+      "holistic_score": 4,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Correct three-column layout, tabs, FAILED statuses, queue section, and most configuration labels",
+        "Captures 'Generate Image (Blue pill shape)' and the Auto Mode / aspect-ratio structure"
+      ],
+      "key_misses": [
+        "Reads history-item cost as '$8.00' — actual value is $0.00",
+        "Response is truncated mid-sentence inside the PROJECTED COST table ('Inputs: $0.0') — sections (3) and (4) entirely missing",
+        "Lists many icons (Lock, Arrow, Warning Triangle, Refresh, Globe) per history item that are unverified"
+      ],
+      "hallucinations": [],
+      "justification": "Severely truncated — cuts off before completing the cost table and never reaches the error-message or interactive-elements sections; also misreads the cost digit."
+    },
+    "Q3.5-4B|rep4": {
+      "holistic_score": 5,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Correct layout, tabs, FAILED statuses, queue, and most of the projected-cost breakdown",
+        "Correctly states 'Generate Image' button is 'disabled (grayed out, likely due to failed queue)'"
+      ],
+      "key_misses": [
+        "Reads history-item cost as '$8.00' — actual value is $0.00",
+        "Response is truncated mid-sentence at the end ('clear visual hierarchy a')",
+        "Adds unverified icon interpretations ('lock, retry, model' icons on history rows)"
+      ],
+      "hallucinations": [],
+      "justification": "Accurately captures the disabled button and overall structure, but misreads the cost digit and trails off truncated at the very end."
+    }
+  },
+  "ranking": [
+    "Q3.5-4B|rep0",
+    "Q3VL-8B-Q8|rep0",
+    "Q3VL-8B-Q8|rep3",
+    "Q3VL-8B-Q8|rep1",
+    "Q3VL-8B-Q8|rep2",
+    "Q3VL-8B-Q8|rep4",
+    "Q3.5-4B|rep1",
+    "Q3.5-4B|rep2",
+    "Q3.5-4B|rep4",
+    "Q3.5-4B|rep3"
+  ],
+  "notes": "Two systematic error patterns across all responses: (1) the per-history-item cost is $0.00 but Q3VL-8B-Q8 reads it as $9.00 in all 5 reps while Q3.5-4B reads $8.00 in reps 2-4 (only Q3.5-4B rep0 gets it right) — these are OCR misreads, not hallucinations; (2) the 'Generate Image' button is faded/disabled, yet 8 of 10 responses call it enabled/blue — only Q3.5-4B reps 1, 2, and 4 correctly identify it as disabled. Q3VL-8B-Q8 produces remarkably consistent, complete, well-structured transcriptions but uniformly misses the cost digit and button state; Q3.5-4B is more variable, with two reps (3 and 4) truncated and rep1 also truncated mid-response. No response fabricated clearly-absent content; the minor icon embellishments (lock/refresh/progress-bar) in Q3.5-4B reps are unverified-but-plausible UI elements and were not flagged as hallucinations per the dense-scene confidence rule."
+}

@@ -1,0 +1,252 @@
+{
+  "image": "ui-test-1.png",
+  "judgments": {
+    "Q3VL-8B-Q8|t0.1|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly captures 3-column layout with left nav + middle settings categories + right content",
+        "Correctly identifies Check for Updates button as enabled and Automatic Update Check toggle ON",
+        "Lists accurate text labels for all sections including App Version v0.8.2 and full Jan CLI path"
+      ],
+      "key_misses": [
+        "Omits the ⌘N/⌘P/⌘K keyboard shortcuts shown next to New Chat/New Projects/Search",
+        "Does not mention the x.AI truncated last provider entry or the colored per-provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Thorough and largely accurate capture of the settings UI with the correct Check for Updates enabled state; omits the visible keyboard shortcuts and the x.AI entry."
+    },
+    "Q3VL-8B-Q8|t0.1|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 3-column layout and complete list of settings-category and provider labels",
+        "Correctly notes Automatic Update Check toggle ON and Reset button red",
+        "Captures App Version v0.8.2 and full Data Folder / Jan CLI paths"
+      ],
+      "key_misses": [
+        "States Check for Updates button is Disabled/grayed out when it is actually enabled",
+        "Omits ⌘N/⌘P/⌘K shortcuts, the x.AI entry, and colored provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Strong structural capture but misreads the Check for Updates button state as disabled."
+    },
+    "Q3VL-8B-Q8|t0.1|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 3-column layout (vertical tabbed nav on left, content on right)",
+        "Correctly identifies Check for Updates as enabled and toggle ON",
+        "Accurate enumeration of all settings categories and provider names with full paths"
+      ],
+      "key_misses": [
+        "Omits ⌘N/⌘P/⌘K keyboard shortcuts shown next to nav items",
+        "Does not mention the x.AI truncated provider entry or colored provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and complete aside from omitting the visible keyboard shortcuts and the x.AI entry."
+    },
+    "Q3VL-8B-Q8|t0.1|rep3": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct layout description and full label enumeration including all providers up to Groq",
+        "Correctly notes toggle ON and Reset button red with white text",
+        "Captures v0.8.2 and the full App Data / Jan CLI paths"
+      ],
+      "key_misses": [
+        "States Check for Updates button is Disabled/grayed out when it is enabled",
+        "Omits ⌘N/⌘P/⌘K shortcuts, x.AI entry, and colored provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Solid structural capture but misreads the Check for Updates button as disabled."
+    },
+    "Q3VL-8B-Q8|t0.1|rep4": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 3-column layout with vertical tabbed nav framing",
+        "Correctly identifies Check for Updates as enabled and toggle ON (red/orange)",
+        "Accurate full label list with v0.8.2 and complete paths"
+      ],
+      "key_misses": [
+        "Omits ⌘N/⌘P/⌘K keyboard shortcuts next to New Chat/New Projects/Search",
+        "Does not mention x.AI truncated entry or colored provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate capture with the correct Check for Updates state; same omissions as the other reps (shortcuts, x.AI)."
+    },
+    "Q3VL-8B-Q8|t0.4|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 3-column layout and complete settings/provider label enumeration",
+        "Correctly notes toggle ON (orange) and Reset red with white text",
+        "Captures v0.8.2 and full App Data / Jan CLI paths"
+      ],
+      "key_misses": [
+        "States Check for Updates button is Disabled/grayed out when it is actually enabled",
+        "Omits ⌘N/⌘P/⌘K shortcuts, x.AI entry, and colored provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Good structural capture but misreads the Check for Updates button as disabled."
+    },
+    "Q3VL-8B-Q8|t0.4|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct layout and full label list including all providers through Groq",
+        "Correctly notes toggle ON and Reset red background",
+        "Captures v0.8.2 and complete paths"
+      ],
+      "key_misses": [
+        "States Check for Updates button is Disabled/greyed out when it is enabled",
+        "Omits ⌘N/⌘P/⌘K shortcuts, x.AI entry, and colored provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Thorough label capture but misreads the Check for Updates button state as disabled."
+    },
+    "Q3VL-8B-Q8|t0.4|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct layout with left nav, main settings, and right scrollbar noted",
+        "Correctly notes toggle ON (red) and Reset red with white text",
+        "Full accurate label list with v0.8.2 and complete paths"
+      ],
+      "key_misses": [
+        "States Check for Updates button is Disabled/grayed out when it is enabled",
+        "Omits ⌘N/⌘P/⌘K shortcuts, x.AI entry, and colored provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Solid capture but misreads the Check for Updates button as disabled."
+    },
+    "Q3VL-8B-Q8|t0.4|rep3": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly describes the two-panel main content (settings nav + detail) layout",
+        "Correctly notes toggle ON (red/orange) and Reset red background",
+        "Full accurate label enumeration with v0.8.2 and complete paths"
+      ],
+      "key_misses": [
+        "States Check for Updates button is Disabled/greyed out when it is enabled",
+        "Omits ⌘N/⌘P/⌘K shortcuts, x.AI entry, and colored provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Detailed structural capture but misreads the Check for Updates button as disabled."
+    },
+    "Q3VL-8B-Q8|t0.4|rep4": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies Check for Updates as enabled and toggle ON (red/orange)",
+        "Correctly notes Reset red prominent and toggle state",
+        "Captures v0.8.2 and the core section labels"
+      ],
+      "key_misses": [
+        "Reorders/drops the verbatim helper-text descriptions present in other reps, less faithful label section",
+        "Omits ⌘N/⌘P/⌘K shortcuts, x.AI entry, and colored provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Correct Check for Updates state but a less complete/faithful label listing than the stronger reps."
+    },
+    "Q3VL-8B-Q8|t0.7|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 3-column layout (vertical tabbed nav + General form on right)",
+        "Correctly identifies Check for Updates button as enabled and toggle ON (red/orange)",
+        "Full accurate label list with v0.8.2 and complete paths"
+      ],
+      "key_misses": [
+        "Omits ⌘N/⌘P/⌘K keyboard shortcuts next to nav items",
+        "Does not mention x.AI truncated entry or colored provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate capture with correct Check for Updates enabled state; same characteristic omissions."
+    },
+    "Q3VL-8B-Q8|t0.7|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct layout and full label list through Groq",
+        "Correctly notes toggle ON (orange/red) and Reset red enabled",
+        "Captures v0.8.2 and complete paths"
+      ],
+      "key_misses": [
+        "States Check for Updates button is disabled/grayed when it is enabled",
+        "Marks Change Location, Show in Finder, Open Logs, and Uninstall all as disabled — these are enabled buttons",
+        "Omits ⌘N/⌘P/⌘K shortcuts, x.AI entry, and colored provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Multiple button-state misreads (Check for Updates plus four other buttons marked disabled) drag this below the cohort."
+    },
+    "Q3VL-8B-Q8|t0.7|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies the two-column main area and Settings/INTEGRATIONS/MODEL PROVIDERS grouping",
+        "Correctly notes toggle ON (red slider right) and Reset red with white text",
+        "Full accurate label list with v0.8.2 and complete paths"
+      ],
+      "key_misses": [
+        "States Check for Updates button is Disabled/grayed out when it is enabled",
+        "Marks Uninstall as grayed out/disabled when it is an enabled button",
+        "Omits ⌘N/⌘P/⌘K shortcuts, x.AI entry, and colored provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Good structural grouping but misreads Check for Updates and Uninstall button states as disabled."
+    },
+    "Q3VL-8B-Q8|t0.7|rep3": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct two-section main content framing (settings categories + General detail)",
+        "Correctly identifies Check for Updates as enabled/grey and toggle ON (orange)",
+        "Correctly notes all of Change Location/Show in Finder/Open Logs/Uninstall as enabled, Reset red",
+        "Full accurate label list with v0.8.2 and complete paths"
+      ],
+      "key_misses": [
+        "Omits ⌘N/⌘P/⌘K keyboard shortcuts next to nav items",
+        "Does not mention x.AI truncated entry or colored provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Most button-state-accurate of the cohort (Check for Updates enabled, all secondary buttons enabled); only the usual omissions."
+    },
+    "Q3VL-8B-Q8|t0.7|rep4": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct layout framing with Settings sub-sections and General/Data Folder/Advanced grouping",
+        "Correctly notes toggle ON and Reset enabled red",
+        "Captures v0.8.2 and core labels"
+      ],
+      "key_misses": [
+        "States Check for Updates button is Disabled/greyed out when it is enabled",
+        "Marks Change Location, Show in Finder, Open Logs, and Uninstall all as disabled — these are enabled",
+        "Omits ⌘N/⌘P/⌘K shortcuts, x.AI entry, and colored provider icons"
+      ],
+      "hallucinations": [],
+      "justification": "Multiple button-state misreads (Check for Updates plus four secondary buttons flagged disabled) place this near the bottom."
+    }
+  },
+  "ranking": [
+    "Q3VL-8B-Q8|t0.7|rep3",
+    "Q3VL-8B-Q8|t0.1|rep0",
+    "Q3VL-8B-Q8|t0.1|rep2",
+    "Q3VL-8B-Q8|t0.1|rep4",
+    "Q3VL-8B-Q8|t0.7|rep0",
+    "Q3VL-8B-Q8|t0.4|rep4",
+    "Q3VL-8B-Q8|t0.1|rep1",
+    "Q3VL-8B-Q8|t0.1|rep3",
+    "Q3VL-8B-Q8|t0.4|rep0",
+    "Q3VL-8B-Q8|t0.4|rep1",
+    "Q3VL-8B-Q8|t0.4|rep2",
+    "Q3VL-8B-Q8|t0.4|rep3",
+    "Q3VL-8B-Q8|t0.7|rep2",
+    "Q3VL-8B-Q8|t0.7|rep1",
+    "Q3VL-8B-Q8|t0.7|rep4"
+  ],
+  "notes": "All 15 reps share the same characteristic strengths (correct 3-column layout, accurate label enumeration through Groq, correct v0.8.2, correct toggle-ON and red Reset) and the same characteristic omissions (none mention the ⌘N/⌘P/⌘K keyboard shortcuts, none capture the truncated x.AI last provider, none note the colored per-provider icons). No hallucinations were found in any response — the listed labels are all genuinely present. The differentiator is purely the Check for Updates button state (and, in two t0.7 reps, the secondary buttons): reps that read it as 'enabled' score 8, those reading 'disabled' score 7, and the two t0.7 reps that flag four+ extra buttons as disabled score 6. t0.7|rep3 is the only rep that gets every button state right."
+}

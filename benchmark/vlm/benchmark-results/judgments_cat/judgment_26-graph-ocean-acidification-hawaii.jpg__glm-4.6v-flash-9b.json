@@ -1,0 +1,162 @@
+{
+  "image": "26-graph-ocean-acidification-hawaii.jpg",
+  "judgments": {
+    "GLM-9B|t0.1|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies multi-series line chart with dual y-axes and exact axis ranges (1958-2018, CO2 275-425, pH 8.03-8.33)",
+        "Right series colors/labels (red atmospheric CO2, green ocean pCO2, blue ocean pH) and overall trends",
+        "Atmospheric CO2 1958 value ~315 ppm is correct"
+      ],
+      "key_misses": [
+        "2018 atmospheric CO2 quoted ~419 ppm vs ~415 actually plotted (minor over-read)",
+        "Ocean pCO2 quoted ~400 in 2018 vs ~380 actually plotted (moderate over-read)",
+        "No mention of Mauna Loa / Station ALOHA source or the Hawaiian Islands inset map"
+      ],
+      "hallucinations": [],
+      "justification": "Axes and series identification are flawless, but the two CO2 endpoint values are over-reads and the inset map / station names are omitted."
+    },
+    "GLM-9B|t0.1|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type, axis labels and exact ranges (1958-2018, CO2 275-425, pH 8.03-8.33)",
+        "Correct three series colors and labels with correct trends",
+        "Atmospheric CO2 1958 ~315 ppm is correct"
+      ],
+      "key_misses": [
+        "2018 atmospheric CO2 ~419 ppm and ocean pCO2 ~400 ppm both over-read vs plotted ~415 and ~380",
+        "Stations (Mauna Loa, ALOHA) and inset Hawaiian Islands map not mentioned"
+      ],
+      "hallucinations": [],
+      "justification": "Nearly identical to rep0; structurally complete and correct on axes/series but repeats the same CO2/pCO2 endpoint over-reads and omits the map."
+    },
+    "GLM-9B|t0.1|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type and exact axis ranges (1958-2018, CO2 275-425, pH 8.03-8.33)",
+        "Correct series colors, labels and overall trends",
+        "Atmospheric CO2 1958 value correct"
+      ],
+      "key_misses": [
+        "Same CO2 endpoint over-reads (atm ~419, pCO2 ~400 in 2018)",
+        "No mention of stations or inset map"
+      ],
+      "hallucinations": [],
+      "justification": "Effectively a duplicate of the other t0.1 reps; strong on structure, same numeric over-reads on the two CO2 series."
+    },
+    "GLM-9B|t0.4|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type and exact axis ranges",
+        "Correctly names both stations (Mauna Loa, Aloha) tied to the right series — only response group to do so",
+        "Correct atmospheric CO2 1958 ~315 ppm start value and correct overall trends"
+      ],
+      "key_misses": [
+        "2018 atmospheric CO2 ~421 ppm over-read (vs ~415)",
+        "Ocean pCO2 quoted peaking near 410 ppm in 2018 vs ~380 actually plotted (largest single over-read in the set)",
+        "Inset Hawaiian Islands map not mentioned"
+      ],
+      "hallucinations": [],
+      "justification": "Best of the t0.4 set because it identifies the actual stations, but its ocean pCO2 ~410 ppm peak is the most inflated value in the batch."
+    },
+    "GLM-9B|t0.4|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type and exact axis ranges (1958-2018, CO2 275-425, pH 8.03-8.33)",
+        "Correctly names both stations (Mauna Loa, Aloha) for each series",
+        "Atmospheric CO2 1958 ~315 ppm start value correct"
+      ],
+      "key_misses": [
+        "2018 atmospheric CO2 ~421 ppm over-read",
+        "Ocean pCO2 ~410 ppm in 2018 vs ~380 plotted (large over-read)",
+        "Inset map omitted"
+      ],
+      "hallucinations": [
+        "Describes ocean pH as ~8.16 in 1993 with 'steep decline post-1993' — the chart shows ~8.12 with a roughly linear gentle decline, not steep from an inflated 8.16 start"
+      ],
+      "justification": "Strong structural answer with station names, but inflates ocean pCO2 endpoints and overstates the pH start value and decline steepness."
+    },
+    "GLM-9B|t0.4|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type and exact axis ranges",
+        "Correct series colors, labels and overall trends",
+        "Atmospheric CO2 1958 ~315 ppm correct; 2018 ~420 is only ~5 ppm high"
+      ],
+      "key_misses": [
+        "Ocean pCO2 2018 ~400 over-read vs ~380",
+        "No station names or inset map mentioned"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, compact and mostly accurate, but repeats the common pCO2 over-read and omits the stations/map."
+    },
+    "GLM-9B|t0.7|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type (dual y-axis multi-series line) and exact axis ranges",
+        "Correct three series colors/labels and overall trends",
+        "Atmospheric CO2 1958 ~315 ppm correct"
+      ],
+      "key_misses": [
+        "2018 atmospheric CO2 ~418 ppm and ocean pCO2 ~410 ppm both over-read (pCO2 especially high vs ~380)",
+        "Stations and inset map omitted"
+      ],
+      "hallucinations": [
+        "Claims 'inflection: all series accelerate upward from ~1993 onward' — the plotted series are essentially linear with no visible acceleration/inflection"
+      ],
+      "justification": "Accurate on axes and series but fabricates a post-1993 acceleration/inflection that is not present in the data and repeats the pCO2 over-read."
+    },
+    "GLM-9B|t0.7|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type and axis labels with correct ranges",
+        "Correct three series colors/labels and overall trends",
+        "Atmospheric CO2 1958 ~315 ppm correct"
+      ],
+      "key_misses": [
+        "2018 atmospheric CO2 ~419 ppm and ocean pCO2 ~400 ppm over-read vs plotted values",
+        "Stations and inset map omitted"
+      ],
+      "hallucinations": [
+        "Asserts an 'inflection point 1993-1994 (sharp rise for all series)' — no such sharp rise/inflection is visible; trends are gradual and roughly linear"
+      ],
+      "justification": "Structurally sound but, like other t0.7 reps, invents a 1993-1994 inflection/sharp-rise that the chart does not show, plus the usual CO2 over-reads."
+    },
+    "GLM-9B|t0.7|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct chart type and exact axis ranges",
+        "Correctly names both stations (Mauna Loa, Aloha) tied to the right series",
+        "Atmospheric CO2 1958 ~315 ppm start correct; overall trends correct"
+      ],
+      "key_misses": [
+        "2018 atmospheric CO2 ~421 ppm over-read",
+        "Ocean pCO2 ~405 ppm in 2018 over-read vs ~380",
+        "Inset Hawaiian Islands map not mentioned"
+      ],
+      "hallucinations": [],
+      "justification": "One of the better answers (names stations, no fabricated inflection), but still over-reads both CO2 endpoints and omits the map."
+    }
+  },
+  "ranking": [
+    "GLM-9B|t0.4|rep0",
+    "GLM-9B|t0.7|rep2",
+    "GLM-9B|t0.4|rep2",
+    "GLM-9B|t0.4|rep1",
+    "GLM-9B|t0.1|rep0",
+    "GLM-9B|t0.1|rep1",
+    "GLM-9B|t0.1|rep2",
+    "GLM-9B|t0.7|rep1",
+    "GLM-9B|t0.7|rep0"
+  ],
+  "notes": "All 9 responses correctly nail the chart type, axis labels/ranges, and the three series colors and overall trends — a strong, consistent baseline. The recurring, systematic error across the whole batch is over-reading the two CO2 series' 2018 endpoints (atmospheric ~418-421 ppm vs ~415 plotted; ocean pCO2 ~400-410 ppm vs ~380 plotted), suggesting the model misreads the right-side scale or extrapolates. None of the nine responses mentioned the inset Hawaiian Islands map (a key visual element), and only the three t0.4-rep0/t0.7-rep2 variants named the Mauna Loa/ALOHA stations. The t0.7 reps uniquely fabricated a 'post-1993 inflection/acceleration' that is absent from the roughly linear plotted data — a mild hallucination that drags them below the t0.1/t0.4 cluster."
+}

@@ -1,0 +1,143 @@
+{
+  "image": "extract-code-test-1.png",
+  "judgments": {
+    "Q3VL-8B-Q8|t0.1|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": ["Captures overall structure, comments, Logger.log strings, and all 7 playlist keys", "Combiner.push correct (not Combine)", "La playlist d'aujourd'hui with escaped apostrophes correct", "All numerics (200, 6, 500) and date/description logic correct"],
+      "key_misses": ["createAujourd'hui should be createAujourdhui (no apostrophe)", "validatePlaylistKeys missing trailing underscore", "aujourd'hui.json should be aujourdhui.json (no apostrophe)", "rateLimitedForEach paren never closed — 500 inside Combiner.push makes broken JS"],
+      "hallucinations": ["Added closing braces (  } and }) not present in the visible image"],
+      "justification": "Faithful to the bulk of the code but fails all three hard identifier discriminators (apostrophes/underscore) and produces an unbalanced-parenthesis rateLimitedForEach call."
+    },
+    "Q3VL-8B-Q8|t0.1|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": ["Captures overall structure, comments, Logger.log strings, and all 7 playlist keys", "Combiner.push correct (not Combine)", "La playlist d'aujourd'hui with escaped apostrophes correct", "All numerics (200, 6, 500) and date/description logic correct"],
+      "key_misses": ["createAujourd'hui should be createAujourdhui (no apostrophe)", "validatePlaylistKeys missing trailing underscore", "aujourd'hui.json should be aujourdhui.json (no apostrophe)", "rateLimitedForEach paren never closed — 500 inside Combiner.push makes broken JS"],
+      "hallucinations": ["Added closing braces (  } and }) not present in the visible image"],
+      "justification": "Faithful to the bulk of the code but fails all three hard identifier discriminators and produces an unbalanced-parenthesis rateLimitedForEach call."
+    },
+    "Q3VL-8B-Q8|t0.1|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": ["Captures overall structure, comments, Logger.log strings, and all 7 playlist keys", "Combiner.push correct (not Combine)", "La playlist d'aujourd'hui with escaped apostrophes correct", "All numerics (200, 6, 500) and date/description logic correct"],
+      "key_misses": ["createAujourd'hui should be createAujourdhui (no apostrophe)", "validatePlaylistKeys missing trailing underscore", "aujourd'hui.json should be aujourdhui.json (no apostrophe)", "rateLimitedForEach paren never closed — 500 inside Combiner.push makes broken JS"],
+      "hallucinations": ["Added closing braces (  } and }) not present in the visible image"],
+      "justification": "Faithful to the bulk of the code but fails all three hard identifier discriminators and produces an unbalanced-parenthesis rateLimitedForEach call."
+    },
+    "Q3VL-8B-Q8|t0.1|rep3": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": ["Captures overall structure, comments, Logger.log strings, and all 7 playlist keys", "Combiner.push correct (not Combine)", "La playlist d'aujourd'hui with escaped apostrophes correct", "All numerics (200, 6, 500) and date/description logic correct"],
+      "key_misses": ["createAujourd'hui should be createAujourdhui (no apostrophe)", "validatePlaylistKeys missing trailing underscore", "aujourd'hui.json should be aujourdhui.json (no apostrophe)", "rateLimitedForEach paren never closed — 500 inside Combiner.push makes broken JS"],
+      "hallucinations": ["Added closing braces (  } and }) not present in the visible image"],
+      "justification": "Faithful to the bulk of the code but fails all three hard identifier discriminators and produces an unbalanced-parenthesis rateLimitedForEach call."
+    },
+    "Q3VL-8B-Q8|t0.1|rep4": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": ["Captures overall structure, comments, Logger.log strings, and all 7 playlist keys", "Combiner.push correct (not Combine)", "La playlist d'aujourd'hui with escaped apostrophes correct", "All numerics (200, 6, 500) and date/description logic correct"],
+      "key_misses": ["createAujourd'hui should be createAujourdhui (no apostrophe)", "validatePlaylistKeys missing trailing underscore", "aujourd'hui.json should be aujourdhui.json (no apostrophe)", "rateLimitedForEach paren never closed — 500 inside Combiner.push makes broken JS"],
+      "hallucinations": ["Added closing braces (  } and }) not present in the visible image"],
+      "justification": "Faithful to the bulk of the code but fails all three hard identifier discriminators and produces an unbalanced-parenthesis rateLimitedForEach call."
+    },
+    "Q3VL-8B-Q8|t0.4|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": ["Captures overall structure, comments, Logger.log strings, and all 7 playlist keys", "Combiner.push correct (not Combine)", "La playlist d'aujourd'hui with escaped apostrophes correct", "All numerics (200, 6, 500) and date/description logic correct"],
+      "key_misses": ["createAujourd'hui should be createAujourdhui (no apostrophe)", "validatePlaylistKeys missing trailing underscore", "aujourd'hui.json should be aujourdhui.json (no apostrophe)", "rateLimitedForEach paren never closed — 500 inside Combiner.push makes broken JS"],
+      "hallucinations": ["Added closing braces (  } and }) not present in the visible image"],
+      "justification": "Faithful to the bulk of the code but fails all three hard identifier discriminators and produces an unbalanced-parenthesis rateLimitedForEach call."
+    },
+    "Q3VL-8B-Q8|t0.4|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": ["Captures overall structure, comments, Logger.log strings, and all 7 playlist keys", "Combiner.push correct (not Combine)", "La playlist d'aujourd'hui with escaped apostrophes correct", "All numerics (200, 6, 500) and date/description logic correct"],
+      "key_misses": ["createAujourd'hui should be createAujourdhui (no apostrophe)", "validatePlaylistKeys missing trailing underscore", "aujourd'hui.json should be aujourdhui.json (no apostrophe)", "rateLimitedForEach paren never closed — 500 inside Combiner.push makes broken JS"],
+      "hallucinations": ["Added closing braces (  } and }) not present in the visible image"],
+      "justification": "Faithful to the bulk of the code but fails all three hard identifier discriminators and produces an unbalanced-parenthesis rateLimitedForEach call."
+    },
+    "Q3VL-8B-Q8|t0.4|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": ["Captures overall structure, comments, Logger.log strings, and all 7 playlist keys", "Combiner.push correct (not Combine)", "La playlist d'aujourd'hui with escaped apostrophes correct", "rateLimitedForEach call closes with )); so parentheses balance (structurally valid JS)"],
+      "key_misses": ["createAujourd'hui should be createAujourdhui (no apostrophe)", "validatePlaylistKeys missing trailing underscore", "aujourd'hui.json should be aujourdhui.json (no apostrophe)", "500 placed inside Combiner.push rather than as rateLimitedForEach 3rd arg (semantic drift from GT)"],
+      "hallucinations": ["Added closing braces (  } and }) not present in the visible image"],
+      "justification": "Same identifier errors as the rest but uniquely produces a parenthesis-balanced rateLimitedForEach, making it syntactically valid JS — marginally the best of the set."
+    },
+    "Q3VL-8B-Q8|t0.4|rep3": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": ["Captures overall structure, comments, Logger.log strings, and all 7 playlist keys", "Combiner.push correct (not Combine)", "La playlist d'aujourd'hui with escaped apostrophes correct", "All numerics (200, 6, 500) and date/description logic correct"],
+      "key_misses": ["createAujourd'hui should be createAujourdhui (no apostrophe)", "validatePlaylistKeys missing trailing underscore", "aujourd'hui.json should be aujourdhui.json (no apostrophe)", "rateLimitedForEach paren never closed — 500 inside Combiner.push makes broken JS"],
+      "hallucinations": ["Added closing braces (  } and }) not present in the visible image"],
+      "justification": "Faithful to the bulk of the code but fails all three hard identifier discriminators and produces an unbalanced-parenthesis rateLimitedForEach call."
+    },
+    "Q3VL-8B-Q8|t0.4|rep4": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": ["Captures overall structure, comments, Logger.log strings, and all 7 playlist keys", "Combiner.push correct (not Combine)", "La playlist d'aujourd'hui with escaped apostrophes correct", "All numerics (200, 6, 500) and date/description logic correct"],
+      "key_misses": ["createAujourd'hui should be createAujourdhui (no apostrophe)", "validatePlaylistKeys missing trailing underscore", "aujourd'hui.json should be aujourdhui.json (no apostrophe)", "rateLimitedForEach paren never closed — 500 inside Combiner.push makes broken JS"],
+      "hallucinations": ["Added closing braces (  } and }) not present in the visible image"],
+      "justification": "Faithful to the bulk of the code but fails all three hard identifier discriminators and produces an unbalanced-parenthesis rateLimitedForEach call."
+    },
+    "Q3VL-8B-Q8|t0.7|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": ["Captures overall structure, comments, Logger.log strings, and all 7 playlist keys", "Combiner.push correct (not Combine)", "La playlist d'aujourd'hui with escaped apostrophes correct", "rateLimitedForEach call closes with )); so parentheses balance (structurally valid JS)"],
+      "key_misses": ["createAujourd'hui should be createAujourdhui (no apostrophe)", "validatePlaylistKeys missing trailing underscore", "aujourd'hui.json should be aujourdhui.json (no apostrophe)", "500 placed inside Combiner.push rather than as rateLimitedForEach 3rd arg (semantic drift from GT)"],
+      "hallucinations": ["Added closing braces (  } and }) not present in the visible image"],
+      "justification": "Same identifier errors as the rest but uniquely produces a parenthesis-balanced rateLimitedForEach, making it syntactically valid JS — marginally the best of the set."
+    },
+    "Q3VL-8B-Q8|t0.7|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": ["Captures overall structure, comments, Logger.log strings, and all 7 playlist keys", "Combiner.push correct (not Combine)", "La playlist d'aujourd'hui with escaped apostrophes correct", "All numerics (200, 6, 500) and date/description logic correct"],
+      "key_misses": ["createAujourd'hui should be createAujourdhui (no apostrophe)", "validatePlaylistKeys missing trailing underscore", "aujourd'hui.json should be aujourdhui.json (no apostrophe)", "rateLimitedForEach reformatted to two lines and paren never closed — 500 inside Combiner.push makes broken JS"],
+      "hallucinations": ["Added closing braces (  } and }) not present in the visible image"],
+      "justification": "Faithful to the bulk of the code but fails all three hard identifier discriminators and produces an unbalanced-parenthesis rateLimitedForEach call (with a line-break reformat)."
+    },
+    "Q3VL-8B-Q8|t0.7|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": ["Captures overall structure, comments, Logger.log strings, and all 7 playlist keys", "Combiner.push correct (not Combine)", "La playlist d'aujourd'hui with escaped apostrophes correct", "All numerics (200, 6, 500) and date/description logic correct"],
+      "key_misses": ["createAujourd'hui should be createAujourdhui (no apostrophe)", "validatePlaylistKeys missing trailing underscore", "aujourd'hui.json should be aujourdhui.json (no apostrophe)", "rateLimitedForEach paren never closed — 500 inside Combiner.push makes broken JS"],
+      "hallucinations": ["Added closing braces (  } and }) not present in the visible image"],
+      "justification": "Faithful to the bulk of the code but fails all three hard identifier discriminators and produces an unbalanced-parenthesis rateLimitedForEach call."
+    },
+    "Q3VL-8B-Q8|t0.7|rep3": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": ["Captures overall structure, comments, Logger.log strings, and all 7 playlist keys", "Combiner.push correct (not Combine)", "La playlist d'aujourd'hui with escaped apostrophes correct", "All numerics (200, 6, 500) and date/description logic correct"],
+      "key_misses": ["createAujourd'hui should be createAujourdhui (no apostrophe)", "validatePlaylistKeys missing trailing underscore", "aujourd'hui.json should be aujourdhui.json (no apostrophe)", "rateLimitedForEach paren never closed — 500 inside Combiner.push makes broken JS"],
+      "hallucinations": ["Added closing braces (  } and }) not present in the visible image"],
+      "justification": "Faithful to the bulk of the code but fails all three hard identifier discriminators and produces an unbalanced-parenthesis rateLimitedForEach call."
+    },
+    "Q3VL-8B-Q8|t0.7|rep4": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": ["Captures overall structure, comments, Logger.log strings, and all 7 playlist keys", "Combiner.push correct (not Combine)", "La playlist d'aujourd'hui with escaped apostrophes correct", "All numerics (200, 6, 500) and date/description logic correct"],
+      "key_misses": ["createAujourd'hui should be createAujourdhui (no apostrophe)", "validatePlaylistKeys missing trailing underscore", "aujourd'hui.json should be aujourdhui.json (no apostrophe)", "rateLimitedForEach paren never closed — 500 inside Combiner.push makes broken JS"],
+      "hallucinations": ["Added closing braces (  } and }) not present in the visible image"],
+      "justification": "Faithful to the bulk of the code but fails all three hard identifier discriminators and produces an unbalanced-parenthesis rateLimitedForEach call."
+    }
+  },
+  "ranking": [
+    "Q3VL-8B-Q8|t0.4|rep2",
+    "Q3VL-8B-Q8|t0.7|rep0",
+    "Q3VL-8B-Q8|t0.1|rep0",
+    "Q3VL-8B-Q8|t0.1|rep1",
+    "Q3VL-8B-Q8|t0.1|rep2",
+    "Q3VL-8B-Q8|t0.1|rep3",
+    "Q3VL-8B-Q8|t0.1|rep4",
+    "Q3VL-8B-Q8|t0.4|rep0",
+    "Q3VL-8B-Q8|t0.4|rep1",
+    "Q3VL-8B-Q8|t0.4|rep3",
+    "Q3VL-8B-Q8|t0.4|rep4",
+    "Q3VL-8B-Q8|t0.7|rep1",
+    "Q3VL-8B-Q8|t0.7|rep2",
+    "Q3VL-8B-Q8|t0.7|rep3",
+    "Q3VL-8B-Q8|t0.7|rep4"
+  ],
+  "notes": "All 15 responses are near-duplicates that share the same three identifier-correctness failures flagged as hard discriminators: createAujourd'hui (apostrophe added), validatePlaylistKeys (trailing underscore dropped), aujourd'hui.json (apostrophe added). They also uniformly misplace the 500 into Combiner.push instead of as the rateLimitedForEach 3rd argument. 13 of 15 leave the rateLimitedForEach( paren unclosed (broken JS); only t0.4|rep2 and t0.7|rep0 balance with )); and score a point higher. The image is itself truncated at Cache.compressTracks(tracks); so the closing braces every response adds are a (minor, reasonable) hallucination not present in the source. No invented functions or fabricated strings beyond those braces; Combiner.push and the escaped La playlist d'aujourd'hui string are correctly preserved across all responses."
+}

@@ -1,0 +1,89 @@
+{
+  "image": "08-poster-class-schedule.jpg",
+  "judgments": {
+    "Q3.5-9B|t0.1|rep0": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes captured with correct days, times, titles", "Color legend correct (Yoga=Blue, Shaolin=Orange, Fitness=Green)", "Notes preserved (Embassy of India, Gabi, VIC Runners)"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Flawless transcription of the full schedule plus accurate color legend; the overlapping Monday 13:10 OSTEOPOROSIS slot is correctly included."
+    },
+    "Q3.5-9B|t0.1|rep1": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes with correct days/times/titles", "Color legend correct", "Notes preserved"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Identical in content to rep0; complete and accurate schedule with correct color-coding legend."
+    },
+    "Q3.5-9B|t0.1|rep2": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes with correct days/times/titles", "Notes preserved", "Legend categories correct"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Complete and accurate schedule; legend table is rearranged but content (Blue=Yoga, Orange=Shaolin, Green=Fitness) is correct."
+    },
+    "Q3.5-9B|t0.4|rep0": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes with correct days/times/titles", "Color legend correct", "Notes preserved"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Full and accurate schedule with correct color legend; only formatting differs (less padded table) from the t0.1 variants."
+    },
+    "Q3.5-9B|t0.4|rep1": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes with correct days/times/titles", "Color legend correct", "Notes preserved"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Complete accurate schedule; legend adds a redundant 'Meaning' column that simply restates the category, harmless."
+    },
+    "Q3.5-9B|t0.4|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes with correct days/times/titles", "Notes preserved"],
+      "key_misses": ["Legend omits the color-to-category mapping (only lists category names Yoga/Shaolin/Fitness without colors)"],
+      "hallucinations": [],
+      "justification": "Schedule content is fully accurate, but the legend table is degraded — it lists only the category names without the corresponding colors, losing part of the legend information."
+    },
+    "Q3.5-9B|t0.7|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes with correct days/times/titles", "Notes preserved", "Color legend mapping correct"],
+      "key_misses": ["Per-row Category column misassigns OSTEOPOROSIS Prevention to Fitness and PRANAYAMA to Yoga — categories not explicitly shown on the poster for those classes"],
+      "hallucinations": ["Invented per-class Category assignments (OSTEOPOROSIS=Fitness, TAIJI=Shaolin, PRANAYAMA=Yoga) that are not visible on the poster"],
+      "justification": "Schedule transcription is accurate, but the added Category column fabricates category labels for classes whose color/category isn't clearly shown, and the redundant per-day legend table is noisy."
+    },
+    "Q3.5-9B|t0.7|rep1": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes with correct days/times/titles", "Color legend correct", "Notes preserved"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Complete and accurate schedule with correct color legend; only the redundant 'Type' column in the legend is superfluous but harmless."
+    },
+    "Q3.5-9B|t0.7|rep2": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes with correct days/times/titles", "Notes preserved", "Legend color-to-category mapping correct"],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Full accurate schedule with correct Blue=Yoga, Orange=Shaolin, Green=Fitness legend; legend Day column is blank but color/meaning mapping is right."
+    }
+  },
+  "ranking": [
+    "Q3.5-9B|t0.1|rep0",
+    "Q3.5-9B|t0.1|rep1",
+    "Q3.5-9B|t0.1|rep2",
+    "Q3.5-9B|t0.4|rep0",
+    "Q3.5-9B|t0.4|rep1",
+    "Q3.5-9B|t0.7|rep1",
+    "Q3.5-9B|t0.7|rep2",
+    "Q3.5-9B|t0.4|rep2",
+    "Q3.5-9B|t0.7|rep0"
+  ],
+  "notes": "Q3.5-9B is remarkably consistent on this image: 8 of 9 responses are essentially perfect transcriptions of the 11-class schedule with the correct color legend (the t0.1 reps are byte-for-byte identical in content). The only blemishes are t0.4|rep2 losing the legend's colors and t0.7|rep0 fabricating per-class Category labels for classes whose category is not explicitly depicted on the poster. Temperature had no effect on schedule accuracy."
+}

@@ -1,0 +1,143 @@
+{
+  "image": "08-poster-class-schedule.jpg",
+  "judgments": {
+    "Q3.5-4B|t0.1|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes correct (day, time, name, notes)", "Preserves sub-notes (Embassy of India, with Gabi, w/ VIC Runners, OSTEOPOROSIS Prevention)", "Captures overlapping Mon/Tue 13:00 slots"],
+      "key_misses": ["Omits title (VIC Health Club) and colour-coding context"],
+      "hallucinations": [],
+      "justification": "Complete and accurate schedule with all 11 entries, correct times and notes; only lacks the poster title and colour-group framing."
+    },
+    "Q3.5-4B|t0.1|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes correct with times and notes", "Sub-notes preserved", "Overlapping Mon/Tue slots captured"],
+      "key_misses": ["No title or colour-coding"],
+      "hallucinations": [],
+      "justification": "Identical content to rep0 — full accurate schedule; only missing poster-level metadata."
+    },
+    "Q3.5-4B|t0.1|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes correct", "Sub-notes preserved", "Overlapping slots captured"],
+      "key_misses": ["No title or colour-coding"],
+      "hallucinations": [],
+      "justification": "Identical content to rep0 — full accurate schedule; only missing poster-level metadata."
+    },
+    "Q3.5-4B|t0.1|rep3": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes correct", "Sub-notes preserved", "Overlapping slots captured"],
+      "key_misses": ["No title or colour-coding"],
+      "hallucinations": [],
+      "justification": "Identical content to rep0 — full accurate schedule; only missing poster-level metadata."
+    },
+    "Q3.5-4B|t0.1|rep4": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes correct", "Sub-notes preserved", "Overlapping slots captured"],
+      "key_misses": ["No title or colour-coding"],
+      "hallucinations": [],
+      "justification": "Identical content to rep0 — full accurate schedule; only missing poster-level metadata."
+    },
+    "Q3.5-4B|t0.4|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes correct with times and notes", "Splits each day into its own table for readability", "Sub-notes preserved"],
+      "key_misses": ["No title or colour-coding"],
+      "hallucinations": [],
+      "justification": "Full accurate schedule, all 11 entries correct; per-day tables are equally complete, just formatted differently."
+    },
+    "Q3.5-4B|t0.4|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes correct", "Sub-notes preserved (on same line, slightly less tidy but content-accurate)", "Overlapping slots captured"],
+      "key_misses": ["No title or colour-coding; inline formatting slightly less clean"],
+      "hallucinations": [],
+      "justification": "Content-complete accurate schedule; minor formatting differences only."
+    },
+    "Q3.5-4B|t0.4|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes correct", "Sub-notes preserved", "Overlapping slots captured"],
+      "key_misses": ["No title or colour-coding"],
+      "hallucinations": [],
+      "justification": "Identical content to t0.1 rep0 — full accurate schedule."
+    },
+    "Q3.5-4B|t0.4|rep3": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes correct", "Sub-notes preserved", "Overlapping slots captured"],
+      "key_misses": ["No title or colour-coding"],
+      "hallucinations": [],
+      "justification": "Identical content to t0.1 rep0 — full accurate schedule."
+    },
+    "Q3.5-4B|t0.4|rep4": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes correct", "Sub-notes preserved", "Overlapping slots captured", "Clean aligned columns"],
+      "key_misses": ["No title or colour-coding"],
+      "hallucinations": [],
+      "justification": "Full accurate schedule, all 11 entries correct with clean alignment."
+    },
+    "Q3.5-4B|t0.7|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes correct", "Sub-notes preserved", "Overlapping slots captured"],
+      "key_misses": ["No title or colour-coding"],
+      "hallucinations": [],
+      "justification": "Full accurate schedule in a stacked per-day layout; content-complete."
+    },
+    "Q3.5-4B|t0.7|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes correct", "Sub-notes preserved", "Clean time|class column split per day"],
+      "key_misses": ["No title or colour-coding"],
+      "hallucinations": [],
+      "justification": "Full accurate schedule, all 11 entries correct; clean two-column per-day layout."
+    },
+    "Q3.5-4B|t0.7|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes correct in a flat Day|Activity|Time table", "Sub-notes folded into Activity cell", "Correct order and times"],
+      "key_misses": ["Instructor/Details column left empty though details exist in the Activity column", "No title or colour-coding"],
+      "hallucinations": [],
+      "justification": "All 11 classes accurate; the empty Details column is a layout choice, not a content error."
+    },
+    "Q3.5-4B|t0.7|rep3": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 classes correct", "Sub-notes preserved", "Overlapping Mon/Tue 13:00 slots shown side-by-side in a third column"],
+      "key_misses": ["No title or colour-coding"],
+      "hallucinations": [],
+      "justification": "Full accurate schedule; the third column elegantly pairs the overlapping Mon OSTEOPOROSIS and Tue TAIJI slots."
+    },
+    "Q3.5-4B|t0.7|rep4": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": ["All 11 class names and times present and correct"],
+      "key_misses": ["Activity Type column mis-categorises several classes (OSTEOPOROSIS = Fitness, TAIJI = Shaolin, YOGASTHENICS type listed as Fitness while event details duplicate the name)", "Drops the day dimension entirely — no Monday-Friday grouping, so the schedule structure is lost"],
+      "hallucinations": ["Activity Type labels (Fitness/Yoga/Shaolin/Pranayama) are inferred colour-group mappings not stated as such on the poster and several are wrong: OSTEOPOROSIS labelled Fitness but is its own entry, TAIJI labelled Shaolin"],
+      "justification": "Class names and times are all correct, but the fabricated 'Activity Type' column introduces miscategorisations and the loss of the per-day structure turns a weekly schedule into an undated list."
+    }
+  },
+  "ranking": [
+    "Q3.5-4B|t0.7|rep3",
+    "Q3.5-4B|t0.4|rep4",
+    "Q3.5-4B|t0.1|rep0",
+    "Q3.5-4B|t0.1|rep1",
+    "Q3.5-4B|t0.1|rep2",
+    "Q3.5-4B|t0.1|rep3",
+    "Q3.5-4B|t0.1|rep4",
+    "Q3.5-4B|t0.4|rep0",
+    "Q3.5-4B|t0.4|rep2",
+    "Q3.5-4B|t0.4|rep3",
+    "Q3.5-4B|t0.7|rep0",
+    "Q3.5-4B|t0.7|rep1",
+    "Q3.5-4B|t0.4|rep1",
+    "Q3.5-4B|t0.7|rep2",
+    "Q3.5-4B|t0.7|rep4"
+  ],
+  "notes": "Q3.5-4B is exceptionally stable on this image: 14 of 15 responses contain a perfectly accurate, complete 11-class schedule (all days, times, names, and sub-notes correct) and differ only in markdown layout — these all earn 9 (docked one point only for omitting the poster title and colour-coding, which the prompt did not explicitly require). The sole outlier is t0.7|rep4, which fabricates an 'Activity Type' column (inferred colour-group labels, several wrong: OSTEOPOROSIS→Fitness, TAIJI→Shaolin) and drops the day structure, scoring 5. No response hallucinated any non-existent class or time — the worst failure mode present is structural/labeling, not fabricated schedule content. Temperature had no meaningful effect on accuracy."
+}

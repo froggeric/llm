@@ -1,0 +1,165 @@
+{
+  "image": "ui-test-1.png",
+  "judgments": {
+    "Q3.5-4B-Q8|t0.1|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 3-column layout and full middle/right panel structure",
+        "Verbatim provider list including xAI, version v0.8.2, and data path /Users/frederic/Library/Application Support/Jan/data",
+        "Captured INTEGRATIONS (Experimental), MCP Servers, Claude Code, MODEL PROVIDERS + button"
+      ],
+      "key_misses": [
+        "Says 'Check for Updates' disabled/grayed out — it is enabled per GT",
+        "Writes Jan CLI path as /Users/frederic/local/bin/jan (missing the dot in .local)",
+        "Misses keyboard shortcuts ⌘N/⌘P/⌘K (claims all listed verbatim but omits them)"
+      ],
+      "hallucinations": [],
+      "justification": "Thorough and largely accurate structural description; docked for the wrong button state, the .local path slip, and omitted keyboard shortcuts."
+    },
+    "Q3.5-4B-Q8|t0.1|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Accurate 3-column layout and complete settings/provider enumeration",
+        "Correct toggle ON (orange), red Reset button, English dropdown",
+        "Right-panel helper text quoted verbatim"
+      ],
+      "key_misses": [
+        "Says 'Check for Updates' disabled/grayed out — actually enabled",
+        "Jan CLI path written as /Users/frederic/local/bin/jan (missing dot)",
+        "Omits ⌘N/⌘P/⌘K shortcuts despite listing the items"
+      ],
+      "hallucinations": [],
+      "justification": "Nearly identical quality to rep0 — clean and structured, same two recurring slips on button state and the .local path."
+    },
+    "Q3.5-4B-Q8|t0.1|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct layout and full provider/category lists with xAI included",
+        "Notes version v0.8.2, English dropdown, orange ON toggle, red Reset",
+        "Mentions download + grid icons at top of sidebar"
+      ],
+      "key_misses": [
+        "Says 'Check for Updates' disabled — it is enabled",
+        "Jan CLI path /Users/frederic/local/bin/jan (missing dot)",
+        "Omits ⌘N/⌘P/⌘K shortcuts"
+      ],
+      "hallucinations": [],
+      "justification": "Solid structural coverage but slightly thinner verbatim text than rep0/rep1; same recurring .local-path and button-state slips."
+    },
+    "Q3.5-4B-Q8|t0.4|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Only response to correctly capture keyboard shortcuts ⌘N/⌘P/⌘K next to New Chat/Projects/Search",
+        "Notes xAI partially visible and the MODEL PROVIDERS + add button",
+        "Full right-panel helper text quoted verbatim including data path"
+      ],
+      "key_misses": [
+        "Marks Change Location/Show in Finder/Open Logs/Uninstall as disabled-grayed — they are active per GT",
+        "Jan CLI path /Users/frederic/local/bin/jan (missing dot)",
+        "Says Language dropdown 'open' — it is closed/set to English"
+      ],
+      "hallucinations": [],
+      "justification": "Best of the set — uniquely captures the keyboard shortcuts and the partially-visible xAI note; docked for over-claiming disabled states and the .local path slip."
+    },
+    "Q3.5-4B-Q8|t0.4|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 3-column layout and complete provider/category enumeration",
+        "Notes orange ON toggle, red active Reset button, English dropdown",
+        "Captures both data and CLI paths"
+      ],
+      "key_misses": [
+        "Says 'Check for Updates' disabled — actually enabled",
+        "Jan CLI path /Users/frederic/local/bin/jan (missing dot)",
+        "Omits ⌘N/⌘P/⌘K shortcuts"
+      ],
+      "hallucinations": [
+        "Invents specific per-category icons not visible: lock icon (Privacy), globe (HTTPS Proxy), pencil (Assistants), paperclip (Attachments), robot (General), palette (Appearance), chart (Shortcuts), hard drive (Hardware), plug (Local API Server)"
+      ],
+      "justification": "Structurally fine but fabricates a detailed icon-per-menu-item scheme (lock/globe/robot/palette/chart/etc.) that cannot be verified in the image — a clear hallucination cluster."
+    },
+    "Q3.5-4B-Q8|t0.4|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Accurate 3-column layout with full middle and right panel structure",
+        "Correctly notes MODEL PROVIDERS + button, orange ON toggle, red Reset",
+        "Includes both Library and .local-ish paths"
+      ],
+      "key_misses": [
+        "Says 'Check for Updates' disabled — it is enabled",
+        "Jan CLI path /Users/frederic/local/bin/jan (missing dot)",
+        "Omits ⌘N/⌘P/⌘K shortcuts"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, concise structural description comparable to the t0.1 reps; no fabricated content, only the shared button-state and .local-path slips."
+    },
+    "Q3.5-4B-Q8|t0.7|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 3-column layout and exhaustive verbatim provider list with xAI",
+        "Quotes right-panel helper text fully and notes Experimental badge + ON toggle",
+        "Correctly describes Check for Updates / Change Location / Show in Finder / Open Logs / Uninstall / Reset as enabled"
+      ],
+      "key_misses": [
+        "Jan CLI path /Users/frederic/local/bin/jan (missing dot)",
+        "Top-bar described as 'download/upload icons' — grid/split-view icons, not upload",
+        "Omits ⌘N/⌘P/⌘K shortcuts"
+      ],
+      "hallucinations": [],
+      "justification": "Among the most accurate on button states (only one to mark Check for Updates enabled); only minor top-bar and .local-path slips, no fabrications."
+    },
+    "Q3.5-4B-Q8|t0.7|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 3-column layout and full middle/right panel item list",
+        "Captures MODEL PROVIDERS + button and Experimental badge",
+        "Notes orange ON toggle and red active Reset button"
+      ],
+      "key_misses": [
+        "Marks Change Location / Show in Finder / Open Logs / Uninstall as disabled-grayed — they are active",
+        "Jan CLI path /Users/frederic/local/bin/jan (missing dot)",
+        "Omits ⌘N/⌘P/⌘K shortcuts"
+      ],
+      "hallucinations": [
+        "Describes 'square icon at top-left' and a 'square icon (top-right of sidebar)' as distinct UI elements that are not clearly present"
+      ],
+      "justification": "Reasonable structure but over-claims disabled states and invents ambiguous 'square icons'; weaker than the cleaner reps."
+    },
+    "Q3.5-4B-Q8|t0.7|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct layout and complete provider/category enumeration with xAI",
+        "Notes version v0.8.2, English dropdown, orange ON toggle, red Reset",
+        "Captures both Library data path and CLI path"
+      ],
+      "key_misses": [
+        "Renders data path as /Users/frédéric/... (accented) — GT uses unaccented frederic",
+        "Marks Change Location / Show in Finder / Open Logs / Uninstall as grayed-inactive — they are active",
+        "Omits ⌘N/⌘P/⌘K shortcuts"
+      ],
+      "hallucinations": [],
+      "justification": "Generally accurate but the accented 'frédéric' path spelling is a notable misread and it over-claims disabled states."
+    }
+  },
+  "ranking": [
+    "Q3.5-4B-Q8|t0.4|rep0",
+    "Q3.5-4B-Q8|t0.7|rep0",
+    "Q3.5-4B-Q8|t0.1|rep0",
+    "Q3.5-4B-Q8|t0.1|rep1",
+    "Q3.5-4B-Q8|t0.4|rep2",
+    "Q3.5-4B-Q8|t0.1|rep2",
+    "Q3.5-4B-Q8|t0.7|rep2",
+    "Q3.5-4B-Q8|t0.7|rep1",
+    "Q3.5-4B-Q8|t0.4|rep1"
+  ],
+  "notes": "All 9 responses correctly identify the 3-column Jan v0.8.2 layout and enumerate the full provider list; none hallucinate absent providers or invented panels. The recurring cross-response errors are OCR/state misreads (key_misses), not fabrications: the Jan CLI path is consistently written /Users/frederic/local/bin/jan instead of /.local/bin/jan; 'Check for Updates' is frequently called disabled when GT says enabled; and only t0.4|rep0 captures the ⌘N/⌘P/⌘K shortcuts. The one clear hallucination is t0.4|rep1's invented per-category icon scheme (lock/globe/robot/palette/chart/hard-drive/plug). Per the strict rules, 'xAI' vs 'x.AI' and the accented 'frédéric' are treated as misreads (key_misses), not hallucinations."
+}

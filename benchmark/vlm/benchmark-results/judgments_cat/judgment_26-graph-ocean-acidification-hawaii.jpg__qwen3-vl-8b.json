@@ -1,0 +1,270 @@
+{
+  "image": "26-graph-ocean-acidification-hawaii.jpg",
+  "judgments": {
+    "Q3VL-8B-Q8|t0.1|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct title, axes, ranges, and station attribution (Mauna Loa / ALOHA)",
+        "Atmospheric CO2 315->415 ppm (1958->2018) is accurate",
+        "pH start year ~1990s and overall acidification trend correct"
+      ],
+      "key_misses": [
+        "Ocean pCO2 starting value stated as ~350 ppm; actual is ~325 ppm (inflated)",
+        "Ocean pCO2 end stated ~410 ppm; actual is ~380-385 ppm (inflated)",
+        "pH start value ~8.20 is too high; actual is ~8.12"
+      ],
+      "hallucinations": [],
+      "justification": "Solid structure and accurate axes/CO2/pH-trend, but ocean pCO2 values are systematically inflated by ~25-30 ppm and the pH starting value is too high."
+    },
+    "Q3VL-8B-Q8|t0.1|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct title, axes, ranges, station attribution",
+        "Atmospheric CO2 315->415 ppm accurate",
+        "pH decline and overall acidification trend correct"
+      ],
+      "key_misses": [
+        "Ocean pCO2 ~350->400 ppm; actual is ~325->~380-385 ppm (inflated both ends)",
+        "pH start ~8.20 too high; actual ~8.12",
+        "Misses stating pCO2 start year (just says '1990s')"
+      ],
+      "hallucinations": [],
+      "justification": "Same systematic pCO2/PH inflation as the t0.1 cohort; slightly better pCO2 endpoint (400 vs 410) but still off."
+    },
+    "Q3VL-8B-Q8|t0.1|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct title, axes, ranges, station attribution",
+        "Atmospheric CO2 315->415 ppm accurate",
+        "pH decline trend correct"
+      ],
+      "key_misses": [
+        "Ocean pCO2 ~350->410 ppm; actual ~325->~380-385 ppm (inflated)",
+        "pH start ~8.20 too high; actual ~8.12",
+        "Duplicated structure of rep0; no added accuracy"
+      ],
+      "hallucinations": [],
+      "justification": "Substantially identical to rep0 with the same pCO2 inflation error; not distinguishable in quality."
+    },
+    "Q3VL-8B-Q8|t0.1|rep3": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct title, axes, ranges, station attribution",
+        "Atmospheric CO2 315->415 ppm accurate",
+        "pH decline and acidification trend correct"
+      ],
+      "key_misses": [
+        "Ocean pCO2 ~350->410 ppm; actual ~325->~380-385 ppm (inflated)",
+        "pH start ~8.20 too high; actual ~8.12"
+      ],
+      "hallucinations": [],
+      "justification": "Same systematic value errors as the rest of the t0.1 cohort; correctly notes CO2 rise coincides with pH decline."
+    },
+    "Q3VL-8B-Q8|t0.1|rep4": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct title, axes, ranges, station attribution",
+        "Atmospheric CO2 315->415 ppm accurate"
+      ],
+      "key_misses": [
+        "Omits explicit ocean pCO2 numeric start/end values entirely",
+        "pH start ~8.20 too high; actual ~8.12",
+        "Calls green pCO2 variability an 'outlier' post-2000 — that is natural seasonal variability, not an outlier"
+      ],
+      "hallucinations": [
+        "Characterizes normal pCO2 seasonal scatter post-2000 as 'outliers', a mild mislabeling"
+      ],
+      "justification": "Accurate axes/CO2 but drops pCO2 numbers and mislabels normal variability as outliers; weaker than peers that at least attempt pCO2 values."
+    },
+    "Q3VL-8B-Q8|t0.4|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct title, axes, ranges, station attribution",
+        "Atmospheric CO2 315->415 ppm accurate",
+        "pH end value ~8.07 (2018) is the most accurate of the cohort (actual ~8.06-8.07)"
+      ],
+      "key_misses": [
+        "Ocean pCO2 ~350->410 ppm; actual ~325->~380-385 ppm (inflated)",
+        "pH start ~8.20 too high; actual ~8.12"
+      ],
+      "hallucinations": [],
+      "justification": "Best pH endpoint of the group (~8.07, matches chart) but still carries the systematic pCO2 inflation and pH start error."
+    },
+    "Q3VL-8B-Q8|t0.4|rep1": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct title, axes, ranges, station attribution",
+        "Atmospheric CO2 315->415 ppm accurate",
+        "Recognizes dual y-axes explicitly"
+      ],
+      "key_misses": [
+        "Ocean pCO2 claimed to start in 1958 at ~350 ppm — WRONG; the green series begins ~1988-1990 at ~325 ppm",
+        "Ocean pH claimed to start in 1958 — WRONG; the blue series begins ~1988-1990",
+        "pCO2 end ~415 ppm too high; actual ~380-385 ppm",
+        "pH start ~8.20 too high; actual ~8.12"
+      ],
+      "hallucinations": [
+        "Fabricates 1958 start dates for the ocean pCO2 and ocean pH series, which visibly begin around 1988-1990"
+      ],
+      "justification": "Invents 1958 start years for both ocean series that clearly begin ~1988-1990, plus the usual pCO2 value inflation — the most serious factual errors in the set."
+    },
+    "Q3VL-8B-Q8|t0.4|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct title, axes, ranges, station attribution",
+        "Atmospheric CO2 315->415 ppm accurate",
+        "Notes pH year-to-year variability of ~0.05 units, which is plausible"
+      ],
+      "key_misses": [
+        "Omits ocean pCO2 numeric values entirely",
+        "pH start ~8.25 too high; actual ~8.12",
+        "Claims pH declines 'despite rising atmospheric CO2' — odd phrasing; pH declines BECAUSE of rising CO2, not despite it"
+      ],
+      "hallucinations": [
+        "Frames pH decline as occurring 'despite' rising CO2, implying no causal link — a misleading interpretation"
+      ],
+      "justification": "Accurate axes and CO2 but drops pCO2 values entirely, overstates the pH start, and oddly frames pH decline as contrary to CO2 rise."
+    },
+    "Q3VL-8B-Q8|t0.4|rep3": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct title, axes, ranges, station attribution",
+        "Atmospheric CO2 315->415 ppm accurate",
+        "Correctly places ocean series start in early 1990s"
+      ],
+      "key_misses": [
+        "Ocean pCO2 ~350->410 ppm; actual ~325->~380-385 ppm (inflated)",
+        "pH start ~8.20 too high; actual ~8.12"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, conventional description with correct series start timing but the same systematic pCO2 inflation and pH start error as the cohort."
+    },
+    "Q3VL-8B-Q8|t0.4|rep4": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct title, axes, ranges, station attribution",
+        "Atmospheric CO2 315->415 ppm accurate, explicitly notes >415 by 2018",
+        "Reasonable pH range 8.22->8.08 over 1994-2018 (end ~8.08 close to actual ~8.07)",
+        "pCO2 ~350->400 over 1994-2018 — endpoint directionally correct though start inflated"
+      ],
+      "key_misses": [
+        "Ocean pCO2 start ~350 ppm; actual ~325 ppm (inflated)",
+        "pH start ~8.22 a bit high; actual ~8.12",
+        "Uses 1994 as start year for ocean series; chart shows ~1988-1990"
+      ],
+      "hallucinations": [],
+      "justification": "Tighter, more internally consistent value set than most (good pH endpoint ~8.08), but still inflates pCO2 start and pH start; 1994 start year is slightly late."
+    },
+    "Q3VL-8B-Q8|t0.7|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct title, axes, ranges, station attribution",
+        "Atmospheric CO2 315->415 ppm accurate",
+        "Notes pH variability (error bars) from 1994 onward, which is visible"
+      ],
+      "key_misses": [
+        "Omits explicit ocean pCO2 start/end numeric values",
+        "pH end ~8.0 too low; actual ~8.06-8.07",
+        "pH start ~8.2 too high; actual ~8.12",
+        "Uses 1994 as inflection year; chart shows ocean series start ~1988-1990"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate axes and CO2 but drops pCO2 numbers, overstates pH range (8.2->8.0 vs actual ~8.12->~8.07), and latches onto 1994 somewhat arbitrarily."
+    },
+    "Q3VL-8B-Q8|t0.7|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct title, axes, ranges, station attribution",
+        "Atmospheric CO2 315->415 ppm accurate",
+        "Ocean pCO2 ~350->380 ppm — the 380 endpoint is the closest to the actual ~380-385 of any response",
+        "pH ~8.22->8.06 — the 8.06 endpoint is essentially correct (actual ~8.06-8.07)",
+        "Correctly places ocean series start in the 1990s"
+      ],
+      "key_misses": [
+        "Ocean pCO2 start ~350 ppm; actual ~325 ppm (inflated by ~25 ppm)",
+        "pH start ~8.22 too high; actual ~8.12"
+      ],
+      "hallucinations": [],
+      "justification": "Best numeric accuracy in the set — pCO2 endpoint 380 and pH endpoint 8.06 both match the chart; only the two starting values remain inflated."
+    },
+    "Q3VL-8B-Q8|t0.7|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct title, axes, ranges, station attribution",
+        "Atmospheric CO2 315->415 ppm accurate",
+        "pH ~8.20->8.06 endpoint (8.06) is essentially correct",
+        "pCO2 ~350->400 endpoint directionally reasonable"
+      ],
+      "key_misses": [
+        "Ocean pCO2 start ~350 ppm; actual ~325 ppm (inflated)",
+        "pH start ~8.20 too high; actual ~8.12",
+        "Claims pH decline has 'no major inflection points' — defensible but the steepening after ~1990 is visible"
+      ],
+      "hallucinations": [],
+      "justification": "Good pH endpoint (~8.06, matches chart) and clean structure, but carries the cohort's pCO2-start and pH-start inflation."
+    },
+    "Q3VL-8B-Q8|t0.7|rep3": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct title, axes, ranges, station attribution",
+        "Atmospheric CO2 315->415 ppm accurate",
+        "pH ~8.20->8.05 endpoint close to actual ~8.06-8.07",
+        "Correctly identifies ~1990 inflection where pH steepens"
+      ],
+      "key_misses": [
+        "Ocean pCO2 ~350->400 ppm; actual ~325->~380-385 ppm (start inflated by ~25 ppm)",
+        "pH start ~8.20 too high; actual ~8.12"
+      ],
+      "hallucinations": [],
+      "justification": "Conventional and mostly accurate with correct inflection timing, but the pCO2 starting value and pH starting value are inflated as in the rest of the cohort."
+    },
+    "Q3VL-8B-Q8|t0.7|rep4": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct title, axes, ranges, station attribution",
+        "Atmospheric CO2 315->415 ppm accurate",
+        "pH ~8.18->8.05 endpoint close to actual ~8.06-8.07",
+        "Notes pCO2 peaks ~400 ppm in 2010s, directionally correct"
+      ],
+      "key_misses": [
+        "Ocean pCO2 start value not given explicitly; implied ~350 ppm region (actual ~325)",
+        "pH start ~8.18 slightly high; actual ~8.12"
+      ],
+      "hallucinations": [],
+      "justification": "Clean summary with a good pH endpoint and reasonable pCO2 peak; minor inflation of pH start and vagueness on pCO2 start value."
+    }
+  },
+  "ranking": [
+    "Q3VL-8B-Q8|t0.7|rep1",
+    "Q3VL-8B-Q8|t0.4|rep4",
+    "Q3VL-8B-Q8|t0.7|rep2",
+    "Q3VL-8B-Q8|t0.4|rep0",
+    "Q3VL-8B-Q8|t0.7|rep3",
+    "Q3VL-8B-Q8|t0.1|rep0",
+    "Q3VL-8B-Q8|t0.1|rep1",
+    "Q3VL-8B-Q8|t0.1|rep3",
+    "Q3VL-8B-Q8|t0.4|rep3",
+    "Q3VL-8B-Q8|t0.7|rep4",
+    "Q3VL-8B-Q8|t0.1|rep2",
+    "Q3VL-8B-Q8|t0.7|rep0",
+    "Q3VL-8B-Q8|t0.4|rep2",
+    "Q3VL-8B-Q8|t0.1|rep4",
+    "Q3VL-8B-Q8|t0.4|rep1"
+  ],
+  "notes": "All 15 responses get the chart skeleton right (title 'Ocean acidification', Year 1958-2018, CO2 275-425 left axis, pH 8.03-8.33 right axis, three series with correct station attribution: red Atmospheric CO2 at Mauna Loa, green Ocean pCO2 at ALOHA, blue Ocean pH at ALOHA). Atmospheric CO2 values (315->415 ppm) are uniformly accurate. Two systematic, model-wide errors recur: (1) ocean pCO2 starting value is inflated from the actual ~325 ppm to ~350 ppm in nearly every response, and (2) ocean pH starting value is inflated from ~8.12 to ~8.18-8.25. The single worst error is t0.4|rep1 fabricating 1958 start dates for the ocean series, which visibly begin ~1988-1990. The best numeric accuracy is t0.7|rep1, whose pCO2 endpoint (~380) and pH endpoint (~8.06) both match the chart. Temperature had no clear monotonic effect on quality; the spread is driven by individual value accuracy, not sampling temperature."
+}

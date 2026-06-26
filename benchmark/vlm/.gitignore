@@ -1,0 +1,2 @@
+# derived webp->png conversions for the LLM judge (regenerable via code/prepare_judge.py)
+benchmark-results/_webp_png/

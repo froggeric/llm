@@ -1,0 +1,70 @@
+{
+  "image": "08-poster-class-schedule.jpg",
+  "image_path": "test-images/08-poster-class-schedule.jpg",
+  "ground_truth": "**Weekly Activities Schedule** for **VIC Health Club**. Each class is displayed in a colour-coded rounded **pill** shape containing: a black **icon on a white disc** (left side), and white text on multiple lines with times, class title, and optional additional info.\n\n**Colour groups (verified 2026-06-19)**:\n- Blue = Yoga (5 classes)\n- Orange = Shaolin (3 classes)\n- Green = Fitness (3 classes)\n\n**Full schedule (verified 2026-06-19)**:\n\n| Day | Time | Class | Notes |\n|---|---|---|---|\n| Monday | 12:00-13:00 | **Shaolin QIGONG** | orange/Shaolin |\n| Monday | 13:00-14:00 | **YOGA** | with the Embassy of India |\n| Monday | 13:10-14:00 | **OSTEOPOROSIS Prevention** | (overlapping slot) |\n| Tuesday | 12:00-13:00 | **YOGASTHENICS** | green/Fitness |\n| Tuesday | 13:00-14:00 | **YOGA** | with the Embassy of India |\n| Tuesday | 13:00-14:00 | **TAIJI (24 forms)** | with Gabi |\n| Wednesday | 12:00-13:00 | **CALISTHENICS** | w/ VIC Runners |\n| Wednesday | 13:00-14:00 | **YOGA** | |\n| Thursday | 12:00-13:00 | **Shaolin KUNG FU** | orange/Shaolin |\n| Thursday | 13:00-14:00 | **YOGA** | |\n| Friday | 13:00-14:00 | **PRANAYAMA** | |\n\nTotal: 11 classes across Mon-Fri, all in lunch hour slots (12:00-13:00 or 13:00-14:00).\n\n**Icons per type**:\n- Same silhouette doing martial arts → all Shaolin practices (Qigong, Kung Fu)\n- Same sitting silhouette meditating or yoga posing → all Yoga classes\n- Head blowing wind → Pranayama\n- Gym weight → Yogasthenics\n- Person running → Calisthenics\n- Person standing up from a squat → Osteoporosis Prevention\n\nFooter: black bar with **\"Register online at https://vichealth.club\"** and a QR code. Background has faint lotus flower and ink-wash brush stroke decorations.\n\n---",
+  "responses": [
+    {
+      "key": "G4-E4B|t0.1|rep0",
+      "model": "G4-E4B",
+      "temp": 0.1,
+      "rep": 0,
+      "content": "| Day | Time | Activity | Details |\n| :--- | :--- | :--- | :--- |\n| Monday | 12:00 - 13:00 | Shaolin QIGONG | |\n| Monday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Monday | 13:10 - 14:00 | OSTEOPOROSIS | Prevention |\n| Tuesday | 12:00 - 13:00 | YOGASTHENICS | |\n| Tuesday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Tuesday | 13:00 - 14:00 | TAJI | (24 forms) |\n| Wednesday | 12:00 - 13:00 | CALISTHENICS | (w/ VIC Runners) |\n| Wednesday | 13:00 - 14:00 | YOGA | |\n| Thursday | 12:00 - 13:00 | Shaolin KUNG FU | |\n| Thursday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Friday | 13:00 - 14:00 | PRANAYAMA | |"
+    },
+    {
+      "key": "G4-E4B|t0.1|rep1",
+      "model": "G4-E4B",
+      "temp": 0.1,
+      "rep": 1,
+      "content": "| Day | Time | Activity | Details |\n| :--- | :--- | :--- | :--- |\n| Monday | 12:00 - 13:00 | Shaolin QIGONG | |\n| Monday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Monday | 13:10 - 14:00 | OSTEOPOROSIS | Prevention |\n| Tuesday | 12:00 - 13:00 | YOGASTHENICS | |\n| Tuesday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Tuesday | 13:00 - 14:00 | TAIJI (24 forms) | with Gabi |\n| Wednesday | 12:00 - 13:00 | CALISTHENICS | (w/ VIC Runners) |\n| Wednesday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Thursday | 12:00 - 13:00 | Shaolin KUNG FU | |\n| Thursday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Friday | 13:00 - 14:00 | PRANAYAMA | |"
+    },
+    {
+      "key": "G4-E4B|t0.1|rep2",
+      "model": "G4-E4B",
+      "temp": 0.1,
+      "rep": 2,
+      "content": "| Day | Activity 1 | Activity 2 | Activity 3 |\n| :--- | :--- | :--- | :--- |\n| Monday | 12:00 - 13:00 Shaolin QIGONG | 13:00 - 14:00 YOGA with the Embassy of India | 13:10 - 14:00 OSTEOPOROSIS Prevention |\n| Tuesday | 12:00 - 13:00 YOGASTHENICS | 13:00 - 14:00 YOGA with the Embassy of India | 13:00 - 14:00 TAIJI (24 forms) |\n| Wednesday | 12:00 - 13:00 CALISTHENICS (w/ VIC Runners) | 13:00 - 14:00 YOGA with the Embassy of India | |\n| Thursday | 12:00 - 13:00 Shaolin KUNG FU | 13:00 - 14:00 YOGA with the Embassy of India | |\n| Friday | 13:00 - 14:00 PRANAYAMA | | |"
+    },
+    {
+      "key": "G4-E4B|t0.4|rep0",
+      "model": "G4-E4B",
+      "temp": 0.4,
+      "rep": 0,
+      "content": "| Day | Time | Activity | Details |\n| :--- | :--- | :--- | :--- |\n| Monday | 12:00 - 13:00 | Shaolin QIGONG | (Fitness) |\n| Monday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Monday | 13:10 - 14:00 | OSTEOPOROSIS | Prevention |\n| Tuesday | 12:00 - 13:00 | YOGASTHENICS | (Fitness) |\n| Tuesday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Tuesday | 13:00 - 14:00 | TAJI (24 forms) | (Fitness) |\n| Wednesday | 12:00 - 13:00 | CALISTHENICS | (Fitness) |\n| Wednesday | 13:00 - 14:00 | YOGA | |\n| Thursday | 12:00 - 13:00 | Shaolin KUNG FU | (Fitness) |\n| Thursday | 13:00 - 14:00 | YOGA | |\n| Friday | 13:00 - 14:00 | PRANAYAMA | |"
+    },
+    {
+      "key": "G4-E4B|t0.4|rep1",
+      "model": "G4-E4B",
+      "temp": 0.4,
+      "rep": 1,
+      "content": "| Day | Time | Activity | Details |\n| :--- | :--- | :--- | :--- |\n| Monday | 12:00 - 13:00 | Shaolin QIGONG | |\n| Monday | 13:00 - 14:00 | YOGA | with the Embassy of India (Osteoporosis) |\n| Tuesday | 12:00 - 13:00 | YOGATHENICS | |\n| Tuesday | 13:00 - 14:00 | YOGA | with the Embassy of India (Osteoporosis) |\n| Wednesday | 12:00 - 13:00 | CALISTHENICS | (w/ VIC Runners) |\n| Wednesday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Thursday | 12:00 - 13:00 | Shaolin KUNG FU | |\n| Thursday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Friday | 13:00 - 14:00 | PRANAYAMA | |"
+    },
+    {
+      "key": "G4-E4B|t0.4|rep2",
+      "model": "G4-E4B",
+      "temp": 0.4,
+      "rep": 2,
+      "content": "| Day | Time | Activity |\n| :--- | :--- | :--- |\n| Monday | 12:00 - 13:00 | Shaolin QIGONG |\n| Monday | 13:00 - 14:00 | YOGA with the Embassy of India |\n| Monday | 13:10 - 14:00 | OSTEOPOROSIS Prevention |\n| Tuesday | 12:00 - 13:00 | YOGASTHENICS |\n| Tuesday | 13:00 - 14:00 | YOGA with the Embassy of India |\n| Tuesday | 13:00 - 14:00 | TAJI (24 forms) |\n| Wednesday | 12:00 - 13:00 | CALISTHENICS (w/ VIC Runners) |\n| Wednesday | 13:00 - 14:00 | YOGA with the Embassy of India |\n| Thursday | 12:00 - 13:00 | Shaolin KUNG FU |\n| Thursday | 13:00 - 14:00 | YOGA with the Embassy of India |\n| Friday | 13:00 - 14:00 | PRANAYAMA |"
+    },
+    {
+      "key": "G4-E4B|t0.7|rep0",
+      "model": "G4-E4B",
+      "temp": 0.7,
+      "rep": 0,
+      "content": "| Day | Time | Activity | Details |\n| :--- | :--- | :--- | :--- |\n| Monday | 12:00 - 13:00 | Shaolin QIGONG | |\n| Monday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Monday | 13:10 - 14:00 | OSTEOPOROSIS | Prevention |\n| Tuesday | 12:00 - 13:00 | YOGASTHENICS | |\n| Tuesday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Tuesday | 13:00 - 14:00 | TAIJI | (24 forms) |\n| Wednesday | 12:00 - 13:00 | CALISTHENICS | (w/ VIC Runners) |\n| Wednesday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Thursday | 12:00 - 13:00 | Shaolin KUNG FU | |\n| Thursday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Friday | 13:00 - 14:00 | PRANAYAMA | |"
+    },
+    {
+      "key": "G4-E4B|t0.7|rep1",
+      "model": "G4-E4B",
+      "temp": 0.7,
+      "rep": 1,
+      "content": "| Day | Time | Activity | Details |\n| :--- | :--- | :--- | :--- |\n| Monday | 12:00 - 13:00 | Shaolin QIGONG | |\n| Monday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Monday | 13:10 - 14:00 | OSTEOPOROSIS | Prevention |\n| Tuesday | 12:00 - 13:00 | YOGA STHENICS | |\n| Tuesday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Tuesday | 13:00 - 14:00 | TAJI | (24 forms) |\n| Wednesday | 12:00 - 13:00 | CALISTHENICS | (w/ VIC Runners) |\n| Wednesday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Thursday | 12:00 - 13:00 | Shaolin KUNG FU | |\n| Thursday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Friday | 13:00 - 14:00 | PRANAYAMA | |"
+    },
+    {
+      "key": "G4-E4B|t0.7|rep2",
+      "model": "G4-E4B",
+      "temp": 0.7,
+      "rep": 2,
+      "content": "| Day | Time | Activity | Details |\n| :--- | :--- | :--- | :--- |\n| Monday | 12:00 - 13:00 | Shaolin QIGONG | |\n| Monday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Monday | 13:00 - 14:00 | OSTEOPOROSIS | Prevention |\n| Tuesday | 12:00 - 13:00 | YOGASTHENICS | |\n| Tuesday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Tuesday | 13:00 - 14:00 | TAJI | (24 forms) with Gabi |\n| Wednesday | 12:00 - 13:00 | CALISTHENICS | (w/ VIC Runners) |\n| Wednesday | 13:00 - 14:00 | YOGA | |\n| Thursday | 12:00 - 13:00 | Shaolin KUNG FU | |\n| Thursday | 13:00 - 14:00 | YOGA | with the Embassy of India |\n| Friday | 13:00 - 14:00 | PRANAYAMA | |"
+    }
+  ]
+}

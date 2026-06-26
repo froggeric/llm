@@ -1,0 +1,160 @@
+{
+  "image": "ocr-test-4.png",
+  "judgments": {
+    "Q3.6-35B-A3B|t0.1|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct header: registry name, registrar name, phone/fax, address, website www.registradores.org",
+        "All four finca numbers exact (32840/32885/32803/32871) and titular ID 50183525D",
+        "Form title, Entrada 11656/2025, DNI 20041185C, phone 635889002 all correct; full GDPR block rendered cleanly"
+      ],
+      "key_misses": [
+        "Email domain misread as registrodelapropiedad.org (visible text is registrodelapropriedad.org with the 'i')",
+        "Handwritten surname misread as 'Almirall Moragas' (GT: Almiñana Moropsa)",
+        "Borrador read as '42 / 2025' correct, but applicant email invented as joan.morales@gmail.com (GT joansnobc@gmail.com) and street number as '4-19' instead of n°19"
+      ],
+      "hallucinations": [],
+      "justification": "Very strong full-form capture with correct website, fincas and titular ID; loses points on misreading the handwritten surname/email/street number and the email domain's spelling."
+    },
+    "Q3.6-35B-A3B|t0.1|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct website www.registradores.org, email corralejo@registrodelapropiedad.org (domain spelled without the 'i' but still a near-miss of visible text)",
+        "All four fincas exact and titular ID 50183525D, DNI 20041185C, phone 635889002 correct",
+        "Form title and Entrada 11656/2025 correct; full GDPR/legal paragraphs complete"
+      ],
+      "key_misses": [
+        "Borrador read as '412 / 2025' instead of 42 / 2025 (extra '1' inserted)",
+        "Handwritten surname 'Almirall Morales' misread (GT Almiñana Moropsa) and applicant email invented as joanestevet@gmail.com",
+        "Street number '4-19' instead of n°19; titular surname 'Arenas' instead of Archanas"
+      ],
+      "hallucinations": [],
+      "justification": "Captures the full form and all fincas/IDs accurately; main deductions are the Borrador extra digit, the handwritten surname/email misreads and the street number."
+    },
+    "Q3.6-35B-A3B|t0.1|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct website www.registradores.org and the corralejo@registrodelapropiedad.org email line",
+        "All four fincas exact, titular ID 50183525D, DNI 20041185C and phone 635889002 all correct",
+        "Entrada 11656/2025 correct; full GDPR block complete"
+      ],
+      "key_misses": [
+        "Borrador read as '412 / 2025' (extra '1') vs 42 / 2025",
+        "Surname 'Almirall Moragas' misread (GT Almiñana Moropsa); applicant email joan.morales@gmail.com invented vs joansnobc@gmail.com",
+        "Street number '4-19' instead of n°19; titular surname 'Armas' vs Archanas"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, complete transcription with correct website, fincas and IDs; weaker on the handwritten surname/email and the Borrador digit, similar to its t0.1 siblings."
+    },
+    "Q3.6-35B-A3B|t0.4|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct website www.registradores.org and corralejo@registrodelapropiedad.org email line",
+        "All four fincas exact, titular ID 50183525D, DNI 20041185C, phone 635889002 correct",
+        "Full GDPR/legal block captured"
+      ],
+      "key_misses": [
+        "Borrador read as '412 / 2025' (extra '1') and Entrada as '116.56 / 2025' (stray decimal)",
+        "Handwritten surname 'Almirall Morales' misread (GT Almiñana Moropsa) and applicant email joan.morales@gmail.com invented",
+        "Street name 'estevez Martin' and number '4-19' instead of estevet Martin / n°19; titular 'Arenas' vs Archanas"
+      ],
+      "hallucinations": [],
+      "justification": "Complete and mostly accurate on printed structure and fincas, but introduces a decimal in the Entrada and an extra Borrador digit plus the usual handwritten-surname miss."
+    },
+    "Q3.6-35B-A3B|t0.4|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct website www.registradores.org and corralejo@registrodelapropiedad.org email line",
+        "All four fincas exact, titular ID 50183525D, DNI 20041185C, phone 635889002 correct",
+        "Entrada 11656/2025 correct and full GDPR block complete"
+      ],
+      "key_misses": [
+        "Borrador read as '412 / 2025' (extra '1') vs 42 / 2025",
+        "Surname 'Almirall Morales' misread (GT Almiñana Moropsa); applicant email joan.estevez@gmail.com invented",
+        "Street 'estevez Martin' and number '4-19' instead of estevet Martin / n°19"
+      ],
+      "hallucinations": [],
+      "justification": "Solid full-form transcription with all fincas, IDs and the website correct; main losses are the Borrador extra digit and the handwritten surname/email/street number."
+    },
+    "Q3.6-35B-A3B|t0.4|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct website www.registradores.org; email line corralejo@registrodelpropriedad.org keeps the distinctive 'i' in propriedad (closest email-domain spelling of any rep)",
+        "All four fincas exact, titular ID 50183525D, DNI 20041185C, phone 635889002 correct",
+        "Entrada 11656/2025 correct; full GDPR block complete"
+      ],
+      "key_misses": [
+        "Email domain reads 'registrodelpropriedad' (missing 'a' in delapropriedad) vs the visible registrodelapropriedad",
+        "Borrador read as '412 / 2025' (extra '1'); surname 'Almirall Morales' misread (GT Almiñana Moropsa)",
+        "Applicant email joan.morales@gmail.com invented; street 'estevet' correct but number '4-19' instead of n°19"
+      ],
+      "hallucinations": [],
+      "justification": "One of the more faithful captures, notably preserving the 'propriedad' spelling on the email; still loses points on the Borrador digit and handwritten surname/email."
+    },
+    "Q3.6-35B-A3B|t0.7|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct website www.registradores.org; email line corralejo@registrodelpropriedad.org retains 'propriedad'",
+        "All four fincas exact; DNI 20041185C and phone 635889002 correct; full GDPR block present",
+        "Borrador 42 / 2025 read correctly (no extra digit)"
+      ],
+      "key_misses": [
+        "Entrada read as '116.56 / 2025' (stray decimal) and titular ID as '5018325D' (missing a '5' vs 50183525D)",
+        "Surname 'Almirahs Morales' misread (GT Almiñana Moropsa); applicant email joan.smobcs@gmail.com close but not exact",
+        "Street 'estevez Martin' and number '4-19' instead of estevet Martin / n°19; titular surname 'Arenas' vs Archanas"
+      ],
+      "hallucinations": [],
+      "justification": "Mostly complete with the Borrador read correctly, but the stray decimal in Entrada and a dropped digit in the titular ID are notable transcription errors alongside the surname miss."
+    },
+    "Q3.6-35B-A3B|t0.7|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct website www.registradores.org and corralejo@registrodelapropiedad.org email line",
+        "All four fincas exact, titular ID 50183525D, DNI 20041185C, phone 635889002 correct",
+        "Full GDPR block complete and cleanly formatted"
+      ],
+      "key_misses": [
+        "Borrador '412 / 2025' (extra '1') and Entrada '116.56 / 2025' (stray decimal)",
+        "Surname 'Almirall Moragas' misread (GT Almiñana Moropsa); applicant email joan.almor@gmail.com invented",
+        "Street 'esdevet Martin' and number '4-19' instead of estevet Martin / n°19; also renders the checkbox glyphs '☐' that are reasonable but unverified"
+      ],
+      "hallucinations": [],
+      "justification": "Complete and well-structured capture with all fincas/IDs right, but the Borrador/Entrada digit-and-decimal errors plus the handwritten surname/email miss keep it at 7."
+    },
+    "Q3.6-35B-A3B|t0.7|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct website www.registradores.org; DNI 20041185C, phone 635889002, and all four fincas exact",
+        "Entrada 11656/2025 read correctly (no stray decimal)"
+      ],
+      "key_misses": [
+        "Email domain misread as 'registrodellapropriedad.org' (extra 'l' in 'dellapropriedad') vs visible registrodelapropriedad",
+        "Borrador '412 / 2025' (extra '1'); stray trailing '/' in phone ('635889002/'); accented letters systematically corrupted to grave/umlaut forms (Investigaciòn, algùn, podrà, INFORMACIÒN) — a pronounced OCR/encoding degradation",
+        "Surname 'Almirahs Moropos' misread (GT Almiñana Moropsa); titular 'Areñas' vs Archanas; applicant email joanmoropos@gmail.com invented; street 'esdevez Martin' and '4-19' instead of estevet Martin / n°19"
+      ],
+      "hallucinations": [],
+      "justification": "Weakest of the set: persistent accent corruption across the legal paragraphs, an invented email, and multiple handwritten-name misreads, though the printed fincas/IDs remain correct."
+    }
+  },
+  "ranking": [
+    "Q3.6-35B-A3B|t0.1|rep0",
+    "Q3.6-35B-A3B|t0.4|rep2",
+    "Q3.6-35B-A3B|t0.1|rep1",
+    "Q3.6-35B-A3B|t0.1|rep2",
+    "Q3.6-35B-A3B|t0.4|rep1",
+    "Q3.6-35B-A3B|t0.4|rep0",
+    "Q3.6-35B-A3B|t0.7|rep0",
+    "Q3.6-35B-A3B|t0.7|rep1",
+    "Q3.6-35B-A3B|t0.7|rep2"
+  ],
+  "notes": "All 9 reps correctly capture the printed skeleton (website www.registradores.org, all four finca numbers 32840/32885/32803/32871, DNI 20041185C, phone 635889002, titular ID 50183525D, full GDPR block) — a strong baseline. Per the strict hallucination rules, none of these responses fabricated content that isn't on the form: the email-domain spellings, the Borrador '412' vs 42, the Entrada '116.56' decimal, the titular-surname variants and the handwritten applicant name/email are all misreads of text that IS visible, so they are key_misses rather than hallucinations. The only applicant email actually printed (joansnobc@gmail.com) is never reproduced exactly — every rep invents a plausible alternative, which is the largest consistent error. The handwritten surname 'Almiñana Moropsa' is rendered variously as Almirall Moragas/Morales, Almirahs Morales/Moropos, and similar — never correct. The website www.registradores.org is read perfectly by all reps; the email domain is harder (most drop the 'i' in 'propriedad', one adds an extra 'l', one drops an 'a'). Temperature 0.7 reps show more degradation (accent corruption in rep2, dropped titular-ID digit in rep0) but no catastrophic failures or hallucination."
+}

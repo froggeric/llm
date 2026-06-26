@@ -1,0 +1,70 @@
+{
+  "image": "04_architecture.png",
+  "image_path": "test-images/04_architecture.png",
+  "ground_truth": "Technical diagram titled **\"System Architecture\"**. Left-to-right flow:\n- **Web Client**: light blue rounded rectangle\n- **API Gateway (FastAPI)**: yellow/orange rounded rectangle\n- **Auth Service**: green rounded rectangle (top branch)\n- **Worker Queue**: green rounded rectangle (bottom branch)\n- **Postgres**: pink oval (connected to Auth Service)\n- **Redis**: pink oval (connected to Worker Queue)\n- Protocol labels: **HTTPS** (Web Client → API Gateway), **gRPC** (API Gateway → Auth Service / Worker Queue)\n- All rectangles have rounded corners; databases are ovals\n- **Notable design quirk**: the gRPC line from API Gateway splits into 3 paths — 2 go to Auth Service and Worker Queue, but a third line in the middle goes nowhere (dangling/phantom connection)\n\n---",
+  "responses": [
+    {
+      "key": "GLM-9B|t0.1|rep0",
+      "model": "GLM-9B",
+      "temp": 0.1,
+      "rep": 0,
+      "content": "### Diagram Type  \nArchitecture diagram (depicting system components and their interactions).  \n\n\n### Named Components  \n- **Web Client** (blue rectangle)  \n- **API Gateway (FastAPI)** (orange rectangle)  \n- **Auth Service** (green rectangle)  \n- **Worker Queue** (green rectangle)  \n- **Postgres** (pink ellipse)  \n- **Redis** (pink ellipse)  \n\n\n### Connections with Labels and Protocols  \n- Web Client → API Gateway: `HTTPS`  \n- API Gateway → Auth Service: `gRPC`  \n- API Gateway → Worker Queue: `gRPC`  \n- Auth Service → Postgres: No protocol label (direct connection)  \n- Worker Queue → Redis: No protocol label (direct connection)  \n\n\n### One-Sentence Summary  \nThe diagram represents a system architecture where a Web Client communicates with an API Gateway (via HTTPS) to route requests via gRPC to an Auth Service (backed by Postgres) and a Worker Queue (backed by Redis)."
+    },
+    {
+      "key": "GLM-9B|t0.1|rep1",
+      "model": "GLM-9B",
+      "temp": 0.1,
+      "rep": 1,
+      "content": "### Diagram Type  \nArchitecture diagram (system architecture showing component interactions and data flow).  \n\n\n### Named Components  \n- **Web Client** (blue rectangle)  \n- **API Gateway (FastAPI)** (orange rectangle)  \n- **Auth Service** (green rectangle)  \n- **Worker Queue** (green rectangle)  \n- **Postgres** (pink ellipse)  \n- **Redis** (pink ellipse)  \n\n\n### Connections with Labels and Protocols  \n- Web Client → API Gateway: `HTTPS`  \n- API Gateway → Auth Service: `gRPC`  \n- API Gateway → Worker Queue: `gRPC`  \n- Auth Service → Postgres: No protocol label (direct connection)  \n- Worker Queue → Redis: No protocol label (direct connection)  \n\n\n### One-Sentence Summary  \nThe diagram represents a system architecture where a Web Client communicates with an API Gateway (via HTTPS) to route requests via gRPC to an Auth Service (backed by Postgres) and a Worker Queue (backed by Redis)."
+    },
+    {
+      "key": "GLM-9B|t0.1|rep2",
+      "model": "GLM-9B",
+      "temp": 0.1,
+      "rep": 2,
+      "content": "### Diagram Type  \nArchitecture diagram (depicting system components and their interactions).  \n\n\n### Named Components  \n- **Web Client** (blue rectangle)  \n- **API Gateway (FastAPI)** (orange rectangle)  \n- **Auth Service** (green rectangle)  \n- **Worker Queue** (green rectangle)  \n- **Postgres** (pink ellipse)  \n- **Redis** (pink ellipse)  \n\n\n### Connections with Labels/Protocols  \n- Web Client → API Gateway: `HTTPS`  \n- API Gateway → Auth Service: `gRPC`  \n- API Gateway → Worker Queue: `gRPC`  \n- Auth Service → Postgres: (direct connection, no protocol label)  \n- Worker Queue → Redis: (direct connection, no protocol label)  \n\n\n### One-Sentence Summary  \nThe diagram represents a system architecture where a Web Client communicates via HTTPS with an API Gateway (FastAPI), which routes gRPC requests to an Auth Service (connected to Postgres) and a Worker Queue (connected to Redis)."
+    },
+    {
+      "key": "GLM-9B|t0.4|rep0",
+      "model": "GLM-9B",
+      "temp": 0.4,
+      "rep": 0,
+      "content": "### Diagram Type  \nArchitecture diagram (depicting the system's component interactions and data flow).  \n\n\n### Named Components  \n- Web Client (blue rectangular box)  \n- API Gateway (FastAPI, orange rectangular box)  \n- Auth Service (green rectangular box)  \n- Worker Queue (green rectangular box)  \n- Postgres (pink oval)  \n- Redis (pink oval)  \n\n\n### Connections with Labels and Protocols  \n1. Web Client → API Gateway: `HTTPS`  \n2. API Gateway → Auth Service: `gRPC`  \n3. API Gateway → Worker Queue: `gRPC`  \n4. Auth Service → Postgres: (unlabeled arrow, implies data flow)  \n5. Worker Queue → Redis: (unlabeled arrow, implies data flow)  \n\n\n### One-Sentence Summary  \nThe diagram illustrates a system architecture where a Web Client communicates with an API Gateway (using HTTPS) to route gRPC requests to an Auth Service (with Postgres) and a Worker Queue (with Redis)."
+    },
+    {
+      "key": "GLM-9B|t0.4|rep1",
+      "model": "GLM-9B",
+      "temp": 0.4,
+      "rep": 1,
+      "content": "### Diagram Type  \nArchitecture diagram (depicting system components and their interactions).  \n\n\n### Named Components  \n- Web Client (blue rectangular box)  \n- API Gateway (FastAPI) (orange rectangular box)  \n- Auth Service (green rectangular box)  \n- Worker Queue (green rectangular box)  \n- Postgres (pink oval)  \n- Redis (pink oval)  \n\n\n### Connections with Labels and Protocols  \n- Web Client → API Gateway: HTTPS  \n- API Gateway → Auth Service: gRPC  \n- API Gateway → Worker Queue: gRPC  \n- Auth Service → Postgres: (implied direct connection, no protocol label shown)  \n- Worker Queue → Redis: (implied direct connection, no protocol label shown)  \n\n\n### One-Sentence Summary  \nThe diagram illustrates a system architecture where a Web Client communicates with an API Gateway (running FastAPI) via HTTPS; the API Gateway routes requests via gRPC to an Auth Service (backed by Postgres) and a Worker Queue (backed by Redis)."
+    },
+    {
+      "key": "GLM-9B|t0.4|rep2",
+      "model": "GLM-9B",
+      "temp": 0.4,
+      "rep": 2,
+      "content": "### Diagram Type  \nSystem Architecture  \n\n\n### All Named Components  \n- **Web Client** (blue rectangle)  \n- **API Gateway (FastAPI)** (orange rectangle)  \n- **Auth Service** (green rectangle)  \n- **Worker Queue** (green rectangle)  \n- **Postgres** (pink oval)  \n- **Redis** (pink oval)  \n\n\n### All Connections with Labels and Protocols  \n1. **Web Client → API Gateway**: HTTPS  \n2. **API Gateway → Auth Service**: gRPC  \n3. **API Gateway → Worker Queue**: gRPC  \n4. **Auth Service → Postgres**: No explicit label (direct connection)  \n5. **Worker Queue → Redis**: No explicit label (direct connection)  \n\n\n### One-Sentence Summary  \nThe diagram depicts a system architecture where a Web Client communicates with an API Gateway (via HTTPS), which routes requests via gRPC to an Auth Service (interacting with Postgres) and a Worker Queue (interacting with Redis)."
+    },
+    {
+      "key": "GLM-9B|t0.7|rep0",
+      "model": "GLM-9B",
+      "temp": 0.7,
+      "rep": 0,
+      "content": "### Diagram Type  \nArchitecture diagram (depicting system components and their interactions).  \n\n\n### Named Components  \n- **Boxes/Nodes**:  \n  - Web Client  \n  - API Gateway (FastAPI)  \n  - Auth Service  \n  - Worker Queue  \n- **Tables/Database Nodes**:  \n  - Postgres  \n  - Redis  \n\n\n### Connections with Labels and Protocols  \n1. Web Client → API Gateway: `HTTPS`  \n2. API Gateway → Auth Service: `gRPC`  \n3. API Gateway → Worker Queue: `gRPC`  \n4. Auth Service → Postgres: Direct connection (no protocol label specified)  \n5. Worker Queue → Redis: Direct connection (no protocol label specified)  \n\n\n### One-sentence Summary  \nThe diagram illustrates a system architecture where a Web Client communicates over HTTPS with an API Gateway (FastAPI), which routes gRPC requests to an Auth Service (connected to Postgres) and a Worker Queue (connected to Redis)."
+    },
+    {
+      "key": "GLM-9B|t0.7|rep1",
+      "model": "GLM-9B",
+      "temp": 0.7,
+      "rep": 1,
+      "content": "# Diagram Type  \nArchitecture diagram (system-level component interaction view).  \n\n\n# Named Components  \n- **Web Client** (blue rectangular box)  \n- **API Gateway** (FastAPI) (orange rectangular box)  \n- **Auth Service** (green rectangular box)  \n- **Worker Queue** (green rectangular box)  \n- **Postgres** (pink oval)  \n- **Redis** (pink oval)  \n\n\n# Connections with Labels and Protocols  \n- Web Client → API Gateway: HTTPS  \n- API Gateway → Auth Service: gRPC  \n- API Gateway → Worker Queue: gRPC  \n- Auth Service → Postgres: (implied direct connection, no protocol label shown, but directional)  \n- Worker Queue → Redis: (implied direct connection, no protocol label shown, but directional)  \n\n\n# One-Sentence Summary  \nThe diagram illustrates a system architecture where a Web Client sends HTTPS requests to an API Gateway (FastAPI), which routes these via gRPC to an Auth Service (backed by Postgres) and a Worker Queue (backed by Redis)."
+    },
+    {
+      "key": "GLM-9B|t0.7|rep2",
+      "model": "GLM-9B",
+      "temp": 0.7,
+      "rep": 2,
+      "content": "# Diagram Type\nArchitecture diagram (system architecture) showing the components and interactions of a system.\n\n# Named Components\n- Boxes (application/services):  \n  - Web Client  \n  - API Gateway (FastAPI)  \n  - Auth Service  \n  - Worker Queue  \n- Storage/Database (ovals):  \n  - Postgres  \n  - Redis  \n\n# Connections with Labels and Protocols\n1. **Web Client → API Gateway**: Protocol = HTTPS  \n2. **API Gateway → Auth Service**: Protocol = gRPC  \n3. **API Gateway → Worker Queue**: Protocol = gRPC  \n4. **Auth Service → Postgres**: Direct connection (no protocol label)  \n5. **Worker Queue → Redis**: Direct connection (no protocol label)  \n\n# One-sentence Summary\nThe diagram depicts a system architecture where a Web Client communicates with an API Gateway (FastAPI) over HTTPS, which then routes requests via gRPC to an Auth Service (backed by Postgres) and a Worker Queue (backed by Redis)."
+    }
+  ]
+}

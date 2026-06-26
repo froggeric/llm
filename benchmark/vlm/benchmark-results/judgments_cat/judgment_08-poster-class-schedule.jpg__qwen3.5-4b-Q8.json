@@ -1,0 +1,139 @@
+{
+  "image": "08-poster-class-schedule.jpg",
+  "judgments": {
+    "Q3.5-4B-Q8|t0.1|rep0": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes captured with correct day, time, and title",
+        "Notes preserved exactly: 'with the Embassy of India' (Mon+Tue YOGA), 'with Gabi' (TAIJI), 'w/ VIC Runners' (CALISTHENICS)",
+        "Correctly records the overlapping Monday 13:10-14:00 OSTEOPOROSIS slot"
+      ],
+      "key_misses": [
+        "No mention of the colour groups (blue/orange/green) or footer URL/QR code"
+      ],
+      "hallucinations": [],
+      "justification": "Perfect transcription of every class entry, time, and note; only the decorative metadata (colours, footer) is omitted."
+    },
+    "Q3.5-4B-Q8|t0.1|rep1": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes in a clean 4-column grid with correct day/time/title",
+        "Notes preserved: Embassy of India, Gabi, VIC Runners",
+        "Monday's overlapping 13:10-14:00 OSTEOPOROSIS slot included"
+      ],
+      "key_misses": [
+        "Colour groups and footer URL/QR not mentioned"
+      ],
+      "hallucinations": [],
+      "justification": "Complete and accurate schedule; every class, time, and note matches the poster."
+    },
+    "Q3.5-4B-Q8|t0.1|rep2": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct day/time/title",
+        "Notes preserved: Embassy of India, Gabi, VIC Runners",
+        "Overlapping Monday OSTEOPOROSIS slot captured"
+      ],
+      "key_misses": [
+        "Colour groups and footer URL/QR not mentioned"
+      ],
+      "hallucinations": [],
+      "justification": "Identical and equally accurate to t0.1|rep1; full correct schedule."
+    },
+    "Q3.5-4B-Q8|t0.4|rep0": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct day/activity/time rows",
+        "Notes preserved: Embassy of India, Gabi, VIC Runners",
+        "Overlapping Monday 13:10-14:00 OSTEOPOROSIS slot included"
+      ],
+      "key_misses": [
+        "Colour groups and footer URL/QR not mentioned"
+      ],
+      "hallucinations": [],
+      "justification": "Complete and accurate transcription of the entire schedule with all notes."
+    },
+    "Q3.5-4B-Q8|t0.4|rep1": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct day/time/activity rows",
+        "Notes preserved: Embassy of India, Gabi, VIC Runners",
+        "Overlapping Monday OSTEOPOROSIS slot captured"
+      ],
+      "key_misses": [
+        "Colour groups and footer URL/QR not mentioned"
+      ],
+      "hallucinations": [],
+      "justification": "Full and accurate schedule; column order swapped vs rep0 but content identical and correct."
+    },
+    "Q3.5-4B-Q8|t0.4|rep2": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct day/activity/time rows",
+        "Notes preserved: Embassy of India, Gabi, VIC Runners",
+        "Overlapping Monday OSTEOPOROSIS slot included"
+      ],
+      "key_misses": [
+        "Colour groups and footer URL/QR not mentioned"
+      ],
+      "hallucinations": [],
+      "justification": "Identical to t0.4|rep0; complete and accurate schedule."
+    },
+    "Q3.5-4B-Q8|t0.7|rep0": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct day/activity/time rows",
+        "Notes preserved: Embassy of India, Gabi, VIC Runners",
+        "Overlapping Monday OSTEOPOROSIS slot included"
+      ],
+      "key_misses": [
+        "Colour groups and footer URL/QR not mentioned"
+      ],
+      "hallucinations": [],
+      "justification": "Complete and accurate schedule transcription at the higher temperature."
+    },
+    "Q3.5-4B-Q8|t0.7|rep1": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct day/time/activity rows",
+        "Notes preserved: Embassy of India, Gabi, VIC Runners",
+        "Overlapping Monday 13:10-14:00 OSTEOPOROSIS slot included"
+      ],
+      "key_misses": [
+        "Colour groups and footer URL/QR not mentioned"
+      ],
+      "hallucinations": [],
+      "justification": "Full and accurate schedule with all 11 classes and notes correctly transcribed."
+    },
+    "Q3.5-4B-Q8|t0.7|rep2": {
+      "holistic_score": 0,
+      "failure_mode": "empty",
+      "key_hits": [],
+      "key_misses": [
+        "Empty response — no schedule content produced at all"
+      ],
+      "hallucinations": [],
+      "justification": "Response is completely empty; no content was returned."
+    }
+  },
+  "ranking": [
+    "Q3.5-4B-Q8|t0.1|rep0",
+    "Q3.5-4B-Q8|t0.4|rep0",
+    "Q3.5-4B-Q8|t0.7|rep1",
+    "Q3.5-4B-Q8|t0.1|rep1",
+    "Q3.5-4B-Q8|t0.1|rep2",
+    "Q3.5-4B-Q8|t0.4|rep1",
+    "Q3.5-4B-Q8|t0.4|rep2",
+    "Q3.5-4B-Q8|t0.7|rep0",
+    "Q3.5-4B-Q8|t0.7|rep2"
+  ],
+  "notes": "The 8 non-empty responses are essentially content-equivalent and flawless: every one captures all 11 classes with correct day, time, title, and notes (Embassy of India, Gabi, VIC Runners, the overlapping Monday OSTEOPOROSIS slot). Differences are purely formatting (row-per-class vs grid, column order, dashes). None hallucinate classes or times; the only consistent omission across all responses is the decorative metadata (colour groups, footer URL/QR code), which is a minor note rather than a schedule error. The sole failure is t0.7|rep2, which returned an empty string."
+}

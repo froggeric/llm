@@ -583,11 +583,12 @@ Both phrasings are correct. Models placing the fracture on the patient's right s
 **Composition**:
 - Foreground: vast yellow sand beach packed with hundreds of tiny figures
 - Background: blue sea with multiple boats/ships (verified 2026-06-19)
+- **Distant land/hills on the horizon** (verified 2026-06-26) — NOT open sea; "landmass/hills on the horizon" is a correct observation, not a hallucination
 - Sky: light blue with white clouds
 
-**Beach huts (verified 2026-06-19)**:
-- **5 blue-and-white striped beach huts**: 3 on the left, 2 on the right
-- **1 red-and-white striped beach hut** on the right
+**Beach huts (verified 2026-06-19; refined 2026-06-26)**:
+- **5 blue-and-white striped beach huts only**: 3 on the left, 2 on the right
+- (The red-and-white striped structure ~⅓ from the right is the **Punch and Judy booth**, NOT a beach hut — see below. There are no green/white huts.)
 
 **Watercraft (verified 2026-06-19; refined 2026-06-21)**:
 - **4 sailboats**: 2 white sails, 1 pink sail, 1 half-yellow/half-white sail (verified 2026-06-21)
@@ -597,11 +598,11 @@ Both phrasings are correct. Models placing the fracture on the patient's right s
 - **1 inflatable dinghy**
 - **1 cruise ship** (some models call it "ferry" or "tour boat" — acceptable)
 - **2 cargo ships**
-- **1 large passenger hovercraft** all the way to the right — blue and white (verified 2026-06-21)
+- **1 large passenger hovercraft** all the way to the right — blue and white (verified 2026-06-21). Its lift **fans/propellers** on top can look like "crosses" — that is the fans, not crosses (verified 2026-06-26).
 - Possibly 1 more sailboat on the horizon
 
 **Distinctive shore elements**:
-- Numerous **beach umbrellas** (various colors)
+- **8 beach umbrellas** (verified 2026-06-26): 3 red/white, 2 red/yellow, 1 green/white, 2 blue/white
 - **Beach chairs / loungers** (verified 2026-06-21)
 - **Tents** (separate from beach huts; verified 2026-06-21)
 - **Coolers / picnic baskets** (verified 2026-06-21)

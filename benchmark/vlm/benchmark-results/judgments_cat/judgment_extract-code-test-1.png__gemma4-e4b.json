@@ -1,0 +1,239 @@
+{
+  "image": "extract-code-test-1.png",
+  "judgments": {
+    "G4-E4B|t0.1|rep0": {
+      "holistic_score": 2,
+      "failure_mode": "normal",
+      "key_hits": [
+        "function name createAujourdhui correct (no apostrophe)",
+        "var C = PLAYLIST_CONFIG correct",
+        "playlistSize=200, historyDays=6 correct",
+        "today via toISOString().split('T')[0] correct",
+        "uses Cache.read and try/catch with Logger.log"
+      ],
+      "key_misses": [
+        "name set to 'Aujourdhui' instead of 'La playlist d\\'aujourd\\'hui' with escaped apostrophes",
+        "historyFile 'Aujourdhui.json' instead of lowercase 'aujourdhui.json'",
+        "description uses template `[DAILY UPDATE]` omitting the today interpolation brackets form \"[DAILY UPDATE \" + today + \"]\"",
+        "validatePlaylistKeys_ call entirely missing",
+        "core pipeline replaced: rateLimitedForEach/Combiner.push/Filter.dedupTracks/Filter.removeTracks/Selector.keepRandom/Playlist.saveWithReplace all absent"
+      ],
+      "hallucinations": [
+        "invented hardcoded track objects array with placeholder 'spotify:playlist:...' URIs",
+        "invented Cache.set, dateCutoff date-filtering logic, and 'is_recent' style flow not in source",
+        "C.AUJOURDHUI_ID (suffix _ID) instead of C.AUJOURDHUI.id"
+      ],
+      "justification": "Captures the skeleton and a few constants but rewrites the entire body with invented placeholder data and fabricated APIs, missing every hard discriminator."
+    },
+    "G4-E4B|t0.1|rep1": {
+      "holistic_score": 2,
+      "failure_mode": "normal",
+      "key_hits": [
+        "function name createAujourdhui correct",
+        "var C = PLAYLIST_CONFIG correct",
+        "playlistSize=200, historyDays=6 correct",
+        "today.toISOString().split('T')[0] present",
+        "try/catch with Logger.log"
+      ],
+      "key_misses": [
+        "name is 'Aujourdhui' not 'La playlist d\\'aujourd\\'hui'",
+        "playlistId/historyFile set to string literals 'C.AUJOURDHUI' / 'C.AUJOURDHUI.json' (quotes make them strings, not references)",
+        "description 'Daily Update' instead of \"[DAILY UPDATE \" + today + \"]\"",
+        "validatePlaylistKeys_ missing",
+        "entire real pipeline (rateLimitedForEach/Combiner.push/Filter.*/Selector.keepRandom/Playlist.saveWithReplace) absent"
+      ],
+      "hallucinations": [
+        "invented track object array with fake artist names 'Artist A'..'Artist E'",
+        "invented Cache.get/Cache.put, JSON.parse, Math.random selection, and 'INITIAL_TRACK_' seeding flow",
+        "duplicated let todayString declaration (syntax error)"
+      ],
+      "justification": "Gets the function signature and constants but fabricates the whole body with placeholder artists and invented caching/selection APIs; misses all hard discriminators."
+    },
+    "G4-E4B|t0.1|rep2": {
+      "holistic_score": 1,
+      "failure_mode": "repetition_loop",
+      "key_hits": [
+        "function name createAujourdhui correct",
+        "var C = PLAYLIST_CONFIG correct",
+        "playlistSize=200, historyDays=6 correct",
+        "mentions Cache.get and Cache.compressTracks"
+      ],
+      "key_misses": [
+        "name 'Aujourdhui' instead of 'La playlist d\\'aujourd\\'hui'",
+        "identifier misspelled C.AJOURDHUI_SOURCE_6 (missing U) twice",
+        "validatePlaylistKeys_ missing",
+        "real pipeline absent; logic collapsed into nonsense"
+      ],
+      "hallucinations": [
+        "repeated nonsense line `let tracks = Logger.Math.round(tracks.length) + ' tracks left...'` assigned many times — fabricated property chain",
+        "invented 'Aujourdhui Source 6' display names and broken redeclaration of `tracks`/`tracksToKeep` in inner scopes",
+        "description referenced but undefined variable"
+      ],
+      "justification": "Degenerates into a repetition loop of a fabricated Logger.Math.round expression; structurally broken and riddled with hallucinated identifiers."
+    },
+    "G4-E4B|t0.4|rep0": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "function name createAujourdhui correct",
+        "name = 'La playlist d\\'aujourd\\'hui' with correctly escaped apostrophes (hard discriminator)",
+        "playlistSize=200 correct",
+        "today.toISOString().split('T')[0] present",
+        "includes the source-playlist key list AUJOURDHUI/ALL_ENGLISH/ALL_LATIN/REGGAE_ALL/CHANSONS_FRANCAISES/AUJOURDHUI_SOURCE_6",
+        "tries to save with public:true and uses Cache.compressTracks"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys_ with trailing underscore missing (uses a plain array instead)",
+        "historyFile 'C.AUJOURDHUI.json' instead of 'aujourdhui.json'",
+        "historyDays omitted",
+        "description uses template `[DAILY UPDATE] ${todayStr}` instead of \"[DAILY UPDATE \" + today + \"]\"",
+        "real helpers absent: rateLimitedForEach, Combiner.push, Filter.dedupTracks, Filter.removeTracks, Selector.keepRandom, Playlist.saveWithReplace"
+      ],
+      "hallucinations": [
+        "invented C[key].getPlaylistTracks(playlistSize) and C.getTrackById(id) APIs",
+        "invented C.savePlaylist(playlist) instead of Playlist.saveWithReplace",
+        "invented 'Found ... tracks from recent playlist loaded' phrasing stitched from original log text",
+        "Cache.compressTracks called outside try block referencing `tracks` that is scoped inside try"
+      ],
+      "justification": "Best of the low-temp group on the string literal (escapes the apostrophes correctly) and the key list, but still fabricates the core API surface and omits validatePlaylistKeys_."
+    },
+    "G4-E4B|t0.4|rep1": {
+      "holistic_score": 3,
+      "failure_mode": "normal",
+      "key_hits": [
+        "function name createAujourdhui correct",
+        "name = 'La playlist d\\'aujourd\\'hui' with correctly escaped apostrophes",
+        "historyFile 'aujourdhui.json' correct (lowercase)",
+        "playlistSize=200, historyDays=6 correct",
+        "uses Playlist.saveWithReplace and Cache.compressTracks (real helpers)",
+        "public:true and description interpolation present"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys_ missing",
+        "playlistKey array mixes C.AUJOURDHUI (reference) with quoted string keys — inconsistent",
+        "description `[DAILY UPDATE] ${todayString}` not the original concatenation form",
+        "rateLimitedForEach, Combiner.push, Filter.dedupTracks, Filter.removeTracks, Selector.keepRandom absent",
+        "duplicated `let tracks` and `let today` declarations (redeclared, syntax issues)"
+      ],
+      "hallucinations": [
+        "invented Playlist.getTracks(trackList, 500) and Playlist.getTrack(id) APIs",
+        "invented 'recentTracks = Playlist.getTracks(playlistKey[0], 500)' dedup logic not in source",
+        "hardcoded id: 'playlist_id' placeholder",
+        "Math.random-based selection instead of Selector.keepRandom"
+      ],
+      "justification": "Gets the escaped-apostrophe name, the lowercase history filename, and references Playlist.saveWithReplace/Cache.compressTracks, but invents the track-fetching API and redeclares variables."
+    },
+    "G4-E4B|t0.4|rep2": {
+      "holistic_score": 2,
+      "failure_mode": "normal",
+      "key_hits": [
+        "function name createAujourdhui correct",
+        "var C = PLAYLIST_CONFIG correct",
+        "today.toISOString().split('T')[0] present",
+        "recognizes source playlists ALL_ENGLISH/ALL_LATIN/REGGAE_ALL/CHANSONS_FRANCAISES"
+      ],
+      "key_misses": [
+        "name missing entirely (no 'La playlist d\\'aujourd\\'hui')",
+        "historyDays=7 not 6",
+        "description 'A curated mix of today\\'s top tracks.' fabricated",
+        "validatePlaylistKeys_ missing",
+        "ROMANCE source omitted; AUJOURDHUI_SOURCE_6 misspelled C.AJOURDHUI_SOURCE_6",
+        "real pipeline (rateLimitedForEach/Combiner.push/Filter.*/Selector.keepRandom/Playlist.saveWithReplace) absent"
+      ],
+      "hallucinations": [
+        "invented Playlist.getPlaylist, Playlist.create, File.exists/File.read/File.write APIs",
+        "invented 'early return if playlist already exists for today' guard",
+        "invented history-file initialization and lastUpdate tracking",
+        "C.AJOURDHUI_SOURCE_6 misspelling"
+      ],
+      "justification": "Rewrites the function around invented File/Playlist APIs, drops ROMANCE and the playlist name, misspells the source-6 identifier, and changes historyDays."
+    },
+    "G4-E4B|t0.7|rep0": {
+      "holistic_score": 3,
+      "failure_mode": "normal",
+      "key_hits": [
+        "function name createAujourdhui correct",
+        "name = 'La playlist d\\'aujourd\\'hui' with correctly escaped apostrophes",
+        "historyFile 'aujourdhui.json' correct",
+        "playlistSize=200 correct",
+        "uses Playlist.saveWithReplace with public:true and the right id/name/description shape",
+        "uses today = (new Date()).toISOString().split('T')[0] form"
+      ],
+      "key_misses": [
+        "var C = PLAYLIST_CONFIG[...] — indexes PLAYLIST_CONFIG with an array (syntactically/semantically wrong)",
+        "validatePlaylistKeys_ missing",
+        "historyDays and description-bracket form not faithful",
+        "rateLimitedForEach, Combiner.push, Filter.dedupTracks, Filter.removeTracks, Selector.keepRandom absent"
+      ],
+      "hallucinations": [
+        "invented `tracks[].map(...)` syntax error and C[i].playlist structure",
+        "invented track.isRecent property-based filtering",
+        "uses sort(() => 0.5 - Math.random()) instead of Selector.keepRandom",
+        "Cache.get instead of Cache.read"
+      ],
+      "justification": "Captures the escaped-apostrophe name, history filename, and the saveWithReplace shape, but corrupts PLAYLIST_CONFIG indexing and fabricates the selection/filtering internals."
+    },
+    "G4-E4B|t0.7|rep1": {
+      "holistic_score": 3,
+      "failure_mode": "normal",
+      "key_hits": [
+        "function name createAujourdhui correct",
+        "name = 'La playlist d\\'aujourd\\'hui' with correctly escaped apostrophes",
+        "playlistKeys array lists all six keys including AUJOURDHUI_SOURCE_6",
+        "playlistSize=200, today.toISOString().split('T')[0] present",
+        "uses Cache.read and Cache.compressTracks, public:true"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys_ missing (has the array but not the validating call with trailing underscore)",
+        "historyFile 'c.aujourdhui.json' lowercased 'c.' prefix wrong",
+        "Playlist.saveWithReplace call missing — only builds a plain object",
+        "rateLimitedForEach, Combiner.push, Filter.dedupTracks, Filter.removeTracks, Selector.keepRandom absent",
+        "no catch block — try without catch (incomplete)"
+      ],
+      "hallucinations": [
+        "invented C[key].getTracks(0, playlistSize) API",
+        "duplicated redundant dedup blocks (Array.from(new Set(...))) not in source",
+        "uses slice(0, playlistSize) instead of Selector.keepRandom",
+        "playlist id set to `name` (the French string) instead of C.AUJOURDHUI.id"
+      ],
+      "justification": "Gets the escaped-apostrophe name and the full key list but omits the saveWithReplace call and catch block, and fabricates the getTracks API; structural gaps."
+    },
+    "G4-E4B|t0.7|rep2": {
+      "holistic_score": 1,
+      "failure_mode": "normal",
+      "key_hits": [
+        "function name createAujourdhui correct",
+        "var C = PLAYLIST_CONFIG correct",
+        "playlistSize=200 present",
+        "recognizes ALL_ENGLISH/ALL_LATIN/REGGAE_ALL/CHANSONS_FRANCAISES/ROMANCE source ids"
+      ],
+      "key_misses": [
+        "name 'Aujourdhui' not 'La playlist d\\'aujourd\\'hui'",
+        "historyDays=7 not 6",
+        "description 'Daily update' wrong",
+        "validatePlaylistKeys_ missing",
+        "AUJOURDHUI_SOURCE_6 omitted from sources",
+        "real pipeline entirely absent"
+      ],
+      "hallucinations": [
+        "invented google.script.run.withSuccessHandler(...).getTracks() client-side API (wrong context — this is server-side Apps Script)",
+        "invented async-style success-handler callbacks and createPlaylist RPC",
+        "invented trackMap/trackMap[track.id] dedup and is_public field",
+        "uses C.ALL_ENGLISH_ID suffix form instead of C.ALL_ENGLISH.id"
+      ],
+      "justification": "Fundamentally re-architects the function around an invented google.script.run asynchronous RPC model that does not match the synchronous source; misses the name, historyDays, and the source-6 key."
+    }
+  },
+  "ranking": [
+    "G4-E4B|t0.4|rep0",
+    "G4-E4B|t0.4|rep1",
+    "G4-E4B|t0.7|rep0",
+    "G4-E4B|t0.7|rep1",
+    "G4-E4B|t0.1|rep0",
+    "G4-E4B|t0.1|rep1",
+    "G4-E4B|t0.4|rep2",
+    "G4-E4B|t0.7|rep2",
+    "G4-E4B|t0.1|rep2"
+  ],
+  "notes": "All 9 responses get the function name createAujourdhui (no apostrophe) right and roughly the right constants, but EVERY response fails the two hardest discriminators: none include validatePlaylistKeys_ (trailing underscore) and none reproduce the real helper pipeline (rateLimitedForEach + Combiner.push + Filter.dedupTracks/removeTracks + Selector.keepRandom + Playlist.saveWithReplace). The model consistently rewrites the body with invented generic APIs (Cache.get/set, Playlist.getTracks, google.script.run, File.read/write, Math.random selection). Four responses (t0.4-rep0, t0.4-rep1, t0.7-rep0, t0.7-rep1) correctly escape the apostrophes in 'La playlist d\\'aujourd\\'hui'; the t0.1 reps and t0.7-rep2 drop the French name entirely. Higher temps (0.4/0.7) paradoxically did better on the string literal than 0.1. t0.1-rep2 is worst due to a repetition loop fabricating Logger.Math.round expressions."
+}

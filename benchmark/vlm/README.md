@@ -5,30 +5,35 @@ Open-weights Vision-Language Model (VLM) benchmark used to pick the catalog for 
 ## Where to look
 
 - **[`BENCHMARK-REPORT-v5.md`](./BENCHMARK-REPORT-v5.md)** — single authoritative report. Master ranking table, per-model analysis, hardware-tier recommendations, Q4 vs Q8 guidance.
+- **[`REPEAT-REPORT.md`](./REPEAT-REPORT.md)** — multi-sampling: latency of warm re-queries, single/union/majority correlation, and the temperature sweep that gates whether correlation pays.
+- **[`CATEGORY-REPORT.md`](./CATEGORY-REPORT.md)** — which localvision tool categories benefit from multi-sampling, for which of 7 models, at which temperature/aggregator.
+- **[`REFINE-REPORT.md`](./REFINE-REPORT.md)** — per-tool prompt refinement on 7 new images with actual MCP prompts.
 - **[`SUMMARY.md`](./SUMMARY.md)** — one-page cheat sheet: 3-tier hardware table.
 - **[`CLAUDE.md`](./CLAUDE.md)** — operational context, gotchas, and run recipes for future Claude Code sessions working in this directory.
-- **[`reddit-post-v6.md`](./reddit-post-v6.md)** — published post summarizing the v6 findings.
 
 ## What's here
 
 ```
 benchmark/vlm/
 ├── BENCHMARK-REPORT-v5.md     # authoritative report (read this first)
+├── REPEAT-REPORT.md           # multi-sampling: latency, correlation, temperature
+├── CATEGORY-REPORT.md         # which tool categories benefit from multi-sampling
+├── REFINE-REPORT.md           # per-tool prompt refinement (7 images)
 ├── SUMMARY.md                 # 3-tier quick reference
 ├── CLAUDE.md                  # ops context + run recipes
-├── reddit-post-v6.md
 ├── code/                      # Python harness + scorers + shell orchestrators
 │   ├── benchmark_llamaserver.py
-│   ├── score_v5.py
-│   ├── score_v5_multirun.py
-│   ├── score_q8_multirun.py
+│   ├── score_v5.py / score_v5_multirun.py / score_q8_multirun.py
+│   ├── score_repeat.py / score_category.py   # multi-sampling scorers
 │   ├── dispatch_multirun_judges.py
 │   └── run_*.sh
 ├── test-images/               # 30 hand-curated images + GROUND-TRUTH.md
 └── benchmark-results/
-    ├── raw.jsonl              # ~2,200 raw llama-server responses (12 MB)
+    ├── raw.jsonl              # ~3,000 raw llama-server responses (16 MB)
     ├── judgments_v5/          # 60 LLM-judge verdicts producing v5 scores
-    └── judgments_q8/          # Q8 judge verdicts
+    ├── judgments_q8/          # Q8 judge verdicts
+    ├── judgments_repeat/      # multi-sampling judge verdicts (30 responses)
+    └── judgments_cat/         # category-sweep judge verdicts (600 responses)
 ```
 
 ## Reproducing

@@ -1,0 +1,236 @@
+{
+  "image": "04_architecture.png",
+  "judgments": {
+    "Q3.5-4B|t0.1|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components named with correct colors/shapes (blue/yellow/green rounded rectangles, pink ovals)",
+        "HTTPS and gRPC protocol labels correctly mapped",
+        "Correctly notes Auth Service->Postgres and Worker Queue->Redis have no protocol labels"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line from API Gateway (notable design quirk in GT)"
+      ],
+      "hallucinations": [],
+      "justification": "Complete and accurate description of every component, shape, color, and protocol label; only misses the phantom gRPC line that no response caught."
+    },
+    "Q3.5-4B|t0.1|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components named with correct colors/shapes",
+        "HTTPS and gRPC labels correctly mapped to all three service-to-service edges",
+        "Explicitly lists the 5 connections with protocols"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line"
+      ],
+      "hallucinations": [],
+      "justification": "Equally accurate as rep0; clean structured enumeration of all connections and protocols."
+    },
+    "Q3.5-4B|t0.1|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components with correct colors/shapes",
+        "HTTPS/gRPC protocol labels correct",
+        "Explicitly distinguishes this from flowchart/ER/sequence diagrams (accurate categorization)"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and thorough; the diagram-type disambiguation is correct and not hallucinated padding."
+    },
+    "Q3.5-4B|t0.1|rep3": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components with correct colors/shapes",
+        "HTTPS and gRPC labels correct",
+        "Nuanced observation that Worker Queue gRPC is implied by line style with no explicit label"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate with a careful, defensible nuance about the gRPC label being implied rather than explicit on the Worker Queue branch."
+    },
+    "Q3.5-4B|t0.1|rep4": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components with correct colors/shapes",
+        "HTTPS/gRPC protocol labels correct",
+        "Correctly notes DB connections are unlabeled"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and complete on all visible elements; consistent with the other reps."
+    },
+    "Q3.5-4B|t0.4|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly grouped into services (rectangles) vs databases (ovals)",
+        "HTTPS and gRPC labels correct",
+        "Notes directions of each connection"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line",
+        "Does not specify the component colors (minor)"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and well-structured; slight omission of per-component colors but otherwise complete."
+    },
+    "Q3.5-4B|t0.4|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components with correct colors/shapes",
+        "HTTPS/gRPC protocol labels correct",
+        "Concise with no padding"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, accurate, concise — a short correct answer with no errors."
+    },
+    "Q3.5-4B|t0.4|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components with correct colors/shapes",
+        "HTTPS/gRPC protocol labels correct",
+        "Carefully notes the gRPC label appears only on Auth Service branch but extends to Worker Queue"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate with a sharp, defensible observation about the gRPC label placement; closing note shows careful line inspection."
+    },
+    "Q3.5-4B|t0.4|rep3": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components named; correctly identifies FastAPI label",
+        "HTTPS/gRPC protocol labels correct",
+        "Notes DB connections unlabeled with implied protocols"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line",
+        "Describes shapes as plain rectangles/ovals rather than rounded rectangles (minor)"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate content; slightly less precise on shape descriptors (plain rectangle vs rounded) but no fabrication."
+    },
+    "Q3.5-4B|t0.4|rep4": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components with correct colors/shapes",
+        "HTTPS/gRPC protocol labels correct",
+        "DB connections correctly noted as unlabeled"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and complete; no errors across all visible diagram elements."
+    },
+    "Q3.5-4B|t0.7|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components with correct colors/shapes",
+        "HTTPS/gRPC protocol labels correct",
+        "Notes the gRPC label appears only on Auth Service arrow and is implied for Worker Queue"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate with a precise note about gRPC label placement on only one of two parallel arrows."
+    },
+    "Q3.5-4B|t0.7|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components named with correct shapes (rectangles/ovals)",
+        "HTTPS/gRPC protocol labels correct",
+        "Concise and correct"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line",
+        "Omits component colors (minor)"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate plain-text description; colors omitted but no errors."
+    },
+    "Q3.5-4B|t0.7|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components with correct colors/shapes",
+        "HTTPS/gRPC protocol labels correct, both gRPC edges explicitly listed",
+        "Correct implied protocols for unlabeled DB edges"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and thorough; treats both gRPC branches as explicitly labeled which is defensible."
+    },
+    "Q3.5-4B|t0.7|rep3": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components with correct colors/shapes",
+        "HTTPS/gRPC protocol labels correct with directions",
+        "Notes the title 'System Architecture' is present but not a component (careful)"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate with thoughtful distinction between title text and components; no errors."
+    },
+    "Q3.5-4B|t0.7|rep4": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components with correct colors/shapes",
+        "HTTPS/gRPC protocol labels correct",
+        "DB edges correctly noted as unlabeled"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and complete; consistent with the other high-quality reps."
+    }
+  },
+  "ranking": [
+    "Q3.5-4B|t0.1|rep3",
+    "Q3.5-4B|t0.4|rep2",
+    "Q3.5-4B|t0.7|rep0",
+    "Q3.5-4B|t0.7|rep3",
+    "Q3.5-4B|t0.1|rep0",
+    "Q3.5-4B|t0.1|rep1",
+    "Q3.5-4B|t0.1|rep2",
+    "Q3.5-4B|t0.1|rep4",
+    "Q3.5-4B|t0.4|rep0",
+    "Q3.5-4B|t0.4|rep1",
+    "Q3.5-4B|t0.4|rep3",
+    "Q3.5-4B|t0.4|rep4",
+    "Q3.5-4B|t0.7|rep1",
+    "Q3.5-4B|t0.7|rep2",
+    "Q3.5-4B|t0.7|rep4"
+  ],
+  "notes": "All 15 responses (3 temps x 5 reps) are highly accurate and consistent — every response correctly identifies all 6 components, their shapes/colors, the HTTPS and gRPC protocol labels, and the unlabeled DB connections. No hallucinations in any response. The sole universal miss is the dangling/phantom third gRPC line from the API Gateway noted in the ground truth; no response caught it (and none fabricated it either). Top-ranked reps (t0.1/rep3, t0.4/rep2, t0.7/rep0) earned slight edge for carefully noting the gRPC label placement nuance on the two parallel arrows. Temperature had no observable effect on accuracy."
+}

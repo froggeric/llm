@@ -1,0 +1,177 @@
+{
+  "image": "30-where-is-waldo.webp",
+  "judgments": {
+    "G4-E4B|t0.1|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Crowded sunny beach with hundreds of tiny figures, yellow-tan sand",
+        "Blue sea with multiple boats, steamships emitting smoke, large passenger ferry on the right",
+        "Beach umbrellas striped in red/blue/white/yellow, pale blue sky with clouds",
+        "Correctly notes horses on the beach (owner-verified)",
+        "Correctly notes no visible text"
+      ],
+      "key_misses": [
+        "Misses all hidden characters (Waldo, Odlaw, Wizard Whitebeard)",
+        "Does not identify the hovercraft, submarine, dinghy, cargo ships, waterskier",
+        "Misses Punch and Judy booth, ice cream cart, volleyball, human pyramid, surfboards",
+        "Does not mention the blue-and-white striped beach huts or distant land on horizon"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate high-level beach/ocean summary with correct horses call and no fabricated content, but it completely misses the Where's-Waldo-specific hidden characters and many distinctive shore/watercraft details."
+    },
+    "G4-E4B|t0.1|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Crowded beach, yellow-tan sand, hundreds of people in beach attire",
+        "Striped beach umbrellas/cabanas (red/white, blue/white), beach balls/toys",
+        "Sailboats (one with reddish sail), larger motorized vessels, smoking/steam boats, large blue/white boat on right",
+        "Light blue sky, horizon line, no discernible text"
+      ],
+      "key_misses": [
+        "Misses all hidden characters (Waldo, Odlaw, Wizard Whitebeard)",
+        "Labels the large right-side hovercraft as a 'beach kiosk or lifeguard station' rather than a vessel",
+        "No horses mentioned (owner-verified present)",
+        "Misses beach huts, Punch and Judy booth, ice cream cart, volleyball, human pyramid, submarine, dinghy, cargo ships, waterskier"
+      ],
+      "hallucinations": [],
+      "justification": "Solid general scene description but mislabels the right-side hovercraft as a beach kiosk/lifeguard station and omits the horses plus all Where's-Waldo hidden characters."
+    },
+    "G4-E4B|t0.1|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Crowded beach with hundreds of figures, walking dogs, people near horses",
+        "Striped beach umbrellas (red/white/blue), large blue/white structure on right",
+        "Sailboats (red/white/blue sails), motorboats, smoking/steam ships, large blue/white boat on right",
+        "Correctly notes distant landmasses on the horizon (owner-verified 2026-06-26)",
+        "No discernible text"
+      ],
+      "key_misses": [
+        "Misses all hidden characters (Waldo, Odlaw, Wizard Whitebeard)",
+        "Labels right-side hovercraft as a generic 'beach concession or lifeguard station'",
+        "Misses Punch and Judy booth, ice cream cart, volleyball, human pyramid, submarine, dinghy, cargo ships, waterskier"
+      ],
+      "hallucinations": [],
+      "justification": "One of the stronger reps — correctly notes dogs, horses, and the distant landmasses on the horizon — but still finds no hidden characters and mislabels the right-side hovercraft."
+    },
+    "G4-E4B|t0.4|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Extremely dense crowd of all ages, beach umbrellas (striped/solid), towels, coolers, people walking dogs",
+        "Sailboats (one with red/white sail), steamships emitting smoke, large multi-story blue/white ferry on right",
+        "Light blue/teal ocean, pale blue sky, bright yellow/tan sand",
+        "Correctly notes no discernible text"
+      ],
+      "key_misses": [
+        "Misses all hidden characters (Waldo, Odlaw, Wizard Whitebeard)",
+        "Does not mention horses (owner-verified present)",
+        "Misses beach huts, Punch and Judy booth, ice cream cart, volleyball, human pyramid, submarine, dinghy, cargo ships, waterskier, distant land"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, accurate general description with no fabrications and correctly calls the right-side vessel a ferry, but omits horses, hidden characters, and most distinctive shore/watercraft details."
+    },
+    "G4-E4B|t0.4|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Crowded beach, beach umbrellas (striped), towels, coolers, people walking dogs",
+        "Beach ball visible, sailboats with white/colored sails, larger passenger boats on right",
+        "Steam-powered/smoking ships, large blue/white ferry-style vessel on right",
+        "Light blue sky with white clouds, clear horizon, no discernible text"
+      ],
+      "key_misses": [
+        "Misses all hidden characters (Waldo, Odlaw, Wizard Whitebeard)",
+        "Does not mention horses (owner-verified present)",
+        "Misses beach huts, Punch and Judy booth, ice cream cart, volleyball, human pyramid, submarine, dinghy, cargo ships, waterskier, distant land"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and hallucination-free scene summary noting the ferry, smoking ships, dogs, and beach ball, but again misses the horses and every Where's-Waldo hidden character."
+    },
+    "G4-E4B|t0.4|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Wide yellow-tan sand beach densely packed with diverse crowd",
+        "Striped and solid umbrellas, towels, beach chairs, people with bags/coolers",
+        "Multiple small sailboats (white sails), several larger steam-powered ships emitting smoke",
+        "Large prominent blue/white ferry/passenger boat on right, cargo vessels on horizon",
+        "Light clear blue sky, no readable text"
+      ],
+      "key_misses": [
+        "Misses all hidden characters (Waldo, Odlaw, Wizard Whitebeard)",
+        "Does not mention horses (owner-verified present)",
+        "Misses beach huts, Punch and Judy booth, ice cream cart, volleyball, human pyramid, submarine, dinghy, waterskier, distant land"
+      ],
+      "hallucinations": [],
+      "justification": "Strong hallucination-free summary that even picks up cargo vessels on the horizon and correctly labels the right-side ferry, but omits horses and all hidden characters."
+    },
+    "G4-E4B|t0.7|rep0": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Extremely crowded beach, striped umbrellas/cabanas (red/white, blue/white), solid blue umbrellas",
+        "Sailboats with white/red sails, multiple smoking steamships, large ferry/dock structure on right",
+        "Pale blue sky, visible horizon, people walking dogs",
+        "Correctly notes no visible text"
+      ],
+      "key_misses": [
+        "Misses all hidden characters (Waldo, Odlaw, Wizard Whitebeard)",
+        "Does not mention horses (owner-verified present)",
+        "Misses beach huts, Punch and Judy booth, ice cream cart, volleyball, human pyramid, submarine, dinghy, waterskier, distant land"
+      ],
+      "hallucinations": [
+        "Claims a 'horse-drawn carriage or wagon' is visible on the right side of the beach — owner-verified NOT present (models describing a carriage are wrong; likely confusing the hovercraft/structure)"
+      ],
+      "justification": "The only rep with a clear fabrication: it invents a horse-drawn carriage/wagon that the ground truth explicitly states is absent, on top of missing all hidden characters and horses."
+    },
+    "G4-E4B|t0.7|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Massive crowd on yellow/ochre sand, beach chairs, umbrellas, recreational activities",
+        "Sailboats with white/colored sails, larger motorized vessels, large boxy blue/white passenger ferry on right with people on deck",
+        "Steamships emitting smoke, light blue sky, clear horizon",
+        "Umbrellas striped red/white and blue/white, at least one dog being walked, no discernible text"
+      ],
+      "key_misses": [
+        "Misses all hidden characters (Waldo, Odlaw, Wizard Whitebeard)",
+        "Does not mention horses (owner-verified present)",
+        "Misses beach huts, Punch and Judy booth, ice cream cart, volleyball, human pyramid, submarine, dinghy, cargo ships, waterskier, distant land"
+      ],
+      "hallucinations": [],
+      "justification": "Detailed and accurate hallucination-free description that correctly notes the ferry with people on deck and the smoking steamships, but again misses horses and every hidden character."
+    },
+    "G4-E4B|t0.7|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Massively crowded beach, yellow/tan sand, hundreds of figures in varied poses",
+        "Striped beach umbrellas (red/blue/white), lounge chairs, towels, walking dogs",
+        "Sailboats (some red/white sails), larger motorized vessels, large passenger ferry on right with people on deck, smaller pleasure craft",
+        "Correctly notes several people riding horses (owner-verified present)",
+        "No visible text in the illustration"
+      ],
+      "key_misses": [
+        "Misses all hidden characters (Waldo, Odlaw, Wizard Whitebeard)",
+        "Misses beach huts, Punch and Judy booth, ice cream cart, volleyball, human pyramid, submarine, dinghy, cargo ships, waterskier, distant land"
+      ],
+      "hallucinations": [],
+      "justification": "Strong rep that correctly identifies both horses and dogs plus the ferry and smoking ships with no fabrications, but still fails to find any of the Where's-Waldo hidden characters."
+    }
+  },
+  "ranking": [
+    "G4-E4B|t0.1|rep2",
+    "G4-E4B|t0.7|rep2",
+    "G4-E4B|t0.4|rep2",
+    "G4-E4B|t0.4|rep1",
+    "G4-E4B|t0.4|rep0",
+    "G4-E4B|t0.7|rep1",
+    "G4-E4B|t0.1|rep0",
+    "G4-E4B|t0.1|rep1",
+    "G4-E4B|t0.7|rep0"
+  ],
+  "notes": "All 9 reps give a competent generic beach-scene summary (crowd, sand, umbrellas, sailboats, smoking steamships, large blue/white vessel on the right, no text) but NONE of them recognize this as a Where's Waldo image or spot any hidden character (Waldo/Odlaw/Wizard Whitebeard) — the defining feature of the image — so every rep is capped around 6. Distinctive verified details like the submarine, dinghy, cargo ships, hovercraft, Punch and Judy booth, ice cream cart, volleyball, human pyramid, surfboards, and beach huts are uniformly missed; per the dense-scene rule these are treated as key_misses rather than hallucinations. Horses (owner-verified) are correctly noted by t0.1/rep0, t0.1/rep2, t0.7/rep2; dogs by several reps. Only t0.7/rep0 commits a clear hallucination — a 'horse-drawn carriage or wagon' that the ground truth explicitly states is absent. The top-ranked reps (t0.1/rep2, t0.7/rep2) earned their position by correctly noting both horses AND the distant landmasses/horizon detail with no fabrication."
+}

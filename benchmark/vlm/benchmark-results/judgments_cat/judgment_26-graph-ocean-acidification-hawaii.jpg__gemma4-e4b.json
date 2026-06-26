@@ -1,0 +1,185 @@
+{
+  "image": "26-graph-ocean-acidification-hawaii.jpg",
+  "judgments": {
+    "G4-E4B|t0.1|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies three series (atmospheric CO2 red/Mauna Loa, ocean pCO2 green/ALOHA, ocean pH blue/ALOHA)",
+        "Correct left Y-axis (CO2 275-425) and right Y-axis (pH 8.03-8.33) ranges",
+        "Correct overall acidification narrative and inverse CO2/pH correlation"
+      ],
+      "key_misses": [
+        "X-axis end stated as 2020; chart ends at 2018",
+        "Claims ocean pCO2 starts at ~320 ppm in 1958 and ocean pH starts ~8.15 in 1958 - both ALOHA series actually begin ~1990, so the 1958 start values are invented",
+        "Misses the inset map of the Hawaiian Islands"
+      ],
+      "hallucinations": [
+        "Invented 1958 starting values for the ocean pCO2 (green) and ocean pH (blue) series, which do not exist before ~1990"
+      ],
+      "justification": "Solid structural description of axes/series/stations, but invents pre-1990 values for the two ALOHA series and misreads the X-axis end year (2020 vs 2018)."
+    },
+    "G4-E4B|t0.1|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct three series with stations (Mauna Loa, ALOHA) and colors",
+        "Correct CO2 (275-425) and pH (8.03-8.33) axis ranges",
+        "Correct downward pH / upward CO2 trend narrative"
+      ],
+      "key_misses": [
+        "X-axis end stated as ~2020; chart ends at 2018",
+        "Attributes 1958 start values (~320 ppm pCO2, ~8.10 pH) to the ALOHA series that only begin ~1990",
+        "Misses the inset map"
+      ],
+      "hallucinations": [
+        "Fabricated 1958 start values for ocean pCO2 and ocean pH series"
+      ],
+      "justification": "Accurate axes and series identification, but fabricates early start values for the ALOHA series and misstates the X-axis endpoint."
+    },
+    "G4-E4B|t0.1|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct three series with correct stations and colors",
+        "Correct CO2 (275-425) and pH (8.03-8.33) ranges",
+        "Correct inverse-correlation acidification summary"
+      ],
+      "key_misses": [
+        "X-axis end stated as 2020; chart ends at 2018",
+        "Claims ocean pCO2 ~320 ppm and ocean pH ~8.1 at 1958 - both series start ~1990",
+        "Misses the inset map"
+      ],
+      "hallucinations": [
+        "Invented 1958 values for the two Station ALOHA series"
+      ],
+      "justification": "Reliable axes/series/trends, but misreads X-axis end year and invents pre-1990 data points for the ALOHA series."
+    },
+    "G4-E4B|t0.4|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly lists the three series with stations (Mauna Loa, ALOHA) and colors",
+        "Correct CO2 (275-425) and pH (8.03-8.33) ranges",
+        "Correct acidification trend and inverse correlation"
+      ],
+      "key_misses": [
+        "X-axis end stated as ~2020; chart ends at 2018",
+        "Assigns 1958 start values (~320 ppm pCO2, ~8.1 pH) to ALOHA series that begin ~1990",
+        "Misses the inset map"
+      ],
+      "hallucinations": [
+        "Fabricated 1958 starting values for the two ALOHA series"
+      ],
+      "justification": "Good axes/series description, but repeats the 2020 end-year error and invents early data points for the ALOHA series."
+    },
+    "G4-E4B|t0.4|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct three series with stations (Mauna Loa, ALOHA) and colors",
+        "Correct CO2 (275-425) and pH (8.03-8.33) axis ranges",
+        "Correct overall acidification narrative"
+      ],
+      "key_misses": [
+        "X-axis end stated as 2020; chart ends at 2018",
+        "Claims ALOHA series start in 1958 (~320 ppm pCO2, ~8.15 pH) - they begin ~1990",
+        "Atmospheric CO2 end value ~405 ppm understated (chart ~415)",
+        "Misses the inset map"
+      ],
+      "hallucinations": [
+        "Invented 1958 start values for ocean pCO2 and ocean pH series"
+      ],
+      "justification": "Accurate axes/series but compounds the shared errors with a slightly understated atmospheric CO2 endpoint and the 2020/1958-series mistakes."
+    },
+    "G4-E4B|t0.4|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct three series with stations (Mauna Loa, ALOHA) and colors",
+        "Correct CO2 (275-425) range",
+        "Notes inverse correlation and acidification correctly"
+      ],
+      "key_misses": [
+        "X-axis end stated as ~2020; chart ends at 2018",
+        "Mislabels right Y-axis as 'pH / CO2' and gives its unit as 'Scale units' - it is purely pH",
+        "States atmospheric CO2 starts ~320 ppm in 1958 (closer to ~315) and assigns pH start ~8.10 to 1958 though the series begins ~1990",
+        "Provides no concrete end value for ocean pCO2, only a qualitative trend",
+        "Misses the inset map"
+      ],
+      "hallucinations": [
+        "Invented 1958 start value for ocean pH; garbled right-axis label/unit"
+      ],
+      "justification": "Weakest of the set: corrupts the right-axis label/units, omits a pCO2 endpoint, and repeats the 2020/1958-series errors."
+    },
+    "G4-E4B|t0.7|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct three series with stations (Mauna Loa, ALOHA) and colors",
+        "Correct CO2 (275-425) and pH (8.03-8.33) ranges",
+        "Correct acidification narrative and inverse correlation"
+      ],
+      "key_misses": [
+        "X-axis end stated as 2020; chart ends at 2018",
+        "Assigns 1958 start values to ALOHA series (~310 ppm pCO2, ~8.1 pH) that begin ~1990; pCO2 310 ppm is also too low",
+        "Atmospheric CO2 end ~410 ppm slightly understated (~415)",
+        "Misses the inset map"
+      ],
+      "hallucinations": [
+        "Fabricated 1958 start values for the two ALOHA series"
+      ],
+      "justification": "Solid axes/series/trends, but repeats the 2020 end-year and invents early ALOHA-series values (pCO2 310 ppm is also a misread)."
+    },
+    "G4-E4B|t0.7|rep1": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct three series with stations (Mauna Loa, ALOHA) and colors",
+        "Correct CO2 (275-425) and pH (8.03-8.33) ranges",
+        "Captures the rising-CO2 / falling-pH relationship"
+      ],
+      "key_misses": [
+        "X-axis end stated as ~2020; chart ends at 2018",
+        "Ocean pH start stated as ~8.30 in 1958 - a large error; the pH series begins ~1990 near ~8.11",
+        "Assigns 1958 start values to both ALOHA series that only begin ~1990",
+        "Misses the inset map"
+      ],
+      "hallucinations": [
+        "Invented 1958 pH start of ~8.30 (chart never shows pH that high anywhere); fabricated 1958 starts for both ALOHA series"
+      ],
+      "justification": "Notably worse: grossly overstates the pH starting value (~8.30 vs ~8.11) in addition to the shared end-year and invented-1958-series errors."
+    },
+    "G4-E4B|t0.7|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct three series with stations (Mauna Loa, ALOHA) and colors",
+        "Correct pH (8.03-8.33) range; correct acidification narrative",
+        "Reasonable atmospheric CO2 end (>400 by 2020)"
+      ],
+      "key_misses": [
+        "X-axis end stated as 2020; chart ends at 2018",
+        "Invents left-axis unit as 'micro-atm' - the axis is labeled 'CO2' (ppm scale) with no microatm unit printed",
+        "Ocean pH start stated as ~8.25 in 1958 - too high and the series begins ~1990",
+        "Stations appear without the inset map being mentioned"
+      ],
+      "hallucinations": [
+        "Fabricated 'micro-atm' unit on the left axis; invented 1958 pH start ~8.25 for an ALOHA series that begins ~1990"
+      ],
+      "justification": "Adds an invented left-axis unit (micro-atm) and an inflated 1958 pH start on top of the shared end-year and 1958-series errors."
+    }
+  },
+  "ranking": [
+    "G4-E4B|t0.1|rep0",
+    "G4-E4B|t0.1|rep1",
+    "G4-E4B|t0.1|rep2",
+    "G4-E4B|t0.4|rep0",
+    "G4-E4B|t0.7|rep0",
+    "G4-E4B|t0.4|rep1",
+    "G4-E4B|t0.4|rep2",
+    "G4-E4B|t0.7|rep2",
+    "G4-E4B|t0.7|rep1"
+  ],
+  "notes": "All nine responses from gemma4-e4b share two consistent errors: (1) the X-axis is read as ending in 2020 when the chart ends in 2018, and (2) the two Station ALOHA series (ocean pCO2 green, ocean pH blue) are given 1958 starting values despite only beginning around 1990 - those early values are invented. Otherwise the model reliably identifies the chart type, all three series with correct colors and stations, both Y-axis ranges (CO2 275-425, pH 8.03-8.33), and the inverse CO2/pH trend. None of the responses mention the inset map of the Hawaiian Islands. The higher-temperature reps (t0.7) introduce additional fabrication: rep1 invents a pH start of ~8.30 and rep2 invents a 'micro-atm' unit for the left axis. Quality is stable at t0.1/t0.4 and degrades at t0.7."
+}

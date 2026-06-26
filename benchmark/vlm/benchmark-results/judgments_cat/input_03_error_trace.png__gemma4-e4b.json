@@ -1,0 +1,70 @@
+{
+  "image": "03_error_trace.png",
+  "image_path": "test-images/03_error_trace.png",
+  "ground_truth": "Terminal screenshot. Command `$ python app.py` triggers a chain of errors:\n- **psycopg2.OperationalError**: connection to server at `\"db.internal\"` (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user `\"app\"`\n- During handling, a secondary **ConnectionError** occurs: \"Failed to connect: password authentication failed for user 'app'\"\n- Stack trace references `/Users/alice/app/main.py` line 42 (`db = connect(DB_URL)`) and `/Users/alice/app/db.py` line 18 (`raise ConnectionError(...)`)\n- Process exits with code 1\n\n---",
+  "responses": [
+    {
+      "key": "G4-E4B|t0.1|rep0",
+      "model": "G4-E4B",
+      "temp": 0.1,
+      "rep": 0,
+      "content": "**Error type:** `psycopg2.OperationalError`\n**Root-cause message verbatim:** `password authentication failed for user \"app\"`\n**Most relevant file:line:** `/Users/alice/app/db.py:18`\n**One-sentence likely cause:** The database connection string (DB\\_URL) is using incorrect credentials, specifically the password for the user \"app\"."
+    },
+    {
+      "key": "G4-E4B|t0.1|rep1",
+      "model": "G4-E4B",
+      "temp": 0.1,
+      "rep": 1,
+      "content": "**Error type:** `psycopg2.OperationalError` / `ConnectionError`\n**Root-cause message verbatim:** `password authentication failed for user \"app\"`\n**Most relevant file:line:** `db.py:18`\n**One-sentence likely cause:** The application is failing to connect to the database because the credentials (username or password) provided are incorrect or the database server requires a different authentication method."
+    },
+    {
+      "key": "G4-E4B|t0.1|rep2",
+      "model": "G4-E4B",
+      "temp": 0.1,
+      "rep": 2,
+      "content": "**Error Type:** `psycopg2.OperationalError`\n**Root-cause message:** `password authentication failed for user \"app\"`\n**Most relevant file:line:** `db.py:18`\n**Likely cause:** The application is attempting to connect to the PostgreSQL database using incorrect credentials or the database requires a different authentication method (e.g., peer or trust) than the one currently configured."
+    },
+    {
+      "key": "G4-E4B|t0.4|rep0",
+      "model": "G4-E4B",
+      "temp": 0.4,
+      "rep": 0,
+      "content": "**1. Error type:** `psycopg2.OperationalError` (or `ConnectionError`)\n**2. Root-cause message verbatim:** `password authentication failed for user \"app\"`\n**3. Most relevant file:line:** `/Users/alice/app/db.py:18`\n**4. One-sentence likely cause:** The database connection string is using incorrect or outdated credentials (username or password) for the specified user."
+    },
+    {
+      "key": "G4-E4B|t0.4|rep1",
+      "model": "G4-E4B",
+      "temp": 0.4,
+      "rep": 1,
+      "content": "**Error type:** `psycopg2.OperationalError`\n**Root-cause message verbatim:** `password authentication failed for user \"app\"`\n**Most relevant file:line:** `db.py:18`\n**One-sentence likely cause:** The database rejected the connection because the provided password for the user \"app\" was incorrect or the database authentication method requires a different credential source."
+    },
+    {
+      "key": "G4-E4B|t0.4|rep2",
+      "model": "G4-E4B",
+      "temp": 0.4,
+      "rep": 2,
+      "content": "**Error type:** `psycopg2.OperationalError` / `ConnectionError`\n**Root-cause message verbatim:** `password authentication failed for user \"app\"`\n**Most relevant file:line:** `/Users/alice/app/db.py:18`\n**Likely cause:** The database user \"app\" is unable to authenticate using the provided password or connection parameters."
+    },
+    {
+      "key": "G4-E4B|t0.7|rep0",
+      "model": "G4-E4B",
+      "temp": 0.7,
+      "rep": 0,
+      "content": "**Error Type:** `psycopg2.OperationalError`\n**Root-cause message verbatim:** `password authentication failed for user \"app\"`\n**Most relevant file:line:** `/Users/alice/app/db.py:18`\n**One-sentence likely cause:** The database server rejected the connection because the username or password provided in the connection string is incorrect or the user lacks proper authentication rights."
+    },
+    {
+      "key": "G4-E4B|t0.7|rep1",
+      "model": "G4-E4B",
+      "temp": 0.7,
+      "rep": 1,
+      "content": "**Error type:** `psycopg2.OperationalError`\n**Root-cause message verbatim:** `password authentication failed for user \"app\"`\n**Most relevant file:line:** `/Users/alice/app/db.py:18`\n**Likely cause:** The database connection string or credentials being used for the user \"app\" are incorrect or out of sync with the database server's authentication requirements."
+    },
+    {
+      "key": "G4-E4B|t0.7|rep2",
+      "model": "G4-E4B",
+      "temp": 0.7,
+      "rep": 2,
+      "content": "**(1) Error type:** `psycopg2.OperationalError` / `ConnectionError`\n**(2) Root-cause message verbatim:** `password authentication failed for user \"app\"`\n**(3) Most relevant file:line:** `app/main.py:42` (or the point where the connection is called)\n**(4) One-sentence likely cause:** The database connection is failing because the provided username or password is incorrect, or the user 'app' does not have appropriate authentication rights."
+    }
+  ]
+}

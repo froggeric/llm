@@ -1,0 +1,70 @@
+{
+  "image": "03_error_trace.png",
+  "image_path": "test-images/03_error_trace.png",
+  "ground_truth": "Terminal screenshot. Command `$ python app.py` triggers a chain of errors:\n- **psycopg2.OperationalError**: connection to server at `\"db.internal\"` (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user `\"app\"`\n- During handling, a secondary **ConnectionError** occurs: \"Failed to connect: password authentication failed for user 'app'\"\n- Stack trace references `/Users/alice/app/main.py` line 42 (`db = connect(DB_URL)`) and `/Users/alice/app/db.py` line 18 (`raise ConnectionError(...)`)\n- Process exits with code 1\n\n---",
+  "responses": [
+    {
+      "key": "Q3.5-4B-Q8|t0.1|rep0",
+      "model": "Q3.5-4B-Q8",
+      "temp": 0.1,
+      "rep": 0,
+      "content": "```markdown\n(1) Error type: `psycopg2.OperationalError` / `ConnectionError`\n\n(2) Root-cause message verbatim: `connection to server at \"db.internal\" (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user \"app\"`\n\n(3) Most relevant file:line in the stack trace: `\"/Users/alice/app/db.py\", line 18, in connect`\n\n(4) One-sentence likely cause: The database password provided in the connection string does not match the password configured for the user \"app\" in the PostgreSQL database.\n```\n"
+    },
+    {
+      "key": "Q3.5-4B-Q8|t0.1|rep1",
+      "model": "Q3.5-4B-Q8",
+      "temp": 0.1,
+      "rep": 1,
+      "content": "```markdown\n(1) Error type: `psycopg2.OperationalError`\n(2) Root-cause message verbatim: `connection to server at \"db.internal\" (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user \"app\"`\n(3) Most relevant file:line in the stack trace: `\"/Users/alice/app/db.py\", line 18, in connect`\n(4) One-sentence likely cause: The database password provided in the connection string does not match the password configured for the 'app' user in the PostgreSQL database.\n```"
+    },
+    {
+      "key": "Q3.5-4B-Q8|t0.1|rep2",
+      "model": "Q3.5-4B-Q8",
+      "temp": 0.1,
+      "rep": 2,
+      "content": "```markdown\n(1) Error type: `psycopg2.OperationalError` / `ConnectionError`\n\n(2) Root-cause message verbatim:\n```\npsycopg2.OperationalError: connection to server at \"db.internal\" (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user \"app\"\n```\n\n(3) Most relevant file:line in the stack trace:\n```\nFile \"/Users/alice/app/db.py\", line 18, in connect\n    raise ConnectionError(f\"Failed to connect: {e}\")\n```\n\n(4) One-sentence likely cause:\nThe database connection failed due to incorrect password credentials for the user \"app\".\n```\n\n```"
+    },
+    {
+      "key": "Q3.5-4B-Q8|t0.4|rep0",
+      "model": "Q3.5-4B-Q8",
+      "temp": 0.4,
+      "rep": 0,
+      "content": "(1) **Error type**\n`psycopg2.OperationalError` (wrapped in `ConnectionError`)\n\n(2) **Root-cause message verbatim**\n`connection to server at \"db.internal\" (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user \"app\"`\n\n(3) **Most relevant file:line in the stack trace**\n`File \"/Users/alice/app/main.py\", line 42, in <module>`\n\n(4) **One-sentence likely cause**\nThe database password provided in the connection string does not match the password configured for the user \"app\" on the server."
+    },
+    {
+      "key": "Q3.5-4B-Q8|t0.4|rep1",
+      "model": "Q3.5-4B-Q8",
+      "temp": 0.4,
+      "rep": 1,
+      "content": "```markdown\n(1) Error type: `psycopg2.OperationalError`\n(2) Root-cause message verbatim: \"connection to server at 'db.internal' (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user 'app'\"\n(3) Most relevant file:line in the stack trace: `/Users/alice/app/db.py:18`\n(4) One-sentence likely cause: The database password for the user 'app' is incorrect or the user does not exist.\n```"
+    },
+    {
+      "key": "Q3.5-4B-Q8|t0.4|rep2",
+      "model": "Q3.5-4B-Q8",
+      "temp": 0.4,
+      "rep": 2,
+      "content": "```markdown\n(1) Error type: psycopg2.OperationalError\n(2) Root-cause message verbatim: connection to server at \"db.internal\" (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user \"app\"\n(3) Most relevant file:line in the stack trace: \"/Users/alice/app/db.py\", line 18, in connect\n(4) One-sentence likely cause: The password provided in the database connection string is incorrect or the user does not exist.\n```"
+    },
+    {
+      "key": "Q3.5-4B-Q8|t0.7|rep0",
+      "model": "Q3.5-4B-Q8",
+      "temp": 0.7,
+      "rep": 0,
+      "content": "```markdown\n(1) Error type: `psycopg2.OperationalError` (wrapped in `ConnectionError`)\n\n(2) Root-cause message verbatim: \n```\npsycopg2.OperationalError: connection to server at \"db.internal\" (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user \"app\"\n\nDuring handling of the above exception, another exception occurred:\n\nConnectionError: Failed to connect: password authentication failed for user \"app\"\n```\n\n(3) Most relevant file:line in the stack trace:\n```\n/Users/alice/app/db.py, line 18, in connect\n    raise ConnectionError(f\"Failed to connect: {e}\")\n```\n\n(4) One-sentence likely cause:\nThe application failed to authenticate the database user \"app\" due to an incorrect password or user configuration.\n```\n\n```"
+    },
+    {
+      "key": "Q3.5-4B-Q8|t0.7|rep1",
+      "model": "Q3.5-4B-Q8",
+      "temp": 0.7,
+      "rep": 1,
+      "content": "```markdown\n(1) Error type (exception class / error code):\npsycopg2.OperationalError\n\n(2) Root-cause message verbatim:\nconnection to server at \"db.internal\" (10.0.0.5), port 5432 failed: FATAL: password authentication failed for user \"app\"\n\n(3) Most relevant file:line in the stack trace:\nmain.py:42\n\n(4) One-sentence likely cause:\nThe password used to authenticate the database connection is incorrect.\n```"
+    },
+    {
+      "key": "Q3.5-4B-Q8|t0.7|rep2",
+      "model": "Q3.5-4B-Q8",
+      "temp": 0.7,
+      "rep": 2,
+      "content": "```markdown\n(1) Error type: psycopg2.errors.InvalidPassword\n(2) Root-cause message verbatim: password authentication failed for user \"app\"\n(3) Most relevant file:line in the stack trace: main.py:42\n(4) Likely cause: The password provided in the connection string does not match the password for the database user 'app'.\n```"
+    }
+  ]
+}

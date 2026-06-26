@@ -1,0 +1,147 @@
+{
+  "image": "08-poster-class-schedule.jpg",
+  "judgments": {
+    "Q3.6-35B-A3B|t0.1|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct days, times, titles, and notes (Embassy of India, with Gabi, VIC Runners)",
+        "Mon 13:10 OSTEOPOROSIS Prevention overlapping slot captured correctly",
+        "Correct Shaolin/Yoga/Fitness class names and PRANAYAMA on Friday"
+      ],
+      "key_misses": [
+        "Omits the VIC Health Club title and footer URL context"
+      ],
+      "hallucinations": [],
+      "justification": "Perfect transcription of all 11 classes with correct times and notes; no hallucinated or mislabeled entries, just missing title/footer context."
+    },
+    "Q3.6-35B-A3B|t0.1|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct days, times, titles, and notes",
+        "Mon 13:10 OSTEOPOROSIS Prevention captured",
+        "TAIJI with Gabi and YOGA with Embassy of India both correct"
+      ],
+      "key_misses": [
+        "No title or footer URL"
+      ],
+      "hallucinations": [],
+      "justification": "Identical and equally correct to rep0; complete and accurate schedule with no errors."
+    },
+    "Q3.6-35B-A3B|t0.1|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct days, times, titles, and notes",
+        "Overlapping 13:10 OSTEOPOROSIS slot captured",
+        "All Yoga/Shaolin/Fitness entries correct including PRANAYAMA"
+      ],
+      "key_misses": [
+        "No title or footer URL"
+      ],
+      "hallucinations": [],
+      "justification": "Full accurate schedule, all 11 classes correct with no omissions or fabrications."
+    },
+    "Q3.6-35B-A3B|t0.4|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct days, times, titles, and notes",
+        "Mon 13:10 OSTEOPOROSIS Prevention present",
+        "All notes (Embassy of India, Gabi, VIC Runners) correct"
+      ],
+      "key_misses": [
+        "Minor markdown table column alignment differs from rep but content identical"
+      ],
+      "hallucinations": [],
+      "justification": "Complete and accurate; all 11 classes correct, no hallucination or omission of substance."
+    },
+    "Q3.6-35B-A3B|t0.4|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct days, times, titles, and notes",
+        "TAIJI with Gabi and both Embassy of India Yoga entries correct",
+        "Mon 13:10 OSTEOPOROSIS Prevention slot captured"
+      ],
+      "key_misses": [
+        "Header row column widths are misaligned but data intact; no title/footer"
+      ],
+      "hallucinations": [],
+      "justification": "Content fully correct for all 11 classes; only markdown formatting of the table header is slightly off with no data loss."
+    },
+    "Q3.6-35B-A3B|t0.4|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct days, times, titles, and notes",
+        "Overlapping OSTEOPOROSIS Prevention 13:10 slot captured",
+        "Friday PRANAYAMA correct"
+      ],
+      "key_misses": [
+        "No title or footer URL"
+      ],
+      "hallucinations": [],
+      "justification": "Identical and complete schedule to the t0.1 reps; all entries accurate with no fabrication."
+    },
+    "Q3.6-35B-A3B|t0.7|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct days, times, titles, and notes in a 4-column table",
+        "Includes the footer URL 'Register online at https://vichealth.club'",
+        "Mon 13:10 OSTEOPOROSIS Prevention and overlapping slots correct"
+      ],
+      "key_misses": [
+        "Slightly verbose 4-column layout (Details column mostly empty) but no data loss"
+      ],
+      "hallucinations": [],
+      "justification": "Full accurate schedule plus the footer URL; all 11 classes correct with no fabricated entries."
+    },
+    "Q3.6-35B-A3B|t0.7|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct days, times, titles, and notes",
+        "Categorizes classes by Type (Shaolin/Yoga/Fitness) which mostly matches the colour groups",
+        "Mon 13:10 OSTEOPOROSIS Prevention captured"
+      ],
+      "key_misses": [
+        "Labels TAIJI (24 forms) as 'Shaolin' type — defensible given the orange pill, but the icon group is Shaolin so acceptable",
+        "Adds an inferred Type column not present as text in the poster"
+      ],
+      "hallucinations": [
+        "Adds 'Type' categorization column inferred from colours rather than text on the poster (minor; categories align with truth)"
+      ],
+      "justification": "All class data correct, but the added Type column is an inference from pill colour rather than literal text, a minor overreach."
+    },
+    "Q3.6-35B-A3B|t0.7|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 11 classes with correct days, times, and titles",
+        "Includes footer URL 'Register online at https://vichealth.club'",
+        "TAIJI with Gabi and YOGA with Embassy of India correct"
+      ],
+      "key_misses": [
+        "Splits 'OSTEOPOROSIS Prevention' across Activity='OSTEOPOROSIS' and Details='Prevention', awkward but content present",
+        "Some notes placed in a separate Details column rather than inline"
+      ],
+      "hallucinations": [],
+      "justification": "All 11 classes and times correct with footer included; only formatting awkwardness in splitting the OSTEOPOROSIS Prevention title, no fabrication."
+    }
+  },
+  "ranking": [
+    "Q3.6-35B-A3B|t0.7|rep0",
+    "Q3.6-35B-A3B|t0.1|rep0",
+    "Q3.6-35B-A3B|t0.1|rep1",
+    "Q3.6-35B-A3B|t0.1|rep2",
+    "Q3.6-35B-A3B|t0.4|rep0",
+    "Q3.6-35B-A3B|t0.4|rep2",
+    "Q3.6-35B-A3B|t0.4|rep1",
+    "Q3.6-35B-A3B|t0.7|rep2",
+    "Q3.6-35B-A3B|t0.7|rep1"
+  ],
+  "notes": "Across all 9 responses the model transcribed all 11 classes with correct days, times, titles, and notes — zero hallucinated classes or times, zero omissions. Scores cluster at 8-9; the only differentiators are formatting polish and whether the footer URL or an inferred Type column is included. t0.7|rep0 edges ahead by including the footer URL with clean layout; t0.7|rep1 drops to 8 for adding an inferred colour-based Type column not present as text on the poster, and t0.7|rep2 splits the OSTEOPOROSIS Prevention title awkwardly."
+}

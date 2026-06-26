@@ -1,0 +1,242 @@
+{
+  "image": "extract-code-test-1.png",
+  "judgments": {
+    "Q3.5-4B|t0.1|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly captures overall function structure, all source playlist keys, and most identifiers (createAujourdhui, PLAYLIST_CONFIG, Combiner.push, Filter.dedupTracks, Filter.removeTracks, Selector.keepRandom, Cache.read, Cache.compressTracks, Playlist.saveWithReplace)",
+        "Correct magic numbers (playlistSize 200, historyDays 6) and the [DAILY UPDATE] description template"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys written without the trailing underscore (GT: validatePlaylistKeys_)",
+        "'La playlist d\\'aujour\\'hui' drops the 'd' — GT is d\\'aujourd\\'hui (escaped apostrophe inside the word)",
+        "rateLimitedForEach 3rd-arg 500 misplaced INSIDE Combiner.push(tracks, getPlaylistTracksLightweight(id), 500) — GT: Combiner.push(tracks, getPlaylistTracksLightweight(id)), 500 belongs to rateLimitedForEach"
+      ],
+      "hallucinations": [],
+      "justification": "Structurally faithful and most identifiers correct, but three real OCR/structural errors (missing trailing underscore, dropped d in aujourd'hui, misplaced 500 argument)."
+    },
+    "Q3.5-4B|t0.1|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Same correct structure and identifiers as rep0: createAujourdhui, Combiner.push, Filter/Selector/Cache/Playlist calls, source keys, magic numbers"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing trailing underscore (GT: validatePlaylistKeys_)",
+        "'d\\'aujour\\'hui' drops the d — GT: d\\'aujourd\\'hui",
+        "500 placed inside Combiner.push(...) instead of as the 3rd arg to rateLimitedForEach"
+      ],
+      "hallucinations": [],
+      "justification": "Identical OCR errors to rep0 — three real discriminator errors; otherwise a clean, faithful extraction."
+    },
+    "Q3.5-4B|t0.1|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Same correct skeleton and identifier set as the other t0.1 reps (Combiner.push, Filter, Selector, Cache, Playlist.saveWithReplace, all source keys, sizes)"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing trailing underscore",
+        "'d\\'aujour\\'hui' drops the d (GT: d\\'aujourd\\'hui)",
+        "500 misplaced inside Combiner.push instead of rateLimitedForEach 3rd arg"
+      ],
+      "hallucinations": [],
+      "justification": "Same three discriminator errors as the other low-temp reps; structurally solid."
+    },
+    "Q3.5-4B|t0.1|rep3": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct overall structure and the full set of identifiers (createAujourdhui, Combiner.push, Filter/Selector/Cache/Playlist calls, all source keys, sizes)"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing trailing underscore",
+        "'d\\'aujour\\'hui' drops the d (GT: d\\'aujourd\\'hui)",
+        "500 misplaced inside Combiner.push instead of rateLimitedForEach 3rd arg"
+      ],
+      "hallucinations": [],
+      "justification": "Same three OCR errors as the rest of the t0.1 cluster; otherwise faithful."
+    },
+    "Q3.5-4B|t0.1|rep4": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct structure and identifiers (Combiner.push, Filter, Selector, Cache, Playlist.saveWithReplace, source keys, sizes)"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing trailing underscore",
+        "'d\\'aujour\\'hui' drops the d (GT: d\\'aujourd\\'hui)",
+        "500 misplaced inside Combiner.push instead of rateLimitedForEach 3rd arg"
+      ],
+      "hallucinations": [],
+      "justification": "Three discriminator errors consistent with the t0.1 cluster; otherwise a clean extraction."
+    },
+    "Q3.5-4B|t0.4|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Captures the full function skeleton and key identifiers (createAujourdhui, Combiner.push, Filter/Selector/Cache/Playlist, source keys, sizes)"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing trailing underscore",
+        "'d\\'aujour\\'hui' drops the d (GT: d\\'aujourd\\'hui)",
+        "500 misplaced inside Combiner.push instead of rateLimitedForEach 3rd arg",
+        "Logger.log(e) loses the \"Error: \" prefix the GT pattern uses (minor)"
+      ],
+      "hallucinations": [],
+      "justification": "Same three core discriminator errors plus a minor catch-block wording change; structurally faithful."
+    },
+    "Q3.5-4B|t0.4|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct full structure and identifier set (Combiner.push, Filter, Selector, Cache, Playlist.saveWithReplace, source keys, sizes)"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing trailing underscore",
+        "'d\\'aujour\\'hui' drops the d (GT: d\\'aujourd\\'hui)",
+        "500 misplaced inside Combiner.push instead of rateLimitedForEach 3rd arg",
+        "Catch block uses invented message string 'Error creating playlist: ' + e (not in GT)"
+      ],
+      "hallucinations": [],
+      "justification": "Three real OCR errors plus a slightly invented catch-block message; otherwise faithful."
+    },
+    "Q3.5-4B|t0.4|rep2": {
+      "holistic_score": 0,
+      "failure_mode": "truncated",
+      "key_hits": [],
+      "key_misses": [
+        "Did not extract the target function at all",
+        "Output an unrelated HTML/CSS mock-up of the Apps Script editor UI rather than the playlist code",
+        "Output is cut off mid-stream (truncated) and contains none of the GT identifiers"
+      ],
+      "hallucinations": [
+        "Fabricated a complete HTML/CSS recreation of the editor chrome (sidebar, toolbar, deploy button, file-list styles) instead of the JavaScript function in the image"
+      ],
+      "justification": "Total failure — produced an unrelated UI mock-up rather than the code in the image, and truncated; this is severe hallucination."
+    },
+    "Q3.5-4B|t0.4|rep3": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct structure and full identifier set (Combiner.push, Filter, Selector, Cache, Playlist.saveWithReplace, source keys, sizes)"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing trailing underscore",
+        "'d\\'aujour\\'hui' drops the d (GT: d\\'aujourd\\'hui)",
+        "500 misplaced inside Combiner.push instead of rateLimitedForEach 3rd arg",
+        "Catch block uses invented message 'Error creating playlist: ' + err"
+      ],
+      "hallucinations": [],
+      "justification": "Same three core discriminator errors plus a minor invented catch message; otherwise a faithful extraction."
+    },
+    "Q3.5-4B|t0.4|rep4": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct structure and identifier set (Combiner.push, Filter, Selector, Cache, Playlist.saveWithReplace, source keys, sizes)"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing trailing underscore",
+        "'d\\'aujour\\'hui' drops the d (GT: d\\'aujourd\\'hui)",
+        "500 misplaced inside Combiner.push instead of rateLimitedForEach 3rd arg",
+        "Logger.log(e) drops the \"Error: \" prefix (minor)"
+      ],
+      "hallucinations": [],
+      "justification": "Three core discriminator errors plus a minor catch-block change; otherwise faithful."
+    },
+    "Q3.5-4B|t0.7|rep0": {
+      "holistic_score": 0,
+      "failure_mode": "truncated",
+      "key_hits": [],
+      "key_misses": [
+        "Did not extract the target function",
+        "Output is an unrelated HTML/CSS mock-up of the Apps Script editor UI",
+        "Truncated mid-attribute; contains none of the GT code identifiers"
+      ],
+      "hallucinations": [
+        "Fabricated a full editor-chrome HTML/CSS template (sidebar, toolbar, editor syntax-highlighting classes) instead of the JavaScript function shown"
+      ],
+      "justification": "Total failure — produced an unrelated editor mock-up instead of the code, and truncated; severe hallucination."
+    },
+    "Q3.5-4B|t0.7|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "BEST extraction of the aujourd'hui string: correctly preserves 'La playlist d\\'aujourd\\'hui' with the escaped apostrophe and the d",
+        "Captures the full function skeleton and identifiers (Combiner.push, Filter, Selector, Cache, Playlist.saveWithReplace, source keys, sizes)"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing trailing underscore",
+        "500 misplaced inside Combiner.push instead of rateLimitedForEach 3rd arg",
+        "Logger.log missing the space before + historyDays in one log line ('past' + historyDays) — minor",
+        "Catch block: Logger.log(err) drops GT 'Error: ' prefix (minor)"
+      ],
+      "hallucinations": [],
+      "justification": "Only response to nail the escaped-apostrophe aujourd'hui string; still has the underscore and 500-arg errors, but the hardest discriminator is correct, so it ranks highest."
+    },
+    "Q3.5-4B|t0.7|rep2": {
+      "holistic_score": 0,
+      "failure_mode": "truncated",
+      "key_hits": [],
+      "key_misses": [
+        "Did not extract the target function",
+        "Output is an unrelated HTML/CSS mock-up of the Apps Script editor UI",
+        "Truncated mid-CSS; none of the GT code identifiers present"
+      ],
+      "hallucinations": [
+        "Fabricated an editor-chrome HTML/CSS template (file-tree, toolbar, editor-area, gutter) instead of the JavaScript function"
+      ],
+      "justification": "Total failure — unrelated editor mock-up instead of the code, truncated; severe hallucination."
+    },
+    "Q3.5-4B|t0.7|rep3": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct full structure and identifier set (Combiner.push, Filter, Selector, Cache, Playlist.saveWithReplace, source keys, sizes)"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing trailing underscore",
+        "'d\\'aujour\\'hui' drops the d (GT: d\\'aujourd\\'hui)",
+        "500 misplaced inside Combiner.push instead of rateLimitedForEach 3rd arg",
+        "One log line loses the space before + historyDays; catch uses e.message (minor wording changes)"
+      ],
+      "hallucinations": [],
+      "justification": "Same three core discriminator errors plus minor log-line wording; otherwise a faithful extraction."
+    },
+    "Q3.5-4B|t0.7|rep4": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Captures the function skeleton and most identifiers (Combiner.push, Filter, Selector, Cache, Playlist.saveWithReplace, source keys, sizes)"
+      ],
+      "key_misses": [
+        "FUNCTION NAME changed to createAujourd’hui using a Unicode right-single-quote ’ instead of plain createAujourdhui — breaks the identifier",
+        "validatePlaylistKeys missing trailing underscore",
+        "500 misplaced inside Combiner.push instead of rateLimitedForEach 3rd arg",
+        "Catch block: Logger.log(err) drops GT 'Error: ' prefix (minor)"
+      ],
+      "hallucinations": [],
+      "justification": "Three core OCR errors PLUS a corrupted function name (createAujourd’hui with a smart-quote) that would break the code — worse than the t0.1 cluster."
+    }
+  },
+  "ranking": [
+    "Q3.5-4B|t0.7|rep1",
+    "Q3.5-4B|t0.1|rep0",
+    "Q3.5-4B|t0.1|rep1",
+    "Q3.5-4B|t0.1|rep2",
+    "Q3.5-4B|t0.1|rep3",
+    "Q3.5-4B|t0.1|rep4",
+    "Q3.5-4B|t0.4|rep0",
+    "Q3.5-4B|t0.4|rep1",
+    "Q3.5-4B|t0.4|rep3",
+    "Q3.5-4B|t0.4|rep4",
+    "Q3.5-4B|t0.7|rep3",
+    "Q3.5-4B|t0.7|rep4",
+    "Q3.5-4B|t0.4|rep2",
+    "Q3.5-4B|t0.7|rep0",
+    "Q3.5-4B|t0.7|rep2"
+  ],
+  "notes": "Two clear behavioral clusters: (1) code-extraction responses (12/15) all share three systematic OCR errors — missing trailing underscore on validatePlaylistKeys_, dropped 'd' in aujourd'hui (except t0.7|rep1 which gets it right), and the 500 misplaced into Combiner.push instead of rateLimitedForEach. (2) Three responses (t0.4|rep2, t0.7|rep0, t0.7|rep2) went completely off-task and fabricated HTML/CSS mock-ups of the editor UI instead of the code, all truncated — scored 0 as severe hallucination. Temperature 0.7 is the only setting that produced both the best single extraction (rep1) and the most off-task failures. The hardest discriminator (escaped-apostrophe aujourd'hui string) was correctly captured only once."
+}

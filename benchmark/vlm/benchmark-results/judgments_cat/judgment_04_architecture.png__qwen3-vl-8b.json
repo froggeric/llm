@@ -1,0 +1,244 @@
+{
+  "image": "04_architecture.png",
+  "judgments": {
+    "Q3VL-8B-Q8|t0.1|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies all 6 components (Web Client, API Gateway (FastAPI), Auth Service, Worker Queue, Postgres, Redis)",
+        "Correct protocols: HTTPS (Web Client→API Gateway), gRPC (API Gateway→Auth Service), gRPC (API Gateway→Worker Queue)",
+        "Correctly notes DB connections (Auth→Postgres, Worker→Redis) have no explicit label",
+        "Correctly states Postgres/Redis are pink ovals"
+      ],
+      "key_misses": [
+        "Does not mention the dangling/phantom third gRPC branch from the API Gateway (the diagram's notable design quirk)",
+        "Says Auth/Worker Queue are 'green' — acceptable but the boxes are a teal-ish green"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate, well-structured description of all components and labeled connections; misses the subtle dangling third gRPC line but introduces no fabrications."
+    },
+    "Q3VL-8B-Q8|t0.1|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with correct labels",
+        "HTTPS and dual gRPC protocols correctly mapped",
+        "Notes DB connections lack explicit labels"
+      ],
+      "key_misses": [
+        "Calls Auth/Worker Queue 'teal' rather than green (minor color imprecision)",
+        "Misses the dangling/phantom third gRPC branch from the API Gateway"
+      ],
+      "hallucinations": [],
+      "justification": "Solid accurate description of all components and connections; minor color wording and omission of the phantom line keep it from a perfect score."
+    },
+    "Q3VL-8B-Q8|t0.1|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified",
+        "HTTPS and dual gRPC protocols correctly mapped",
+        "Notes DB connections lack explicit labels"
+      ],
+      "key_misses": [
+        "Calls Auth/Worker Queue 'teal' rather than green (minor)",
+        "Misses the dangling/phantom third gRPC branch from the API Gateway"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and complete on all components and labeled connections; only misses the subtle phantom line and slightly imprecise color."
+    },
+    "Q3VL-8B-Q8|t0.1|rep3": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with green color for Auth/Worker",
+        "HTTPS and dual gRPC protocols correctly mapped",
+        "Notes DB connections lack explicit labels"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC branch from the API Gateway"
+      ],
+      "hallucinations": [],
+      "justification": "Clean accurate description with correct colors; misses only the subtle dangling third line."
+    },
+    "Q3VL-8B-Q8|t0.1|rep4": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with green color for Auth/Worker",
+        "HTTPS and dual gRPC protocols correctly mapped",
+        "Notes DB connections lack explicit labels"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC branch from the API Gateway"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and well-structured; only omission is the subtle dangling third line."
+    },
+    "Q3VL-8B-Q8|t0.4|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with correct colors (green for Auth/Worker)",
+        "HTTPS and dual gRPC protocols correctly mapped",
+        "Notes DB connections lack explicit labels",
+        "Correctly identifies diagram title 'System Architecture'"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC branch from the API Gateway"
+      ],
+      "hallucinations": [],
+      "justification": "Complete accurate coverage of components, colors, and protocols; misses only the phantom line."
+    },
+    "Q3VL-8B-Q8|t0.4|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with correct colors",
+        "HTTPS and dual gRPC protocols correctly mapped",
+        "Notes DB connections lack explicit labels"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC branch from the API Gateway"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate description of all components and connections; misses only the subtle phantom line."
+    },
+    "Q3VL-8B-Q8|t0.4|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with correct colors",
+        "HTTPS and dual gRPC protocols correctly mapped",
+        "Notes DB connections lack explicit labels"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC branch from the API Gateway"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate coverage of all components and protocols; misses only the dangling third line."
+    },
+    "Q3VL-8B-Q8|t0.4|rep3": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with correct colors",
+        "HTTPS and dual gRPC protocols correctly mapped",
+        "Notes DB connections lack explicit labels and offers reasonable implied-protocol inference (PostgreSQL native, Redis RESP)"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC branch from the API Gateway"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and slightly richer with well-flagged inferences about DB protocols; misses the phantom line."
+    },
+    "Q3VL-8B-Q8|t0.4|rep4": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified",
+        "HTTPS and dual gRPC protocols correctly mapped",
+        "Notes DB connections lack explicit labels with reasonable implied-protocol inference"
+      ],
+      "key_misses": [
+        "Calls Auth/Worker Queue 'teal' rather than green (minor)",
+        "Misses the dangling/phantom third gRPC branch from the API Gateway"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate on all components and connections; minor color wording and omission of the phantom line."
+    },
+    "Q3VL-8B-Q8|t0.7|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with clear descriptions of each role",
+        "HTTPS and dual gRPC protocols correctly mapped",
+        "Notes DB connections lack explicit labels and offers reasonable implied-protocol inference (SQL, Redis pub/sub)"
+      ],
+      "key_misses": [
+        "Omits the explicit box colors and shapes that other responses include",
+        "Misses the dangling/phantom third gRPC branch from the API Gateway"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and descriptive, capturing all components and connections with helpful context; trades color/shape detail for prose and misses the phantom line."
+    },
+    "Q3VL-8B-Q8|t0.7|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified",
+        "HTTPS and dual gRPC protocols correctly mapped",
+        "Notes DB connections lack explicit labels with reasonable implied-protocol inference"
+      ],
+      "key_misses": [
+        "Calls Auth/Worker Queue 'teal' rather than green (minor)",
+        "Misses the dangling/phantom third gRPC branch from the API Gateway"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate on all components and connections; minor color wording and omission of the phantom line."
+    },
+    "Q3VL-8B-Q8|t0.7|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with correct colors (green for Auth/Worker)",
+        "HTTPS and dual gRPC protocols correctly mapped",
+        "Notes DB connections lack explicit labels"
+      ],
+      "key_misses": [
+        "Uses 'box' instead of specifying 'rounded rectangle' (minor shape imprecision)",
+        "Misses the dangling/phantom third gRPC branch from the API Gateway"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate coverage of components, colors, and protocols; misses the subtle phantom line and is slightly loose on shape terminology."
+    },
+    "Q3VL-8B-Q8|t0.7|rep3": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with correct colors (green for Auth/Worker)",
+        "HTTPS and dual gRPC protocols correctly mapped",
+        "Notes DB connections lack explicit labels"
+      ],
+      "key_misses": [
+        "Uses 'box' instead of specifying 'rounded rectangle' (minor)",
+        "Misses the dangling/phantom third gRPC branch from the API Gateway"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and clearly structured; misses only the subtle phantom line and is slightly loose on shape terminology."
+    },
+    "Q3VL-8B-Q8|t0.7|rep4": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with correct colors (green for Auth/Worker) and helpful role descriptions",
+        "HTTPS and dual gRPC protocols correctly mapped",
+        "Notes DB connections lack explicit labels with reasonable implied-protocol inference"
+      ],
+      "key_misses": [
+        "Uses 'box' instead of specifying 'rounded rectangle' (minor)",
+        "Misses the dangling/phantom third gRPC branch from the API Gateway"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and descriptive coverage of all components and connections; misses the phantom line and is slightly loose on shape terminology."
+    }
+  },
+  "ranking": [
+    "Q3VL-8B-Q8|t0.4|rep0",
+    "Q3VL-8B-Q8|t0.1|rep3",
+    "Q3VL-8B-Q8|t0.1|rep4",
+    "Q3VL-8B-Q8|t0.4|rep3",
+    "Q3VL-8B-Q8|t0.1|rep0",
+    "Q3VL-8B-Q8|t0.4|rep1",
+    "Q3VL-8B-Q8|t0.4|rep2",
+    "Q3VL-8B-Q8|t0.7|rep3",
+    "Q3VL-8B-Q8|t0.7|rep2",
+    "Q3VL-8B-Q8|t0.7|rep4",
+    "Q3VL-8B-Q8|t0.7|rep0",
+    "Q3VL-8B-Q8|t0.1|rep2",
+    "Q3VL-8B-Q8|t0.1|rep1",
+    "Q3VL-8B-Q8|t0.4|rep4",
+    "Q3VL-8B-Q8|t0.7|rep1"
+  ],
+  "notes": "All 15 responses (across temps 0.1/0.4/0.7, reps 0-4) are remarkably consistent and accurate: every one correctly identifies all 6 components, the HTTPS + dual-gRPC protocols, the unlabeled DB connections, and the pink-oval databases, with zero hallucinations. The single universal miss is the dangling/phantom third gRPC branch from the API Gateway — the diagram's deliberate design quirk — which no response mentions; since none fabricate a false endpoint for it, this counts as omission rather than hallucination. Minor differentiators: a few responses call the green Auth/Worker boxes 'teal' (acceptable color imprecision), and some at t0.7 use 'box' rather than specifying 'rounded rectangle'. The t0.1 reps are slightly cleaner on shape/color detail; t0.7 rep0 trades structural detail for prose. I scored all at 8 (solid, captures most key details, minor omissions) since the phantom-line miss is a subtle trap and the responses are otherwise flawless."
+}

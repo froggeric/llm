@@ -1,0 +1,142 @@
+{
+  "image": "03_error_trace.png",
+  "judgments": {
+    "Q3.5-4B-Q8|t0.1|rep0": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Both exception types identified (psycopg2.OperationalError + ConnectionError)",
+        "Root-cause message verbatim and exact, including host/IP/port/user",
+        "Correct most-relevant frame db.py:18 (where ConnectionError is raised)",
+        "Accurate one-sentence cause (password mismatch for user 'app')"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Complete and accurate: both exceptions, exact verbatim message, correct raise frame, sound cause."
+    },
+    "Q3.5-4B-Q8|t0.1|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Verbatim root-cause message exact",
+        "Correct db.py:18 frame",
+        "Accurate cause"
+      ],
+      "key_misses": [
+        "Omits the chained ConnectionError exception"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate but lists only psycopg2.OperationalError, missing the secondary ConnectionError."
+    },
+    "Q3.5-4B-Q8|t0.1|rep2": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Both exception types identified",
+        "Verbatim root-cause message exact",
+        "db.py:18 with the exact raise ConnectionError code line",
+        "Correct cause"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Thorough and fully accurate across all four asked fields."
+    },
+    "Q3.5-4B-Q8|t0.4|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Both exceptions noted (OperationalError wrapped in ConnectionError)",
+        "Verbatim root-cause message exact",
+        "Accurate cause"
+      ],
+      "key_misses": [
+        "Cites main.py:42 (the call site) as most-relevant instead of db.py:18 where the error is raised"
+      ],
+      "hallucinations": [],
+      "justification": "Strong and accurate, but picks the call frame over the raise frame as 'most relevant'."
+    },
+    "Q3.5-4B-Q8|t0.4|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Verbatim root-cause message substantively correct",
+        "Correct db.py:18 frame"
+      ],
+      "key_misses": [
+        "Omits the chained ConnectionError",
+        "Speculative 'or the user does not exist' not supported by the message"
+      ],
+      "hallucinations": [],
+      "justification": "Mostly correct but misses the secondary exception and adds an unsupported user-doesn't-exist speculation."
+    },
+    "Q3.5-4B-Q8|t0.4|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Verbatim root-cause message exact",
+        "Correct db.py:18 frame"
+      ],
+      "key_misses": [
+        "Omits the chained ConnectionError",
+        "Adds unsupported 'or the user does not exist' speculation"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate message and frame, but drops the secondary exception and speculates about a nonexistent user."
+    },
+    "Q3.5-4B-Q8|t0.7|rep0": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Both exceptions with the full 'During handling' chain verbatim",
+        "Exact root-cause message including host/IP/port/user",
+        "db.py:18 with the exact raise ConnectionError code line",
+        "Accurate cause"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Most complete and precise response: captures both exceptions, the chaining context, and the raise frame exactly."
+    },
+    "Q3.5-4B-Q8|t0.7|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Verbatim root-cause message exact",
+        "Accurate cause"
+      ],
+      "key_misses": [
+        "Omits the chained ConnectionError",
+        "Cites main.py:42 instead of db.py:18 as most-relevant"
+      ],
+      "hallucinations": [],
+      "justification": "Correct message and cause but misses the secondary exception and picks the call frame."
+    },
+    "Q3.5-4B-Q8|t0.7|rep2": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct cause (password mismatch)",
+        "main.py:42 is a valid trace frame"
+      ],
+      "key_misses": [
+        "Truncated root-cause message drops the 'connection to server at ...' prefix",
+        "Cites only main.py:42, not the raise frame"
+      ],
+      "hallucinations": [
+        "Fabricates error class 'psycopg2.errors.InvalidPassword' which does not appear in the image (actual class is psycopg2.OperationalError)"
+      ],
+      "justification": "Hallucinates the exception class (InvalidPassword vs OperationalError) and truncates the message, a serious accuracy failure."
+    }
+  },
+  "ranking": [
+    "Q3.5-4B-Q8|t0.7|rep0",
+    "Q3.5-4B-Q8|t0.1|rep0",
+    "Q3.5-4B-Q8|t0.1|rep2",
+    "Q3.5-4B-Q8|t0.4|rep0",
+    "Q3.5-4B-Q8|t0.1|rep1",
+    "Q3.5-4B-Q8|t0.4|rep1",
+    "Q3.5-4B-Q8|t0.4|rep2",
+    "Q3.5-4B-Q8|t0.7|rep1",
+    "Q3.5-4B-Q8|t0.7|rep2"
+  ],
+  "notes": "All nine responses correctly identified the root cause as a PostgreSQL password mismatch for user 'app'. Accuracy was strong at low temperature: every t0.1/t0.4 response quoted the verbatim message and a correct frame, with the main differentiator being whether the secondary ConnectionError was mentioned. The single serious failure is t0.7|rep2, which fabricates 'psycopg2.errors.InvalidPassword' as the exception class (not in the image) and truncates the message — a true hallucination, not a visible-text discussion. No empty/truncated/repetition-loop failures occurred."
+}

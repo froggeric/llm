@@ -1,0 +1,146 @@
+{
+  "image": "04_architecture.png",
+  "judgments": {
+    "GLM-9B|t0.1|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies all 6 named components with accurate colors/shapes (blue/orange/green rectangles, pink ellipses)",
+        "Correctly maps all 5 connections: HTTPS on Web Client->API Gateway, gRPC on both API Gateway->services arrows, unlabeled direct DB connections",
+        "Notes absence of protocol labels on Auth->Postgres and Worker->Redis links"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line (the diagram's notable design quirk)",
+        "Does not mention the 'System Architecture' title"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, accurate description of all components, colors, shapes, and protocols with zero hallucination; only misses the subtle dangling gRPC line and the title."
+    },
+    "GLM-9B|t0.1|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies all 6 components with accurate colors/shapes",
+        "Correctly maps all 5 connections with correct HTTPS/gRPC/unlabeled protocols"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line",
+        "Does not mention the 'System Architecture' title"
+      ],
+      "hallucinations": [],
+      "justification": "Substantively identical to rep0; accurate components, colors, and protocols with no hallucination."
+    },
+    "GLM-9B|t0.1|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies all 6 components with accurate colors/shapes",
+        "Correctly maps all 5 connections with correct HTTPS/gRPC/unlabeled protocols"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line",
+        "Does not mention the 'System Architecture' title"
+      ],
+      "hallucinations": [],
+      "justification": "Substantively identical to the other t0.1 reps; accurate throughout with no hallucination."
+    },
+    "GLM-9B|t0.4|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies all 6 components with accurate colors/shapes",
+        "Correctly maps all 5 connections with correct HTTPS/gRPC protocols and notes unlabeled DB arrows"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line",
+        "Does not mention the 'System Architecture' title"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate components, colors, and protocols; same minor omissions as the cohort, no hallucination."
+    },
+    "GLM-9B|t0.4|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies all 6 components with accurate colors/shapes",
+        "Correctly maps all 5 connections with correct HTTPS/gRPC protocols and notes unlabeled DB connections"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line",
+        "Does not mention the 'System Architecture' title"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and consistent with the cohort; no hallucination, only the shared minor omissions."
+    },
+    "GLM-9B|t0.4|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies all 6 components with accurate colors/shapes",
+        "Correctly maps all 5 connections with correct HTTPS/gRPC protocols and notes unlabeled DB connections"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line",
+        "Does not mention the 'System Architecture' title"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate throughout; same minor omissions, no hallucination."
+    },
+    "GLM-9B|t0.7|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies all 6 components and groups services vs databases",
+        "Correctly maps all 5 connections with correct HTTPS/gRPC protocols and notes unlabeled DB connections"
+      ],
+      "key_misses": [
+        "Does NOT report component colors/shapes (omits the blue/orange/green/pink and rectangle/oval detail)",
+        "Misses the dangling/phantom third gRPC line",
+        "Does not mention the 'System Architecture' title"
+      ],
+      "hallucinations": [],
+      "justification": "Connections and component names are correct and hallucination-free, but it omits the colors/shapes that the diagram-prompt asks for, dropping it slightly below the t0.1/t0.4 responses."
+    },
+    "GLM-9B|t0.7|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies all 6 components with accurate colors/shapes",
+        "Correctly maps all 5 connections with correct HTTPS/gRPC protocols and notes unlabeled, directional DB connections"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line",
+        "Does not mention the 'System Architecture' title"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate components, colors, and protocols including the directionality note on DB links; no hallucination."
+    },
+    "GLM-9B|t0.7|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies all 6 components grouped as services vs storage",
+        "Correctly maps all 5 connections with correct HTTPS/gRPC protocols and notes unlabeled DB connections"
+      ],
+      "key_misses": [
+        "Does NOT report component colors/shapes (omits blue/orange/green/pink and rectangle/oval detail)",
+        "Misses the dangling/phantom third gRPC line",
+        "Does not mention the 'System Architecture' title"
+      ],
+      "hallucinations": [],
+      "justification": "Connections and names are correct and hallucination-free, but like t0.7|rep0 it omits the colors/shapes, placing it a notch below the responses that include them."
+    }
+  },
+  "ranking": [
+    "GLM-9B|t0.1|rep0",
+    "GLM-9B|t0.4|rep1",
+    "GLM-9B|t0.7|rep1",
+    "GLM-9B|t0.1|rep1",
+    "GLM-9B|t0.1|rep2",
+    "GLM-9B|t0.4|rep0",
+    "GLM-9B|t0.4|rep2",
+    "GLM-9B|t0.7|rep0",
+    "GLM-9B|t0.7|rep2"
+  ],
+  "notes": "All 9 responses are highly consistent and accurate: correct 6 components, correct 5 connections, correct HTTPS/gRPC protocol labels, correct 'no label' on the DB arrows, and zero hallucination across the board. The only substantive miss shared by every response is the dangling/phantom third gRPC line (the diagram's deliberate quirk) and the 'System Architecture' title. The t0.7 reps are slightly weaker because two of them (t0.7|rep0, t0.7|rep2) omit component colors/shapes that the prompt asks for, while all other responses include them. No repetition, truncation, or fabrication in any response. Model is extremely stable across temperatures and reps on this image."
+}

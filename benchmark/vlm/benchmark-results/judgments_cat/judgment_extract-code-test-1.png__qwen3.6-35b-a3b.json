@@ -1,0 +1,193 @@
+{
+  "image": "extract-code-test-1.png",
+  "judgments": {
+    "Q3.6-35B-A3B|t0.1|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Combiner.push correct (not Combine)",
+        "escaped apostrophes in 'La playlist d\\'aujourd\\'hui' correct",
+        "rateLimitedForEach 500 placed correctly as 3rd argument outside the arrow function",
+        "all 7 playlist keys and config values correct"
+      ],
+      "key_misses": [
+        "function name createAujourdHui (capital H) — GT is createAujourdhui (lowercase h)",
+        "validatePlaylistKeys missing trailing underscore (GT: validatePlaylistKeys_)",
+        "historyFile 'aujourdHui.json' (capital H) — GT is 'aujourdhui.json' (lowercase h)"
+      ],
+      "hallucinations": [
+        "invented Cache.write(historyFile, tracks) line not in the source",
+        "invented try/catch block with Logger.log error handling not shown in the image"
+      ],
+      "justification": "Solid core transcription but misses 3 hard discriminators (func name cap, missing underscore, historyFile cap) and fabricates a Cache.write call and catch block beyond the visible code."
+    },
+    "Q3.6-35B-A3B|t0.1|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Combiner.push correct",
+        "escaped apostrophes in name string correct",
+        "rateLimitedForEach 500 placed correctly as 3rd argument",
+        "config keys and values correct"
+      ],
+      "key_misses": [
+        "function name createAujourdHui (capital H) vs GT createAujourdhui",
+        "validatePlaylistKeys missing trailing underscore",
+        "historyFile 'aujourdHui.json' (capital H) vs GT 'aujourdhui.json'"
+      ],
+      "hallucinations": [
+        "invented Cache.write(historyFile, tracks) line",
+        "invented try/catch block ending with `throw e;` not present in source"
+      ],
+      "justification": "Same core accuracy as rep0 but adds a fabricated `throw e;` in the invented catch block, slightly worse hallucination."
+    },
+    "Q3.6-35B-A3B|t0.1|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Combiner.push correct",
+        "escaped apostrophes in name string correct",
+        "rateLimitedForEach 500 placed correctly as 3rd argument",
+        "config keys and values correct"
+      ],
+      "key_misses": [
+        "function name createAujourdHui (capital H) vs GT createAujourdhui",
+        "validatePlaylistKeys missing trailing underscore",
+        "historyFile 'aujourdHui.json' (capital H) vs GT 'aujourdhui.json'"
+      ],
+      "hallucinations": [
+        "invented try/catch block with error logging not shown in the image"
+      ],
+      "justification": "Accurate core with correct 500 placement; misses the 3 discriminators and adds only a single invented catch block (no Cache.write fabrication)."
+    },
+    "Q3.6-35B-A3B|t0.4|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Combiner.push correct",
+        "escaped apostrophes in name string correct",
+        "rateLimitedForEach 500 placed correctly as 3rd argument",
+        "config keys and values correct"
+      ],
+      "key_misses": [
+        "function name createAujourdHui (capital H) vs GT createAujourdhui",
+        "validatePlaylistKeys missing trailing underscore",
+        "historyFile 'aujourdHui.json' (capital H) vs GT 'aujourdhui.json'"
+      ],
+      "hallucinations": [
+        "invented try/catch block with error logging not shown in the image"
+      ],
+      "justification": "Identical quality to t0.1|rep2: correct core, 500 placement right, misses 3 discriminators, single invented catch block."
+    },
+    "Q3.6-35B-A3B|t0.4|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Combiner.push correct",
+        "escaped apostrophes in name string correct",
+        "rateLimitedForEach 500 placed correctly as 3rd argument",
+        "config keys and values correct"
+      ],
+      "key_misses": [
+        "function name createAujourdHui (capital H) vs GT createAujourdhui",
+        "validatePlaylistKeys missing trailing underscore",
+        "historyFile 'aujourdHui.json' (capital H) vs GT 'aujourdhui.json'"
+      ],
+      "hallucinations": [
+        "invented try/catch block with error logging not shown in the image"
+      ],
+      "justification": "Same as t0.4|rep0: accurate core and correct 500 placement, 3 discriminator misses, one invented catch block."
+    },
+    "Q3.6-35B-A3B|t0.4|rep2": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Combiner.push correct",
+        "escaped apostrophes in name string correct",
+        "rateLimitedForEach 500 placed correctly as 3rd argument"
+      ],
+      "key_misses": [
+        "function name createAujourdHui (capital H) vs GT createAujourdhui",
+        "validatePlaylistKeys missing trailing underscore",
+        "historyFile 'aujourdHui.json' (capital H) vs GT 'aujourdhui.json'"
+      ],
+      "hallucinations": [
+        "invented Cache.write(historyFile, tracks) line",
+        "invented extra Logger.log(\"Saved ... tracks to history file\") line",
+        "invented try/catch block ending with `throw e;`"
+      ],
+      "justification": "Most fabricated trailing content of the t0.4 set: Cache.write + extra log + throw, on top of the 3 discriminator misses."
+    },
+    "Q3.6-35B-A3B|t0.7|rep0": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "validatePlaylistKeys_ WITH trailing underscore correct (only rep besides t0.7|rep2 to get this)",
+        "Combiner.push correct",
+        "escaped apostrophes in name string correct"
+      ],
+      "key_misses": [
+        "function name createAujourdHui (capital H) vs GT createAujourdhui",
+        "historyFile 'aujourdHui.json' (capital H) vs GT 'aujourdhui.json'",
+        "rateLimitedForEach_ hallucinated with trailing underscore (GT: rateLimitedForEach)"
+      ],
+      "hallucinations": [
+        "invented rateLimitedForEach_ with trailing underscore and misplaced 500 inside arrow fn args: Combiner.push(tracks, getPlaylistTracksLightweight(id)), 500) — wrong structure",
+        "invented try/catch block logging e (not e.message) not shown in source"
+      ],
+      "justification": "Uniquely gets the validatePlaylistKeys_ underscore right but over-applies the trailing-underscore pattern to rateLimitedForEach_ (fabrication) and misplaces the 500 argument."
+    },
+    "Q3.6-35B-A3B|t0.7|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "rateLimitedForEach 500 placed correctly as 3rd argument outside the arrow function",
+        "Combiner.push correct",
+        "escaped apostrophes in name string correct",
+        "ends cleanly at Cache.compressTracks(tracks) matching the visible code boundary — no fabricated trailing code",
+        "config keys and values correct"
+      ],
+      "key_misses": [
+        "function name createAujourdHui (capital H) vs GT createAujourdhui",
+        "validatePlaylistKeys missing trailing underscore",
+        "historyFile 'aujourdHui.json' (capital H) vs GT 'aujourdhui.json'"
+      ],
+      "hallucinations": [],
+      "justification": "Best response: correct 500 placement, no invented Cache.write/catch block, truncates exactly where the visible image ends — only the 3 shared discriminator misses remain."
+    },
+    "Q3.6-35B-A3B|t0.7|rep2": {
+      "holistic_score": 3,
+      "failure_mode": "normal",
+      "key_hits": [
+        "validatePlaylistKeys_ WITH trailing underscore correct",
+        "Combiner.push correct",
+        "escaped apostrophes in name string correct"
+      ],
+      "key_misses": [
+        "function name createAujourdHui (capital H) vs GT createAujourdhui",
+        "historyFile 'aujourdhui.json' lowercase here but the id line is C.AUJOURD'HUI.id with an apostrophe — invalid identifier",
+        "validatePlaylistKeys_ array contains 'AUJOURD\\'HUI' with a literal apostrophe breaking the string",
+        "rateLimitedForEach_ hallucinated trailing underscore"
+      ],
+      "hallucinations": [
+        "C.AUJOURD'HUI.id — apostrophe inside a property identifier (syntax-breaking fabrication)",
+        "'AUJOURD'HUI' inside the validatePlaylistKeys_ array — unescaped apostrophe breaks the JS string",
+        "invented rateLimitedForEach_ trailing underscore",
+        "invented catch-block rate-limit detection logic (if (e.message.includes('rate limit')) ...)"
+      ],
+      "justification": "Worst response: introduces syntax-breaking apostrophes inside identifiers/strings (AUJOURD'HUI), hallucinates rateLimitedForEach_, and fabricates rate-limit handling logic — multiple severe errors."
+    }
+  },
+  "ranking": [
+    "Q3.6-35B-A3B|t0.7|rep1",
+    "Q3.6-35B-A3B|t0.1|rep2",
+    "Q3.6-35B-A3B|t0.4|rep0",
+    "Q3.6-35B-A3B|t0.4|rep1",
+    "Q3.6-35B-A3B|t0.1|rep0",
+    "Q3.6-35B-A3B|t0.1|rep1",
+    "Q3.6-35B-A3B|t0.7|rep0",
+    "Q3.6-35B-A3B|t0.4|rep2",
+    "Q3.6-35B-A3B|t0.7|rep2"
+  ],
+  "notes": "All 9 responses share two systematic errors: function name createAujourdHui (capital H) instead of GT createAujourdhui, and historyFile 'aujourdHui.json' instead of 'aujourdhui.json' — the model consistently mis-reads the lowercase 'h' as capital. The strongest differentiator is the validatePlaylistKeys_ trailing underscore (only t0.7|rep0 and t0.7|rep2 capture it, and rep2 over-generalizes the pattern to rateLimitedForEach_) and the absence of fabricated trailing code (Cache.write / catch blocks). t0.7|rep1 is uniquely clean: it truncates at the exact visible-code boundary with no hallucinated tail. t0.7|rep2 is worst due to syntax-breaking apostrophes embedded inside identifiers (AUJOURD'HUI). Higher temperature (0.7) produced both the best and the worst response, showing high variance. Note: external vision MCP tools (analyze_image, 4_5v_mcp) both failed to transcribe this image accurately — returning entirely different/fabricated code — so scoring relied on the owner-verified ground_truth discriminators embedded in the input file."
+}

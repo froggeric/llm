@@ -1,0 +1,151 @@
+{
+  "image": "04_architecture.png",
+  "judgments": {
+    "Q3.6-35B-A3B|t0.1|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with correct colors and shapes (Web Client blue rounded rect, API Gateway yellow rounded rect, Auth Service/Worker Queue green rounded rects, Postgres/Redis pink ovals)",
+        "HTTPS label on Web Client to API Gateway correct",
+        "gRPC label on API Gateway to Auth Service correct",
+        "Correct left-to-right microservices flow with FastAPI gateway routing to Auth Service (Postgres) and Worker Queue (Redis)"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line from API Gateway that goes nowhere (notable design quirk)",
+        "States Worker Queue connection has 'no explicit label' when the gRPC label actually covers both branches"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate component inventory and protocol labels; omits the phantom dangling gRPC line and misreports the Worker Queue gRPC label as absent."
+    },
+    "Q3.6-35B-A3B|t0.1|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with correct colors and shapes",
+        "HTTPS and gRPC labels correctly reported on Web Client and Auth Service connections",
+        "Correct architecture flow with FastAPI gateway, Postgres-backed Auth Service, Redis-backed Worker Queue"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line from API Gateway",
+        "Reports Worker Queue connection as unlabeled, though gRPC label spans both branches"
+      ],
+      "hallucinations": [],
+      "justification": "Solid and accurate description of components and protocols; shares the common omissions of the phantom line and the gRPC label on the Worker Queue branch."
+    },
+    "Q3.6-35B-A3B|t0.1|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components with correct colors and shapes",
+        "HTTPS and gRPC labels correct; summary correctly states gateway routes via gRPC to both services",
+        "Note explicitly recognizes both outgoing arrows from API Gateway share the gRPC label"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line (still describes only 2 outgoing arrows)"
+      ],
+      "hallucinations": [],
+      "justification": "Slightly more precise than peers by noting both branches share the gRPC label, but still misses the phantom third line; otherwise accurate."
+    },
+    "Q3.6-35B-A3B|t0.4|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with correct colors and shapes",
+        "HTTPS and gRPC labels correct",
+        "Correct microservices flow and summary"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line",
+        "States Worker Queue connection has no explicit label, though gRPC spans both branches"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate component and protocol reporting; same shared omissions as the other reps."
+    },
+    "Q3.6-35B-A3B|t0.4|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with correct colors and shapes",
+        "HTTPS and gRPC labels correct",
+        "Correct architecture flow with FastAPI, Postgres, Redis"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line",
+        "Reports Worker Queue branch as unlabeled despite shared gRPC label"
+      ],
+      "hallucinations": [],
+      "justification": "Consistent, accurate description; shares the common phantom-line omission and Worker Queue label misreport."
+    },
+    "Q3.6-35B-A3B|t0.4|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with correct colors and shapes",
+        "HTTPS and gRPC labels correct",
+        "Correct microservices flow and summary"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line",
+        "Reports Worker Queue branch as unlabeled though gRPC spans both branches"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and consistent with the rest of the cohort; same two shared omissions."
+    },
+    "Q3.6-35B-A3B|t0.7|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with correct colors and shapes",
+        "HTTPS and gRPC labels correct",
+        "Correct architecture flow and summary"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line",
+        "Reports Worker Queue connection as unlabeled despite shared gRPC label"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate component and protocol reporting; shares the cohort's two common omissions."
+    },
+    "Q3.6-35B-A3B|t0.7|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with correct colors and shapes",
+        "HTTPS and gRPC labels correct; summary states gRPC routes to both services",
+        "Correct architecture flow"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line",
+        "Lists Worker Queue branch as unlabeled though gRPC spans both"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and consistent; same shared omissions as the cohort."
+    },
+    "Q3.6-35B-A3B|t0.7|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components correctly identified with correct colors and shapes",
+        "HTTPS and gRPC labels correct; summary correctly states gRPC routes to both services",
+        "Context note recognizes gRPC proximity to Auth Service implies Worker Queue also uses gRPC"
+      ],
+      "key_misses": [
+        "Missed the dangling/phantom third gRPC line"
+      ],
+      "hallucinations": [],
+      "justification": "Most precise of the cohort on the shared gRPC label inference; still misses the phantom third line but otherwise accurate."
+    }
+  },
+  "ranking": [
+    "Q3.6-35B-A3B|t0.1|rep2",
+    "Q3.6-35B-A3B|t0.7|rep2",
+    "Q3.6-35B-A3B|t0.1|rep0",
+    "Q3.6-35B-A3B|t0.1|rep1",
+    "Q3.6-35B-A3B|t0.4|rep0",
+    "Q3.6-35B-A3B|t0.4|rep1",
+    "Q3.6-35B-A3B|t0.4|rep2",
+    "Q3.6-35B-A3B|t0.7|rep0",
+    "Q3.6-35B-A3B|t0.7|rep1"
+  ],
+  "notes": "All 9 responses are highly consistent and accurate on the 6 components, colors, shapes, and the HTTPS/gRPC protocol labels. None detected the dangling/phantom third gRPC line from the API Gateway — the diagram's notable design quirk — so this is a systematic blind spot rather than a per-response failure. rep2 variants (t0.1 and t0.7) were marginally better by explicitly noting the gRPC label spans both the Auth Service and Worker Queue branches, whereas most others misreported the Worker Queue connection as unlabeled. No hallucinations in any response; all scores held to 8 due to the shared phantom-line omission and minor label-attribution imprecision."
+}

@@ -1,0 +1,149 @@
+{
+  "image": "03_error_trace.png",
+  "judgments": {
+    "Q3.5-9B|t0.1|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies psycopg2.OperationalError wrapped in ConnectionError",
+        "Verbatim root-cause message \"password authentication failed for user \\\"app\\\"\"",
+        "Correct most-relevant file:line (db.py:18)",
+        "Sound cause inference including db.internal:5432"
+      ],
+      "key_misses": [
+        "Verbatim quote omits the \"connection to server at db.internal (10.0.0.5), port 5432 failed: FATAL:\" prefix"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate error type, message, file:line, and cause; only misses the full server-address prefix in the verbatim quote."
+    },
+    "Q3.5-9B|t0.1|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies psycopg2.OperationalError wrapped in ConnectionError",
+        "Verbatim root-cause message correct",
+        "Correct file:line (db.py:18 in connect)",
+        "Sound cause inference including db.internal:5432"
+      ],
+      "key_misses": [
+        "Verbatim quote omits server-address prefix"
+      ],
+      "hallucinations": [],
+      "justification": "Identical-quality answer to rep0; all key facts accurate with only the full prefix omitted."
+    },
+    "Q3.5-9B|t0.1|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct error type chain",
+        "Verbatim message correct",
+        "Correct file:line",
+        "Sound cause inference"
+      ],
+      "key_misses": [
+        "Verbatim quote omits server-address prefix"
+      ],
+      "hallucinations": [],
+      "justification": "Same high-quality response as the other t0.1 reps; accurate on all material points."
+    },
+    "Q3.5-9B|t0.4|rep0": {
+      "holistic_score": 10,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Full verbatim error message including server address db.internal (10.0.0.5), port 5432 and FATAL prefix",
+        "Correct error type psycopg2.OperationalError wrapped in ConnectionError",
+        "Correct file:line db.py:18",
+        "Correct cause inference"
+      ],
+      "key_misses": [],
+      "hallucinations": [],
+      "justification": "Most complete and accurate response; quotes the entire OperationalError line verbatim and gets every detail right."
+    },
+    "Q3.5-9B|t0.4|rep1": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct error type chain",
+        "Verbatim root-cause message correct",
+        "Correct file:line in connect",
+        "Sound cause inference"
+      ],
+      "key_misses": [
+        "Verbatim quote omits server-address prefix"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate on all material points; slightly less complete verbatim quote than t0.4|rep0."
+    },
+    "Q3.5-9B|t0.4|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct error type chain",
+        "Verbatim message correct",
+        "Correct file:line",
+        "Sound cause inference"
+      ],
+      "key_misses": [
+        "Verbatim quote omits server-address prefix"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate response matching the t0.4 cohort quality; only the full prefix is omitted."
+    },
+    "Q3.5-9B|t0.7|rep0": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct error type chain",
+        "Verbatim message correct",
+        "Correct file:line in connect",
+        "Reasonable cause inference (password does not match credentials)"
+      ],
+      "key_misses": [
+        "Verbatim quote omits server-address prefix"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate on all key facts; cause phrasing is slightly more generic but correct."
+    },
+    "Q3.5-9B|t0.7|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Verbatim root-cause message correct",
+        "Correct file:line db.py:18",
+        "Sound cause inference"
+      ],
+      "key_misses": [
+        "Misspells the exception as \"psycogp.OperationalError\" instead of psycopg2"
+      ],
+      "hallucinations": [],
+      "justification": "Mostly accurate but introduces a real OCR typo in the exception module name (psycogp vs psycopg2)."
+    },
+    "Q3.5-9B|t0.7|rep2": {
+      "holistic_score": 9,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct error type chain",
+        "Verbatim message correct",
+        "Correct file:line",
+        "Sound cause inference"
+      ],
+      "key_misses": [
+        "Verbatim quote omits server-address prefix"
+      ],
+      "hallucinations": [],
+      "justification": "Concise and fully accurate on all material points."
+    }
+  },
+  "ranking": [
+    "Q3.5-9B|t0.4|rep0",
+    "Q3.5-9B|t0.1|rep0",
+    "Q3.5-9B|t0.1|rep1",
+    "Q3.5-9B|t0.1|rep2",
+    "Q3.5-9B|t0.4|rep1",
+    "Q3.5-9B|t0.4|rep2",
+    "Q3.5-9B|t0.7|rep0",
+    "Q3.5-9B|t0.7|rep2",
+    "Q3.5-9B|t0.7|rep1"
+  ],
+  "notes": "All 9 responses are accurate and none hallucinate; the cohort is highly consistent across temperatures. The sole differentiator is verbatim-message completeness: t0.4|rep0 is the only one quoting the full server-address prefix. t0.7|rep1 has a minor OCR typo (\"psycogp\" instead of \"psycopg2\") that costs it one point. No response mentioned the secondary ConnectionError message or exit code 1, but those are secondary to the asked-for fields (error type, root-cause message, file:line, cause)."
+}

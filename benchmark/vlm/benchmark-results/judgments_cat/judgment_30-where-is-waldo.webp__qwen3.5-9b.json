@@ -1,0 +1,195 @@
+{
+  "image": "30-where-is-waldo.webp",
+  "judgments": {
+    "Q3.5-9B|t0.1|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Correctly identifies dense crowded sunny beach with hundreds of figures",
+        "Blue-and-white striped beach huts noted",
+        "Sailboats, steamships with smoke, and large blue-and-white boat on far right all captured",
+        "Notes no legible text"
+      ],
+      "key_misses": [
+        "Says 'green/yellow' umbrellas; ground truth lists green/white and blue/white, red/white, red/yellow",
+        "Mentions 'jet skis/water scooters' which are not among the verified watercraft",
+        "Misses the hovercraft specifically (calls far-right vessel a generic large boat)"
+      ],
+      "hallucinations": [
+        "'American flag pattern' small flags planted in sand (cannot verify; likely fabrication)",
+        "'Jet skis/water scooters' ridden by individuals (not a verified watercraft type here)"
+      ],
+      "justification": "Solid scene-level description with correct major elements, but invents a few watercraft/flag details and cuts off mid-sentence."
+    },
+    "Q3.5-9B|t0.1|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Correctly captures the crowded beach, ocean, sky with clouds composition",
+        "Blue-and-white striped beach huts/tents identified",
+        "Three sailboats (pink, white, yellow) and three steamships with smoke noted, matching ground truth reasonably",
+        "Large blue-and-white ferry/patrol boat on far right captured",
+        "Horses near shoreline correctly observed"
+      ],
+      "key_misses": [
+        "Claims a 'small red boat rescuing swimmers' which is not a verified element",
+        "Says 'green/yellow' umbrellas rather than the verified palette",
+        "Misses the hovercraft, submarine, dinghy, and waterskier"
+      ],
+      "hallucinations": [
+        "'Lifeboats/rescue boats' doing a rescue of swimmers (fabricated narrative)"
+      ],
+      "justification": "Accurate macro description and good watercraft count, with one invented rescue-boat narrative and truncated ending."
+    },
+    "Q3.5-9B|t0.1|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Correctly notes faint green landmasses on the horizon (matches verified ground truth)",
+        "Blue-and-white striped huts on left/right, red-and-white striped booth near center-right observed",
+        "Sailboats with pink and yellow sails, steamships with smoke, large blue-and-white vessel on right",
+        "Horses with riders near shoreline captured"
+      ],
+      "key_misses": [
+        "Describes a 'green cactus-like object' near center-right which is dubious",
+        "Lists 'person riding a unicycle' and 'American flags' as specific sightings that cannot be verified",
+        "Misses hovercraft, submarine, dinghy, waterskier, human pyramid"
+      ],
+      "hallucinations": [
+        "'Green cactus-like object' (decorative plant/sculpture) not supported by the beach scene",
+        "'Person riding a unicycle' asserted as a specific sighting"
+      ],
+      "justification": "Good landmass call and core elements, but sprinkles in a couple of unverifiable specific objects; truncated."
+    },
+    "Q3.5-9B|t0.4|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Correctly identifies the human pyramid near the right edge of the water (verified element)",
+        "Horses and riders along shoreline noted",
+        "Blue-and-white striped beach huts, umbrellas, coolers, beach toys captured",
+        "Sailboats (one pink), steamships with smoke, large blue-and-white boat on far right"
+      ],
+      "key_misses": [
+        "Umbrella palette given as 'green/yellow' rather than the verified combinations",
+        "Misses the hovercraft, submarine, dinghy, waterskier, ice cream cart, Punch & Judy booth",
+        "No mention of distant land/hills on horizon"
+      ],
+      "hallucinations": [
+        "'American flag patterns' held by figures (cannot verify)"
+      ],
+      "justification": "Strong on verified activities (human pyramid, horses) but light on the distinctive watercraft and ends mid-sentence."
+    },
+    "Q3.5-9B|t0.4|rep1": {
+      "holistic_score": 3,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Correctly frames it as a Where's Wally/I Spy style crowded beach scene",
+        "Notes blue-and-white and red-and-white striped huts and umbrellas",
+        "Captures sailboats, steamships, blue-and-white ferry on right, swimmers"
+      ],
+      "key_misses": [
+        "Asserts a horse-drawn carriage on the shore, which ground truth explicitly states is NOT present",
+        "Long enumerated list of invented specific activities (unicycle, kite, fishing rod, parasol, toy airplane, cards, tripod, surfboard, etc.) that cannot be verified",
+        "Misses every distinctive watercraft (hovercraft, submarine, dinghy, waterskier) and all hidden characters"
+      ],
+      "hallucinations": [
+        "'A person sits on a horse-drawn carriage near the shore' — explicitly contradicted by ground truth",
+        "Dozens of fabricated micro-details (trumpet/guitar instruments, fishing rod, kite, toy airplane, card games, camera+tripod, parasol, life vest, surfboard) presented as observed facts"
+      ],
+      "justification": "Correct genre but riddled with invented specifics, including the carriage the ground truth flags as a common hallucination."
+    },
+    "Q3.5-9B|t0.4|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies tugboats/steamships with smoke and large blue-and-white ferry/tour boat on right",
+        "Blue-and-white striped beach huts and umbrellas captured",
+        "Notes sailboats with white and yellow sails, rowboats/inflatables",
+        "Mentions dogs and horses near the water"
+      ],
+      "key_misses": [
+        "Says 'two horses' near the water; ground truth verifies six",
+        "Claims 'service workers / lifeguards' and one holding a 'megaphone' which are unverifiable",
+        "Misses hovercraft, submarine, dinghy, waterskier, human pyramid, Punch & Judy booth"
+      ],
+      "hallucinations": [
+        "'Lifeguards' and a figure holding a 'megaphone' (fabricated roles)",
+        "'Vendor or lifeguard' pushing a cart framed as a specific sighting"
+      ],
+      "justification": "Reasonable macro description with a real watercraft vocabulary, but invents lifeguard/megaphone roles and undercounts horses."
+    },
+    "Q3.5-9B|t0.7|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Correctly captures sailboats (two white + one pink), steamships with smokestacks, large blue-and-white ferry on right",
+        "Horses running along shoreline with riders noted",
+        "Blue-and-white striped beach huts clustered on left, umbrellas, coolers captured",
+        "Mentions surfing/being pulled behind boats, consistent with the verified waterskier"
+      ],
+      "key_misses": [
+        "Describes a 'yellow motorboat emitting smoke' as a distinct vessel (unverified)",
+        "Misses hovercraft, submarine, dinghy specifically, plus Punch & Judy booth and hidden characters",
+        "No mention of distant land/hills"
+      ],
+      "hallucinations": [
+        "'Yellow motorboat emitting smoke' as a specific craft",
+        "'Seagulls or other birds' near the shore (cannot verify)"
+      ],
+      "justification": "Accurate core scene with good watercraft detail; a couple of invented specifics and truncated."
+    },
+    "Q3.5-9B|t0.7|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Correctly identifies it as Where's Wally/Waldo style with crowded beach and sea zones",
+        "Notes faint landmasses/hills on far left and right of horizon (matches verified ground truth)",
+        "Three sailboats (pink, white, yellow) and steamships with smoke captured",
+        "Horses near water's edge and blue-and-white boat/ferry on right noted"
+      ],
+      "key_misses": [
+        "Lists many specific invented details (trumpet, guitar, cats, megaphone, person in crown, dog in hat) that cannot be verified",
+        "Misses the distinctive watercraft (hovercraft, submarine, dinghy, waterskier) and all hidden characters",
+        "Red/white huts not distinguished from the Punch & Judy booth"
+      ],
+      "hallucinations": [
+        "'At least one person plays a trumpet, another carries a guitar' (fabricated instruments)",
+        "'Dogs, cats, and possibly birds' — cats are not supported"
+      ],
+      "justification": "Good genre and landmass call, but populated with invented micro-details (instruments, cats); truncated."
+    },
+    "Q3.5-9B|t0.7|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Correctly captures blue-and-white ferry on right with people on deck",
+        "Steamships with red funnels emitting gray smoke noted (plausible detail)",
+        "Sailboats (pink, two white, small yellow) and motorboats/rowboats captured",
+        "Blue-and-white striped huts on left and a red-and-white striped hut near center-right observed"
+      ],
+      "key_misses": [
+        "Calls the red-and-white striped center-right structure a 'hut'; ground truth identifies it as the Punch & Judy booth, not a beach hut",
+        "Lists 'chicken or two', 'cats', 'child flying a kite', 'man with cane' as specific sightings that cannot be verified",
+        "Misses hovercraft, submarine, dinghy, waterskier, human pyramid"
+      ],
+      "hallucinations": [
+        "'Even a chicken or two' on the beach (fabricated animal)",
+        "Cats and a kite-flying child presented as observed specifics"
+      ],
+      "justification": "Decent watercraft and hut description but mislabels the Punch & Judy booth as a hut and invents animals (chicken, cats); truncated."
+    }
+  },
+  "ranking": [
+    "Q3.5-9B|t0.1|rep1",
+    "Q3.5-9B|t0.1|rep2",
+    "Q3.5-9B|t0.1|rep0",
+    "Q3.5-9B|t0.7|rep0",
+    "Q3.5-9B|t0.4|rep0",
+    "Q3.5-9B|t0.4|rep2",
+    "Q3.5-9B|t0.7|rep1",
+    "Q3.5-9B|t0.7|rep2",
+    "Q3.5-9B|t0.4|rep1"
+  ],
+  "notes": "All nine responses correctly identify the macro scene (crowded sunny beach, sea with boats, Where's Wally style) but none locate any hidden characters (Waldo/Odlaw/Wizard Whitebeard) and none name the distinctive watercraft (hovercraft, submarine, dinghy, waterskier) or the Punch & Judy booth. Hallucination density rises with temperature: t0.1 responses stay closer to verifiable content, t0.4|rep1 is the clear outlier with a fabricated horse-drawn carriage (explicitly contradicted by ground truth) plus a long list of invented micro-activities, and the t0.7 responses introduce invented animals (cats, chicken) and instruments. Every response is truncated mid-sentence except t0.4|rep2."
+}

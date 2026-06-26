@@ -1,0 +1,146 @@
+{
+  "image": "ui-test-1.png",
+  "judgments": {
+    "Q3.6-35B-A3B|t0.1|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 3-column layout with window dots, nav items, settings categories, and right-panel sections",
+        "Accurately captured all paths (App Data, Jan CLI), version v0.8.2, button states, and Experimental badge",
+        "Correctly noted 'interpreter' spelling and Chats ellipsis button"
+      ],
+      "key_misses": [
+        "Read last REMOTE provider as 'vLLM' (GT: x.AI, truncated) — OCR misread of partially-visible text",
+        "Omitted x.AI as the truncated final entry"
+      ],
+      "hallucinations": [],
+      "justification": "Comprehensive and accurate capture of the full settings UI; only error is a misread of the truncated last provider label, which is an OCR miss not a fabrication."
+    },
+    "Q3.6-35B-A3B|t0.1|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 3-column layout, all nav items with shortcuts, settings categories, and full right-panel content",
+        "Stopped the REMOTE list at 'Groq' without inventing a wrong label for the truncated entry",
+        "Accurate paths, version, and verbatim description strings"
+      ],
+      "key_misses": [
+        "Did not mention the truncated x.AI entry below Groq (omission, not a misread)"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, accurate enumeration that wisely avoided guessing the clipped final provider; only minor omission of the partial x.AI row."
+    },
+    "Q3.6-35B-A3B|t0.1|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct layout and full verbatim capture of settings categories and right-panel descriptions",
+        "Noted colored per-provider icons (consistent with GT)"
+      ],
+      "key_misses": [
+        "Read last REMOTE provider as 'vAI' (GT: x.AI, truncated) — OCR misread"
+      ],
+      "hallucinations": [
+        "Asserted specific icon colors per provider (OpenAI green, Azure blue, Anthropic brown, OpenRouter black, Mistral orange, Groq red) as if verified — these specific assignments cannot be confirmed from the image and are presented as fact"
+      ],
+      "justification": "Strong structural capture but introduces unverified per-provider icon color assignments; the last-provider misread is a key_miss."
+    },
+    "Q3.6-35B-A3B|t0.4|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Correct 3-panel layout, nav items with shortcuts, full settings categories and right-panel sections",
+        "Captured paths, version, button states, and Experimental badge accurately"
+      ],
+      "key_misses": [
+        "Read last REMOTE provider as 'vAI' (GT: x.AI, truncated) — OCR misread",
+        "Misspelled 'interpreter' as 'interpretor'"
+      ],
+      "hallucinations": [
+        "Invented 'ML:' prefix on the MLX icon label — not present in the image"
+      ],
+      "justification": "Substantively accurate but truncated mid-sentence at the end; also fabricates an 'ML:' prefix on the MLX row and misreads the clipped provider."
+    },
+    "Q3.6-35B-A3B|t0.4|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Correct layout and exhaustive verbatim listing of all visible labels, descriptions, and paths",
+        "Accurately captured version, toggle state, and all section headers"
+      ],
+      "key_misses": [
+        "Read last REMOTE provider as 'vAI' (GT: x.AI, truncated) — OCR misread"
+      ],
+      "hallucinations": [],
+      "justification": "Thorough and largely accurate enumeration; output is cut off mid-listing at the end, and the only substantive error is the misread of the truncated last provider."
+    },
+    "Q3.6-35B-A3B|t0.4|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 3-column layout, nav items with shortcuts, full settings categories, and right-panel content",
+        "Accurately captured all paths, descriptions, version, and button states",
+        "Correctly noted 'interpreter' spelling"
+      ],
+      "key_misses": [
+        "Read last REMOTE provider as 'vLLM' (GT: x.AI, truncated) — OCR misread"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, well-organized, accurate capture of the entire UI; sole error is the OCR misread of the clipped final provider label."
+    },
+    "Q3.6-35B-A3B|t0.7|rep0": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct layout, nav items with shortcuts, full settings categories and right-panel sections",
+        "Accurately captured paths, version, toggle state, and Experimental badge"
+      ],
+      "key_misses": [
+        "Read last REMOTE provider as 'vAI' (GT: x.AI, truncated) — OCR misread"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and complete structural capture; only the truncated last provider is misread, with no fabricated content."
+    },
+    "Q3.6-35B-A3B|t0.7|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "Correct layout and full verbatim capture of all visible labels, descriptions, paths, and section headers",
+        "Noted per-provider colored icons (consistent with GT)"
+      ],
+      "key_misses": [
+        "Read last REMOTE provider as 'vAI' (GT: x.AI, truncated) — OCR misread"
+      ],
+      "hallucinations": [
+        "Invented 'ML' prefix on the MLX icon label — not present in the image"
+      ],
+      "justification": "Detailed and mostly accurate but truncated at the end; fabricates an 'ML' prefix on the MLX row and misreads the clipped provider."
+    },
+    "Q3.6-35B-A3B|t0.7|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correct 3-region layout, nav items with shortcuts, full settings categories and right-panel sections",
+        "Accurately captured paths, version, toggle state, and warning text"
+      ],
+      "key_misses": [
+        "Read last REMOTE provider as 'vLLM' (GT: x.AI, truncated) — OCR misread",
+        "Misspelled 'interpreter' as 'interpretor'"
+      ],
+      "hallucinations": [],
+      "justification": "Well-structured and largely accurate; errors are an OCR misread of the clipped provider and a misspelling, with no fabrications."
+    }
+  },
+  "ranking": [
+    "Q3.6-35B-A3B|t0.1|rep1",
+    "Q3.6-35B-A3B|t0.1|rep0",
+    "Q3.6-35B-A3B|t0.4|rep2",
+    "Q3.6-35B-A3B|t0.7|rep0",
+    "Q3.6-35B-A3B|t0.4|rep1",
+    "Q3.6-35B-A3B|t0.7|rep2",
+    "Q3.6-35B-A3B|t0.1|rep2",
+    "Q3.6-35B-A3B|t0.4|rep0",
+    "Q3.6-35B-A3B|t0.7|rep1"
+  ],
+  "notes": "All 9 responses correctly captured the 3-column layout, window dots, nav items with ⌘N/⌘P/⌘K shortcuts, settings categories, paths, version v0.8.2, and right-panel sections. The single universal error is misreading the truncated final REMOTE provider (GT: x.AI) — variants wrote 'vLLM' or 'vAI', all treated as key_misses per strict rules. Genuine fabrications are confined to two responses inventing an 'ML'/'ML:' prefix on the MLX icon (t0.4 rep0, t0.7 rep1) and one asserting specific per-provider icon color assignments as verified fact (t0.1 rep2). Three responses (t0.4 rep0, t0.4 rep1, t0.7 rep1) were truncated mid-output. rep1 t0.1 ranks highest because it is the only response that avoided guessing the clipped label while remaining complete and accurate elsewhere."
+}

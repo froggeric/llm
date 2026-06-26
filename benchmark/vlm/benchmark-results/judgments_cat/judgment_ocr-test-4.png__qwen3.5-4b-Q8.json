@@ -1,0 +1,160 @@
+{
+  "image": "ocr-test-4.png",
+  "judgments": {
+    "Q3.5-4B-Q8|t0.1|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header org/registry name, registradora name, phone/fax, and address structure all correct",
+        "All four finca numbers (32840, 32885, 32803, 32871) exact",
+        "Nº Borrador 42/2025 and DNI 20041185C and phone 635889002 exact; full GDPR body reproduced"
+      ],
+      "key_misses": [
+        "Website misread as www.registros.org (printed www.registradores.org)",
+        "Email misread as corralejo@registrodelaoliva.org (printed ...registrodelapropriedad.org)",
+        "Nº Entrada misread as 11650 (printed 11656)",
+        "Handwritten apellidos misread as 'Almirans Moragas' (Almiñana Moropsa)",
+        "Handwritten address 'Estevet n°19' misread as 'Esteban Martín 4-19'; email joansnobs vs joansnobc"
+      ],
+      "hallucinations": [],
+      "justification": "Strong structural OCR of the whole form with all fincas and most header fields, but every printed-domain and handwritten field carries reading errors and the Nº Entrada last digit is wrong."
+    },
+    "Q3.5-4B-Q8|t0.1|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header block, registradora, phone/fax, address line, and all four fincas correct",
+        "Nº Borrador 42/2025, DNI, phone, and full GDPR/legal body reproduced accurately"
+      ],
+      "key_misses": [
+        "Website misread as www.registros.org; email as registrodelaoliva.org (both printed domains wrong)",
+        "Nº Entrada badly misread as 8650 (printed 11656 — lost the leading '1')",
+        "Handwritten apellidos 'Almirans Moragas' and email joansnobs are misreads"
+      ],
+      "hallucinations": [],
+      "justification": "Same reliable structure as rep0 but the Nº Entrada is more severely garbled (8650 vs 11656), dropping it below rep0."
+    },
+    "Q3.5-4B-Q8|t0.1|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header, registradora, phone/fax, address line, and all four fincas correct",
+        "Nº Borrador 42/2025, DNI, phone, and full legal body reproduced"
+      ],
+      "key_misses": [
+        "Website www.registros.org and email registrodelaoliva.org both misread",
+        "Nº Entrada misread as 8650 (printed 11656)",
+        "Handwritten apellidos 'Almirans Moragas' and titular 'Arenas' are misreads"
+      ],
+      "hallucinations": [],
+      "justification": "Functionally identical to rep1 — same domain misreads and same 8650 Entrada error; tied with rep1, just behind rep0."
+    },
+    "Q3.5-4B-Q8|t0.4|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header, registradora, phone/fax, address, and all four fincas correct",
+        "Nº Borrador 42/2025, DNI, phone correct; checkbox formatting ([]) on interest options captured"
+      ],
+      "key_misses": [
+        "Website misread as www.registrodelaoliva.org (printed www.registradores.org)",
+        "Email domain misread as registrodelaoliva.org (printed registrodelapropriedad.org)",
+        "Nº Entrada misread as 8650 (printed 11656)",
+        "Fincas placed in FOLIO column instead of the FINCA column (column misalignment)",
+        "Handwritten apellidos 'Almirall Motapés' and titular 'Adelin' are misreads"
+      ],
+      "hallucinations": [],
+      "justification": "Captures the checkbox layout detail others miss, but misaligns the finca table columns and repeats the same domain/Entrada misreads, landing comparable to rep0 at t0.1."
+    },
+    "Q3.5-4B-Q8|t0.4|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header, registradora, phone/fax, address, and all four fincas correct",
+        "Titular 'Adelina Muñoz Arenas 50183525 D' is the closest apellidos read across all responses",
+        "Pipe-delimited field layout is a faithful structural rendering"
+      ],
+      "key_misses": [
+        "Website www.registros.org misread; email split as 'registrodela propiedad.org' (broken token)",
+        "Nº Entrada misread as 6650 (printed 11656)",
+        "Handwritten apellidos 'Almirante Moropos' and email joansnobs are misreads"
+      ],
+      "hallucinations": [],
+      "justification": "Best titular-name read of the set and clean structure, but the email token is broken and Entrada is wrong, so it ties the top tier rather than leading it."
+    },
+    "Q3.5-4B-Q8|t0.4|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header, registradora, phone/fax, address, and all four fincas correct",
+        "Titular 'Adelina Muñoz Arenas 50183525 D' read well; DNI/phone exact",
+        "Full GDPR body reproduced; checkbox-free interest list cleanly laid out"
+      ],
+      "key_misses": [
+        "Website www.registros.org and email registrodelaoliva.org both misread",
+        "Nº Entrada misread as 8686 (printed 11656)",
+        "Handwritten apellidos 'Almirall Montoya' is a more garbled read than t0.4|rep1"
+      ],
+      "hallucinations": [],
+      "justification": "Clean full-form OCR with a strong titular read; the invented-sounding 'Montoya' is still a handwritten misread, not a fabrication, keeping it in the top tier."
+    },
+    "Q3.5-4B-Q8|t0.7|rep0": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header, registradora, phone/fax, address, and all four fincas correct",
+        "DNI, phone, and full legal body reproduced"
+      ],
+      "key_misses": [
+        "Website www.registros.org and email 'registrodela propiedad.org' both misread",
+        "Nº Borrador misread as 78 (printed 42) — the only response to corrupt Borrador",
+        "Nº Entrada misread as 8856 (printed 11656)",
+        "Address 'Estevez' variant and handwritten apellidos 'Almirans Moragas' are misreads"
+      ],
+      "hallucinations": [],
+      "justification": "Same reliable structure but uniquely corrupts the Nº Borrador (78 vs 42) on top of the usual domain and Entrada errors, placing it below the t0.1/t0.4 runs."
+    },
+    "Q3.5-4B-Q8|t0.7|rep1": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header, registradora, phone/fax, address, and all four fincas correct",
+        "Checkbox glyphs (☐) and bold markdown formatting captured; DNI/phone exact"
+      ],
+      "key_misses": [
+        "Registry name misread as 'Corralesjo' (printed Corralejo) — header location garbled",
+        "Website www.registros.org and email registrodelaoliva.org both misread",
+        "Nº Entrada misread as 8860 (printed 11656); apellidos 'Almirans Xorops' and titular 'Adelia' are garbled handwritten reads"
+      ],
+      "hallucinations": [],
+      "justification": "Richest formatting but the header registry name itself is corrupted ('Corralesjo') and the handwritten apellidos/titular reads are the weakest, dropping it to the lower tier."
+    },
+    "Q3.5-4B-Q8|t0.7|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Header, registradora, phone/fax, address, and all four fincas correct",
+        "DNI, phone, and full GDPR body reproduced; checkbox formatting captured"
+      ],
+      "key_misses": [
+        "Website www.registros.org and email registrodelaoliva.org both misread",
+        "Nº Entrada misread as 8850 (printed 11656)",
+        "Titular DNI misread as 50183255.D (printed 50183525D — transposed digits); handwritten apellidos 'Alvarado Moropos' is a misread"
+      ],
+      "hallucinations": [],
+      "justification": "Solid full-form structure but uniquely transposes digits in the titular's DNI (50183255 vs 50183525) alongside the standard domain/Entrada errors."
+    }
+  },
+  "ranking": [
+    "Q3.5-4B-Q8|t0.1|rep0",
+    "Q3.5-4B-Q8|t0.4|rep1",
+    "Q3.5-4B-Q8|t0.4|rep2",
+    "Q3.5-4B-Q8|t0.4|rep0",
+    "Q3.5-4B-Q8|t0.1|rep1",
+    "Q3.5-4B-Q8|t0.1|rep2",
+    "Q3.5-4B-Q8|t0.7|rep2",
+    "Q3.5-4B-Q8|t0.7|rep0",
+    "Q3.5-4B-Q8|t0.7|rep1"
+  ],
+  "notes": "All 9 runs are structurally complete (no truncation/loops/empties) and nail the stable printed fields — registradora name, phone/fax, address, the four finca numbers, DNI, phone, and the full GDPR body. The systematic weakness is consistent across temps: every run misreads BOTH printed header domains (writes www.registros.org and ...registrodelaoliva.org instead of the verified www.registradores.org / ...registrodelapropriedad.org) and every handwritten field (apellidos, applicant email). The Nº Entrada (11656) is corrupted in all 9 (11650, 8650, 8686, 6650, 8856, 8860, 8850) — the leading '1' is dropped or digits swapped in every case. Per the strict rules these visible-text misreads are key_misses, not hallucinations: nothing was invented, and no run fabricated content beyond the form. Lower temps (0.1/0.4) are marginally more faithful than 0.7, where the registry name itself ('Corralesjo') and the titular DNI digits start to corrupt."
+}

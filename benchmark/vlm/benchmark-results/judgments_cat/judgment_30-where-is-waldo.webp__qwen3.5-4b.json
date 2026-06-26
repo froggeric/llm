@@ -1,0 +1,260 @@
+{
+  "image": "30-where-is-waldo.webp",
+  "judgments": {
+    "Q3.5-4B|t0.1|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly identifies Where's Waldo style and dense beach scene",
+        "Mentions horses/donkeys near water (verified present)",
+        "Notes sailboats, motorboats, steamships and blue-and-white ferry-like vessel on right"
+      ],
+      "key_misses": [
+        "Does not mention the human pyramid or Punch and Judy booth",
+        "Does not attempt to locate Waldo or any named character"
+      ],
+      "hallucinations": [],
+      "justification": "Solid, accurate overview of a dense scene with correct major elements (horses, boats, striped huts) and no clear fabrications."
+    },
+    "Q3.5-4B|t0.1|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly notes horses and riders near the water's edge",
+        "Identifies sailboats (pink/white/yellow), tugboat, and large blue-and-white ferry on the right",
+        "Mentions striped beach huts and umbrellas in plausible colors"
+      ],
+      "key_misses": [
+        "Misses the human pyramid in the water and Punch and Judy booth",
+        "Claims a 'cactus stands alone near the right edge' which is not supported"
+      ],
+      "hallucinations": [
+        "Solitary cactus on the beach near the right edge"
+      ],
+      "justification": "Mostly accurate scene summary but invents a beach cactus and misses several distinctive verified elements."
+    },
+    "Q3.5-4B|t0.1|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly observes distant green hills/coastline on the horizon (verified present)",
+        "Notes the large blue-and-white vessel with crosses on its roof (the hovercraft's fans)",
+        "Mentions a person riding a donkey/mule near the water (horses verified)"
+      ],
+      "key_misses": [
+        "Does not locate Waldo or other named characters",
+        "Misses the human pyramid and Punch and Judy booth"
+      ],
+      "hallucinations": [],
+      "justification": "Above-average accuracy, including the rarely-correct horizon landmass and the crosses-on-roof detail, with no clear fabrications."
+    },
+    "Q3.5-4B|t0.1|rep3": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Mentions horses near the water's edge (verified present)",
+        "Correctly notes distant green hills on the horizon (verified present)",
+        "Identifies sailboats with pink/yellow/white sails and the large blue-and-white building on the right"
+      ],
+      "key_misses": [
+        "Misses the human pyramid, Punch and Judy booth, and the hovercraft identity",
+        "Does not attempt to find Waldo"
+      ],
+      "hallucinations": [],
+      "justification": "Consistent and accurate across major elements with no fabricated content; slightly generic on the distinctive details."
+    },
+    "Q3.5-4B|t0.1|rep4": {
+      "holistic_score": 2,
+      "failure_mode": "repetition_loop",
+      "key_hits": [
+        "Initial scene framing (beach, sky, boats) is broadly correct",
+        "Mentions horses and striped beach huts before degrading"
+      ],
+      "key_misses": [
+        "Endless repeated 'person wearing a hat and sunglasses' lines crowd out any useful detail",
+        "Misses every distinctive verified element (pyramid, booth, characters)"
+      ],
+      "hallucinations": [
+        "Shark fin subtly visible underwater near center-left",
+        "Wedding dress, dinosaur costume, space helmet, superhero cape, princess dress"
+      ],
+      "justification": "Degrades into a repetition loop packed with absurd fabricated costumes plus an invented shark fin, making the output largely unusable."
+    },
+    "Q3.5-4B|t0.4|rep0": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly notes large blue-and-white boat with crosses on its roof (hovercraft fans)",
+        "Observes faint landmasses/hills on the horizon (verified present)",
+        "Mentions horses or donkeys near center-right (verified present)"
+      ],
+      "key_misses": [
+        "Describes sail colors as red/yellow/white (red is wrong; should be pink)",
+        "Several unverified minor activities (guitar, blowing bubbles) crowd the description"
+      ],
+      "hallucinations": [],
+      "justification": "Broadly accurate with correct horizon land and crosses-on-roof detail, weakened by a wrong sail color and unverified minor items."
+    },
+    "Q3.5-4B|t0.4|rep1": {
+      "holistic_score": 2,
+      "failure_mode": "repetition_loop",
+      "key_hits": [
+        "Correctly spots the human pyramid near the water's edge on the right",
+        "Mentions horses/donkeys and distant landmasses before degrading"
+      ],
+      "key_misses": [
+        "Degrades into an endless list of bag/person variants that crowd out all content",
+        "Misses the Punch and Judy booth and any named-character search"
+      ],
+      "hallucinations": [
+        "A sign that says 'HALLOWEEN' (invented readable text in a text-free image)"
+      ],
+      "justification": "Despite an early correct human-pyramid observation, it collapses into a repetition loop and invents readable 'HALLOWEEN' text."
+    },
+    "Q3.5-4B|t0.4|rep2": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Mentions several horses and riders near the shore (verified present)",
+        "Identifies sailboats with pink/yellow/white sails",
+        "Correctly notes no legible text in the image"
+      ],
+      "key_misses": [
+        "Misidentifies the far-right vessel as a 'floating bar or club'",
+        "Misses the human pyramid, Punch and Judy booth, and horizon landmass"
+      ],
+      "hallucinations": [
+        "Attributes the style to Durer's 'The Hay Wain' (wrong artist; fabricated art-historical link)"
+      ],
+      "justification": "A generally competent description undermined by a fabricated, doubly-wrong artist attribution."
+    },
+    "Q3.5-4B|t0.4|rep3": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Identifies the scene as 'Where's Wally?' style",
+        "Notes distant landmasses on the horizon (verified present) and the crosses-on-roof vessel",
+        "Mentions horses, donkeys, and dogs among the crowd"
+      ],
+      "key_misses": [
+        "Interprets the crosses as a chapel/church rather than the hovercraft's fans",
+        "Misses the human pyramid and Punch and Judy booth"
+      ],
+      "hallucinations": [],
+      "justification": "Solid scene description with correct horizon land and animal details, only mildly off on the right-side vessel interpretation."
+    },
+    "Q3.5-4B|t0.4|rep4": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Notes the large white-and-blue vessel with crosses on its roof and smoke-emitting steamships",
+        "Mentions horses near the water's edge (verified present)",
+        "Correctly states there is no legible text"
+      ],
+      "key_misses": [
+        "Misses the human pyramid, Punch and Judy booth, and horizon landmass",
+        "Calls the far-right structure a 'religious vessel' rather than a hovercraft"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate on major visible elements with no fabrications, but generic on the distinctive details."
+    },
+    "Q3.5-4B|t0.7|rep0": {
+      "holistic_score": 0,
+      "failure_mode": "empty",
+      "key_hits": [],
+      "key_misses": [
+        "Provides no description of the image whatsoever",
+        "Misses every element of the scene"
+      ],
+      "hallucinations": [
+        "Outputs only an HTML wrapper with a fabricated local image path instead of describing the picture"
+      ],
+      "justification": "No usable content — returns a bogus HTML/image-tag blob instead of any image description."
+    },
+    "Q3.5-4B|t0.7|rep1": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Correctly spots the group building a tower/pyramid in the water on the right (verified present)",
+        "Mentions people standing on horses or donkeys (verified present) and striped beach huts"
+      ],
+      "key_misses": [
+        "Misidentifies the far-right large hovercraft as a steamship",
+        "Misses the Punch and Judy booth and horizon landmass"
+      ],
+      "hallucinations": [
+        "A lighthouse or tower faintly visible in the far distance (no lighthouse/tower exists)"
+      ],
+      "justification": "Includes a correct human-pyramid observation but invents a lighthouse/tower that the ground truth explicitly rules out."
+    },
+    "Q3.5-4B|t0.7|rep2": {
+      "holistic_score": 5,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Notes a volleyball game near center-right (verified present)",
+        "Mentions a donkey/horse near the water's edge (verified present)",
+        "Identifies the large white-and-blue structure with crosses on its roof"
+      ],
+      "key_misses": [
+        "Calls the scene inspired by '1000 people puzzles' rather than Where's Waldo",
+        "Misses the human pyramid and Punch and Judy booth"
+      ],
+      "hallucinations": [
+        "A 'ghostly figure' that may be present (fabricated element)"
+      ],
+      "justification": "Reasonably accurate with a correct volleyball spot, but undermined by an invented ghostly figure."
+    },
+    "Q3.5-4B|t0.7|rep3": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Notes the large ferry-like vessel with multiple crosses on its roof (hovercraft fans)",
+        "Mentions dogs, horses, and striped beach huts"
+      ],
+      "key_misses": [
+        "Misses the human pyramid, Punch and Judy booth, and horizon landmass",
+        "Invents a 'goat or donkey' near the right edge (unverified)"
+      ],
+      "hallucinations": [
+        "Attributes the style to fictional 'Dutch artist Dries Aerts' The Beach series' (fabricated artist/series)"
+      ],
+      "justification": "Adequate visual description spoiled by a fabricated artist and series attribution."
+    },
+    "Q3.5-4B|t0.7|rep4": {
+      "holistic_score": 3,
+      "failure_mode": "normal",
+      "key_hits": [
+        "Identifies the large white-and-blue ferry with crosses on its roof and smoke-emitting ships",
+        "Mentions horses near the water's edge (verified present)"
+      ],
+      "key_misses": [
+        "Misses the human pyramid, Punch and Judy booth, and horizon landmass",
+        "Claims a small pier/dock near the ferry (explicitly absent per ground truth)"
+      ],
+      "hallucinations": [
+        "Attributes the cartoon to artist 'David Fickling' (fabricated/misapplied attribution)",
+        "Chickens or poultry near the huts (not supported)",
+        "A small pier or dock near the ferry (no pier exists)"
+      ],
+      "justification": "Multiple unsupported inventions — wrong artist, chickens, and a pier that the ground truth explicitly rules out — outweigh the correct elements."
+    }
+  },
+  "ranking": [
+    "Q3.5-4B|t0.1|rep2",
+    "Q3.5-4B|t0.1|rep3",
+    "Q3.5-4B|t0.1|rep0",
+    "Q3.5-4B|t0.4|rep0",
+    "Q3.5-4B|t0.4|rep3",
+    "Q3.5-4B|t0.4|rep4",
+    "Q3.5-4B|t0.1|rep1",
+    "Q3.5-4B|t0.7|rep2",
+    "Q3.5-4B|t0.4|rep2",
+    "Q3.5-4B|t0.7|rep1",
+    "Q3.5-4B|t0.7|rep3",
+    "Q3.5-4B|t0.7|rep4",
+    "Q3.5-4B|t0.1|rep4",
+    "Q3.5-4B|t0.4|rep1",
+    "Q3.5-4B|t0.7|rep0"
+  ],
+  "notes": "The lower temperature (0.1) reps are markedly more reliable than 0.7 reps at this model size: t0.7 produced one empty HTML blob (rep0) and two fabricated-artist attributions (Dries Aerts, David Fickling) plus a lighthouse hallucination. Two responses overall (rep1 t0.4 and rep4 t0.1) collapse into repetition loops with invented text/costumes. Notably none of the 15 responses located Waldo, Odlaw, or Wizard Whitebeard — the model describes the scene but never engages the 'find the character' task. The rarely-correct details (horizon landmass, crosses-on-roof = hovercraft fans, human pyramid, volleyball, horses) appear only sporadically; rep2@t0.1 is the single best all-round description."
+}

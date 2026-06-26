@@ -33,7 +33,7 @@ SHORT = {"qwen3.5-4b": "Q3.5-4B-nt", "qwen3-vl-8b": "Q3VL-8B-Q8",
 # as substrings. These are the coverage target — "did the model surface this element?"
 UI1 = ["New Chat", "New Projects", "Search", "Hub", "Settings", "Chats", "INTEGRATIONS",
        "Experimental", "MCP Servers", "Claude Code", "MODEL PROVIDERS", "Llama.cpp", "MLX",
-       "OpenAI", "Azure", "Anthropic", "OpenRouter", "Mistral", "Groq", "vAI", "General",
+       "OpenAI", "Azure", "Anthropic", "OpenRouter", "Mistral", "Groq", "xAI", "General",
        "App Version", "v0.8.2", "Automatic Update Check", "Check for Updates", "Language",
        "English", "Data Folder", "App Data", "Change Location", "App Logs", "Show in Finder",
        "Open Logs", "Advanced", "Jan CLI", "Uninstall", "Reset To Factory Settings"]

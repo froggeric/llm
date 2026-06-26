@@ -1,0 +1,155 @@
+{
+  "image": "04_architecture.png",
+  "judgments": {
+    "Q3.5-4B-Q8|t0.1|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components named with correct shapes (rounded rects, ovals) and colors (blue/yellow/green/pink)",
+        "Correct protocols: HTTPS and gRPC x2",
+        "Correct left-to-right flow and Auth->Postgres / Worker->Redis wiring"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line in the middle (notable design quirk)",
+        "Speculates 'likely SQL-based' / 'likely AMQP or similar' for the unlabeled DB links"
+      ],
+      "hallucinations": [
+        "Calls Redis connection 'likely AMQP or similar' — a mischaracterization (Redis uses RESP, not AMQP), though hedged"
+      ],
+      "justification": "Complete and accurate on all real components, connections, and protocols, but misses the phantom middle gRPC line and makes a mildly incorrect speculative guess (AMQP) for the Redis link."
+    },
+    "Q3.5-4B-Q8|t0.1|rep1": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components named with correct shapes and colors",
+        "Correct protocols (HTTPS, gRPC x2) and correctly notes the two DB links are unlabeled",
+        "Clean, accurate left-to-right microservices summary"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate and appropriately conservative — explicitly notes no protocol labels on DB links rather than inventing them; only omission is the phantom middle line."
+    },
+    "Q3.5-4B-Q8|t0.1|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components named with correct shapes and colors",
+        "Correct protocols and connection wiring",
+        "Correctly distinguishes architecture diagram from flowchart/ER/sequence/state-machine"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line",
+        "Speculates 'likely SQL-based' / Redis-client protocol for unlabeled DB links"
+      ],
+      "hallucinations": [],
+      "justification": "Thorough and accurate on the real structure with useful diagram-type disambiguation, but speculates on DB protocols and misses the phantom middle line."
+    },
+    "Q3.5-4B-Q8|t0.4|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components named with correct shapes and colors",
+        "Correct protocols (HTTPS, gRPC x2)",
+        "Correct Auth->Postgres / Worker->Redis wiring"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line",
+        "Adds hedged speculation ('likely SQL-based', 'Redis as a message broker or cache') for unlabeled links"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate on all real components and protocols with clear structure, but misses the phantom line and infers DB protocols not shown."
+    },
+    "Q3.5-4B-Q8|t0.4|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components named with correct shapes and colors",
+        "Correctly identifies HTTPS and gRPC on the labeled links",
+        "Notes the DB links have no protocol label"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line",
+        "Claims API Gateway->Worker Queue gRPC is only 'implied', not explicitly labeled — undercounts it",
+        "Speculates 'Google Remotable Procedure Calls', SQL, RESP"
+      ],
+      "hallucinations": [
+        "Says the gRPC label on API Gateway->Worker Queue is not explicit ('no explicit label but shares protocol') when the diagram does label it"
+      ],
+      "justification": "Components are right, but it undercounts the Worker Queue gRPC label as merely 'implied' and adds several hedged protocol guesses; also misses the phantom line."
+    },
+    "Q3.5-4B-Q8|t0.4|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components named with correct shapes and colors",
+        "Correct protocols (HTTPS, gRPC x2)",
+        "Explicitly states the two DB links have no protocol label — no speculation"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, accurate, and conservative — no invented protocols and all real structure captured; only the phantom middle line is missed."
+    },
+    "Q3.5-4B-Q8|t0.7|rep0": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components named with correct shapes and colors",
+        "Correct protocols (HTTPS, gRPC x2)",
+        "Notes DB links have no protocol label"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line",
+        "Says Worker Queue gRPC is 'implied by the shared label on the split line' rather than explicitly labeled"
+      ],
+      "hallucinations": [],
+      "justification": "Accurate on components and overall flow and rightly avoids DB-protocol speculation, but slightly undersells the explicit Worker Queue gRPC label and misses the phantom line."
+    },
+    "Q3.5-4B-Q8|t0.7|rep1": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components named with correct shapes and colors",
+        "Correct protocols (HTTPS, gRPC x2)",
+        "Notes DB links have no protocol label"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line",
+        "Intro says 'four distinct connections' then lists five — minor internal inconsistency"
+      ],
+      "hallucinations": [],
+      "justification": "Components and protocols are all correct with no DB-protocol invention, but a small count-vs-list inconsistency appears and the phantom line is missed."
+    },
+    "Q3.5-4B-Q8|t0.7|rep2": {
+      "holistic_score": 7,
+      "failure_mode": "normal",
+      "key_hits": [
+        "All 6 components named with correct grouping (services vs data stores) and shapes",
+        "Correct protocols (HTTPS, gRPC x2) explicitly on the labeled arrows",
+        "Notes DB links have no label/protocol"
+      ],
+      "key_misses": [
+        "Misses the dangling/phantom third gRPC line",
+        "Omits per-component colors (only groups by shape, not color)"
+      ],
+      "hallucinations": [],
+      "justification": "Structurally complete and accurate with no protocol fabrication, but drops per-component colors and misses the phantom middle line."
+    }
+  },
+  "ranking": [
+    "Q3.5-4B-Q8|t0.1|rep1",
+    "Q3.5-4B-Q8|t0.4|rep2",
+    "Q3.5-4B-Q8|t0.1|rep2",
+    "Q3.5-4B-Q8|t0.4|rep0",
+    "Q3.5-4B-Q8|t0.7|rep0",
+    "Q3.5-4B-Q8|t0.7|rep2",
+    "Q3.5-4B-Q8|t0.7|rep1",
+    "Q3.5-4B-Q8|t0.1|rep0",
+    "Q3.5-4B-Q8|t0.4|rep1"
+  ],
+  "notes": "All 9 responses (Qwen3.5-4B Q8 across t0.1/0.4/0.7 x 3 reps) are highly consistent and uniformly strong on the real structure: every component, shape, color, and labeled protocol (HTTPS, gRPC x2) is correct, with correct left-to-right branching and Auth->Postgres / Worker->Redis wiring. The single universal miss is the dangling/phantom third gRPC line from the API Gateway — none of the nine detected it. Differentiators are minor: responses that explicitly note the DB links are unlabeled and avoid speculating score higher (rep1@t0.1, rep2@t0.4); rep1@t0.4 is weakest because it treats the explicit Worker Queue gRPC label as only 'implied' (a subtle undercount) and adds the most hedged protocol guesses. rep0@t0.1 is the only one to make a mildly incorrect guess (AMQP for Redis). No response fabricated components or phantom connections."
+}

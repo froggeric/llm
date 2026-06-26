@@ -1,0 +1,180 @@
+{
+  "image": "extract-code-test-1.png",
+  "judgments": {
+    "GLM-9B|t0.1|rep0": {
+      "holistic_score": 3,
+      "failure_mode": "repetition_loop",
+      "key_hits": [
+        "createAujourdhui correct (no apostrophe)",
+        "Combiner.push correct (not Combine)",
+        "escaped apostrophes in 'La playlist d\\'aujourd\\'hui'",
+        "all playlist key strings (AUJOURDHUI, ALL_ENGLISH, etc.) correct",
+        "main logic: dedup/remove/keepRandom/saveWithReplace sequence correct"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing the trailing underscore (GT: validatePlaylistKeys_)",
+        "comment reads 'by unnecessary information' — missing the word 'removing'"
+      ],
+      "hallucinations": [
+        "Cache.compressTracks(tracks) emitted 4 times in a loop at the end (clear repetition loop fabricating extra invocations)"
+      ],
+      "justification": "Good body OCR but corrupted by a severe repetition loop quadruplicating the final call, plus two real OCR errors (underscore, missing word)."
+    },
+    "GLM-9B|t0.1|rep1": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "createAujourdhui correct (no apostrophe)",
+        "Combiner.push correct",
+        "escaped apostrophes in playlist name string",
+        "all 7 playlist key strings correct",
+        "complete logic chain and try-block structure",
+        "Cache.compressTracks appears exactly once (no repetition)"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing trailing underscore",
+        "comment says 'by unnecessary information' instead of 'by removing unnecessary information'"
+      ],
+      "hallucinations": [],
+      "justification": "Clean, complete transcription with only the underscore and one missing word as errors; no fabrication."
+    },
+    "GLM-9B|t0.1|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "createAujourdhui correct (no apostrophe)",
+        "Combiner.push correct",
+        "escaped apostrophes in playlist name",
+        "all 7 playlist key strings correct",
+        "complete logic chain, single Cache.compressTracks call"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing trailing underscore",
+        "comment missing the word 'removing' ('by unnecessary information')"
+      ],
+      "hallucinations": [],
+      "justification": "Equivalent quality to t0.1|rep1 — clean and complete with the same two minor OCR errors."
+    },
+    "GLM-9B|t0.4|rep0": {
+      "holistic_score": 4,
+      "failure_mode": "normal",
+      "key_hits": [
+        "createAujourdhui correct (no apostrophe)",
+        "Combiner.push correct",
+        "escaped apostrophes in playlist name",
+        "description and structure otherwise complete"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing trailing underscore",
+        "comment missing the word 'removing'"
+      ],
+      "hallucinations": [
+        "AUJOURDHUI truncated to AUJOURDHI (dropped final 'U') in the validate array, propagated to C.AUJOURDHI.id and AUJOURDHI_SOURCE_6 — three identifiers fabricated with wrong spelling"
+      ],
+      "justification": "A significant identifier-truncation error (AUJOURDHI) propagated across three keys on top of the usual OCR misses drops this below the clean reps."
+    },
+    "GLM-9B|t0.4|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "repetition_loop",
+      "key_hits": [
+        "createAujourdhui correct (no apostrophe)",
+        "Combiner.push correct",
+        "escaped apostrophes in playlist name",
+        "all 7 playlist key strings correct",
+        "logic chain correct"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing trailing underscore",
+        "comment missing the word 'removing'"
+      ],
+      "hallucinations": [
+        "Cache.compressTracks(tracks) duplicated (emitted 2 times) at the end"
+      ],
+      "justification": "Body is accurate but the duplicated final call is a minor repetition artifact; combined with the two OCR errors it sits mid-pack."
+    },
+    "GLM-9B|t0.4|rep2": {
+      "holistic_score": 6,
+      "failure_mode": "normal",
+      "key_hits": [
+        "createAujourdhui correct (no apostrophe)",
+        "Combiner.push correct",
+        "escaped apostrophes in playlist name",
+        "all 7 playlist key strings correct",
+        "all numeric literals and Logger.log lines correct"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing trailing underscore",
+        "the '// Cleanup the tracklist ...' comment is entirely absent",
+        "Cache.compressTracks(tracks) placed outside the try block (structural deviation)"
+      ],
+      "hallucinations": [],
+      "justification": "Content is otherwise clean and complete, but it drops the cleanup comment and structurally misplaces the final call outside the try block."
+    },
+    "GLM-9B|t0.7|rep0": {
+      "holistic_score": 4,
+      "failure_mode": "truncated",
+      "key_hits": [
+        "createAujourdhui correct (no apostrophe)",
+        "Combiner.push correct",
+        "escaped apostrophes in playlist name",
+        "all 7 playlist key strings correct",
+        "logic chain through saveWithReplace correct"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing trailing underscore",
+        "comment missing the word 'removing'",
+        "ends with a '// ...' placeholder — function never properly closed"
+      ],
+      "hallucinations": [],
+      "justification": "Truncated ending (// ... placeholder, missing closing braces) makes the function structurally incomplete despite a correct body."
+    },
+    "GLM-9B|t0.7|rep1": {
+      "holistic_score": 5,
+      "failure_mode": "repetition_loop",
+      "key_hits": [
+        "createAujourdhui correct (no apostrophe)",
+        "Combiner.push correct",
+        "escaped apostrophes in playlist name",
+        "all 7 playlist key strings correct",
+        "logic chain correct"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing trailing underscore",
+        "comment missing the word 'removing'"
+      ],
+      "hallucinations": [
+        "Cache.compressTracks(tracks) duplicated (emitted 2 times) after the try block closes"
+      ],
+      "justification": "Accurate body but the duplicated final call plus the two OCR errors place it in the middle of the pack."
+    },
+    "GLM-9B|t0.7|rep2": {
+      "holistic_score": 8,
+      "failure_mode": "normal",
+      "key_hits": [
+        "createAujourdhui correct (no apostrophe)",
+        "Combiner.push correct (not Combine)",
+        "escaped apostrophes in 'La playlist d\\'aujourd\\'hui'",
+        "all 7 playlist key strings correct",
+        "the ONLY response to get the cleanup comment exactly right: '// Cleanup the tracklist by removing unnecessary information'",
+        "complete, correctly nested try-block with single Cache.compressTracks call"
+      ],
+      "key_misses": [
+        "validatePlaylistKeys missing the trailing underscore"
+      ],
+      "hallucinations": [],
+      "justification": "Best of the set — the only response with the exact comment wording and clean structure; its sole error is the dropped trailing underscore on validatePlaylistKeys_."
+    }
+  },
+  "ranking": [
+    "GLM-9B|t0.7|rep2",
+    "GLM-9B|t0.1|rep1",
+    "GLM-9B|t0.1|rep2",
+    "GLM-9B|t0.4|rep2",
+    "GLM-9B|t0.4|rep1",
+    "GLM-9B|t0.7|rep1",
+    "GLM-9B|t0.4|rep0",
+    "GLM-9B|t0.7|rep0",
+    "GLM-9B|t0.1|rep0"
+  ],
+  "notes": "All 9 responses share one identical OCR error: the trailing underscore on validatePlaylistKeys_ is dropped in every rep (the GT flags this underscore as a hard discriminator). The responses separate on the final cleanup comment: only t0.7|rep2 captures 'by removing unnecessary information' verbatim; the rest drop 'removing' or drop the comment entirely. Repetition of Cache.compressTracks is the main failure mode (4x in t0.1|rep0, 2x in t0.4|rep1 and t0.7|rep1). t0.4|rep0 uniquely truncates the identifier AUJOURDHUI to AUJOURDHI across three keys. No response invented entirely new functions or strings — hallucinations are confined to repeated/duplicated real lines and the one truncated identifier."
+}
