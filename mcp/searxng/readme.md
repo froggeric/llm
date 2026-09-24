@@ -1,18 +1,95 @@
 # SearXNG + MCP Setup Guide
 
-Free, unlimited web search and URL reading for AI coding tools. No Docker needed.
+Free web search and URL reading for your AI coding tools. One private SearXNG instance on your Mac — no Docker, no API keys, no search quotas — kept current by automatic daily updates.
 
----
+## Quick Start
 
-## What You'll End Up With
+**1. Install** — one command, about two minutes:
 
-- A local SearXNG metasearch engine running on your Mac
-- SearXNG MCP server configured in your AI coding tools
-- Auto-start via macOS launchd
+```bash
+python3 searxng-setup-local-mcp.py
+```
+
+The installer clones SearXNG to `~/searxng`, configures it, starts it, and offers to register the MCP server in each coding tool it finds.
+
+When it finishes, you should see:
+
+```
+All tests passed. SearXNG is ready.
+
+MCP server URL: http://127.0.0.1:8888
+Service: installed (auto-starts at login)
+Auto-update: installed (daily)
+```
+
+**2. Restart your coding tools** so they load the new MCP server.
+
+**3. Verify** — in a new session, ask your tool to:
+
+- "search the web for Claude Code MCP servers" → it returns results
+- "fetch the content of https://httpbin.org/html" → it returns the page
+
+Both work? You're done.
+
+### Prerequisites
+
+```bash
+python3 --version    # 3.10 or newer
+node --version       # 18 or newer
+git --version
+```
+
+Install any that are missing: `brew install python node git`
+
+## What the Installer Sets Up
+
+| Piece | Detail |
+|---|---|
+| SearXNG instance | Cloned to `~/searxng`, serving `http://127.0.0.1:8888` |
+| Service | launchd agent `com.searxng` — starts at login, restarts after a crash |
+| Daily updates | launchd job `com.searxng.update` — checks upstream every day at 10:42 |
+| MCP config | Registered in every coding tool it detects (see table below) |
+| Logs | Service: `/tmp/searxng.log`, `/tmp/searxng.err` · Updates: `/tmp/searxng-update.log` |
+
+Configuration changes it applies (and re-applies after every update):
+
+- **Required fixes** — replaces the default `secret_key` (SearXNG refuses to start without this), enables the JSON API the MCP server needs, disables Tor-only and karmasearch engines (they fail without extra setup), patches the wikidata engine bug ([#5982](https://github.com/searxng/searxng/issues/5982)), and creates `/etc/searxng/limiter.toml`
+- **Speed and reliability** — HTTP/1.1 keep-alive, a 10 s cap on slow engines, correct `base_url`, shorter engine suspension times (hours instead of days), and niche engines (torrents, recipes, radio) turned off
+
+The script is idempotent — run it as many times as you like. It restores the files it manages from git, then re-applies its changes, so the result is always clean.
+
+## Daily Updates (Automatic)
+
+SearXNG searches by scraping Google, Bing, DuckDuckGo, and others. When those sites change, scrapers break — an outdated install quietly loses results. The update job keeps this from happening.
+
+Every day at 10:42 (or on wake, if the Mac was asleep), the job:
+
+1. Checks upstream for new commits — and exits if there are none
+2. Pulls them, reinstalls dependencies, re-applies all local configuration
+3. Restarts the service (searches pause for ~5–10 s)
+4. Runs the test suite — and **rolls back** to the previous version if any test fails, then retries the next day
+
+Check the last run:
+
+```bash
+tail /tmp/searxng-update.log
+```
+
+Run an update on demand:
+
+```bash
+python3 searxng-setup-local-mcp.py        # from anywhere; also offers MCP setup
+```
+
+Disable automatic updates:
+
+```bash
+launchctl unload ~/Library/LaunchAgents/com.searxng.update.plist
+```
 
 ## Supported AI Coding Tools
 
-The setup script auto-detects installed tools and offers to configure the MCP server:
+The installer detects these and offers to configure the MCP server in each:
 
 | Tool | Config file | Detection |
 |------|------------|-----------|
@@ -25,107 +102,17 @@ The setup script auto-detects installed tools and offers to configure the MCP se
 | Windsurf | `~/.codeium/windsurf/mcp_config.json` | `windsurf` command |
 | OpenCode | `~/.config/opencode/opencode.json` | `opencode` command |
 
-## Prerequisites
+## Manual MCP Setup
 
-Before starting, verify you have these installed:
+Skip this if the installer already configured your tool. Otherwise:
 
-```bash
-python3 --version    # needs 3.10+
-node --version       # needs 18+
-git --version
-```
-
-If missing: `brew install python node git`
-
----
-
-## Step 1: Install & Configure SearXNG
-
-### 1.1 Set up (one command)
-
-```bash
-python3 searxng-setup-local-mcp.py
-```
-
-That's it. The script handles everything:
-
-- Clones the SearxNG github repo
-- Creates a virtual environment and installs dependencies
-- Applies all configuration changes (secret key, JSON API, engine fixes, optimizations)
-- Installs the macOS launchd service for auto-start
-- Detects installed AI coding tools and offers to configure MCP for each
-- Starts SearXNG and runs automated tests
-
-You should see:
-
-```
-All tests passed. SearXNG is ready.
-
-MCP server URL: http://127.0.0.1:8888
-Service: installed (auto-starts at login)
-```
-
-### What the script does
-
-**Required fixes:**
-- Changes the default `secret_key` (SearXNG won't start without this)
-- Enables the JSON API (required for the MCP server)
-- Sets Tor-only engines (ahmia, torch) to `inactive` — they can't work without a Tor proxy
-- Disables karmasearch engines (they return HTTP 403)
-- Fixes the wikidata engine bug ([#5982](https://github.com/searxng/searxng/issues/5982)) — `KeyError: 'name'` at startup
-- Creates `/etc/searxng/limiter.toml` to silence a startup warning
-
-**MCP optimizations:**
-- HTTP/1.1 keep-alive (faster repeated API calls)
-- Caps `max_request_timeout` at 10s (prevents slow engines from blocking)
-- Sets `base_url` for correct URL generation
-- Disables `ahmia_filter` plugin (unnecessary without Tor)
-- Reduces engine suspension times from days to hours
-- Disables niche engines (torrents, recipes, radio, etc.) for faster queries
-
-**Service:**
-- Installs a macOS launchd agent that auto-starts SearXNG at login
-- Logs go to `/tmp/searxng.log` and `/tmp/searxng.err`
-
-**MCP auto-detection:**
-- Scans for installed AI coding tools (Claude Code, Gemini CLI, iFlow, Qwen Code, Cursor, Windsurf, OpenCode, Claude Desktop)
-- For each detected tool, asks if you want to install the SearXNG MCP server
-- Writes the correct config format for each tool (OpenCode uses a different format)
-- Skips tools that already have the SearXNG config
-
-The script is idempotent — safe to run multiple times. It restores modified files from git first, then re-applies config. It also handles updates: if the repo is behind upstream, it pulls new commits and re-applies config.
-
-### CLI flags
-
-```bash
-python3 searxng-setup-local-mcp.py              # full install + configure + test
-python3 searxng-setup-local-mcp.py --test       # just run tests
-python3 searxng-setup-local-mcp.py --uninstall  # remove service + MCP configs, keep repo
-```
-
-### To undo all changes
-
-```bash
-git checkout -- searx/settings.yml searx/engines/wikidata.py
-```
-
-> **Note:** The wikidata fix will be overwritten by `git pull`. Re-run `python3 searxng-setup-local-mcp.py` after updating SearXNG until [PR #5993](https://github.com/searxng/searxng/pull/5993) is merged.
-
----
-
-## Step 2: Manual MCP Setup (if not using the script)
-
-If you prefer to configure MCP manually or the script didn't detect your tool:
-
-### Claude Code
+**Claude Code:**
 
 ```bash
 claude mcp add searxng -s user -e SEARXNG_URL=http://localhost:8888 -- npx -y mcp-searxng
 ```
 
-### Other tools
-
-Edit the config file listed in the table above. Add a `"searxng"` entry under the `"mcpServers"` key (or `"mcp"` for OpenCode):
+**Most other tools** — add a `"searxng"` entry under `"mcpServers"` in the config file listed above:
 
 ```json
 "searxng": {
@@ -137,7 +124,7 @@ Edit the config file listed in the table above. Add a `"searxng"` entry under th
 }
 ```
 
-For OpenCode, use this format instead:
+**OpenCode** uses a different format:
 
 ```json
 "searxng": {
@@ -150,90 +137,83 @@ For OpenCode, use this format instead:
 }
 ```
 
-### Optional: MCP Fetch (not recommended)
+Restart the tool afterward.
 
-`mcp-server-fetch` is a bare HTTP client that reads URLs directly. You generally don't need it alongside SearXNG because:
+### About MCP Fetch (not needed)
 
-- **Bot evasion:** mcp-server-fetch makes plain HTTP requests that get blocked by Cloudflare and similar services. SearXNG's URL reader goes through its anti-bot pipeline (UA rotation, TLS fingerprinting, browser headers) — it can fetch from sites that block bare clients.
-- **Structured reading:** SearXNG's reader supports extracting by section heading, paragraph range, or document outline — mcp-server-fetch only does basic HTML-to-markdown.
-- **Search:** mcp-server-fetch can't search the web at all.
+You do not need `mcp-server-fetch` alongside SearXNG:
 
-The one advantage of mcp-server-fetch is that it works without SearXNG running. If you want it as a minimal fallback:
+- SearXNG's URL reader goes through its anti-bot pipeline (rotating user agents, browser headers, TLS randomization) and reaches sites that block bare HTTP clients
+- Its reader extracts by section, paragraph range, or document outline — not just raw HTML-to-markdown
+- It also searches; `mcp-server-fetch` cannot
 
-```bash
-claude mcp add mcp-server-fetch -s user -- uvx mcp-server-fetch
-```
+`mcp-server-fetch` has one advantage: it works when SearXNG is down. To add it anyway: `claude mcp add mcp-server-fetch -s user -- uvx mcp-server-fetch`
 
-### Restart your tool
-
-Quit and relaunch your AI coding tool for the new MCP server to load.
-
----
-
-## Step 3: Verify
-
-In a new session of your AI coding tool, try:
-
-- **Search:** Ask it to "search the web for Claude Code MCP servers"
-- **Read a URL:** Ask it to "fetch the content of https://httpbin.org/html"
-
-If both work, you're done.
-
----
-
-## Updating SearXNG
-
-To update to the latest version:
+## Commands
 
 ```bash
-cd ~/searxng
-python3 searxng-setup-local-mcp.py
+python3 searxng-setup-local-mcp.py                  # full install + configure + test
+python3 searxng-setup-local-mcp.py --auto-update    # non-interactive update check (what the daily job runs)
+python3 searxng-setup-local-mcp.py --test           # just run tests
+python3 searxng-setup-local-mcp.py --uninstall      # remove service, update job, and MCP configs
 ```
-
-The script automatically pulls new commits from GitHub and re-applies all configuration.
-
----
 
 ## Troubleshooting
 
-**SearXNG won't start:**
-- Make sure port 8888 is free: `lsof -i :8888`
-- Check logs: `cat /tmp/searxng.err`
-- If you see `Address already in use`: `kill $(lsof -ti :8888)`
+**SearXNG won't start**
 
-**MCP server not appearing in your tool:**
-- Check the correct config file for your tool (see table above)
-- Verify the JSON is valid: `python3 -c "import json; json.load(open('CONFIG_FILE'))"`
-- Make sure SearXNG is running before starting your tool
+- Check the port: `lsof -i :8888` — if stale, `kill $(lsof -ti :8888)`
+- Read the log: `cat /tmp/searxng.err`
 
-**Search returns no results:**
-- Verify SearXNG is running: `curl "http://localhost:8888/search?q=test&format=json"`
-- Check that `json` is in the `formats` list in `searx/settings.yml`
+**MCP server missing from your tool**
 
-**`X-Forwarded-For nor X-Real-IP header is set!` in logs:**
-- Expected when running without a reverse proxy. Harmless for local development.
+- Confirm you edited the right config file (see the table above)
+- Validate the JSON: `python3 -c "import json; json.load(open('CONFIG_FILE'))"`
+- Start SearXNG before launching your tool
 
-**Engine errors in logs (CAPTCHA, timeouts, rate limits):**
-- These are normal for a local SearXNG. External engines (Google, DuckDuckGo, etc.) may temporarily rate-limit or block requests. Results will still be returned from other engines.
+**Search returns no results**
 
-**Wikidata engine still crashes after git pull:**
-- Re-run `python3 searxng-setup-local-mcp.py` to re-apply the fix until [PR #5993](https://github.com/searxng/searxng/pull/5993) is merged.
+Check what the engines say:
 
-**To stop auto-starting:**
+```bash
+curl "http://localhost:8888/search?q=test&format=json"
+```
+
+- Confirm `json` appears in the `formats` list in `searx/settings.yml`
+- Read `unresponsive_engines` in the response:
+  - `CAPTCHA` or `too many requests` — those engines temporarily blocked your IP. This clears by itself; the other engines keep working
+  - Many engines failing with parse errors, or returning zero results silently — the scrapers are stale. Check the last update (`tail /tmp/searxng-update.log`) and run the installer
+
+**`X-Forwarded-For nor X-Real-IP header is set!` in the logs**
+
+Expected without a reverse proxy. Harmless for local use.
+
+**Engine errors in the logs (CAPTCHA, timeouts, rate limits)**
+
+Normal for a local SearXNG. External engines throttle individual IPs from time to time; the rest cover for them.
+
+**An update left things broken**
+
+Updates that fail their tests roll back on their own. If the service still misbehaves, run the installer from a terminal — it rebuilds the configuration from scratch.
+
+## How SearXNG Avoids Getting Blocked
+
+These measures run automatically:
+
+- **User-agent rotation** — every request carries a random Firefox user agent (Google requests draw from a pool of 2,285 real Android Chrome device strings)
+- **TLS fingerprint randomization** — cipher-suite order shuffles per connection, defeating the JA3/JA4 fingerprinting behind Cloudflare and similar services
+- **Browser-like headers** — realistic `Accept-Encoding`, `Accept-Language`, `Sec-Fetch-*`, `DNT`, and `Referer` values
+- **HTTP/2** — traffic resembles a modern browser's
+- **Auto-suspension** — engines that serve CAPTCHAs or 429/403s pause for a while (configured in hours, not days) instead of hammering back
+
+For a single-user local instance, these suffice. The binding constraint is your single IP address. To go further, add rotating proxies under `outgoing.proxies` in `searx/settings.yml` — this requires an external proxy service.
+
+## Uninstall
+
 ```bash
 python3 searxng-setup-local-mcp.py --uninstall
 ```
 
----
+This removes the service, the daily update job, and the MCP configs, and keeps the repo at `~/searxng`. To undo only the configuration changes: `cd ~/searxng && git checkout -- searx/settings.yml searx/engines/wikidata.py`
 
-## Bot Detection Evasion
-
-SearXNG includes built-in measures to avoid being blocked by search engines. These run automatically — no configuration needed:
-
-- **User-Agent rotation** — Each outgoing request gets a random Firefox UA (general engines) or a random Android Chrome UA from a pool of 2,285 real device strings (Google specifically)
-- **TLS fingerprint randomization** — Cipher suite order is shuffled on every new connection, bypassing JA3/JA4 fingerprinting used by Cloudflare and others
-- **Browser-like headers** — Requests include realistic `Accept-Encoding`, `Accept-Language`, `Sec-Fetch-*`, `DNT`, and `Referer` headers
-- **HTTP/2 by default** — Modern protocol that matches real browser traffic patterns
-- **Engine auto-suspension** — Engines that return CAPTCHAs or rate-limit errors (429/403) are automatically suspended, with shorter recovery times configured for local use
-
-For a single-user local instance, these measures are sufficient. The binding constraint is the single IP address — if you need more, you can add rotating proxies in `searx/settings.yml` under `outgoing.proxies`, but this requires an external proxy service.
+To remove everything: `rm -rf ~/searxng`

@@ -2,8 +2,9 @@
 """SearXNG local MCP setup — install, configure, and test.
 
 Run from anywhere:
-    python3 searxng-setup-local-mcp.py          # full install + configure + test
-    python3 searxng-setup-local-mcp.py --test   # just run tests
+    python3 searxng-setup-local-mcp.py              # full install + configure + test
+    python3 searxng-setup-local-mcp.py --auto-update  # non-interactive daily update (used by launchd)
+    python3 searxng-setup-local-mcp.py --test       # just run tests
     python3 searxng-setup-local-mcp.py --uninstall  # remove service, keep repo
 
 Idempotent — safe to run multiple times. Restores modified files from git
@@ -29,6 +30,10 @@ SEARXNG_PORT = 8888
 SEARXNG_URL = f"http://127.0.0.1:{SEARXNG_PORT}"
 LAUNCHD_LABEL = "com.searxng"
 LAUNCHD_PLIST = os.path.expanduser(f"~/Library/LaunchAgents/{LAUNCHD_LABEL}.plist")
+UPDATE_LABEL = "com.searxng.update"
+UPDATE_PLIST = os.path.expanduser(f"~/Library/LaunchAgents/{UPDATE_LABEL}.plist")
+UPDATE_HOUR = 10   # daily check time (fires on wake if the Mac was asleep)
+UPDATE_MINUTE = 42
 SETTINGS_FILE = "searx/settings.yml"
 WIKIDATA_FILE = "searx/engines/wikidata.py"
 
@@ -199,27 +204,20 @@ def install_or_update():
         ok(f"Cloned to {SEARXNG_DIR}")
     else:
         section("Updating SearXNG repository")
-        r = run(["git", "fetch", "origin"], cwd=SEARXNG_DIR)
-        if r.returncode != 0:
-            warn(f"git fetch failed: {r.stderr}")
+        behind = fetch_and_count_behind()
+        if behind is None:
             # non-fatal, continue with local copy
-
-        # Check if behind
-        r = run(["git", "rev-list", "--count", "HEAD..origin/master"], cwd=SEARXNG_DIR)
-        if r.returncode == 0 and r.stdout.strip():
-            behind = int(r.stdout.strip())
-            if behind > 0:
-                # Stash any local changes, pull, then we'll re-apply config
-                run(["git", "stash"], cwd=SEARXNG_DIR)
-                r2 = run(["git", "pull", "origin", "master"], cwd=SEARXNG_DIR)
-                if r2.returncode == 0:
-                    changed(f"Updated: {behind} new commit(s) pulled from upstream")
-                else:
-                    warn(f"git pull failed: {r2.stderr}")
-            else:
-                ok("Already up to date")
-        else:
             ok("Could not check remote (offline?)")
+        elif behind > 0:
+            # Stash any local changes, pull, then we'll re-apply config
+            run(["git", "stash"], cwd=SEARXNG_DIR)
+            r2 = run(["git", "pull", "origin", "master"], cwd=SEARXNG_DIR)
+            if r2.returncode == 0:
+                changed(f"Updated: {behind} new commit(s) pulled from upstream")
+            else:
+                warn(f"git pull failed: {r2.stderr}")
+        else:
+            ok("Already up to date")
 
     # 2b: Venv + dependencies
     section("Setting up virtual environment")
@@ -482,6 +480,12 @@ def install_service():
     # Unload existing service if loaded
     run(["launchctl", "unload", LAUNCHD_PLIST])
 
+    # Fresh logs — test_installation() scans the whole error log for config
+    # errors, so stale lines from a previous run must not survive a restart
+    for log_file in ("/tmp/searxng.log", "/tmp/searxng.err"):
+        if os.path.exists(log_file):
+            open(log_file, "w").close()
+
     # Write plist
     os.makedirs(os.path.dirname(LAUNCHD_PLIST), exist_ok=True)
     with open(LAUNCHD_PLIST, "w") as f:
@@ -513,6 +517,75 @@ def uninstall_service():
     changed(f"Removed {LAUNCHD_PLIST}")
 
 
+def install_update_job():
+    """Install or update the launchd job that runs --auto-update daily."""
+    if platform.system() != "Darwin":
+        skip("Daily update job (not on macOS)")
+        return
+
+    section("Installing daily update job")
+
+    # Run via a login shell so Homebrew's python3 is found regardless of
+    # where Homebrew lives or which python version is current.
+    script_path = os.path.realpath(__file__)
+    plist_content = f"""<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>{UPDATE_LABEL}</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/zsh</string>
+        <string>-lc</string>
+        <string>python3 "{script_path}" --auto-update</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>{UPDATE_HOUR}</integer>
+        <key>Minute</key>
+        <integer>{UPDATE_MINUTE}</integer>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/tmp/searxng-update.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/searxng-update.log</string>
+</dict>
+</plist>
+"""
+
+    # Unload existing job if loaded
+    run(["launchctl", "unload", UPDATE_PLIST])
+
+    os.makedirs(os.path.dirname(UPDATE_PLIST), exist_ok=True)
+    with open(UPDATE_PLIST, "w") as f:
+        f.write(plist_content)
+    changed(f"Written {UPDATE_PLIST}")
+
+    r = run(["launchctl", "load", UPDATE_PLIST])
+    if r.returncode == 0:
+        ok(f"Daily update job loaded (checks upstream daily at {UPDATE_HOUR:02d}:{UPDATE_MINUTE:02d})")
+        ok("Update log: /tmp/searxng-update.log")
+    else:
+        warn(f"launchctl load failed: {r.stderr}")
+
+
+def uninstall_update_job():
+    """Remove the daily update job."""
+    if not os.path.exists(UPDATE_PLIST):
+        skip("Daily update job not installed")
+        return
+
+    section("Uninstalling daily update job")
+
+    run(["launchctl", "unload", UPDATE_PLIST])
+    changed("Daily update job unloaded")
+
+    os.remove(UPDATE_PLIST)
+    changed(f"Removed {UPDATE_PLIST}")
+
+
 # ── Step 5: Test ──────────────────────────────────────────────────────────
 
 def wait_for_searxng(timeout=30):
@@ -520,9 +593,7 @@ def wait_for_searxng(timeout=30):
     start = time.time()
     while time.time() - start < timeout:
         try:
-            resp = urllib.request.urlopen(
-                f"{SEARXNG_URL}/search?q=test&format=json", timeout=3
-            )
+            resp = urllib.request.urlopen(f"{SEARXNG_URL}/config", timeout=3)
             if resp.status == 200:
                 return True
         except (urllib.error.URLError, ConnectionRefusedError, OSError):
@@ -531,9 +602,14 @@ def wait_for_searxng(timeout=30):
     return False
 
 def is_searxng_running():
-    """Check if SearXNG is already running."""
+    """Check if SearXNG is already running.
+
+    Probes /config — instant, no engine work. (/search would conflate
+    "running" with "engines answered within 3s" and report a healthy
+    service as down.)
+    """
     try:
-        resp = urllib.request.urlopen(f"{SEARXNG_URL}/search?q=health&format=json", timeout=3)
+        resp = urllib.request.urlopen(f"{SEARXNG_URL}/config", timeout=3)
         return resp.status == 200
     except Exception:
         return False
@@ -570,6 +646,11 @@ def test_installation():
         ok("SearXNG is already running")
     else:
         changed("Starting SearXNG for testing...")
+        # Fresh logs — the config-error scan below reads the whole error
+        # log, so stale lines from an earlier run must not pollute it
+        for log_file in ("/tmp/searxng.log", "/tmp/searxng.err"):
+            if os.path.exists(log_file):
+                open(log_file, "w").close()
         proc = start_searxng_temp()
         started_ourselves = True
         if wait_for_searxng(timeout=20):
@@ -785,16 +866,96 @@ def uninstall_mcp_servers():
         changed(f"Removed from {harness['name']}")
 
 
+# ── Auto-update ────────────────────────────────────────────────────────────
+
+def fetch_and_count_behind():
+    """Fetch upstream and return commits-behind count, or None if unreachable."""
+    r = run(["git", "fetch", "origin"], cwd=SEARXNG_DIR)
+    if r.returncode != 0:
+        warn(f"git fetch failed: {r.stderr}")
+        return None
+    r = run(["git", "rev-list", "--count", "HEAD..origin/master"], cwd=SEARXNG_DIR)
+    if r.returncode == 0 and r.stdout.strip():
+        return int(r.stdout.strip())
+    return None
+
+
+def rollback_update(prev_head):
+    """Best-effort restore of the pre-update commit, config, and service."""
+    warn("Rolling back to previous version")
+    run(["git", "reset", "--hard", prev_head], cwd=SEARXNG_DIR)
+
+    # Reinstall deps for the old code (pins may differ)
+    venv_pip = os.path.join(SEARXNG_DIR, "venv", "bin", "pip")
+    run([venv_pip, "install", "-q", "-r", "requirements.txt"], cwd=SEARXNG_DIR)
+
+    configure()
+    install_service()
+
+
+def auto_update():
+    """Non-interactive daily update: apply if behind, verify, roll back on failure.
+
+    Never prompts (MCP setup is skipped — it's a one-time interactive step).
+    Exits 0 if up to date or successfully updated, 1 otherwise.
+    """
+    banner(f"SearXNG auto-update — {time.strftime('%Y-%m-%d %H:%M:%S')}")
+
+    if not os.path.isdir(os.path.join(SEARXNG_DIR, ".git")):
+        warn(f"No installation found at {SEARXNG_DIR} — run the full setup first")
+        sys.exit(1)
+
+    behind = fetch_and_count_behind()
+    if behind is None:
+        warn("Could not reach upstream — trying again tomorrow")
+        sys.exit(1)
+    if behind == 0:
+        ok("Already up to date")
+        sys.exit(0)
+
+    changed(f"{behind} new commit(s) upstream — updating")
+
+    # Remember where we are so we can roll back if the update breaks anything
+    r = run(["git", "rev-parse", "HEAD"], cwd=SEARXNG_DIR)
+    prev_head = r.stdout.strip()
+
+    install_or_update()
+    configure()
+    install_service()
+
+    banner("Post-update verification")
+    if test_installation():
+        r = run(["git", "rev-parse", "--short", "HEAD"], cwd=SEARXNG_DIR)
+        ok(f"Updated to {r.stdout.strip()} — all tests passed")
+        sys.exit(0)
+
+    warn("Update failed verification")
+    rollback_update(prev_head)
+
+    banner("Post-rollback verification")
+    if test_installation():
+        warn(f"Restored previous version ({prev_head[:7]}) — update will retry tomorrow")
+    else:
+        warn("Rollback verification also failed — run the full setup from a terminal:")
+        warn(f"  python3 {os.path.realpath(__file__)}")
+    sys.exit(1)
+
+
 # ── Main ───────────────────────────────────────────────────────────────────
 
 def main():
     if "--uninstall" in sys.argv:
         banner("Uninstalling SearXNG")
         uninstall_mcp_servers()
+        uninstall_update_job()
         uninstall_service()
-        print("\nService and MCP configs removed. Repo preserved at:")
+        print("\nService, daily update job, and MCP configs removed. Repo preserved at:")
         print(f"  {SEARXNG_DIR}")
         print("\nTo fully remove: rm -rf ~/searxng")
+        return
+
+    if "--auto-update" in sys.argv:
+        auto_update()
         return
 
     if "--test" in sys.argv:
@@ -823,15 +984,19 @@ def main():
     # Step 4: Service
     install_service()
 
-    # Step 5: MCP servers
+    # Step 5: Daily update job
+    install_update_job()
+
+    # Step 6: MCP servers
     install_mcp_servers()
 
-    # Step 6: Test
+    # Step 7: Test
     banner("Testing")
     if test_installation():
         print("\nAll tests passed. SearXNG is ready.")
         print(f"\nMCP server URL: {SEARXNG_URL}")
         print(f"Service: {'installed (auto-starts at login)' if os.path.exists(LAUNCHD_PLIST) else 'not installed'}")
+        print(f"Auto-update: {'installed (daily)' if os.path.exists(UPDATE_PLIST) else 'not installed'}")
     else:
         print("\nSome tests failed. See above for details.")
         sys.exit(1)
